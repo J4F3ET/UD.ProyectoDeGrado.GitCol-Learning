@@ -1,0 +1,24 @@
+{
+	"name": "ud.proyectodegrado.gitcol-learning",
+	"version": "1.0.0",
+	"description": "Una plataforma web para aprender y practicar las bases de Git. Incluye un modo colaborativo que permite a los usuarios participar en desafíos y trabajar en equipo para mejorar sus habilidades de control de versiones.",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/J4F3ET/UD.ProyectoDeGrado.GitCol-Learning"
+	},
+	"main": "server.js",
+	"scripts": {
+		"start": "nodemon --exec babel-node server.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Danna He <dhsepulvedas@udistrital.edu.co>(https://github.com/Chocolatamargo2607), Jafet Stiven <jslopezz@udistrital.edu.co> (https://github.com/J4F3ET)",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.18.2",
+		"morgan": "^1.10.0"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.23.6",
+		"@babel/preset-env": "^7.23.6"
+	}
+}
