@@ -3,6 +3,7 @@
 
 ### Firebase ###
 .idea
+**/firebase.json
 **/node_modules/*
 **/.firebaserc
 
