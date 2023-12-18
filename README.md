@@ -7,7 +7,8 @@
 3. [Assets](#assets)
 4. [Dependencias](#dependencias)
 5. [Scripts](#scripts)
-6. [Arquitectura](#arquitectura)
+6. [Dockers](#dockers)
+7. [Arquitectura](#arquitectura)
 
 ## Mokaps
 
@@ -129,6 +130,15 @@ npm install socket.io
 
 ```bash
 npm run start
+```
+# Dockers
+Para construir la imagen de docker se debe ejecutar el siguiente comando:
+```bash
+docker build . -t gitcol_learning_image
+```
+Para ejecutar la imagen de docker se debe ejecutar el siguiente comando:
+```bash
+docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_learning_image
 ```
 
 # Arquitectura

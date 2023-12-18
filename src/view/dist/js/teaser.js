@@ -1,19 +1,18 @@
-console.log(document.getElementById("tittle"));
-const parallaxTitle = new Parallax(document.getElementById("tittle"), {
+const titleParallax = new Parallax(document.getElementById("tittle"), {
 	hoverOnly: true,
 });
-const parallaxBoton = new Parallax(document.querySelector(".boton"), {
+const botonParallax = new Parallax(document.querySelector(".boton"), {
 	pointerEvents: true,
 });
-parallaxBoton.setInputElement(document.getElementById("btnEntrar"));
-const parallaxInstanceCat = new Parallax(document.getElementById("cat"));
-const parallaxInstanceFireBalls = new Parallax(
+botonParallax.setInputElement(document.getElementById("btnEntrar"));
+const catParallax = new Parallax(document.getElementById("cat"),{
+	pointerEvents: true,
+});
+const fireBallsParallax = new Parallax(
 	document.getElementById("sceneFireballs"),
-	{
-		hoverOnly: true,
-	}
+	{hoverOnly: true}
 );
-const parallaxInstanceGrass = new Parallax(
+const grassParallax = new Parallax(
 	document.getElementById("grassGroupParallax"),
 	{
 		invertX: true,
@@ -37,3 +36,18 @@ document.querySelectorAll(".individualGrass").forEach((grass) => {
 		}
 	);
 });
+document
+	.getElementById("individualFireball")
+	.animate(
+		[
+			{transform: "translateX(-2px)"},
+			{transform: "translateX(2px)"},
+			{transform: "translateY(-2px)"},
+			{transform: "translateY(2px)"},
+		],
+		{
+			duration: 100,
+			iterations: Infinity,
+			direction: "alternate",
+		}
+	);
