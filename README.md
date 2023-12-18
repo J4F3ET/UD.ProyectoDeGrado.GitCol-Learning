@@ -84,7 +84,7 @@ npm install --save-dev @babel/core @babel/cli @babel/preset-env
 - **Babel Node**: Para ejecutar el código transpilado por Babel.
 
 ```bash
-npm install -g @babel/node
+npm install --save-dev @babel/node
 ```
 
 ## Dependencias de producción
