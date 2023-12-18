@@ -14,9 +14,11 @@
 	"author": "Danna He <dhsepulvedas@udistrital.edu.co>(https://github.com/Chocolatamargo2607), Jafet Stiven <jslopezz@udistrital.edu.co> (https://github.com/J4F3ET)",
 	"license": "ISC",
 	"dependencies": {
+		"dotenv": "^16.3.1",
 		"express": "^4.18.2",
-		"firebase": "^10.7.1",
-		"morgan": "^1.10.0"
+		"firebase-admin": "^12.0.0",
+		"morgan": "^1.10.0",
+		"socket.io": "^4.7.2"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.23.4",
