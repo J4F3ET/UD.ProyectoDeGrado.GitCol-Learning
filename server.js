@@ -8,7 +8,7 @@ const server = express();
 //Settings: Configuraciones del servidor (puerto, vistas, etc)
 server.set("port", process.env.PORT || 3000);
 server.set("views", path.join(__dirname, "src", "view"));
-server.set("view engine", ".html");
+server.set("view engine", "ejs");
 
 // Middlewares: Funciones que se ejecutan antes de que lleguen a las rutas
 server.use(morgan("dev"));

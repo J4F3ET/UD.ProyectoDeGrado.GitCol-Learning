@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link
+			rel="shortcut icon"
+			href="./dist/assets/fav-icon.ico"
+			type="image/x-icon"
+		/>
+		<link rel="stylesheet" href="dist/css/style.css" />
+	</head>
+	<body>
+		<main class="container">
+			<section id="tittle">
+				<h1 data-depth="1" class="tittle">Git Col-Learning</h1>
+			</section>
+			<section id="containerScenes">
+				<div data-invert-x="false" data-invert-y="true" id="sceneFireballs">
+					<div id="containerFireballs" class="layer" data-depth="1">
+						<img width="100%" src="./dist/assets/img/teaser/fireballsnew.png" />
+					</div>
+				</div>
+				<div
+					class="containerGrass"
+					data-invert-x="false"
+					data-invert-y="true"
+					id="grassGroupParallax"
+					class="layer"
+				>
+					<img
+						class="grass"
+						data-depth="0.2"
+						data-origin-x="100"
+						data-origin-y="100"
+						src="./dist/assets/img/teaser/grass.png"
+					/>
+					<img
+						class="grass"
+						data-depth="0.4"
+						data-origin-x="50"
+						data-origin-y="50"
+						src="./dist/assets/img/teaser/grass.png"
+					/>
+					<img
+						class="grass"
+						data-depth="1"
+						data-origin-x="1"
+						data-origin-y="1"
+						src="./dist/assets/img/teaser/grass.png"
+					/>
+				</div>
+				<div id="cat">
+					<img
+						id="principalCat"
+						width="100%"
+						class="layer"
+						data-depth="0.1"
+						src="./dist/assets/img/teaser/principalCat.png"
+					/>
+				</div>
+			</section>
+			<div data-clip-relative-input="true" class="boton">
+				<button id="btnEntrar" data-depth="0.6">Entrar</button>
+			</div>
+			<section class="containerGrass">
+				<img
+					style="right: 0"
+					class="individualGrass"
+					src="./dist/assets/img/teaser/grass.png"
+				/>
+				<div id="grassGroup" class="layer">
+					<img class="grass" src="./dist/assets/img/teaser/grass.png" />
+					<img class="grass" src="./dist/assets/img/teaser/grass.png" />
+					<img class="grass" src="./dist/assets/img/teaser/grass.png" />
+				</div>
+				<img class="individualGrass" src="./dist/assets/img/teaser/grass.png" />
+			</section>
+		</main>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
+		<script src="./dist/js/teaser.js"></script>
+	</body>
+</html>

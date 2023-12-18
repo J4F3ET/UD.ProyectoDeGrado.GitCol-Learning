@@ -100,7 +100,11 @@ npm install express
 ```bash
 npm install morgan
 ```
+- **EJS**: Para renderizar las vistas.
 
+```bash
+npm install ejs
+```
 - **Firebase-admin**: Para conectar la aplicación con la base de datos de Firebase.
 
 ```bash
