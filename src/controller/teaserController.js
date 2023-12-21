@@ -4,7 +4,7 @@ import {database} from "../model/db/conn";
 const router = Router();
 
 router.get("/", (req, res) => {
-    res.render("teaser");
+    res.render("collaborativeViews/login");
 });
 
 export default router;
