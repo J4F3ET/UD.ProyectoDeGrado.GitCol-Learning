@@ -1,14 +1,15 @@
 import {Router} from "express";
-import {verifyIdTokenMiddleware} from "./util/middleware .js";
+import {releaseVerificationMiddleware} from "./util/middleware .js";
 const router = Router();
-router.post("/login", (req, res) => {
-
+router.get("/login", (req, res) => {
+	res.render("login");
 });
-router.get("/login",verifyIdTokenMiddleware,(req, res) => {
-	console.log("Authorized");
-	res.send("ok");
+router.post("/login", releaseVerificationMiddleware, (req, res) => {
+	res.status(200).json({message: "OK"});
+	res.end()
 });
-router.get("/logout", (req, res) => {
-
+router.get("/rooms", releaseVerificationMiddleware, (req, res) => {
+	res.render("rooms");
+	res.end()
 });
 export default router;

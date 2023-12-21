@@ -10,18 +10,21 @@ document.getElementById("githubLogin").addEventListener("click", async () => {
 	login((await signInWithPopup(auth, githubAuthProvider)).user);
 });
 document.getElementById("logout").addEventListener("click", async () => {
-	const response = auth.signOut();
-	console.log(await response);
+	auth.signOut();
 });
 async function login(user) {
 	const headers = new Headers();
 	headers.append("Content-Type", "application/json");
 	headers.append("Authorization", `Bearer ${user.accessToken}`);
-	fetch("/login", {
-		method: "GET",
+	return fetch("/login", {
+		method: "POST",
 		headers: headers,
 	});
 }
-onAuthStateChanged(auth, (user) => {
-	if (user) login(user);
+onAuthStateChanged(auth,async (user) => {
+	if (!user) return;
+	const response = await login(user);
+	if (response.status === 200) {
+		window.location.href = "/rooms";
+	}
 });

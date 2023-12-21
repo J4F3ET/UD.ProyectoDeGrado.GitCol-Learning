@@ -6,5 +6,6 @@ const app = initializeApp({
 	credential: applicationDefault(),
 	databaseURL: "https://gitcol-learning-default-rtdb.firebaseio.com",
 });
-export const database = getDatabase(app);
 export const auth = getAuth(app);
+export const database = getDatabase(app);
+
