@@ -12,4 +12,9 @@ router.get("/rooms", releaseVerificationMiddleware, (req, res) => {
 	res.render("rooms");
 	res.end()
 });
+router.get("/logout",releaseVerificationMiddleware, (req, res) => {
+	res.clearCookie("access_token");
+	res.render("login");
+	res.end()
+});
 export default router;
