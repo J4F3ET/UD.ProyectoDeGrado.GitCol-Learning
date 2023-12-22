@@ -22,6 +22,8 @@
 
 ### [Mokap Diseño](https://excalidraw.com/#room=f02156652a490656904a,aEEX4YXh5ZaQrA5-SQWIhg)
 
+### [Mokap Auth](https://excalidraw.com/#room=f5e9b3946bfb6efa7de6,sX_7Bvm6NW4Vg4j89S0uJA)
+![ImagenMokaps](./documetation/img/MokapAuth.png)
 ## Diseño UI/UX
 
 ### Paleta de colores
