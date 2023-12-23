@@ -1,4 +1,4 @@
-import {database} from "./firebaseService";
+import {database} from "./firebase-service";
 import {ref, set, onValue, off} from "firebase-admin/database";
 class Ejercise {
 	constructor(id, name, description, generator, solution) {

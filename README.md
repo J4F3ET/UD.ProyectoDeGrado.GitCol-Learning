@@ -237,20 +237,20 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
     └── server.js
     └── 📁src
         └── 📁controller
-            └── homeController.js
-            └── loginController.js
-            └── teaserController.js
+            └── home-controller.js
+            └── login-controller.js
+            └── teaser-controller.js
             └── 📁util
-                └── middleware .js
+                └── login-middleware .js
         └── 📁model
-            └── ejerciseService.js
-            └── firebaseService.js
-            └── roomService.js
+            └── exercise-service.js
+            └── firebase-service.js
+            └── room-service.js
         └── 📁view
-            └── screen-home.ejs
-            └── screen-login.ejs
-            └── screen-rooms.ejs
-            └── screen-teaser.ejs
+            └── home-screen.ejs
+            └── login-screen.ejs
+            └── rooms-screen.ejs
+            └── teaser-screen.ejs
 ```
 ## Estructura de carpetas
 
@@ -259,20 +259,20 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
 ```
 └── 📁src
     └── 📁controller
-        └── homeController.js
-        └── loginController.js
-        └── teaserController.js
+        └── home-controller.js
+        └── login-controller.js
+        └── teaser-controller.js
         └── 📁util
-            └── middleware .js
+            └── login-middleware .js
     └── 📁model
-        └── ejerciseService.js
-        └── firebaseService.js
-        └── roomService.js
+        └── exercise-service.js
+        └── firebase-service.js
+        └── room-service.js
     └── 📁view
-        └── screen-home.ejs
-        └── screen-login.ejs
-        └── screen-rooms.ejs
-        └── screen-teaser.ejs
+        └── home-screen.ejs
+        └── login-screen.ejs
+        └── rooms-screen.ejs
+        └── teaser-screen.ejs
 ```
 
 - **documetation**: Contiene la documentación del proyecto.

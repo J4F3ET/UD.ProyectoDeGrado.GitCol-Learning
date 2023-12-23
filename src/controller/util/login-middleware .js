@@ -1,10 +1,10 @@
-import {auth} from "../../model/firebaseService.js";
+import {auth} from "../../model/firebase-service.js";
 export const releaseVerificationMiddleware = (req, res, next) => {
 	if (undefined !== req.headers.cookie) {
 		verifyAccessCookieMiddleware(req, res, next);
 	} else if (undefined !== req.headers["authorization"]) {
 		verifyIdTokenMiddleware(req, res, next);
-	}else{
+	} else {
 		res.status(401).render("login");
 		res.end();
 	}
