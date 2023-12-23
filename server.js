@@ -20,5 +20,5 @@ server.use(require("./src/controller/loginController").default);
 server.use(express.static(path.join(__dirname, "src", "view")));
 // Routes: Rutas de la aplicacion
 server.listen(server.get("port"), () => {
-	console.log(`Example app listening on port ${server.get("port")}`);
+	console.log(`Escuchando en el puerto ${server.get("port")}`);
 });
