@@ -1,6 +1,6 @@
 import {Router} from "express";
 const router = Router();
 router.get("/home", (req, res) => {
-	res.render("screen-home");
+	res.render("home-screen");
 });
 export default router;

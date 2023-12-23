@@ -7,7 +7,7 @@ router.get("/login", async (req, res) => {
 	//const find = ejerciseFindById("1");
 	console.log(await idKey);
 	//console.log(await find);
-	res.render("screen-login");
+	res.render("login-screen");
 });
 router.post("/login", releaseVerificationMiddleware, (req, res) => {
 	// Agregar Servicio "Verificar si el usuario no se encuentra en una sala"
@@ -15,12 +15,12 @@ router.post("/login", releaseVerificationMiddleware, (req, res) => {
 	res.end()
 });
 router.get("/rooms", releaseVerificationMiddleware, (req, res) => {
-	res.render("screen-rooms");
+	res.render("rooms-screen");
 	res.end()
 });
 router.get("/logout",releaseVerificationMiddleware, (req, res) => {
 	res.clearCookie("access_token");
-	res.render("screen-login");
+	res.render("login-screen");
 	res.end()
 });
 export default router;
