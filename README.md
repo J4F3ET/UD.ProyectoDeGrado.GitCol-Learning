@@ -247,10 +247,10 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
             └── firebaseService.js
             └── roomService.js
         └── 📁view
-            └── login.ejs
-            └── rooms.ejs
             └── screen-home.ejs
-            └── teaser.ejs
+            └── screen-login.ejs
+            └── screen-rooms.ejs
+            └── screen-teaser.ejs
 ```
 ## Estructura de carpetas
 
@@ -269,10 +269,10 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
         └── firebaseService.js
         └── roomService.js
     └── 📁view
-        └── login.ejs
-        └── rooms.ejs
         └── screen-home.ejs
-        └── teaser.ejs
+        └── screen-login.ejs
+        └── screen-rooms.ejs
+        └── screen-teaser.ejs
 ```
 
 - **documetation**: Contiene la documentación del proyecto.
