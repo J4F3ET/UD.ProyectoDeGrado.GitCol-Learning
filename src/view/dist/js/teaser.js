@@ -5,7 +5,7 @@ const botonParallax = new Parallax(document.querySelector(".boton"), {
 	pointerEvents: true,
 });
 botonParallax.setInputElement(document.getElementById("btnEntrar"));
-const catParallax = new Parallax(document.getElementById("cat"),{
+const catParallax = new Parallax(document.getElementById("cat"), {
 	pointerEvents: true,
 });
 const fireBallsParallax = new Parallax(
@@ -52,5 +52,5 @@ document
 		}
 	);
 document.getElementById("btnEntrar").addEventListener("click", () => {
-	window.location.href = "/login";
+	window.location.href = "/home";
 });
