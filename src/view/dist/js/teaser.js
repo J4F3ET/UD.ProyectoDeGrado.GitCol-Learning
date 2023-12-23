@@ -51,3 +51,6 @@ document
 			direction: "alternate",
 		}
 	);
+document.getElementById("btnEntrar").addEventListener("click", () => {
+	window.location.href = "/login";
+});
