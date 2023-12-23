@@ -37,7 +37,7 @@ ScrollReveal({
 });
 
 ScrollReveal().reveal('.home-content, .heading', { origin: 'top'});
-ScrollReveal().reveal('.home-img, .levels-container, .overview-content', { origin: 'bottom'});
+ScrollReveal().reveal('.home-img, .levels-container, .overview-content, .about-container',{ origin: 'bottom'});
 ScrollReveal().reveal('.home-content h1, .overview-img', { origin: 'left'});
 ScrollReveal().reveal('.home-content p, .overview-content', { origin: 'right'});
 

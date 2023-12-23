@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@font-face {
+	font-family: "Virgil";
+	src: url("../assets/font/Virgil.woff2");
+}
 *{
     margin: 0;
     padding: 0;
@@ -44,8 +48,25 @@ section{
     box-shadow: 0 0 1rem var(--text-color);
 
 }
+.navbar .btn {
+    display: inline-block;
+    padding: 1rem 2.8rem;
+    background: var(--main-color);
+    border-radius: 4rem;
+    box-shadow: 0 0 1rem var(--main-color);
+    font-size: 1.6rem;
+    color: var(--text-color);
+    letter-spacing: .1rem;
+    font-weight: 600;
+    transition: .5s ease;
+}
+.navbar .btn:hover {
+    box-shadow: none;
+    color: var(--text-color);
+}
 .logo{
     font-size: 3.5rem;
+    font-family: "Virgil";
     color: var(--text1-color);
     font-weight: 600;
     cursor: default;
@@ -122,33 +143,15 @@ span{
     color: var(--second-bg-color);
     box-shadow: 0 0 1rem var(--main-color);
 }
-.btn {
-    display: inline-block;
-    padding: 1rem 2.8rem;
-    background: var(--main-color);
-    border-radius: 4rem;
-    box-shadow: 0 0 1rem var(--main-color);
-    font-size: 1.6rem;
-    color: var(--second-bg-color);
-    letter-spacing: .1rem;
-    font-weight: 600;
-    transition: .5s ease;
-}
-.btn:hover {
-    box-shadow: none;
-
-}
 
 /* OVERVIEW SECTION DESING */
 
 .overview {
     display: grid;
     line-height: 1.6;
-    background-image: url(https://images.alphacoders.com/127/1274991.png);
     min-height: 100vh;
     place-items: center;
 }
-
 .card1 {
     width: 80%;
     max-width: 1000px;
@@ -210,6 +213,186 @@ span{
     margin: 1rem 0 3rem;
 }
 
+/* MISION SECTION DESING */
+
+.mision {
+    min-height: .2vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+.mision-img img{
+    width: 35vw;
+    border-radius: 25px 25px 25px 25px;
+}
+.heading1 {
+    text-align: center;
+    font-size: 6rem ;
+}
+.mision-content h2{
+    text-align: left;
+    line-height: 1.2;
+}
+.mision-content p {
+    font-size: 1.6rem;
+    margin: 2rem 0 3rem;
+}
+
+/* BISION SECTION DESING */
+
+.bision {
+    min-height: 0.2vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+.bision-img img{
+    width: 35vw;
+    border-radius: 25px 25px 25px 25px;
+}
+.bision-content h2{
+    text-align: left;
+    line-height: 1.2;
+}
+.bision-content p {
+    font-size: 1.6rem;
+    margin: 2rem 0 3rem;
+}
+
+/* ABOUT US SECTION DESING */
+
+.about-container {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap:0.5rem;
+}
+#card2 , #card3 {
+	background-color: var(--second-bg-color);
+	height: auto;
+	width: 350px;
+	margin: 10vh auto;
+	border-radius: 25px;
+	padding-bottom: 1px;
+	box-shadow: 2px 2px 5px var(--text-color);
+}
+#card2 h1 , #card3 h1{
+	color: white;
+	text-align: center;
+	width: 100%;
+	background-color: #E6EBEE;
+	border-radius: 25px 25px 0 0;
+	color: var(--main-color);
+	padding: 30px 0;
+	font-weight: 800;
+	margin: 0;
+}
+.image-crop {
+	display: block;
+	position: relative;
+	background-color: #E6EBEE;
+	width: 150px;
+	height: 150px;
+	margin: 0 auto;
+	margin-top: 30px;
+	overflow: hidden;
+	border-radius: 50%;
+	box-shadow: 1px 1px 5px var(--text-color);
+}
+#card2 #avatar {
+	display: inline;
+	height: 170px;
+	width: auto;
+	margin-left: -20px;
+}
+#card3 #avatar {
+	display: inline;
+	height: 170px;
+	width: auto;
+	margin-left: -2px;
+}
+#bio {
+	display: block;
+	margin: 30px auto;
+	width: 280px;
+	height: auto;
+}
+#bio p {
+	color: #E6EBEE;
+	font-weight: lighter;
+	font-size: 15px;
+	text-align: justify;
+}
+#stats {
+	display: flex;
+	flex-direction: row;
+	height: auto;
+	width: 280px;
+	justify-content:space-around;
+	align-items: center;
+	margin: 0 auto;
+	font-weight: 500;
+}
+.col {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: auto;
+}
+.stat {
+	font-size: 25px;
+	margin: 0;
+}
+.label {
+	margin: 0;
+}
+#buttons {
+	display: flex;
+	margin: 0 auto;
+	justify-content: space-between;
+	width: 280px;
+}
+button {
+	display: block;
+	position: relative;
+	padding: 10px 0;
+	width: 130px;
+	margin: 30px 0;
+	border-radius: 25px;
+	border: none;
+	font-size: 20px;
+	letter-spacing: 0.2px;
+	font-weight: 500;
+	background-color: var(--main-color);
+	color: #E6EBEE;
+}
+button:focus {
+	display: none;
+}
+button:hover {
+	transform: scale(1.03);
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+}
+#msg{
+	background-color: #E6EBEE;
+	color: #393B45;
+}
+.about-container #card2:hover {
+    border-color: var(--main-color);
+    transition: .5s ease;
+    transform: scale(1.02);
+}
+.about-container #card3:hover {
+    border-color: var(--main-color);
+    transition: .5s ease;
+    transform: scale(1.02);
+}
+
 /* FOOTER SECTION DESING */
 
 .footer {
@@ -241,10 +424,10 @@ span{
 }
 
 /* RESPONSIVE */
+
 @media (max-width: 1200px){
     html{
         font-size: 55%;
-
     }
 }
 @media (max-width: 991px){
@@ -298,4 +481,17 @@ span{
         width: 50vw;
         margin-top: 4rem;
     }
+}
+#particles-js{
+    width: 100%;
+}
+canvas{
+    position:fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
 }
