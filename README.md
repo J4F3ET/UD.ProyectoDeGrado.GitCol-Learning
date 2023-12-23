@@ -23,7 +23,9 @@
 ### [Mokap Diseño](https://excalidraw.com/#room=f02156652a490656904a,aEEX4YXh5ZaQrA5-SQWIhg)
 
 ### [Mokap Auth](https://excalidraw.com/#room=f5e9b3946bfb6efa7de6,sX_7Bvm6NW4Vg4j89S0uJA)
+
 ![ImagenMokaps](./documetation/img/MokapAuth.png)
+
 ## Diseño UI/UX
 
 ### Paleta de colores
@@ -45,6 +47,8 @@
 
 #### JSON PROTOTYPE
 
+Ejercicio
+
 ```JSON
 {
 	"id": 1,
@@ -61,14 +65,75 @@
 }
 ```
 
-challenge: Problema
-id: identificador del problema
-name: nombre del problema
-generator: lista de comando que genera la solución problema
-level: nivel del problema
-solution: lista de soluciones de problemas
+> [!NOTE]
+> Prototype del ejercicio
+>
+> - challenge: Problema
+> - id: identificador del problema
+> - name: nombre del problema
+> - generator: lista de comando que genera la solución problema
+> - level: nivel del problema
+> - solution: lista de soluciones de problemas
+
+#### JSON PROTOTYPE
+
+Sala
+
+```JSON
+{
+    "id": 1,
+    "name": "",
+    "owner": "",
+    "members": {
+        "1": "user1",
+        "2": "user2"
+    },
+    "challenge":1,
+    "status": "active",
+    "chat": {
+        "1": {
+            "user": "user1",
+            "message": "message1"
+        },
+        "2": {
+            "user": "user2",
+            "message": "message2"
+        }
+    },
+    "code": {
+        "1": {
+            "user": "user1",
+            "code": "code1"
+        },
+        "2": {
+            "user": "user2",
+            "code": "code2"
+        }
+    }
+}
+```
+
+> [!NOTE]
+> Prototype de la sala
+>
+> - id: identificador de la sala
+> - name: nombre de la sala
+> - owner: usuario que creo la sala
+> - members: lista de usuarios que pertenecen a la sala
+> - challenge: identificador del problema
+> - status: estado de la sala
+> - chat: lista de mensajes de la sala
+> - code: lista de códigos de la sala
 
 # Dependencias
+> [!IMPORTANT]
+> Comando para instalar las dependencias del proyecto.
+
+```bash
+npm install --save-dev @babel/core @babel/cli @babel/preset-env @babel/node &&
+npm install express morgan ejs firebase-admin dotenv socket.io &&
+npm install -g nodemon
+```
 
 ## Dependencias de desarrollo
 
@@ -103,11 +168,13 @@ npm install express
 ```bash
 npm install morgan
 ```
+
 - **EJS**: Para renderizar las vistas.
 
 ```bash
 npm install ejs
 ```
+
 - **Firebase-admin**: Para conectar la aplicación con la base de datos de Firebase.
 
 ```bash
@@ -133,12 +200,17 @@ npm install socket.io
 ```bash
 npm run start
 ```
+
 # Dockers
+
 Para construir la imagen de docker se debe ejecutar el siguiente comando:
+
 ```bash
 docker build . -t gitcol_learning_image
 ```
+
 Para ejecutar la imagen de docker se debe ejecutar el siguiente comando:
+
 ```bash
 docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_learning_image
 ```
@@ -150,23 +222,36 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
 ```
 └── 📁UD.ProyectoDeGrado.GitCol-Learning
     └── .babelrc
+    └── .dockerignore
+    └── .env
+    └── Dockerfile
     └── 📁documetation
         └── 📁img
+            └── MokapAuth.png
             └── MokapsMenus.png
             └── MokapsScreens.png
+    └── firebase.json
     └── package-lock.json
     └── package.json
     └── README.md
     └── server.js
     └── 📁src
         └── 📁controller
+            └── homeController.js
+            └── loginController.js
+            └── teaserController.js
+            └── 📁util
+                └── middleware .js
         └── 📁model
-            └── 📁db
+            └── ejerciseService.js
+            └── firebaseService.js
+            └── roomService.js
         └── 📁view
-            └── 📁collaborativeViews
-            └── 📁singleViews
+            └── login.ejs
+            └── rooms.ejs
+            └── screen-home.ejs
+            └── teaser.ejs
 ```
-
 ## Estructura de carpetas
 
 - **src**: Contiene el código fuente de la aplicación.
@@ -174,11 +259,20 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
 ```
 └── 📁src
     └── 📁controller
+        └── homeController.js
+        └── loginController.js
+        └── teaserController.js
+        └── 📁util
+            └── middleware .js
     └── 📁model
-        └── 📁db
+        └── ejerciseService.js
+        └── firebaseService.js
+        └── roomService.js
     └── 📁view
-        └── 📁collaborativeViews
-        └── 📁singleViews
+        └── login.ejs
+        └── rooms.ejs
+        └── screen-home.ejs
+        └── teaser.ejs
 ```
 
 - **documetation**: Contiene la documentación del proyecto.
