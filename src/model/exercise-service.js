@@ -1,6 +1,6 @@
 import {database} from "./firebase-service";
 import {ref, set, onValue, off} from "firebase-admin/database";
-class Ejercise {
+class Exercise {
 	constructor(id, name, description, generator, solution) {
 		this.id = id;
 		this.name = name;
@@ -9,21 +9,21 @@ class Ejercise {
 		this.solution = solution;
 	}
 }
-export async function ejerciseCreate(name, description, generator, solution) {
-	return database.ref("ejercises/").push({
+export async function exerciseCreate(name, description, generator, solution) {
+	return database.ref("exercises/").push({
 		name: name,
 		description: description,
 		generator: generator,
 		solution: solution,
 	}).key;
 }
-export async function ejerciseFindById(id) {
+export async function exerciseFindById(id) {
 	return new Promise((resolve, reject) => {
-		onValue(ref(database, `ejercises/${id}`), (snapshot) => {
-			const ejercise = snapshot.val();
-			if (ejercise) {
+		onValue(ref(database, `exercises/${id}`), (snapshot) => {
+			const exercise = snapshot.val();
+			if (exercise) {
 				resolve(
-					new Ejercise(
+					new Exercise(
 						id,
 						ejercise.name,
 						ejercise.description,
