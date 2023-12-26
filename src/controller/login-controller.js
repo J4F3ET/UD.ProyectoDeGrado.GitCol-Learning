@@ -14,10 +14,7 @@ router.post("/login", releaseVerificationMiddleware, (req, res) => {
 	res.status(200).json({url: "/rooms"});
 	res.end()
 });
-router.get("/rooms", releaseVerificationMiddleware, (req, res) => {
-	res.render("rooms-screen");
-	res.end()
-});
+
 router.get("/logout",releaseVerificationMiddleware, (req, res) => {
 	res.clearCookie("access_token");
 	res.render("login-screen");
