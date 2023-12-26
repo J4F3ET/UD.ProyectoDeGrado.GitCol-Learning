@@ -203,6 +203,7 @@ npm run start
 
 # Dockers
 
+![docker-architecture](./documetation/img/docker-architecture.webp)
 Para construir la imagen de docker se debe ejecutar el siguiente comando:
 
 ```bash
