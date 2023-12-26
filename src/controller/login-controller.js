@@ -1,12 +1,7 @@
 import {Router} from "express";
 import {releaseVerificationMiddleware} from "./util/login-middleware .js";
-import {ejerciseCreate, ejerciseFindById} from "../model/exercise-service.js";
 const router = Router();
 router.get("/login", async (req, res) => {
-	const idKey = ejerciseCreate("Ejercicio 1", "Ejercicio 1", "Ejercicio 1", "Ejercicio 1");
-	//const find = ejerciseFindById("1");
-	console.log(await idKey);
-	//console.log(await find);
 	res.render("login-screen");
 });
 router.post("/login", releaseVerificationMiddleware, (req, res) => {
