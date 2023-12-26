@@ -3,13 +3,45 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>roomManager</title>
+		<title>Col-Learning</title>
+
+		<link rel="stylesheet" href="dist/css/room-style.css" />
 	</head>
 	<body>
-		<h1>Logiado</h1>
-		<button id="logout">Logout</button>
-		<img src="./dist/assets/img/teaser/background.jpg" alt="" />
+		<div class="back">
+			<a href="#"><i class="bx bx-caret-left-circle"></i>Logout</a>
+		</div>
+		<div class="room">
+			<form action="" class="room__form">
+				<h1 class="room__title">Rooms</h1>
+
+				<div class="room__inputs">
+					<div class="room__box">
+						<input type="code" placeholder="ID" required class="room__input" />
+						<i class="ri-lock-2-fill"></i>
+					</div>
+				</div>
+				<button type="submit" class="room__button">Login</button>
+				<button type="submit" class="room__button">Crear Sala</button>
+
+				<div class="room__register">Not logged in ? <a href="#">Help</a></div>
+			</form>
+		</div>
+
+		<div id="particles-js"></div>
 	</body>
-	<script type="module" src="./dist/js/userAuth-observer.js"></script>
-	<script type="module" src="./dist/js/rooms-script.js"></script>
+
+	<!--=============== REMIXICONS ===============-->
+	<link
+		rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css"
+		crossorigin=""
+	/>
+
+	<script type="module" src="./dist/js/userAuthObserver.js"></script>
+	<script type="module" src="./dist/js/rooms.js"></script>
+
+	<!--PARTICLE JS-->
+	<script src="dist/assets/lib/particles.min.js"></script>
+	<script src="dist/assets/lib/particlesjs-config.json"></script>
 </html>
