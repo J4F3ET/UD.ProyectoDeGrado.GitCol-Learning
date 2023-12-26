@@ -17,7 +17,6 @@ server.use(morgan("dev"));
 server.use(require("./src/controller/teaser-controller").default);
 server.use(require("./src/controller/login-controller").default);
 server.use(require("./src/controller/home-controller").default);
-server.use(require("./src/controller/pruebaCRUD").default);
 // Static files: Archivos que se envian al navegador(frontend)
 server.use(express.static(path.join(__dirname, "src", "view")));
 // Routes: Rutas de la aplicacion
