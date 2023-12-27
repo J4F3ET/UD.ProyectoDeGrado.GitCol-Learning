@@ -9,7 +9,7 @@
 5. [Scripts](#scripts)
 6. [Dockers](#dockers)
 7. [Arquitectura](#arquitectura)
-
+8. [Comandos de git que soporta la aplicación](#comandos-de-git-que-soporta-la-aplicación)
 ## Mokaps
 
 ### [Mokap Screens](https://excalidraw.com/#room=aa8cb898b51ca15e7332,cJnn7SoDPItVCLnpyTbKOA)
@@ -282,3 +282,46 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
 └── 📁documetation
     └── 📁img
 ```
+
+# Comandos de git que soporta la aplicación
+
+1. **git init**: Inicializa un repositorio local de git en la carpeta actual.
+2. **git config**: Configura el nombre y el correo electrónico del usuario.
+    - **git config --global user.name "Nombre"**: Configura el nombre del usuario de forma global.
+    - **git config --global user.email "Correo"**: Configura el correo electrónico del usuario de forma global.
+    - **git config user.name "Nombre"**: Configura el nombre del usuario de forma local en el repositorio actual.
+    - **git config user.email "Correo"**: Configura el correo electrónico del usuario de forma local en el repositorio actual.
+    - **git config --list**: Muestra la configuración actual.
+    - **git config --global --unset user.name**: Elimina la configuración del nombre del usuario.
+    - **git config --global --unset user.email**: Elimina la configuración del correo electrónico del usuario.
+3. **git add**: Agrega los archivos al área de preparación.
+> [!NOTE]
+> **Idea de implementacion**
+> Ya que nosotros no implementamos manejo de archivos la idea es que el comando simule agregar los archivos al área de preparación. Con archivos con nombres específicos. Con el fin de que el usuario pueda ejecutar los comandos de git.
+> - **git add .**: Agrega todos los archivos al área de preparación.
+> - **git add "NombreArchivo"**: Agrega el archivo al área de preparación.
+
+
+4. **git rm**: Elimina los archivos del área de preparación.
+    - **git rm --cached "NombreArchivo"**: Elimina el archivo del área de preparación.
+5. **git restore**: Elimina los archivos del área de preparación.
+
+6. **git commit**: Crea un commit con los archivos del área de preparación.
+    - **git commit -m "Mensaje"**: Crea un commit con los archivos del área de preparación y un mensaje.
+    - **git commit -am "Mensaje"**: Agrega los archivos al área de preparación y crea un commit con los archivos del área de preparación y un mensaje.
+7. **git status**: Muestra el estado actual del repositorio.
+8. **git log**: Muestra el historial de commits.
+9. **git branch**: Muestra las ramas del repositorio.
+    - **git branch "NombreRama"**: Crea una rama con el nombre especificado.
+    - **git branch -d "NombreRama"**: Elimina la rama con el nombre especificado.
+10. **git checkout**: Cambia de rama.
+11. **git switch**: Cambia de rama.
+12. **git merge**: Fusiona dos ramas.
+13. **git push**: Sube los cambios al repositorio remoto.
+14. **git pull**: Descarga los cambios del repositorio remoto.
+15. **git clone**: Clona un repositorio remoto.
+16. **git remote**: Muestra los repositorios remotos.
+    - **git remote add "NombreRepositorio" "URLRepositorio"**: Agrega un repositorio remoto.
+    - **git remote remove "NombreRepositorio"**: Elimina un repositorio remoto del repositorio local.
+
+
