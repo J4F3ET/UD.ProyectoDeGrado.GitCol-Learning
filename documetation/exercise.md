@@ -92,6 +92,26 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
 >[!NOTE]
 > Tambien puede usar `git commit -am "Agregando <<nombre de archivos>>"` evita usar hacer el paso 2
 ### Ejercicio 4: Crear un rama nueva
+1. Crea una rama con el nombre de `develop`.
+    - `git branch develop`
+2. Cambia a la rama `develop`.
+    - `git checkout develop` o tambien puede usar `git switch develop`
+3. Agrega el archivo `index.html` al área de preparación.
+    - `git add index.html`
+4. Realiza un commit con el mensaje `Add index.html`.
+    - `git commit -m "Add index.html"`
+>[!NOTE]
+> Tambien puede usar `git commit -am "Add index.html"` evita usar hacer el paso 3
 ### Ejercicio 5: Deshacer un commit
+1. Verifica el historial de commits.
+    - `git log`
+2. Deshacer el último commit.
+    - `git reset --soft HEAD~1`
+3. Verifica el historial de commits.
+    - `git log`
+>[!NOTE]
+> Tambien puede usar `git log --oneline` para ver el historial de commits de una forma mas resumida
+>
+> Tambien puede usar `git log --oneline --graph` para ver el historial de commits de una forma mas resumida y con graficos
 ### Ejercicio 6: Actualiza repositorio local
 ### Ejercicio 7: Clonar un repositorio
