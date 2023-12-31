@@ -53,89 +53,45 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
     - `git remote add "NombreRepositorio" "URLRepositorio"`
     - `git remote remove "NombreRepositorio"`
 ## Beginner
-### Ejercicio 1 : Crear un repositorio
+### Ejercicio 1 : Crear un repositorio local
 1. Crea un repositorio local con el nombre de `git-exercises`.
     - `git init`
 2. Configura tu nombre y correo electrónico.
     - `git config --global user.name "Nombre"`
     - `git config --global user.email "Correo"`
-3. Crea un archivo con el nombre de `README.md` y escribe una breve descripción del repositorio.
-    - `echo "# git-exercises" >> README.md`
+>[!NOTE]
+>No debería de crear un archivo si no que de alguna forma ya estar creado solo como que seleccionarlo para agregarlo al stash
+3. Crea un archivo con el nombre de `README.md`
 4. Agrega el archivo `README.md` al área de preparación.
     - `git add README.md`
 5. Realiza un commit con el mensaje `Initial commit`.
     - `git commit -m "Initial commit"`
-6. Crea un repositorio remoto con el nombre de `git-exercises`.
-    - `git remote add git-exercises
+### Ejercicio 2: Repositorio remoto
+>[!NOTE]
+>El archivo ya debería de estar creado por defectos para eventos prácticos. Se debería de representar de alguna forma la creación o el dar a entender que ya existe el archivo solo es agregarlo
+1. Agrega el archivo `index.html` al área de preparación.
+2. Realiza un commit con el mensaje `Add index.html`.
+3. Agrega el archivo `style.css` al área de preparación.
+4. Realiza un commit con el mensaje `Add style.css`.
+5. Agrega el archivo `script.js` al área de preparación.
+6. Realiza un commit con el mensaje `Add script.js`.
+7. Crear un repositorio en la nube
+>[!NOTE]
+>Ya deberá tener configuración `git config`
+8. Crea la conexión con el repositorio remoto
+    - `git remote add <<nombre de conexión>> <<url repositorio>>`
 7. Sube los cambios al repositorio remoto.
-    - `git push -u git-exercises master`
-### Ejercicio 2: Crear un archivo
-1. Crea un archivo con el nombre de `index.html` y escribe el siguiente código:
-    ```html
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <title>Git Exercises</title>
-    </head>
-    <body>
-        <h1>Git Exercises</h1>
-    </body>
-    </html>
-    ```
-2. Agrega el archivo `index.html` al área de preparación.
-3. Realiza un commit con el mensaje `Add index.html`.
-4. Crea un archivo con el nombre de `style.css` y escribe el siguiente código:
-    ```css
-    body {
-        background-color: #000;
-        color: #fff;
-    }
-    ```
-5. Agrega el archivo `style.css` al área de preparación.
-6. Realiza un commit con el mensaje `Add style.css`.
-7. Crea un archivo con el nombre de `script.js` y escribe el siguiente código:
-    ```js
-    console.log("Git Exercises");
-    ```
-8. Agrega el archivo `script.js` al área de preparación.
-9. Realiza un commit con el mensaje `Add script.js`.
-10. Sube los cambios al repositorio remoto.
     - `git push`
-### Ejercicio 3: Modificar un archivo
-1. Modifica el archivo `index.html` y agrega el siguiente código:
-    ```html
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <title>Git Exercises</title>
-    </head>
-    <body>
-        <h1>Git Exercises</h1>
-        <p>Este es un repositorio para aprender los comandos básicos de git.</p>
-    </body>
-    </html>
-    ```
-2. Agrega el archivo `index.html` al área de preparación.
-3. Realiza un commit con el mensaje `Add description to index.html`.
-4. Modifica el archivo `style.css` y agrega el siguiente código:
-    ```css
-    body {
-        background-color: #000;
-        color: #fff;
-        font-family: Arial, Helvetica, sans-serif;
-    }
-    ```
-5. Agrega el archivo `style.css` al área de preparación.
-6. Realiza un commit con el mensaje `Add font-family to style.css`.
-7. Modifica el archivo `script.js` y agrega el siguiente código:
-    ```js
-    console.log("Git Exercises");
-    console.log("Este es un repositorio para aprender los comandos básicos de git.");
-    ```
-8. Agrega el archivo `script.js` al área de preparación.
-9. Realiza un commit con el mensaje `Add console.log to script.js`.
-10. Sube los cambios al repositorio remoto.
-    - `git push`
-### Ejercicio 4: Eliminar un archivo
+### Ejercicio 3:Agrega los archivos faltantes
+1. Verifica que esten todos los archivos en el stash
+    -`git status`
+2. Agrega los archivos faltantes
+    -`git add <<nombre del archivo>>`
+3. Agrega el commit
+    -`git commit -m "Agregando <<nombre de archivos>>"`
+>[!NOTE]
+> Tambien puede usar `git commit -am "Agregando <<nombre de archivos>>"` evita usar hacer el paso 2
+### Ejercicio 4: Crear un rama nueva
+### Ejercicio 5: Deshacer un commit
+### Ejercicio 6: Actualiza repositorio local
+### Ejercicio 7: Clonar un repositorio
