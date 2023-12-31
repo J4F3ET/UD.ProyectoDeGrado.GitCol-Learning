@@ -1,22 +1,22 @@
 # Ejercicios del sistema
 Los niveles en los que se dividen los ejercicios son los siguientes:
 - __Beginner__ : Ejercicios básicos para aprender los comandos básicos de git.
-    - `git init`
-    - `git config`
-    - `git add`
-    - `git rm`
-    - `git restore`
-    - `git commit`
-    - `git status`
-    - `git log`
-    - `git branch`
-    - `git checkout`
-    - `git switch`
-    - `git merge`
-    - `git push`
-    - `git pull`
-    - `git clone`
-    - `git remote`
+    >- [x] `git init`
+    >- [x] `git config`
+    >- [x] `git add`
+    >- [ ] `git rm`
+    >- [ ] `git restore`
+    >- [x] `git commit`
+    >- [x] `git status`
+    >- [x] `git log`
+    >- [x] `git branch`
+    >- [x] `git checkout`
+    >- [x] `git switch`
+    >- [ ] `git merge`
+    >- [x] `git push`
+    >- [x] `git pull`
+    >- [x] `git clone`
+    >- [x] `git remote`
 - __Intermediate__ : Ejercicios intermedios para afianzar los conocimientos de comandos básicos de git.
 - __Advanced__: Ejercicios avanzados para retar los conocimientos de comandos básicos de git.
 ## Indice
@@ -114,4 +114,10 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
 >
 > Tambien puede usar `git log --oneline --graph` para ver el historial de commits de una forma mas resumida y con graficos
 ### Ejercicio 6: Actualiza repositorio local
+1. Actualiza el repositorio local en la rama `master`.
+    - `git pull`
+>[!NOTE]
+> También puede usar `git pull origin master` para actualizar el repositorio local, `origin` es el nombre de la conexión y `master` es el nombre de la rama a actualizar
 ### Ejercicio 7: Clonar un repositorio
+1. Clona el repositorio `git-exercises` en la carpeta `git-exercises-clone`.
+    - `git clone <<URL>>`
