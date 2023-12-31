@@ -323,5 +323,3 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
 16. **git remote**: Muestra los repositorios remotos.
     - **git remote add "NombreRepositorio" "URLRepositorio"**: Agrega un repositorio remoto.
     - **git remote remove "NombreRepositorio"**: Elimina un repositorio remoto del repositorio local.
-
-
