@@ -121,3 +121,11 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
 ### Ejercicio 7: Clonar un repositorio
 1. Clona el repositorio `git-exercises` en la carpeta `git-exercises-clone`.
     - `git clone <<URL>>`
+### Ejercicio 8: Restaurar commit
+### Ejercicio 9: Fucionar dos ramas
+1. Crea la rama `bugRelease` y la rama `bugHotfix` a partir de la rama `master`.
+    - `git branch bugRelease`
+    - `git branch bugHotfix`
+2. Cambia a la rama `bugRelease`.
+    - `git checkout bugRelease` o tambien puede usar `git switch bugRelease`
+3. Agrega un commit  
