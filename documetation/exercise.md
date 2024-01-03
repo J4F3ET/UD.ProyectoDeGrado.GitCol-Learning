@@ -1,40 +1,24 @@
 # Ejercicios del sistema
 Los niveles en los que se dividen los ejercicios son los siguientes:
 - __Beginner__ : Ejercicios básicos para aprender los comandos básicos de git.
-    > [x] `git init`
-    >
-    > [x] `git config`
-    >
-    > [x] `git add`
-    >
-    > [x] `git rm`
-    >
-    > [x] `git restore`
-    >
-    > [x] `git commit`
-    >
-    > [x] `git status`
-    >
-    > [x] `git log`
-    >
-    > [x] `git branch`
-    >
-    > [x] `git checkout`
-    >
-    > [x] `git switch`
-    >
-    > [x] `git merge`
-    >
-    > [x] `git rebase`
-    >
-    > [x] `git push`
-    >
-    > [x] `git pull`
-    >
-    > [x] `git clone`
-    >
-    > [x] `git remote`
-    >
+    >![INFO]
+    >- [x] `git init`
+    >- [x] `git config`
+    >- [x] `git add`
+    >- [x] `git rm`
+    >- [x] `git restore`
+    >- [x] `git commit`
+    >- [x] `git status`
+    >- [x] `git log`
+    >- [x] `git branch`
+    >- [x] `git checkout`
+    >- [x] `git switch`
+    >- [x] `git merge`
+    >- [x] `git rebase`
+    >- [x] `git push`
+    >- [x] `git pull`
+    >- [x] `git clone`
+    >- [x] `git remote`
 - __Intermediate__ : Ejercicios intermedios para afianzar los conocimientos de comandos básicos de git.
 - __Advanced__: Ejercicios avanzados para retar los conocimientos de comandos básicos de git.
 ## Indice
