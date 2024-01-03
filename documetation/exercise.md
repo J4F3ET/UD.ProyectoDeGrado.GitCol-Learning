@@ -1,22 +1,40 @@
 # Ejercicios del sistema
 Los niveles en los que se dividen los ejercicios son los siguientes:
 - __Beginner__ : Ejercicios básicos para aprender los comandos básicos de git.
-    >- [x] `git init`
-    >- [x] `git config`
-    >- [x] `git add`
-    >- [ ] `git rm`
-    >- [ ] `git restore`
-    >- [x] `git commit`
-    >- [x] `git status`
-    >- [x] `git log`
-    >- [x] `git branch`
-    >- [x] `git checkout`
-    >- [x] `git switch`
-    >- [ ] `git merge`
-    >- [x] `git push`
-    >- [x] `git pull`
-    >- [x] `git clone`
-    >- [x] `git remote`
+    > [x] `git init`
+    >
+    > [x] `git config`
+    >
+    > [x] `git add`
+    >
+    > [x] `git rm`
+    >
+    > [x] `git restore`
+    >
+    > [x] `git commit`
+    >
+    > [x] `git status`
+    >
+    > [x] `git log`
+    >
+    > [x] `git branch`
+    >
+    > [x] `git checkout`
+    >
+    > [x] `git switch`
+    >
+    > [x] `git merge`
+    >
+    > [x] `git rebase`
+    >
+    > [x] `git push`
+    >
+    > [x] `git pull`
+    >
+    > [x] `git clone`
+    >
+    > [x] `git remote`
+    >
 - __Intermediate__ : Ejercicios intermedios para afianzar los conocimientos de comandos básicos de git.
 - __Advanced__: Ejercicios avanzados para retar los conocimientos de comandos básicos de git.
 ## Indice
@@ -66,6 +84,10 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
     - `git add README.md`
 5. Realiza un commit con el mensaje `Initial commit`.
     - `git commit -m "Initial commit"`
+>[!NOTE]
+>Tambien puede usar `git commit -am "Initial commit"` evita usar hacer el paso 4
+>Tambien puedes usar `git commit -a` para agregar todos los archivos al stash y hacer el commit
+>Tambien puedes eliminar  archivos del stash con `git rm --cached <<nombre del archivo>>`
 ### Ejercicio 2: Repositorio remoto
 >[!NOTE]
 >El archivo ya debería de estar creado por defectos para eventos prácticos. Se debería de representar de alguna forma la creación o el dar a entender que ya existe el archivo solo es agregarlo
@@ -122,10 +144,32 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
 1. Clona el repositorio `git-exercises` en la carpeta `git-exercises-clone`.
     - `git clone <<URL>>`
 ### Ejercicio 8: Restaurar commit
+1. Verifica el historial de commits.
+    - `git log`
+2. Restaura el commit con el mensaje `Add index.html`.
+    - `git restore --source=HEAD~1 index.html` el `HEAD~1` es el numero de commit que se quiere restaurar, en este caso es el ultimo commit
+3. Verifica el historial de commits.
+    - `git log`
+>[!NOTE]
+> Tambien puede usar `git log --oneline` para ver el historial de commits de una forma mas resumida
+
 ### Ejercicio 9: Fucionar dos ramas
 1. Crea la rama `bugRelease` y la rama `bugHotfix` a partir de la rama `master`.
     - `git branch bugRelease`
     - `git branch bugHotfix`
 2. Cambia a la rama `bugRelease`.
     - `git checkout bugRelease` o tambien puede usar `git switch bugRelease`
-3. Agrega un commit  
+3. Agrega un commit con el mensaje `Add bugRelease`.
+    - `git commit -m "Add bugRelease"`
+4. Cambia a la rama `bugHotfix`.
+    - `git checkout bugHotfix` o tambien puede usar `git switch bugHotfix`
+5. Agrega un commit con el mensaje `Add bugHotfix`
+    - `git commit -m "Add bugHotfix"`
+6. Cambia a la rama `master`.
+    - `git checkout master` o tambien puede usar `git switch master`
+7. Fusiona la rama `bugRelease` con la rama `master`.
+    - `git merge bugRelease` o tambien puede usar `git merge bugRelease`
+    - `git rebase bugRelease` o tambien puede usar `git rebase bugRelease`
+8. Fusiona la rama `bugHotfix` con la rama `master`.
+    - `git merge bugHotfix` o tambien puede usar `git merge bugHotfix`
+    - `git rebase bugHotfix` o tambien puede usar `git rebase bugHotfix`
