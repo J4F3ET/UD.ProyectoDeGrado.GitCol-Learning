@@ -1,7 +1,7 @@
 # Ejercicios del sistema
 Los niveles en los que se dividen los ejercicios son los siguientes:
 - __Beginner__ : Ejercicios básicos para aprender los comandos básicos de git.
-    >![INFO]
+    >[!INFO]
     >- [x] `git init`
     >- [x] `git config`
     >- [x] `git add`
