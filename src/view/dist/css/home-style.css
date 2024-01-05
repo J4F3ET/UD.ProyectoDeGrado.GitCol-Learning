@@ -128,8 +128,8 @@ span{
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    width: 4rem;
-    height: 4rem;
+    width: 6rem;
+    height: 6rem;
     background: transparent;
     border: .2rem solid var(--main-color);
     border-radius: 50%;
@@ -239,24 +239,24 @@ span{
     margin: 2rem 0 3rem;
 }
 
-/* BISION SECTION DESING */
+/* VISION SECTION DESING */
 
-.bision {
+.vision {
     min-height: 0.2vh;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 2rem;
 }
-.bision-img img{
+.vision-img img{
     width: 35vw;
     border-radius: 25px 25px 25px 25px;
 }
-.bision-content h2{
+.vision-content h2{
     text-align: left;
     line-height: 1.2;
 }
-.bision-content p {
+.vision-content p {
     font-size: 1.6rem;
     margin: 2rem 0 3rem;
 }
