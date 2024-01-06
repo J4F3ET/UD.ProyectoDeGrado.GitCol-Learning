@@ -5,7 +5,7 @@ export const releaseVerificationMiddleware = (req, res, next) => {
 	} else if (undefined !== req.headers["authorization"]) {
 		verifyIdTokenMiddleware(req, res, next);
 	} else {
-		res.status(401).render("login");
+		res.status(401).render("login-screen");
 		res.end();
 	}
 };
@@ -17,7 +17,7 @@ const verifyAccessCookieMiddleware = (req, res, next) => {
 		});
 	} catch (error) {
 		console.error(error);
-		res.status(401).render("login");
+		res.status(401).render("login-screen");
 		return;
 	}
 };
@@ -28,14 +28,14 @@ const verifyIdTokenMiddleware = (req, res, next) => {
 			.verifyIdToken(req.headers["authorization"].split(" ")[1])
 			.then((result) => {
 				if (!result) {
-					res.status(401).render("login");
+					res.status(401).render("login-screen");
 					return;
 				}
 				setAccessTokenCookieMiddleware(req, res, next);
 			});
 	} catch (error) {
 		console.error(error);
-		res.status(401).render("login");
+		res.status(401).render("login-screen");
 		return;
 	}
 };

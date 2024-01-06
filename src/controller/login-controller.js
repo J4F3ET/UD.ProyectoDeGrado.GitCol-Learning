@@ -7,12 +7,14 @@ router.get("/login", async (req, res) => {
 router.post("/login", releaseVerificationMiddleware, (req, res) => {
 	// Agregar Servicio "Verificar si el usuario no se encuentra en una sala"
 	res.status(200).json({url: "/rooms"});
-	res.end()
+	res.end();
 });
 
-router.get("/logout",releaseVerificationMiddleware, (req, res) => {
+router.get("/logout", releaseVerificationMiddleware, (req, res) => {
 	res.clearCookie("access_token");
 	res.render("login-screen");
-	res.end()
+	res.status(200).json({url: "/login"});
+	res.end();
 });
 export default router;
+	

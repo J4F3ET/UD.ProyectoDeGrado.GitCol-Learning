@@ -1,6 +1,6 @@
 import {auth} from "./firebase-config.js";
 import {onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-document.getElementById("logout").addEventListener("click", () => logout());
+document.getElementById("btnLogout").addEventListener("click", () => logout());
 async function logout() {
 	const headers = new Headers();
 	headers.append("Content-Type", "application/json");
@@ -16,6 +16,7 @@ onAuthStateChanged(auth, async (user) => {
 	if ((await logout()).status === 200) {
 		window.location.href = "/login";
 	} else {
+
 		alert("Logout failed");
 	}
 });

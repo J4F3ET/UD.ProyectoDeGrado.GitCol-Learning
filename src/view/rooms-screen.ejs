@@ -4,17 +4,15 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Col-Learning</title>
-
 		<link rel="stylesheet" href="dist/css/room-style.css" />
 	</head>
 	<body>
 		<div class="back">
-			<a href="#"><i class="bx bx-caret-left-circle"></i>Logout</a>
+			<a id="btnLogout" href="#"><i class="bx bx-caret-left-circle"></i>Logout</a>
 		</div>
 		<div class="room">
 			<form action="" class="room__form">
 				<h1 class="room__title">Rooms</h1>
-
 				<div class="room__inputs">
 					<div class="room__box">
 						<input type="code" placeholder="ID" required class="room__input" />
@@ -38,8 +36,8 @@
 		crossorigin=""
 	/>
 
-	<script type="module" src="./dist/js/userAuthObserver.js"></script>
-	<script type="module" src="./dist/js/rooms.js"></script>
+	<script type="module" src="./dist/js/userAuth-observer.js"></script>
+	<script type="module" src="./dist/js/rooms-script.js"></script>
 
 	<!--PARTICLE JS-->
 	<script src="dist/assets/lib/particles.min.js"></script>
