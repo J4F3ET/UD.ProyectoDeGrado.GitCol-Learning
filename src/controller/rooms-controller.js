@@ -1,9 +1,4 @@
 import {Router} from "express";
-import { <link
-			rel="shortcut icon"
-			href="./dist/assets/fav-icon.ico"
-			type="image/x-icon"
-		/> } from "../model/room-service.js";
 import {releaseVerificationMiddleware} from "./util/login-middleware .js";
 const router = Router();
 router.get("/rooms", releaseVerificationMiddleware, (req, res) => {
@@ -11,6 +6,7 @@ router.get("/rooms", releaseVerificationMiddleware, (req, res) => {
 	res.end();
 });
 router.get("/challenges",(req,res) =>{
-	
+	console.log(req.query.level);
+	const level = req.query.level;
 });
 export default router;

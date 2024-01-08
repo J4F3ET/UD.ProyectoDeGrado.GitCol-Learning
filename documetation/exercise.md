@@ -55,7 +55,7 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
     - `git remote remove "NombreRepositorio"`
 ## Beginner
 ### Ejercicio 1 : Crear un repositorio local
-1. Crea un repositorio local con el nombre de `git-exercises`.
+1. Crea un repositorio local
     - `git init`
 2. Configura tu nombre y correo electrónico.
     - `git config --global user.name "Nombre"`
