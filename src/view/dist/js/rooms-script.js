@@ -3,7 +3,7 @@ document.getElementById("btnLogout").addEventListener("click", () => logout());
 document
 	.getElementById("selectLevelChallenge")
 	.addEventListener("change", () => {
-		const level = document.getElementById("selectLevelChallenge").value||0;
+		const level = document.getElementById("selectLevelChallenge").value || 0;
 		const url = `http://localhost:3000/challenges/${level}`;
 		fetch(url)
 			.then((response) => response.json())

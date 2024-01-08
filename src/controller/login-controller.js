@@ -13,7 +13,7 @@ router.post("/login", releaseVerificationMiddleware, (req, res) => {
 router.get("/logout", releaseVerificationMiddleware, (req, res) => {
 	res.clearCookie("access_token");
 	res.render("login-screen");
-	res.status(200).json({url: "/login"});
+	res.status(401).json({url: "/login"});
 	res.end();
 });
 export default router;
