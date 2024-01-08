@@ -4,6 +4,11 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Col-Learning</title>
+		<link
+			rel="shortcut icon"
+			href="./dist/assets/fav-icon.ico"
+			type="image/x-icon"
+		/>
 		<link rel="stylesheet" href="dist/css/room-style.css" />
 	</head>
 	<body>
@@ -20,11 +25,39 @@
 					</div>
 				</div>
 				<button type="submit" class="room__button">Login</button>
-				<button type="submit" class="room__button">Crear Sala</button>
-
 				<div class="room__register">Not logged in ? <a href="#">Help</a></div>
 			</form>
+			<button id="btnCreateRoom" class="room__button">Crear Sala</button>
 		</div>
+		<dialog>
+			/**
+ * roomUpdate - Update a room
+ * @param {string} id : id of the room
+ * @param {string} code : code of the room
+ * @param {string} description : description of the room
+ * @param {string} owner : owner of the room
+ * @param {List<int>} members : members of the room
+ * @param {int} challenge : id of the challenge
+ * @param {boolean} status : status of the room
+ * @param {List<object>} chat : record of the chat
+ * @param {List<object>} record : record of the code
+ * @param {boolean} hidden : hidden status of the room
+ * @returns {Promise<int>} : id of the room
+ */
+			<form method="dialog">
+				<h1>Crear Sala</h1>
+				<input type="text" placeholder="Code" required />
+				<input type="text" placeholder="Description" required />
+				<select name="selectLevelChallenge" id="selectLevelChallenge">
+					<option value="1">Beginner</option>
+					<option value="2">Intermediate</option>
+					<option value="3">Advanced</option>
+				</select>
+				<select name="selectChallenge" id="selectChallenge" disabled>
+				</select>
+				<button type="submit">Crear</button>
+			</form>
+		</dialog>
 
 		<div id="particles-js"></div>
 	</body>

@@ -9,9 +9,11 @@ import {database} from "./firebase-service";
  * @param {boolean} status : status of the room
  * @param {List<object>} chat : record of the chat
  * @param {List<object>} record : record of the code
+ * @param {boolean} hidden : hidden status of the room
+ * @param {int} level : challenge level
  * @returns {Promise<int>} : id of the room
  */
-async function roomCreate(code, description,owner, members, challenge, status, chat, record) {
+async function roomCreate(code, description,owner, members, challenge, status, chat, record,hidden) {
 	return database.ref("rooms/").push({
         code,
         description,
@@ -20,7 +22,9 @@ async function roomCreate(code, description,owner, members, challenge, status, c
         challenge,
         status,
         chat,
-        record
+        record,
+        hidden,
+        level
 	}).key;
 }
 /**
@@ -34,9 +38,11 @@ async function roomCreate(code, description,owner, members, challenge, status, c
  * @param {boolean} status : status of the room
  * @param {List<object>} chat : record of the chat
  * @param {List<object>} record : record of the code
+ * @param {boolean} hidden : hidden status of the room
+ * @param {int} level : level challenge
  * @returns {Promise<int>} : id of the room
  */
-async function roomUpdate(id,code, description,owner, members, challenge, status, chat, record) {
+async function roomUpdate(id,code, description,owner, members, challenge, status, chat, record,hidden,level) {
     return database.ref("rooms/"+id).set({
         code,
         description,
@@ -45,7 +51,9 @@ async function roomUpdate(id,code, description,owner, members, challenge, status
         challenge,
         status,
         chat,
-        record
+        record,
+        hidden,
+        level
     }).key;
 }
 /**
@@ -70,4 +78,8 @@ async function roomGet(id) {
 async function roomGetAll() {
     return database.ref("rooms/").get();
 }
-export {roomCreate, roomUpdate, roomDelete, roomGet, roomGetAll}
+/**
+ * @param {int} level : level challenge by find
+ */
+async function roomGetByLevel(level) {}
+export {roomCreate, roomUpdate, roomDelete, roomGet, roomGetAll, roomGetByLevel}
