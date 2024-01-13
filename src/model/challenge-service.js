@@ -27,15 +27,12 @@ async function challengeFindAll() {
 	return database.ref("challenges/").limitToFirst(10).get();
 }
 async function challengeFindByLevel(level) {
-	var promise = {}
 	try {
-		promise = database
-			.ref("challenges/")
-			.get();
+		return database.ref("challenges/").orderByChild("level").equalTo(level).once('value');
 	} catch (error) {
 		console.log("error en la bda");
+		return null;
 	}
-	return promise;
 }
 
 export {

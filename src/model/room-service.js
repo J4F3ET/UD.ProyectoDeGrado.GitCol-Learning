@@ -5,7 +5,7 @@ import {database} from "./firebase-service";
  * @param {string} description : description of the room
  * @param {string} owner : owner of the room
  * @param {List<int>} members : members of the room
- * @param {int} challenge : id of the challenge
+ * @param {string} challenge : id of the challenge
  * @param {boolean} status : status of the room
  * @param {List<object>} chat : record of the chat
  * @param {List<object>} record : record of the code
@@ -13,19 +13,25 @@ import {database} from "./firebase-service";
  * @param {int} level : challenge level
  * @returns {Promise<int>} : id of the room
  */
-async function roomCreate(code, description,owner, members, challenge, status, chat, record,hidden) {
-	return database.ref("rooms/").push({
-        code,
-        description,
-        owner,
-        members,
-        challenge,
-        status,
-        chat,
-        record,
-        hidden,
-        level
-	}).key;
+async function roomCreate(code, description,owner, members, challenge, status, chat, record,hidden,level) {
+    try{
+        return database.ref("rooms/").push({
+            code,
+            description,
+            owner,
+            members,
+            challenge,
+            status,
+            chat,
+            record,
+            hidden,
+            level
+        }).key;
+    }catch(error){
+        console.error(error);
+        return null;
+    }
+	
 }
 /**
  * roomUpdate - Update a room
