@@ -10,6 +10,7 @@
 6. [Dockers](#dockers)
 7. [Arquitectura](#arquitectura)
 8. [Comandos de git que soporta la aplicación](#comandos-de-git-que-soporta-la-aplicación)
+
 ## Mokaps
 
 ### [Mokap Screens](https://excalidraw.com/#room=aa8cb898b51ca15e7332,cJnn7SoDPItVCLnpyTbKOA)
@@ -45,23 +46,24 @@
 
 ### Logo
 
-#### JSON PROTOTYPE
+#### JSON PROTOTYPE Ejercicio
 
 Ejercicio
 
 ```JSON
 {
-	"id": 1,
-	"name": "",
-	"generator": {
-		"1": "git commit",
-		"2": "..."
-	},
-	"level": 1,
-	"solution": {
-		"1": "git commit",
-		"2": "..."
-	}
+ "id": 1,
+ "name": "",
+ "generator": {
+  "1": "git commit",
+  "2": "..."
+ },
+ "level": 1,
+ "solution": {
+  "1": "git commit",
+  "2": "..."
+ },
+ "files":["README.md","style.css","index.html"]
 }
 ```
 
@@ -75,7 +77,7 @@ Ejercicio
 > - level: nivel del problema
 > - solution: lista de soluciones de problemas
 
-#### JSON PROTOTYPE
+#### JSON PROTOTYPE Sala
 
 Sala
 
@@ -125,7 +127,8 @@ Sala
 > - chat: lista de mensajes de la sala
 > - code: lista de códigos de la sala
 
-# Dependencias
+## Dependencias
+
 > [!IMPORTANT]
 > Comando para instalar las dependencias del proyecto.
 
@@ -135,7 +138,7 @@ npm install express morgan ejs firebase-admin dotenv socket.io &&
 npm install -g nodemon
 ```
 
-## Dependencias de desarrollo
+### Dependencias de desarrollo
 
 - **Nodemon**: Para reiniciar el servidor cuando se detectan cambios en el código, permite agilizar el desarrollo.
 
@@ -155,7 +158,7 @@ npm install --save-dev @babel/core @babel/cli @babel/preset-env
 npm install --save-dev @babel/node
 ```
 
-## Dependencias de producción
+### Dependencias de producción
 
 - **Express**: Para crear el servidor web.
 
@@ -193,7 +196,7 @@ npm install --save dotenv
 npm install socket.io
 ```
 
-# Scripts
+## Scripts
 
 - **start**: Ejecuta el servidor en modo producción.
 
@@ -201,7 +204,7 @@ npm install socket.io
 npm run start
 ```
 
-# Dockers
+## Dockers
 
 ![docker-architecture](./documetation/img/docker-architecture.webp)
 Para construir la imagen de docker se debe ejecutar el siguiente comando:
@@ -216,11 +219,11 @@ Para ejecutar la imagen de docker se debe ejecutar el siguiente comando:
 docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_learning_image
 ```
 
-# Arquitectura
+## Arquitectura
 
-## Estructura
+### Estructura
 
-```
+```text
 └── 📁UD.ProyectoDeGrado.GitCol-Learning
     └── .babelrc
     └── .dockerignore
@@ -253,16 +256,17 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
             └── rooms-screen.ejs
             └── teaser-screen.ejs
 ```
-## Estructura de carpetas
+
+### Estructura de carpetas
 
 - **src**: Contiene el código fuente de la aplicación.
 
-```
+```text
 └── 📁src
     └── 📁controller
         └── home-controller.js
         └── login-controller.js
-        └── teaser-controller.js
+        └── teaser-controller.js    
         └── 📁util
             └── login-middleware .js
     └── 📁model
@@ -278,12 +282,12 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
 
 - **documetation**: Contiene la documentación del proyecto.
 
-```
+```text
 └── 📁documetation
     └── 📁img
 ```
 
-# Comandos de git que soporta la aplicación
+## Comandos de git que soporta la aplicación
 
 1. **git init**: Inicializa un repositorio local de git en la carpeta actual.
 2. **git config**: Configura el nombre y el correo electrónico del usuario.
@@ -295,12 +299,13 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
     - **git config --global --unset user.name**: Elimina la configuración del nombre del usuario.
     - **git config --global --unset user.email**: Elimina la configuración del correo electrónico del usuario.
 3. **git add**: Agrega los archivos al área de preparación.
-> [!NOTE]
-> **Idea de implementacion**
-> Ya que nosotros no implementamos manejo de archivos la idea es que el comando simule agregar los archivos al área de preparación. Con archivos con nombres específicos. Con el fin de que el usuario pueda ejecutar los comandos de git.
-> - **git add .**: Agrega todos los archivos al área de preparación.
-> - **git add "NombreArchivo"**: Agrega el archivo al área de preparación.
 
+    > [!NOTE]
+    > **Idea de implementacion**
+    > Ya que nosotros no implementamos manejo de archivos la idea es que el comando simule agregar los archivos al área de preparación. Con archivos con nombres específicos. Con el fin de que el usuario pueda ejecutar los comandos de git.
+    >
+    > - **git add .**: Agrega todos los archivos al área de preparación.
+    > - **git add "NombreArchivo"**: Agrega el archivo al área de preparación.
 
 4. **git rm**: Elimina los archivos del área de preparación.
     - **git rm --cached "NombreArchivo"**: Elimina el archivo del área de preparación.

@@ -28,12 +28,19 @@ body{
     color: var(--text-color);
 }
 
-
 body,
 input,
-button {
+button,
+dialog {
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
+}
+dialog{
+    background-color: transparent;
+    color: var(--text-color);
+    backdrop-filter: blur(5px);
+    width: 100vw;
+    height: 100vh;
 }
 
 /* HEADER*/
@@ -73,12 +80,12 @@ button {
 .room__form {
     position: relative;
     margin-inline: 1.5rem;
-    background-color: hsla(0, 0%, 100%, .01);
+    background-color: transparent;
+    backdrop-filter: blur(8px);
     border: 2px solid hsla(0, 0%, 100%, .7);
     padding: 2.5rem 1rem;
     color: var(--text-color);
     border-radius: 1rem;
-    backdrop-filter: blur(16px);
   }
 .room__title {
     text-align: center;
@@ -145,7 +152,12 @@ button {
     text-decoration: underline;
   }
   
-  
+.dialog_form{
+    position: fixed;
+    top: 25%;
+    left: 34%;
+    background-color: var(--bg-color);
+}
   /* RESPONSIVE */
   @media (max-width: 1200px){
       html{

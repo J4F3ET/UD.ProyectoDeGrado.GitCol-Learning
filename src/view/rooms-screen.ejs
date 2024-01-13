@@ -29,19 +29,36 @@
 			</form>
 			<button id="btnCreateRoom" class="room__button">Crear Sala</button>
 		</div>
-		<dialog>
-			<form method="dialog">
-				<h1>Crear Sala</h1>
-				<input type="text" placeholder="Code" required />
-				<input type="text" placeholder="Description" required />
-				<select name="selectLevelChallenge" id="selectLevelChallenge">
-					<option value="0">Beginner</option>
-					<option value="1">Intermediate</option>
-					<option value="2">Advanced</option>
-				</select>
-				<select name="selectChallenge" id="selectChallenge" disabled>
-				</select>
-				<button type="submit">Crear</button>
+		<dialog id="dialogCreateRoom">
+			<form class="room__form dialog_form" method="dialog">
+				<h1 class="room__title">Crear Sala</h1>
+				<div class="room__inputs">
+					<div class="room__box">
+						<input class="room__input" type="text" placeholder="Code" required />
+					</div>
+				</div>
+				<div class="room__inputs">
+					<div class="room__box">
+						<input class="room__input" type="text" placeholder="Description" required />
+					</div>
+				</div>
+				<div class="room__inputs">
+					<div class="room__box">
+						<select name="selectLevelChallenge" id="selectLevelChallenge">
+							<option value="0">Beginner</option>
+							<option value="1">Intermediate</option>
+							<option value="2">Advanced</option>
+						</select>
+					</div>
+				</div>
+				<div class="room__inputs">
+					<div class="room__box">
+						<select name="selectChallenge" id="selectChallenge" disabled>
+						</select>
+					</div>
+				</div>
+				<button id="btnCancelCreateRoom" type="reset">Clear</button>
+				<button type="submit">Create</button>
 			</form>
 		</dialog>
 

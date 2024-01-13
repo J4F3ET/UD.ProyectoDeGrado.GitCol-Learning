@@ -16,4 +16,12 @@ document
 					selectChallenge.appendChild(option);
 				});
 			});
-	});
+});
+const dialogCreateRoom = document.getElementById("dialogCreateRoom");
+document.getElementById("btnCreateRoom").addEventListener("click", () => {
+	dialogCreateRoom.showModal();
+
+})
+document.getElementById("btnCancelCreateRoom").addEventListener("click", () => {
+	dialogCreateRoom.close();
+})
