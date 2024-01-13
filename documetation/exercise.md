@@ -72,17 +72,19 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
     - `git config --global user.email "Correo"`
 
 3. Crea un archivo con el nombre de `README.md`
-    >[!NOTE]
-    >No debería de crear un archivo si no que de alguna forma ya estar creado solo como que seleccionarlo para agregarlo al stash
+
+>[!NOTE]
+>No debería de crear un archivo si no que de alguna forma ya estar creado solo como que seleccionarlo para agregarlo al stash
+
 4. Agrega el archivo `README.md` al área de preparación.
     - `git add README.md`
 5. Realiza un commit con el mensaje `Initial commit`.
     - `git commit -m "Initial commit"`
 
-    >[!NOTE]
-    >Tambien puede usar `git commit -am "Initial commit"` evita usar hacer el paso 4
-    >Tambien puedes usar `git commit -a` para agregar todos los archivos al stash y hacer el commit
-    >Tambien puedes eliminar  archivos del stash con `git rm --cached <<nombre del archivo>>`
+>[!NOTE]
+>Tambien puede usar `git commit -am "Initial commit"` evita usar hacer el paso 4
+>Tambien puedes usar `git commit -a` para agregar todos los archivos al stash y hacer el commit
+>Tambien puedes eliminar  archivos del stash con `git rm --cached <<nombre del archivo>>`
 
 ### Ejercicio 2: Repositorio remoto
 
@@ -97,8 +99,8 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
 6. Realiza un commit con el mensaje `Add script.js`.
 7. Crear un repositorio en la nube
 
-    >[!NOTE]
-    >Ya deberá tener configuración `git config`
+>[!NOTE]
+>Ya deberá tener configuración `git config`
 
 8. Crea la conexión con el repositorio remoto
     - `git remote add <<nombre de conexión>> <<url repositorio>>`
@@ -114,8 +116,8 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
 3. Agrega el commit
     -`git commit -m "Agregando <<nombre de archivos>>"`
 
-    >[!NOTE]
-    > Tambien puede usar `git commit -am "Agregando <<nombre de archivos>>"` evita usar hacer el paso 2
+>[!NOTE]
+> Tambien puede usar `git commit -am "Agregando <<nombre de archivos>>"` evita usar hacer el paso 2
 
 ### Ejercicio 4: Crear un rama nueva
 
@@ -128,8 +130,8 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
 4. Realiza un commit con el mensaje `Add index.html`.
     - `git commit -m "Add index.html"`
 
-    >[!NOTE]
-    > Tambien puede usar `git commit -am "Add index.html"` evita usar hacer el paso 3
+>[!NOTE]
+> Tambien puede usar `git commit -am "Add index.html"` evita usar hacer el paso 3
 
 ### Ejercicio 5: Deshacer un commit
 
@@ -140,17 +142,17 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
 3. Verifica el historial de commits.
     - `git log`
 
-    >[!NOTE]
-    > Tambien puede usar `git log --oneline` para ver el historial de commits de una forma mas resumida
-    > Tambien puede usar `git log --oneline --graph` para ver el historial de commits de una forma mas resumida y con graficos
+>[!NOTE]
+> Tambien puede usar `git log --oneline` para ver el historial de commits de una forma mas resumida
+> Tambien puede usar `git log --oneline --graph` para ver el historial de commits de una forma mas resumida y con graficos
 
 ### Ejercicio 6: Actualiza repositorio local
 
 1. Actualiza el repositorio local en la rama `master`.
     - `git pull`
-    >[!NOTE]
-    > También puede usar `git pull origin master` para actualizar el repositorio local, `origin` es el nombre de la conexión y `master` es el nombre de la rama a actualizar
-    >
+>[!NOTE]
+> También puede usar `git pull origin master` para actualizar el repositorio local, `origin` es el nombre de la conexión y `master` es el nombre de la rama a actualizar
+>
 ### Ejercicio 7: Clonar un repositorio
 
 1. Clona el repositorio `git-exercises` en la carpeta `git-exercises-clone`.
@@ -164,8 +166,9 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
     - `git restore --source=HEAD~1 index.html` el `HEAD~1` es el numero de commit que se quiere restaurar, en este caso es el ultimo commit
 3. Verifica el historial de commits.
     - `git log`
-    >[!NOTE]
-    > Tambien puede usar `git log --oneline` para ver el historial de commits de una forma mas resumida
+
+>[!NOTE]
+> Tambien puede usar `git log --oneline` para ver el historial de commits de una forma mas resumida
 
 ### Ejercicio 9: Fucionar dos ramas
 
