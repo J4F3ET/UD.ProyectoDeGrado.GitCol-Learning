@@ -31,7 +31,7 @@
 		</div>
 		<dialog id="dialogCreateRoom">
 			<form class="room__form dialog_form" method="dialog">
-				<h1 class="room__title">Crear Sala</h1>
+				<h1 class="room__title">Create Room</h1>
 				<div class="room__inputs">
 					<div class="room__box">
 						<input class="room__input" type="text" placeholder="Code" required />
@@ -44,21 +44,24 @@
 				</div>
 				<div class="room__inputs">
 					<div class="room__box">
-						<select name="selectLevelChallenge" id="selectLevelChallenge">
-							<option value="0">Beginner</option>
-							<option value="1">Intermediate</option>
-							<option value="2">Advanced</option>
+						<select class="room_select" name="selectLevelChallenge" id="selectLevelChallenge">
+							<option class="room_option" value="0">Beginner</option>
+							<option class="room_option" value="1">Intermediate</option>
+							<option class="room_option" value="2">Advanced</option>
 						</select>
 					</div>
 				</div>
 				<div class="room__inputs">
 					<div class="room__box">
-						<select name="selectChallenge" id="selectChallenge" disabled>
+						<select class="room_select" name="selectChallenge" id="selectChallenge">
+							<option class="room_option" value="0">Challenge 1</option>
 						</select>
 					</div>
 				</div>
-				<button id="btnCancelCreateRoom" type="reset">Clear</button>
-				<button type="submit">Create</button>
+				<div class="room__buttons">
+					<button class="room__button red" id="btnCancelCreateRoom" type="reset">Close</button>
+					<button class="room__button green" type="submit">Create</button>
+				</div>
 			</form>
 		</dialog>
 

@@ -11,13 +11,15 @@
 }
 :root {
     --black-color: hsl(0, 0%, 0%);
+    --red-color: #d45050;
+    --green-color: #83BD86;
     --body-font: "Poppins", sans-serif;
     --h1-font-size: 4rem;
     --normal-font-size: 1.3rem;
     --small-font-size: 1.3rem;
     --bg-color: #1B263B;
     --text-color: #fff;
-    --main-color: #FA8E5F;
+    --main-color: #d45050;
   }
 html{
     font-size: 62.5%;
@@ -61,8 +63,7 @@ dialog{
 }
 
 .back a:hover{
-    
-    box-shadow: 0 0 1rem var(--text-color) ;
+    box-shadow: 0 0 1rem var(--main-color); ;
 }
 .back a i{
     font-size: 2.4rem;
@@ -151,7 +152,43 @@ dialog{
   .room__register a:hover {
     text-decoration: underline;
   }
-  
+  .room_select{
+    background-color: transparent;
+    color: var(--text-color);
+    padding: 1rem 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  .room_option{
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  .room__buttons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    .red{
+      background-color: var(--red-color);
+      color: var(--text-color);
+      box-shadow: 0 0 .5rem var(--red-color) ;
+      padding: 1rem;
+      border-radius: 4rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .green{
+      background-color: var(--green-color);
+      color: var(--text-color);
+      box-shadow: 0 0 .5rem var(--green-color) ;
+      padding: 1rem;
+      border-radius: 4rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+  }
 .dialog_form{
     position: fixed;
     top: 25%;
