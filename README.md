@@ -302,7 +302,9 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
 
     > [!NOTE]
     > **Idea de implementacion**
-    > Ya que nosotros no implementamos manejo de archivos la idea es que el comando simule agregar los archivos al área de preparación. Con archivos con nombres específicos. Con el fin de que el usuario pueda ejecutar los comandos de git.
+    > Ya que nosotros no implementamos manejo de archivos la idea es que el comando simule agregar los archivos al área de
+    >preparación. Con archivos con nombres específicos. Con el fin de que el 
+    >usuario pueda ejecutar los comandos de git.
     >
     > - **git add .**: Agrega todos los archivos al área de preparación.
     > - **git add "NombreArchivo"**: Agrega el archivo al área de preparación.

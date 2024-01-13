@@ -96,8 +96,10 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
 5. Agrega el archivo `script.js` al área de preparación.
 6. Realiza un commit con el mensaje `Add script.js`.
 7. Crear un repositorio en la nube
+
     >[!NOTE]
     >Ya deberá tener configuración `git config`
+
 8. Crea la conexión con el repositorio remoto
     - `git remote add <<nombre de conexión>> <<url repositorio>>`
 9. Sube los cambios al repositorio remoto.
@@ -111,9 +113,10 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
     -`git add <<nombre del archivo>>`
 3. Agrega el commit
     -`git commit -m "Agregando <<nombre de archivos>>"`
+
     >[!NOTE]
     > Tambien puede usar `git commit -am "Agregando <<nombre de archivos>>"` evita usar hacer el paso 2
-    >
+
 ### Ejercicio 4: Crear un rama nueva
 
 1. Crea una rama con el nombre de `develop`.
@@ -124,9 +127,10 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
     - `git add index.html`
 4. Realiza un commit con el mensaje `Add index.html`.
     - `git commit -m "Add index.html"`
+
     >[!NOTE]
     > Tambien puede usar `git commit -am "Add index.html"` evita usar hacer el paso 3
-    >
+
 ### Ejercicio 5: Deshacer un commit
 
 1. Verifica el historial de commits.
@@ -135,11 +139,11 @@ Los niveles en los que se dividen los ejercicios son los siguientes:
     - `git reset --soft HEAD~1`
 3. Verifica el historial de commits.
     - `git log`
+
     >[!NOTE]
     > Tambien puede usar `git log --oneline` para ver el historial de commits de una forma mas resumida
-    >
     > Tambien puede usar `git log --oneline --graph` para ver el historial de commits de una forma mas resumida y con graficos
-    >
+
 ### Ejercicio 6: Actualiza repositorio local
 
 1. Actualiza el repositorio local en la rama `master`.
