@@ -17,7 +17,7 @@ function inflateSelectChallenge(challenges) {
 }
 async function getChallenge() {
 	const level = document.getElementById("selectLevelChallenge").value || 0;
-	const response = fetch(`http://localhost:3000/challenges?level=${level}`)
+	const response = fetch(`/challenges?level=${level}`)
 	return inflateSelectChallenge(await (await response).json());
 }
 const dialogCreateRoom = document.getElementById("dialogCreateRoom");
@@ -70,14 +70,10 @@ document.getElementById("btnSubmitCreateRoom").addEventListener("click", () => {
 		},
 		body: JSON.stringify(room)
 	}).then((response) => {
-		if(response.ok){
-			response.json().then((data) => {
-				alert(data);
-			});
+		if(!response.ok)return;
+		response.json().then((data) => {
 			dialogCreateRoom.close();
-		}
-		else{
-			alert("No se pudo crear la sala");
-		}
+			window.location.href = `/teamWorking?room=${data.room}`;
+		})
 	});
 });
