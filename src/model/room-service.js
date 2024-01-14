@@ -84,8 +84,34 @@ async function roomGet(id) {
 async function roomGetAll() {
     return database.ref("rooms/").get();
 }
-/**
- * @param {int} level : level challenge by find
- */
-async function roomGetByLevel(level) {}
-export {roomCreate, roomUpdate, roomDelete, roomGet, roomGetAll, roomGetByLevel}
+async function findByUserToRoom(idUser) {
+    try {
+        const roomsSnapshot = database.ref("rooms").get();
+        const rooms = (await roomsSnapshot).val();
+        if (!rooms) return [];
+        const roomsWithUser = Object.keys(rooms).filter(roomId => {
+            const members = rooms[roomId].members || [];
+            return members.includes(idUser);
+        });
+        return roomsWithUser;
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
+async function roomRemoveMember(roomKey, userId) {
+    try {
+        const roomSnapshot = database.ref("rooms/"+roomKey).get();
+        const room = (await roomSnapshot).val();
+        if (!room) return false;
+        const members = room.members || [];
+        const newMembers = members.filter(member => member != userId);
+        await database.ref("rooms/"+roomKey).update({members: newMembers});
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+
+}
+export {roomCreate, roomUpdate, roomDelete, roomGet, roomGetAll,findByUserToRoom,roomRemoveMember}
