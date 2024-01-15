@@ -2,7 +2,12 @@ import {Router} from "express";
 import {releaseVerificationMiddleware} from "./util/login-middleware .js";
 import {verifyUserInAnyRoomMiddleware} from "./util/teamWorking-middleware.js";
 import {auth} from "../model/firebase-service.js";
-import {roomCreate,roomGetByCode,roomAddMember, roomUpdate, roomDelete, roomGet, roomGetAll, roomGetByLevel} from "../model/room-service.js";
+import {
+	roomCreate,
+	roomGetByCode,
+	roomAddMember,
+	roomGetAll, 
+} from "../model/room-service.js";
 const router = Router();
 router.get("/rooms", releaseVerificationMiddleware,verifyUserInAnyRoomMiddleware, (req, res) => {
 	res.render("rooms-screen");
