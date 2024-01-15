@@ -99,6 +99,18 @@ async function findByUserToRoom(idUser) {
         return [];
     }
 }
+async function roomGetByCode(code) {
+    try {
+        const roomsSnapshot = database.ref("rooms").get();
+        const rooms = (await roomsSnapshot).val();
+        if (!rooms) return null;
+        const room = Object.keys(rooms).find(roomId => rooms[roomId].code === code);
+        return room === undefined ? null : room;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
 async function roomRemoveMember(roomKey, userId) {
     try {
         const roomSnapshot = database.ref("rooms/"+roomKey).get();
@@ -112,6 +124,29 @@ async function roomRemoveMember(roomKey, userId) {
         console.error(error);
         return false;
     }
-
 }
-export {roomCreate, roomUpdate, roomDelete, roomGet, roomGetAll,findByUserToRoom,roomRemoveMember}
+async function roomAddMember(roomKey, userId) {
+    try {
+        const roomSnapshot = database.ref("rooms/"+roomKey).get();
+        const room = (await roomSnapshot).val();
+        if (!room) return false;
+        const members = room.members || [];
+        const newMembers = members.concat(userId);
+        await database.ref("rooms/"+roomKey).update({members: newMembers});
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+export {
+    roomCreate, 
+    roomUpdate, 
+    roomDelete, 
+    roomGet,
+    roomGetAll,
+    findByUserToRoom,
+    roomRemoveMember,
+    roomAddMember,
+    roomGetByCode
+}

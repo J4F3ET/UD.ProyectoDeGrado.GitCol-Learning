@@ -77,6 +77,10 @@ input[type="checkbox"]:checked::before {
   transform: scale(1);
 }
 
+button:disabled{
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 /* HEADER*/
 .back a {
     font-size: 2.3rem;
