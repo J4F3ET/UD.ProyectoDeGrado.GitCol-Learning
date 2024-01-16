@@ -207,6 +207,8 @@ npm run start
 ## Dockers
 
 ![docker-architecture](./documetation/img/docker-architecture.webp)
+Imagene tomada de [Docker](https://docs.docker.com/get-started/overview/)
+
 Para construir la imagen de docker se debe ejecutar el siguiente comando:
 
 ```bash
@@ -218,6 +220,21 @@ Para ejecutar la imagen de docker se debe ejecutar el siguiente comando:
 ```bash
 docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_learning_image
 ```
+
+## Socket
+
+Un socket es un canal de comunicación bidireccional entre un cliente y un servidor. El servidor crea un socket para cada cliente que se conecta. De esta forma, el servidor puede enviar información a un cliente específico. Y el cliente puede enviar información al servidor.
+![socket](./documetation/img/socket.png)
+Imagene tomada de [Socket.io](https://socket.io/docs/v4)
+
+### Eventos
+
+Socket.io permite crear eventos personalizados. Los eventos son mensajes que se envían entre el cliente y el servidor. Los eventos se pueden enviar con o sin datos. Pues es un canal de comunicación bidireccional abierta.
+
+Socket.io permite crear salas con las cuales se pueden agrupar sockets. De esta forma, se puede enviar un evento a todos los sockets de una sala específica.
+
+![socket](./documetation/img/socketRoom.png)
+Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
 
 ## Arquitectura
 
@@ -300,14 +317,14 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
     - **git config --global --unset user.email**: Elimina la configuración del correo electrónico del usuario.
 3. **git add**: Agrega los archivos al área de preparación.
 
-    > [!NOTE]
-    > **Idea de implementacion**
-    > Ya que nosotros no implementamos manejo de archivos la idea es que el comando simule agregar los archivos al área de
-    >preparación. Con archivos con nombres específicos. Con el fin de que el 
-    >usuario pueda ejecutar los comandos de git.
-    >
-    > - **git add .**: Agrega todos los archivos al área de preparación.
-    > - **git add "NombreArchivo"**: Agrega el archivo al área de preparación.
+> [!NOTE]
+> **Idea de implementacion**
+> Ya que nosotros no implementamos manejo de archivos la idea es que el comando simule agregar los archivos al área de
+>preparación. Con archivos con nombres específicos. Con el fin de que el 
+>usuario pueda ejecutar los comandos de git.
+>
+> - **git add .**: Agrega todos los archivos al área de preparación.
+> - **git add "NombreArchivo"**: Agrega el archivo al área de preparación.
 
 4. **git rm**: Elimina los archivos del área de preparación.
     - **git rm --cached "NombreArchivo"**: Elimina el archivo del área de preparación.

@@ -11,7 +11,7 @@ const firebaseConfig = {
 	projectId: "gitcol-learning",
 	storageBucket: "gitcol-learning.appspot.com",
 	messagingSenderId: "614262624756",
-	appId: "1:614262624756:web:d04a12efe26955d13ca9a1",
+	appId: "1:614262624756:web:d04a12efe26955d13ca9a1"
 };
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
