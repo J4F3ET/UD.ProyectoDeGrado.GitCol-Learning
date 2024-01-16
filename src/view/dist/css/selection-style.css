@@ -25,7 +25,7 @@ body{
 }
 section{
     min-height: 100vh;
-    padding: 10rem 9% 2rem;
+    padding: 15rem 9% 2rem;  
 }
 
 /* HEAD SECTION DESING */
@@ -70,48 +70,30 @@ section{
 }
 .heading {
     text-align: center;
-    font-size: 4.5rem ;
+    font-size: 6.5rem ;
 }
-#card2 {
-	background-color: transparent;
-	height: auto;
-	width: 380px;
-	margin: 10vh auto;
-	border-radius: 25px;
-	padding-bottom: 1px;
-	box-shadow: 2px 2px 8px var(--text-color);
-    backdrop-filter: blur(5px);
-}
-
-#buttons {
-	display: flex;
-	margin: 0 auto;
-    margin-left: 30px;
-	justify-content: space-between;
-	width: 280px;
-}
-#buttons1 {
-	display: flex;
-	margin: 0 auto;
-    
-	justify-content: space-between;
-	width: 280px;
+#card{
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
 }
 button {
-	display: block;
-	position: relative;
-	padding: 10px 15px;
-	width: 130px;
-	margin: 80px 0;
-    margin-right: 10px;
-	border-radius: 25px;
-	border: none;
-	font-size: 20px;
-	letter-spacing: 0.2px;
-	font-weight: 500;
-	background-color: var(--main-color);
-	color: #E6EBEE;
+    width: 60%;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    background-color: var(--main-color);
+    border-radius: 4rem;
+    color: var(--black-color);
+    font-weight:600;
+    font-size: 2rem ;
+    cursor: pointer;
 }
+button i{   
+    font-size: 2.6rem;
+    color: var(--text-color);
+}
+
 button:focus {
 	display: none;
 }
@@ -137,32 +119,7 @@ button:hover {
 
 /* RESPONSIVE */
 
-@media (max-width: 1200px){
-    html{
-        font-size: 55%;
 
-    }
-}
-@media (max-width: 991px){
-    .header{
-        padding: 2rem 3%;
-    }
-    section{
-        padding: 10rem 3% 2rem;
-    }
-    .footer{
-        padding: 2rem 3%;
-    }
-}
-@media (max-width: 768px){
-    #menu-icon{
-        display: block;
-    }
-    .login{
-        flex-direction: column;
-    }
-    
-}
 #particles-js{
     width: 100%;
 }
