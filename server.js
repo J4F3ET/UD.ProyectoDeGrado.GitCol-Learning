@@ -8,7 +8,7 @@ import { socketRoomController } from "./src/controller/teamWorking-socket-server
 dotenv.config();
 const app = express();
 const server = createServer(app);
-export const io = new Server(server);
+const io = new Server(server);
 
 //Settings: Configuraciones del servidor (puerto, vistas, etc)
 app.set("port", process.env.PORT || 3000);
