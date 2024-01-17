@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: none;
+    outline: none;
+    scroll-behavior: smooth;
+    font-family: 'Poppins',sans-serif;
+}
+:root{
+    --bg-color: #1B263B;
+    --text-color: #fff;
+    --second-bg-color: #465166;
+    --main-color: #FA8E5F;
+}
+
+body{
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+
+/* ---------------------------------- */
+#content{
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    max-height: 100%;
+    justify-content:center;
+}
+#card {    
+	width:18%;
+    height:96.5%;
+    margin: 1%;
+    padding:8px;
+    display:flex;
+    align-items: end;
+    border-radius: 15px;
+    background-color: transparent;
+	box-shadow: 2px 2px 8px var(--text-color);   
+}
+#room__inputs {
+    display: grid;
+    row-gap: 1.25rem;
+    border-radius: 1.5rem;
+    padding-inline: 42%;
+    padding-left: 5%;
+    grid-template-columns: 1fr max-content;
+    border: 2px solid hsla(0, 0%, 100%, .7);
+}
+.room__input {
+    border: none;
+    outline: none;
+    width: 170%;
+    background: none;
+    color: var(--text-color);
+    padding-block: .75rem;
+  }
+.room__input::placeholder {
+    color: var(--text-color);
+    text-decoration: underline;
+}
+
+
+#card1 {
+    width:80%;
+    margin: 1%;
+    height: 97%;
+    margin-left:0%;
+	border-radius: 25px;
+}
+
+#card2 {    
+	width:98%;
+    height:8%;
+    padding:3px;
+    display:flex;
+    justify-content: end;
+    background-color: transparent;
+   
+}
+#card2 a {
+    width:9% ;
+    height: 90%;
+    margin: .3%;
+    padding: .6rem;
+    font-size: 90%;
+    font-weight: 600;
+    align-items: center;
+    border-radius: 10px;
+    display: flex;
+    transition: .5s ease;
+    justify-content: center;
+    color: var(--text-color);
+    background: var(--main-color);
+}
+#card2 a:hover{
+    box-shadow: 0 0 1rem var(--text-color) ;
+}
+#card2 a i{
+    font-size:1.7rem;
+    color: var(--text-color);
+}
+
+/* ----------------PRINICIPAL DIV------------------ */
+#card3 {
+    width:100%;
+    margin: 1%;
+    height: 89.5%;
+    margin-left:0%;
+	border-radius: 15px;
+    background-color: var(--second-bg-color);
+	box-shadow: 2px 2px 5px var(--text-color);
+}
