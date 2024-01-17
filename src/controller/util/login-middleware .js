@@ -16,26 +16,19 @@ const verifyAccessCookieMiddleware = (req, res, next) => {
 			next();
 		});
 	} catch (error) {
-		console.error(error);
 		res.status(401).render("login-screen");
+		res.end();
 		return;
 	}
 };
 // Verifica que el usuario esté autenticado
 const verifyIdTokenMiddleware = (req, res, next) => {
 	try {
-		const result = auth
-			.verifyIdToken(req.headers["authorization"].split(" ")[1])
-			.then((result) => {
-				if (!result) {
-					res.status(401).render("login-screen");
-					return;
-				}
-				setAccessTokenCookieMiddleware(req, res, next);
-			});
+		auth.verifyIdToken(req.headers["authorization"].split(" ")[1])
+			.then((result) => setAccessTokenCookieMiddleware(req, res, next));
 	} catch (error) {
-		console.error(error);
 		res.status(401).render("login-screen");
+		res.end();
 		return;
 	}
 };

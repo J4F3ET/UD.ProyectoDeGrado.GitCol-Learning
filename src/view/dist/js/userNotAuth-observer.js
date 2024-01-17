@@ -15,7 +15,5 @@ onAuthStateChanged(auth, async (user) => {
 	const responseJson = response.json();
 	if (response.status === 200) {
 		window.location.href = (await responseJson).url;
-	} else {
-		alert("Login failed");
 	}
 });

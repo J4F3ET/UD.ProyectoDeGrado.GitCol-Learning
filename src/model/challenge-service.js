@@ -1,25 +1,43 @@
 import {database} from "./firebase-service";
-async function exerciseCreate(name, description, generator, solution) {
+async function challengeCreate(name, description, generator, solution, level) {
 	return database.ref("challenges/").push({
-		name: name,
-		description: description,
-		generator: generator,
-		solution: solution,
+		name,
+		description,
+		generator,
+		solution,
+		level,
 	}).key;
 }
 /**
- * exerciseFindById - Find an exercise by id
+ * challengeFindById - Find an challenge by id
  * @param {string} id: id of the challenge
  * @returns Promise<DataSnapshot>
  */
-async function exerciseFindById(id) {
-	return database.ref("challenges/"+id).get();
+async function challengeFindById(id) {
+	return database
+		.ref("challenges/" + id)
+		.limitToFirst(1)
+		.get();
 }
 /**
- * exerciseFindAll - Find all exercises
+ * challengeFindAll - Find all challenges
  * @returns Promise<DataSnapshot>
  */
-async function exerciseFindAll() {
-	return database.ref("challenges/").get();
+async function challengeFindAll() {
+	return database.ref("challenges/").limitToFirst(10).get();
 }
-export {exerciseCreate, exerciseFindById, exerciseFindAll};
+async function challengeFindByLevel(level) {
+	try {
+		return database.ref("challenges/").orderByChild("level").equalTo(level).once('value');
+	} catch (error) {
+		console.log("error en la bda");
+		return null;
+	}
+}
+
+export {
+	challengeCreate,
+	challengeFindById,
+	challengeFindAll,
+	challengeFindByLevel,
+};
