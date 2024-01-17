@@ -134,7 +134,7 @@ Sala
 
 ```bash
 npm install --save-dev @babel/core @babel/cli @babel/preset-env @babel/node &&
-npm install express morgan ejs firebase-admin dotenv socket.io &&
+npm install express morgan ejs firebase-admin dotenv socket.io swagger-jsdoc swagger-ui-express &&
 npm install -g nodemon
 ```
 
@@ -194,6 +194,17 @@ npm install --save dotenv
 
 ```bash
 npm install socket.io
+```
+
+-**Swagger-jsdoc**: Para documentar la API.
+
+```bash
+npm install swagger-jsdoc
+```
+-**Swagger-ui-express**: Para visualizar la documentación de la API.
+
+```bash
+npm install swagger-ui-express
 ```
 
 ## Scripts

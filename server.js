@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import path from "path";
 import { createServer } from 'node:http';
 import { socketRoomController } from "./src/controller/teamWorking-socket-server.js";
+import { swaggerDoc } from "./documetation/swagger.js";
 
 const app = express();
 const server = createServer(app);
@@ -35,4 +36,5 @@ app.use(express.static(path.join(__dirname, "src", "view")));
 
 server.listen(app.get("port"), () => {
 	console.log(`Escuchando en el puerto ${app.get("port")}`);
+	swaggerDoc(app, app.get("port"));
 });
