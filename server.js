@@ -3,9 +3,8 @@ import morgan from "morgan";
 import { Server } from 'socket.io';
 import path from "path";
 import { createServer } from 'node:http';
-import * as dotenv from "dotenv";
 import { socketRoomController } from "./src/controller/teamWorking-socket-server.js";
-dotenv.config();
+
 const app = express();
 const server = createServer(app);
 const io = new Server(server);

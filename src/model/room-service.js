@@ -95,6 +95,7 @@ async function findByUserToRoom(idUser) {
         });
         return roomsWithUser;
     } catch (error) {
+        console.log("Error al buscar las salas del usuario");
         console.error(error);
         return [];
     }
