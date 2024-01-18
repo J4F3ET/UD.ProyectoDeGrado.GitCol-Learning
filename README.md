@@ -9,6 +9,7 @@
 5. [Scripts](#scripts)
 6. [Dockers](#dockers)
 7. [Arquitectura](#arquitectura)
+8. [Comandos de git que soporta la aplicación](#comandos-de-git-que-soporta-la-aplicación)
 
 ## Mokaps
 
@@ -20,9 +21,11 @@
 
 ![ImagenMokaps](./documetation/img/MokapsMenus.png)
 
-### [Mokap Diseño](https://excalidraw.com/#room=f02156652a490656904a,aEEX4YXh5ZaQrA5-SQWIhg)
+### [Mokap Visualizing Git](https://excalidraw.com/#room=977bcce490f934711f98,bvG7SJZBXeIBiKmduDb3ow)
 
-### [Mokap Auth](https://excalidraw.com/#room=f5e9b3946bfb6efa7de6,sX_7Bvm6NW4Vg4j89S0uJA)
+![ImagenMokaps](./documetation/img/MokapsVisualizingGit.png)
+
+### [Proceso Auth](https://excalidraw.com/#room=f5e9b3946bfb6efa7de6,sX_7Bvm6NW4Vg4j89S0uJA)
 
 ![ImagenMokaps](./documetation/img/MokapAuth.png)
 
@@ -45,23 +48,24 @@
 
 ### Logo
 
-#### JSON PROTOTYPE
+#### JSON PROTOTYPE Ejercicio
 
 Ejercicio
 
 ```JSON
 {
-	"id": 1,
-	"name": "",
-	"generator": {
-		"1": "git commit",
-		"2": "..."
-	},
-	"level": 1,
-	"solution": {
-		"1": "git commit",
-		"2": "..."
-	}
+ "id": 1,
+ "name": "",
+ "generator": {
+  "1": "git commit",
+  "2": "..."
+ },
+ "level": 1,
+ "solution": {
+  "1": "git commit",
+  "2": "..."
+ },
+ "files":["README.md","style.css","index.html"]
 }
 ```
 
@@ -75,7 +79,7 @@ Ejercicio
 > - level: nivel del problema
 > - solution: lista de soluciones de problemas
 
-#### JSON PROTOTYPE
+#### JSON PROTOTYPE Sala
 
 Sala
 
@@ -125,17 +129,123 @@ Sala
 > - chat: lista de mensajes de la sala
 > - code: lista de códigos de la sala
 
-# Dependencias
+#### JSON PROTOTYPE Generator
+
+```JSON
+{ [
+      {
+        "id": "e137e9b",
+        "tags": [],
+        "message": "first commit",
+        "parent": "initial",
+        "cx": 50,
+        "cy": 330,
+        "branchless": false
+      },
+      {
+        "id": "84c98fe",
+        "parent": "e137e9b",
+        "tags": [
+          "master",
+          "origin/master"
+        ],
+        "cx": 140,
+        "cy": 330,
+        "branchless": false
+      },
+      {
+        "id": "1c016b6",
+        "parent": "e137e9b",
+        "tags": [],
+        "cx": 140,
+        "cy": 240,
+        "branchless": false
+      },
+      {
+        "id": "fd0af32",
+        "parent": "1c016b6",
+        "tags": [],
+        "cx": 230,
+        "cy": 240,
+        "branchless": false
+      },
+      {
+        "id": "5041e4c",
+        "tags": [
+          "feature",
+          "origin/feature",
+          "HEAD"
+        ],
+        "parent": "fd0af32",
+        "cx": 320,
+        "cy": 240,
+        "branchless": false
+      }
+    ],
+    originData: [
+      {
+        "id": "e137e9b",
+        "tags": [],
+        "message": "first commit",
+        "parent": "initial",
+        "cx": 50,
+        "cy": 360,
+        "branchless": false
+      },
+      {
+        "id": "84c98fe",
+        "parent": "e137e9b",
+        "tags": [
+          "master"
+        ],
+        "cx": 140,
+        "cy": 360,
+        "branchless": false
+      },
+      {
+        "id": "1c016b6",
+        "parent": "e137e9b",
+        "tags": [],
+        "cx": 140,
+        "cy": 270,
+        "branchless": false
+      },
+      {
+        "id": "fd0af32",
+        "tags": [
+          "feature",
+          "HEAD"
+        ],
+        "parent": "1c016b6",
+        "cx": 230,
+        "cy": 270,
+        "branchless": false
+      },
+      {
+        "id": "5041e4c",
+        "tags": [],
+        "parent": "fd0af32",
+        "cx": 320,
+        "cy": 270,
+        "branchless": true
+      }
+    ]
+}
+```
+JSON sacado de [Visualizing Git](https://git-school.github.io/visualizing-git/)
+
+## Dependencias
+
 > [!IMPORTANT]
 > Comando para instalar las dependencias del proyecto.
 
 ```bash
 npm install --save-dev @babel/core @babel/cli @babel/preset-env @babel/node &&
-npm install express morgan ejs firebase-admin dotenv socket.io &&
+npm install express morgan ejs firebase-admin dotenv socket.io swagger-jsdoc swagger-ui-express &&
 npm install -g nodemon
 ```
 
-## Dependencias de desarrollo
+### Dependencias de desarrollo
 
 - **Nodemon**: Para reiniciar el servidor cuando se detectan cambios en el código, permite agilizar el desarrollo.
 
@@ -155,7 +265,7 @@ npm install --save-dev @babel/core @babel/cli @babel/preset-env
 npm install --save-dev @babel/node
 ```
 
-## Dependencias de producción
+### Dependencias de producción
 
 - **Express**: Para crear el servidor web.
 
@@ -193,7 +303,18 @@ npm install --save dotenv
 npm install socket.io
 ```
 
-# Scripts
+-**Swagger-jsdoc**: Para documentar la API.
+
+```bash
+npm install swagger-jsdoc
+```
+-**Swagger-ui-express**: Para visualizar la documentación de la API.
+
+```bash
+npm install swagger-ui-express
+```
+
+## Scripts
 
 - **start**: Ejecuta el servidor en modo producción.
 
@@ -201,7 +322,10 @@ npm install socket.io
 npm run start
 ```
 
-# Dockers
+## Dockers
+
+![docker-architecture](./documetation/img/docker-architecture.webp)
+Imagene tomada de [Docker](https://docs.docker.com/get-started/overview/)
 
 Para construir la imagen de docker se debe ejecutar el siguiente comando:
 
@@ -215,11 +339,26 @@ Para ejecutar la imagen de docker se debe ejecutar el siguiente comando:
 docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_learning_image
 ```
 
-# Arquitectura
+## Socket
 
-## Estructura
+Un socket es un canal de comunicación bidireccional entre un cliente y un servidor. El servidor crea un socket para cada cliente que se conecta. De esta forma, el servidor puede enviar información a un cliente específico. Y el cliente puede enviar información al servidor.
+![socket](./documetation/img/socket.png)
+Imagene tomada de [Socket.io](https://socket.io/docs/v4)
 
-```
+### Eventos
+
+Socket.io permite crear eventos personalizados. Los eventos son mensajes que se envían entre el cliente y el servidor. Los eventos se pueden enviar con o sin datos. Pues es un canal de comunicación bidireccional abierta.
+
+Socket.io permite crear salas con las cuales se pueden agrupar sockets. De esta forma, se puede enviar un evento a todos los sockets de una sala específica.
+
+![socket](./documetation/img/socketRoom.png)
+Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
+
+## Arquitectura
+
+### Estructura
+
+```text
 └── 📁UD.ProyectoDeGrado.GitCol-Learning
     └── .babelrc
     └── .dockerignore
@@ -252,16 +391,17 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
             └── rooms-screen.ejs
             └── teaser-screen.ejs
 ```
-## Estructura de carpetas
+
+### Estructura de carpetas
 
 - **src**: Contiene el código fuente de la aplicación.
 
-```
+```text
 └── 📁src
     └── 📁controller
         └── home-controller.js
         └── login-controller.js
-        └── teaser-controller.js
+        └── teaser-controller.js    
         └── 📁util
             └── login-middleware .js
     └── 📁model
@@ -277,7 +417,51 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
 
 - **documetation**: Contiene la documentación del proyecto.
 
-```
+```text
 └── 📁documetation
     └── 📁img
 ```
+
+## Comandos de git que soporta la aplicación
+
+1. **git init**: Inicializa un repositorio local de git en la carpeta actual.
+2. **git config**: Configura el nombre y el correo electrónico del usuario.
+    - **git config --global user.name "Nombre"**: Configura el nombre del usuario de forma global.
+    - **git config --global user.email "Correo"**: Configura el correo electrónico del usuario de forma global.
+    - **git config user.name "Nombre"**: Configura el nombre del usuario de forma local en el repositorio actual.
+    - **git config user.email "Correo"**: Configura el correo electrónico del usuario de forma local en el repositorio actual.
+    - **git config --list**: Muestra la configuración actual.
+    - **git config --global --unset user.name**: Elimina la configuración del nombre del usuario.
+    - **git config --global --unset user.email**: Elimina la configuración del correo electrónico del usuario.
+3. **git add**: Agrega los archivos al área de preparación.
+
+> [!NOTE]
+> **Idea de implementacion**
+> Ya que nosotros no implementamos manejo de archivos la idea es que el comando simule agregar los archivos al área de
+>preparación. Con archivos con nombres específicos. Con el fin de que el 
+>usuario pueda ejecutar los comandos de git.
+>
+> - **git add .**: Agrega todos los archivos al área de preparación.
+> - **git add "NombreArchivo"**: Agrega el archivo al área de preparación.
+
+4. **git rm**: Elimina los archivos del área de preparación.
+    - **git rm --cached "NombreArchivo"**: Elimina el archivo del área de preparación.
+5. **git restore**: Elimina los archivos del área de preparación.
+
+6. **git commit**: Crea un commit con los archivos del área de preparación.
+    - **git commit -m "Mensaje"**: Crea un commit con los archivos del área de preparación y un mensaje.
+    - **git commit -am "Mensaje"**: Agrega los archivos al área de preparación y crea un commit con los archivos del área de preparación y un mensaje.
+7. **git status**: Muestra el estado actual del repositorio.
+8. **git log**: Muestra el historial de commits.
+9. **git branch**: Muestra las ramas del repositorio.
+    - **git branch "NombreRama"**: Crea una rama con el nombre especificado.
+    - **git branch -d "NombreRama"**: Elimina la rama con el nombre especificado.
+10. **git checkout**: Cambia de rama.
+11. **git switch**: Cambia de rama.
+12. **git merge**: Fusiona dos ramas.
+13. **git push**: Sube los cambios al repositorio remoto.
+14. **git pull**: Descarga los cambios del repositorio remoto.
+15. **git clone**: Clona un repositorio remoto.
+16. **git remote**: Muestra los repositorios remotos.
+    - **git remote add "NombreRepositorio" "URLRepositorio"**: Agrega un repositorio remoto.
+    - **git remote remove "NombreRepositorio"**: Elimina un repositorio remoto del repositorio local.
