@@ -1,7 +1,9 @@
 {
     "BEGINNER1": {
         "name": "Create local repository",
-        "generator": [],
+        "generator": [
+
+        ],
         "solution": [
             "git init",
             "git config --global user.name",

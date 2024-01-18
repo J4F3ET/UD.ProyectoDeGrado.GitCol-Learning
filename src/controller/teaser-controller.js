@@ -1,27 +1,18 @@
 import { Router } from "express";
+const router = Router();
 /**
  * @openapi
- * /api/v1/workouts:
+ * /:
  *   get:
- *     tags:
- *       - Workouts
+ *     summary: Endpoint para obtener la pantalla de avance.
+ *     description: Retorna la pantalla de avance (teaser-screen).
  *     responses:
  *       200:
- *         description: OK
+ *         description: Éxito. Retorna la pantalla de avance.
  *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: OK
- *                 data:
- *                   type: array 
- *                   items: 
- *                     type: object
+ *           text/html:
+ *             example: teaser-screen.ejs
  */
-const router = Router();
 router.get("/", (req, res) => {
     res.render("teaser-screen");
 });

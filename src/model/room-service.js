@@ -84,6 +84,12 @@ async function roomGet(id) {
 async function roomGetAll() {
     return database.ref("rooms/").get();
 }
+/**
+ * 
+ * @param {string} idUser 
+ * @returns data of the rooms
+ * @throws error
+ */
 async function findByUserToRoom(idUser) {
     try {
         const roomsSnapshot = database.ref("rooms").get();

@@ -21,9 +21,11 @@
 
 ![ImagenMokaps](./documetation/img/MokapsMenus.png)
 
-### [Mokap Diseño](https://excalidraw.com/#room=f02156652a490656904a,aEEX4YXh5ZaQrA5-SQWIhg)
+### [Mokap Visualizing Git](https://excalidraw.com/#room=977bcce490f934711f98,bvG7SJZBXeIBiKmduDb3ow)
 
-### [Mokap Auth](https://excalidraw.com/#room=f5e9b3946bfb6efa7de6,sX_7Bvm6NW4Vg4j89S0uJA)
+![ImagenMokaps](./documetation/img/MokapsVisualizingGit.png)
+
+### [Proceso Auth](https://excalidraw.com/#room=f5e9b3946bfb6efa7de6,sX_7Bvm6NW4Vg4j89S0uJA)
 
 ![ImagenMokaps](./documetation/img/MokapAuth.png)
 
@@ -126,6 +128,111 @@ Sala
 > - status: estado de la sala
 > - chat: lista de mensajes de la sala
 > - code: lista de códigos de la sala
+
+#### JSON PROTOTYPE Generator
+
+```JSON
+{ [
+      {
+        "id": "e137e9b",
+        "tags": [],
+        "message": "first commit",
+        "parent": "initial",
+        "cx": 50,
+        "cy": 330,
+        "branchless": false
+      },
+      {
+        "id": "84c98fe",
+        "parent": "e137e9b",
+        "tags": [
+          "master",
+          "origin/master"
+        ],
+        "cx": 140,
+        "cy": 330,
+        "branchless": false
+      },
+      {
+        "id": "1c016b6",
+        "parent": "e137e9b",
+        "tags": [],
+        "cx": 140,
+        "cy": 240,
+        "branchless": false
+      },
+      {
+        "id": "fd0af32",
+        "parent": "1c016b6",
+        "tags": [],
+        "cx": 230,
+        "cy": 240,
+        "branchless": false
+      },
+      {
+        "id": "5041e4c",
+        "tags": [
+          "feature",
+          "origin/feature",
+          "HEAD"
+        ],
+        "parent": "fd0af32",
+        "cx": 320,
+        "cy": 240,
+        "branchless": false
+      }
+    ],
+    originData: [
+      {
+        "id": "e137e9b",
+        "tags": [],
+        "message": "first commit",
+        "parent": "initial",
+        "cx": 50,
+        "cy": 360,
+        "branchless": false
+      },
+      {
+        "id": "84c98fe",
+        "parent": "e137e9b",
+        "tags": [
+          "master"
+        ],
+        "cx": 140,
+        "cy": 360,
+        "branchless": false
+      },
+      {
+        "id": "1c016b6",
+        "parent": "e137e9b",
+        "tags": [],
+        "cx": 140,
+        "cy": 270,
+        "branchless": false
+      },
+      {
+        "id": "fd0af32",
+        "tags": [
+          "feature",
+          "HEAD"
+        ],
+        "parent": "1c016b6",
+        "cx": 230,
+        "cy": 270,
+        "branchless": false
+      },
+      {
+        "id": "5041e4c",
+        "tags": [],
+        "parent": "fd0af32",
+        "cx": 320,
+        "cy": 270,
+        "branchless": true
+      }
+    ]
+}
+```
+JSON sacado de [Visualizing Git](https://git-school.github.io/visualizing-git/)
 
 ## Dependencias
 
