@@ -1,27 +1,40 @@
 import express from "express";
 import morgan from "morgan";
+import { Server } from 'socket.io';
 import path from "path";
-import * as dotenv from "dotenv";
-dotenv.config();
-const server = express();
+import { createServer } from 'node:http';
+import { socketRoomController } from "./src/controller/teamWorking-socket-server.js";
+import { swaggerDoc } from "./documetation/swagger.js";
+
+const app = express();
+const server = createServer(app);
+const io = new Server(server);
 
 //Settings: Configuraciones del servidor (puerto, vistas, etc)
-server.set("port", process.env.PORT || 3000);
-server.set("views", path.join(__dirname, "src", "view"));
-server.set("view engine", "ejs");
+app.set("port", process.env.PORT || 3000);
+app.set("views", path.join(__dirname, "src", "view"));
+app.set("view engine", "ejs");
 
 // Middlewares: Funciones que se ejecutan antes de que lleguen a las rutas
-server.use(morgan("dev"));
+app.use(morgan("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// Socket.io: Configuraciones de socket.io
+socketRoomController(io);
 
 // Routes: Rutas de la aplicacion
-server.use(require("./src/controller/teaser-controller").default);
-server.use(require("./src/controller/login-controller").default);
-server.use(require("./src/controller/home-controller").default);
-server.use(require("./src/controller/rooms-controller").default);
-server.use(require("./src/controller/working-controller").default);
+app.use(require("./src/controller/teaser-controller").default);
+app.use(require("./src/controller/login-controller").default);
+app.use(require("./src/controller/home-controller").default);
+app.use(require("./src/controller/rooms-controller").default);
+app.use(require("./src/controller/working-controller").default);
+app.use(require("./src/controller/challenges-controller").default);
+app.use(require("./src/controller/teamWorking-controller").default);
+
 // Static files: Archivos que se envian al navegador(frontend)
-server.use(express.static(path.join(__dirname, "src", "view")));
-// Routes: Rutas de la aplicacion
-server.listen(server.get("port"), () => {
-	console.log(`Escuchando en el puerto ${server.get("port")}`);
+app.use(express.static(path.join(__dirname, "src", "view")));
+
+server.listen(app.get("port"), () => {
+	console.log(`Escuchando en el puerto ${app.get("port")}`);
+	swaggerDoc(app, app.get("port"));
 });

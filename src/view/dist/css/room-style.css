@@ -11,13 +11,15 @@
 }
 :root {
     --black-color: hsl(0, 0%, 0%);
+    --red-color: #d45050;
+    --green-color: #83BD86;
     --body-font: "Poppins", sans-serif;
     --h1-font-size: 4rem;
     --normal-font-size: 1.3rem;
     --small-font-size: 1.3rem;
     --bg-color: #1B263B;
     --text-color: #fff;
-    --main-color: #FA8E5F;
+    --main-color: #d45050;
   }
 html{
     font-size: 62.5%;
@@ -28,14 +30,57 @@ body{
     color: var(--text-color);
 }
 
-
 body,
 input,
-button {
+button,
+dialog {
   font-family: var(--body-font);
   font-size: var(--normal-font-size);
 }
+dialog{
+    background-color: transparent;
+    color: var(--text-color);
+    backdrop-filter: blur(5px);
+    width: 100vw;
+    height: 100vh;
+    
+}
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 1px;
+  background-color: #ffffff00;
+  font: inherit;
+  color: var(--text-color);
+  width: 1.5em;
+  height: 1.15em;
+  border: 0.15em solid var(--text-color);
+  border-radius: 0.15em;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+}
 
+input[type="checkbox"]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--form-control-color);
+  background-color: var(--text-color);
+  transform-origin: bottom left;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+button:disabled{
+  cursor: not-allowed;
+  opacity: 0.5;
+}
 /* HEADER*/
 .back a {
     font-size: 2.3rem;
@@ -52,16 +97,24 @@ button {
     border-radius: .8rem;
     transition: .5s ease;
 }
-
+small{
+    color: #adadad;
+    margin-left: 1rem;
+}	
 .back a:hover{
-    
-    box-shadow: 0 0 1rem var(--text-color) ;
+    box-shadow: 0 0 1rem var(--main-color); ;
 }
 .back a i{
     font-size: 2.4rem;
     color: var(--text-color);
 }
 
+.validRequirements{
+  color: #73cc78;
+}
+.invalidRequirements{
+color: var(--red-color);
+}
 /* ROOM*/
 
 .room {
@@ -73,12 +126,12 @@ button {
 .room__form {
     position: relative;
     margin-inline: 1.5rem;
-    background-color: hsla(0, 0%, 100%, .01);
+    background-color: transparent;
+    backdrop-filter: blur(8px);
     border: 2px solid hsla(0, 0%, 100%, .7);
     padding: 2.5rem 1rem;
     color: var(--text-color);
     border-radius: 1rem;
-    backdrop-filter: blur(16px);
   }
 .room__title {
     text-align: center;
@@ -90,13 +143,14 @@ button {
     display: grid;
   }
 .room__inputs {
-    row-gap: 1.25rem;
+    row-gap: 0.5rem;
     margin-bottom: 1rem;
   }
 .room__box {
-    grid-template-columns: 1fr max-content;
+    display: flex;
     column-gap: .75rem;
     align-items: center;
+    justify-content: start;
     border: 2px solid hsla(0, 0%, 100%, .7);
     padding-inline: 1.25rem;
     border-radius: 4rem;
@@ -110,42 +164,102 @@ button {
     background: none;
     color: var(--text-color);
     padding-block: 1rem;
-  }
-  .room__input::placeholder {
+}
+.room__input::placeholder {
+  color: var(--text-color);
+}
+.room__box i {
+  font-size: 1.25rem;
+}
+.container_checkBox {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  column-gap: .75rem;
+}	
+.room__button {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: var(--text-color);
+  border-radius: 4rem;
+  color: var(--black-color);
+  font-weight: 500;
+  cursor: pointer;
+}
+.room__button:hover {
+    transform: scale(1.03);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 0 .5rem var(--text-color) ;
+}
+.room__register {
+  font-size: var(--small-font-size);
+  text-align: center;
+}
+.room__register a {
+  color: var(--text-color);
+  font-weight: 500;
+}
+.room__register a:hover {
+  text-decoration: underline;
+}
+.room_select{
+  background-color: transparent;
+  color: var(--text-color);
+  padding: 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.room_option{
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+.room__buttons{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  .red{
+    background-color: var(--red-color);
     color: var(--text-color);
-  }
-  .room__box i {
-    font-size: 1.25rem;
-  }
-  .room__button {
-    width: 100%;
+    box-shadow: 0 0 .5rem var(--red-color) ;
     padding: 1rem;
-    margin-bottom: 1rem;
-    background-color: var(--text-color);
     border-radius: 4rem;
-    color: var(--black-color);
     font-weight: 500;
     cursor: pointer;
   }
-  .room__button:hover {
-      transform: scale(1.03);
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
-      box-shadow: 0 0 .5rem var(--text-color) ;
-  }
-  .room__register {
-    font-size: var(--small-font-size);
-    text-align: center;
-  }
-  .room__register a {
+  .green{
+    background-color: var(--green-color);
     color: var(--text-color);
+    box-shadow: 0 0 .5rem var(--green-color) ;
+    padding: 1rem;
+    border-radius: 4rem;
     font-weight: 500;
+    cursor: pointer;
   }
-  .room__register a:hover {
-    text-decoration: underline;
-  }
-  
-  
+}
+.container_dialog{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  height: 100%;
+}
+.dialog_form{
+  display: flex;
+  flex-direction: column;
+  margin-inline: 1.5rem;
+  background-color: transparent;
+  backdrop-filter: blur(8px);
+  border: 2px solid hsla(0, 0%, 100%, .7);
+  padding: 2.5rem 1rem;
+  color: var(--text-color);
+  border-radius: 1rem;
+  background-color: var(--bg-color);
+}
   /* RESPONSIVE */
   @media (max-width: 1200px){
       html{
