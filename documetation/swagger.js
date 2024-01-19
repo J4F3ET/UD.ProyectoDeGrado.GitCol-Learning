@@ -5,7 +5,10 @@ import swaggerUi from "swagger-ui-express";
 const options = {
     definition: {
         openapi: "3.0.0",
-        info: {title: "GitCol-Learning",version: "1.0.0",description: "API para el proyecto de GitCol-Learning"},
+        info: {
+            title: "GitCol-Learning",
+            version: "1.0.0",
+            description: "Documentación de la API de GitCol-Learning"},
     },
     apis: ["./src/controller/*.js","./src/model/*.js"]
 }
