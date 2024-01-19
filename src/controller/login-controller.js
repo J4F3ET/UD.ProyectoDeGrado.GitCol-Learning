@@ -58,15 +58,19 @@ router.post("/login", releaseVerificationMiddleware, (req, res) => {
  * /logout:
  *   get:
  *     summary: Endpoint para cerrar sesión.
- *     description: Cierra la sesión del usuario y lo redirige a la pantalla de login (login-screen).
+ *     description: Elimina la cookie de sesión del usuario y redirige a la pantalla de login (login-screen).
  *     responses:
  *       401:
  *         description: Éxito. Redirige a la pantalla de login.
  *         content:
- *           text/html:
- *             example: login-screen.ejs
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 url:
+ *                   type: string
+ *                   example: /login
  */
-
 router.get("/logout", releaseVerificationMiddleware, (req, res) => {
 	res.clearCookie("access_token");
 	res.render("login-screen");
