@@ -75,7 +75,12 @@ async function roomDelete(id) {
  * @returns {Promise<object>} : room
 */
 async function roomGet(id) {
-    return database.ref("rooms/"+id).get();
+    try {
+        return database.ref("rooms/"+id).get();
+    } catch (error) {
+        return null;
+    }
+    
 }
 /**
  * roomGetAll - Get all rooms

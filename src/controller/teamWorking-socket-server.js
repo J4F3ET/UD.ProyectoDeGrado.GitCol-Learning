@@ -1,13 +1,16 @@
 import { verifyUrl } from "./util/teamWorking-middleware";
 export const socketRoomController = (io) => {
-    io.use(verifyUrl);
-    io.on('connection', (socket) => {
-        console.log('a user connected');
-        socket.on('disconnect', () => {
-            console.log('user disconnected');
+    try {
+        io.on('connection', (socket) => {
+            socket.use(verifyUrl(socket,io.next));
+            socket.on('disconnect', () => {
+                console.log('user disconnected');
+            });
+            socket.on('chat', (msg) => {
+                console.log('message: ' + msg);
+            });
         });
-        socket.on('chat message', (msg) => {
-            console.log('message: ' + msg);
-        });
-    });
+    } catch (error) {
+        console.log(error);
+    }
 }

@@ -22,5 +22,4 @@ export const swaggerDoc = (app,port) => {
         res.setHeader("Content-Type","application/json");
         res.send(swaggerSpec);
     });
-    console.log(`Swagger running on port ${port}`);
 }
