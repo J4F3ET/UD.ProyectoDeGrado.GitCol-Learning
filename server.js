@@ -30,6 +30,7 @@ app.use(require("./src/controller/rooms-controller").default);
 app.use(require("./src/controller/working-controller").default);
 app.use(require("./src/controller/challenges-controller").default);
 app.use(require("./src/controller/teamWorking-controller").default);
+app.use(require("./src/controller/aloneWorking-controller").default);
 
 // Static files: Archivos que se envian al navegador(frontend)
 app.use(express.static(path.join(__dirname, "src", "view")));

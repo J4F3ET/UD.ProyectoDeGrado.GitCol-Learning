@@ -72,9 +72,7 @@ router.post("/login", releaseVerificationMiddleware, (req, res) => {
  *                   example: /login
  */
 router.get("/logout", releaseVerificationMiddleware, (req, res) => {
-	res.clearCookie("access_token");
-	res.render("login-screen");
-	res.status(401).json({url: "/login"});
+	res.clearCookie("access_token").status(401).json({url: "/working"});
 	res.end();
 });
 export default router;
