@@ -9,6 +9,7 @@
 			type="image/x-icon"
 		/>
 		<title> Col-Learning</title>
+        <link rel="stylesheet" href="./dist/css/dataViewer/elementSVG.css">
         <link rel="stylesheet" href="dist/css/wk-alone-style.css">
         <!-- SVG Assets -->
         <svg width="0" height="0"  baseProfile="full" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -26,10 +27,7 @@
 	<body class="scrollable">
         <section id="controlBoxContainer">
             <div id="logContainer" class="shell scrollable" >
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nemo magni dignissimos rerum tenetur sint nobis nulla dicta omnis fuga placeat, magnam a cum accusantium architecto velit beatae provident labore animi!
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum nam aperiam, obcaecati deleniti voluptatibus consequatur repellat facere voluptatem consequuntur? Minus aspernatur nobis asperiores nesciunt quos cupiditate eos eius repudiandae porro?
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae unde et alias aliquam tenetur? Praesentium distinctio ratione corrupti accusamus dolor repellat molestias debitis? Nemo magni doloremque voluptatibus temporibus facere sequi?
-            </p>
+                <p>log</p>
             <p id="contadorp">
                 1
             </p>
@@ -54,14 +52,10 @@
                 </button>
             </div>
             <div id="svgContainer" class="scrollable">
-                <div id="emptyContainer">
-                    <h2 id="emptyTitle">EMPTY</h2>
-                    <p id="emptyText">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.</p>
-                </div>
-                
             </div>
         </section>
 	</body>
-    <script src="./dist/js/working-alone-script.js"></script>
+    <script type="module" src="./dist/js/dataViewer/createElementSVG.js"></script>
+    <script type="module" src="./dist/js/working-alone-script.js"></script>
 	<script type="module" src="./dist/js/userNotAuth-observer.js"></script>
 </html>
