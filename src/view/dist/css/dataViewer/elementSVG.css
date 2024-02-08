@@ -23,11 +23,10 @@ circle.commit {
 }
 .line {
     stroke: var(--text-color);
-    stroke-width: 1px;
-    stroke-linecap: round;
+    stroke-width: 1.2px;
+    stroke-linecap:round;
     animation: dash 0.5s linear;
 }
-
 .line.branch {
     stroke:var(--main-color);
 }

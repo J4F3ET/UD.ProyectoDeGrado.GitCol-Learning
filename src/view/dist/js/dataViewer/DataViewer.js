@@ -56,7 +56,7 @@ export class DataViewer{
      */
     createCommit(circleElementParent){
         const newCircle = document.createElementNS("http://www.w3.org/2000/svg","circle");
-        newCircle.setAttribute("cx", parseInt(circleElementParent.getAttribute("cx")) + 70);
+        newCircle.setAttribute("cx", parseInt(circleElementParent.getAttribute("cx")) + 80);
         newCircle.setAttribute("cy", parseInt(circleElementParent.getAttribute("cy")));
         newCircle.setAttribute("r", "20");
         newCircle.classList.add("commit");
@@ -75,7 +75,7 @@ export class DataViewer{
         line.setAttribute("class", "line");
         line.setAttribute("x1", "68");
         line.setAttribute("y1", "334");
-        line.setAttribute("x2", "43");
+        line.setAttribute("x2", "-5");
         line.setAttribute("y2", "334");
         line.setAttribute("marker-end", "url(#triangle)");
         gContainerPointer.appendChild(line);
@@ -99,9 +99,9 @@ export class DataViewer{
         const newLine = document.createElementNS("http://www.w3.org/2000/svg","line");
         newLine.classList.add("line");
         //Para que la linea quede apuntando a la derecha se le suma 68 a x1 y a x2 se le suma 25, pero para la animacion esos valores se ponen despues agregar al contenedor
-        newLine.setAttribute("x1", parseInt(circleElementParent.getAttribute("cx"))+68);// x1 es el punto de inicio de la linea en x
+        newLine.setAttribute("x1", parseInt(circleElementParent.getAttribute("cx"))+55);// x1 es el punto de inicio de la linea en x
         newLine.setAttribute("y1", parseInt(circleElementParent.getAttribute("cy")));// y1 es el punto de inicio de la linea en y
-        newLine.setAttribute("x2", parseInt(circleElementParent.getAttribute("cx"))+25);// x2 es el punto final de la linea en x
+        newLine.setAttribute("x2", parseInt(circleElementParent.getAttribute("cx"))+28);// x2 es el punto final de la linea en x
         newLine.setAttribute("y2", parseInt(circleElementParent.getAttribute("cy")));// y2 es el punto final de la linea en y
         newLine.setAttribute("marker-end", "url(#triangle)");
         return newLine;
