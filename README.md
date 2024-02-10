@@ -342,7 +342,7 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
 ## Socket
 
 Un socket es un canal de comunicación bidireccional entre un cliente y un servidor. El servidor crea un socket para cada cliente que se conecta. De esta forma, el servidor puede enviar información a un cliente específico. Y el cliente puede enviar información al servidor.
-![socket](./documetation/img/socket.png)
+![socket](./documetation/img/Socket.png)
 Imagene tomada de [Socket.io](https://socket.io/docs/v4)
 
 ### Eventos
@@ -351,7 +351,7 @@ Socket.io permite crear eventos personalizados. Los eventos son mensajes que se 
 
 Socket.io permite crear salas con las cuales se pueden agrupar sockets. De esta forma, se puede enviar un evento a todos los sockets de una sala específica.
 
-![socket](./documetation/img/socketRoom.png)
+![socket](./documetation/img/SocketRoom.png)
 Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
 
 ## Arquitectura

@@ -9,28 +9,48 @@
 			type="image/x-icon"
 		/>
 		<title> Col-Learning</title>
+        <link rel="stylesheet" href="./dist/css/dataViewer/elementSVG.css">
         <link rel="stylesheet" href="dist/css/wk-alone-style.css">
+        <!-- SVG Assets -->
+        <svg width="0" height="0"  baseProfile="full" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <marker id="triangle" refX="5" refY="5" markerUnits="strokeWidth" fill="rgba(255, 131, 48, 0.877)" markerWidth="10" markerHeight="9" orient="auto" viewBox="0 0 10 10">
+                <path d="M 0 0 L 10 5 L 0 10 z"></path>
+            </marker>
+            <marker id="faded-triangle" refX="5" refY="5" markerUnits="strokeWidth" fill="#DDD" markerWidth="4" markerHeight="3" orient="auto" viewBox="0 0 10 10">
+                <path d="M 0 0 L 10 5 L 0 10 z"></path>
+            </marker>
+            <marker id="brown-triangle" refX="5" refY="5" markerUnits="strokeWidth" fill="rgba(255, 131, 48, 0.877)" markerWidth="4" markerHeight="3" orient="auto" viewBox="0 0 10 10">
+                <path d="M 0 0 L 10 5 L 0 10 z"></path>
+            </marker>
+        </svg>
 	</head>
-	<body>
-        <div id="content">
-            <div id="card">                                 
-                    <div id="room__inputs">
-                          <input type="code" placeholder="code" required class="room__input">                          
-                    </div>
-            </div> 
-            <div id="card1">                     
-                <div id="card2">
-                    <a href="" class="btn">"Solution"</a>
-                    <a href="" class="btn"><i class='bx bx-x-circle'></i></a>
-                </div>
-                <div id="card3"></div>
-            </div>     
-        </div>	
+	<body class="scrollable">
+        <section id="controlBoxContainer">
+            <div id="logContainer" class="shell scrollable" >
+            </div>
+            <div id="inputContainer" class="shell">
+                $
+                <input id="comandInput" type="text" placeholder="comand" class="input"> 
+            </div>                                                   
+        </section>
+        <section id="contentContainer">
+            <div id="panelHelpContainer">
+                <button class="btn" title="solution">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info-lg" viewBox="0 0 16 16">
+                        <path d="m9.708 6.075-3.024.379-.108.502.595.108c.387.093.464.232.38.619l-.975 4.577c-.255 1.183.14 1.74 1.067 1.74.72 0 1.554-.332 1.933-.789l.116-.549c-.263.232-.65.325-.905.325-.363 0-.494-.255-.402-.704zm.091-2.755a1.32 1.32 0 1 1-2.64 0 1.32 1.32 0 0 1 2.64 0"/>
+                    </svg>
+                </button>
+                <button class="btn" title="back">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="svgContainer" class="scrollable">
+            </div>
+        </section>
 	</body>
-
-     <!-- --------- BOX ICONS ---------- -->
-     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
-	<script type="module" src="./dist/js/userNotAuthObserver.js"></script>
-	<script type="module" src="./dist/js/login.js"></script>
+    <script type="module" src="./dist/js/working-alone-script.js"></script>
+	<script type="module" src="./dist/js/userNotAuth-observer.js"></script>
 </html>
