@@ -1,18 +1,43 @@
 import { DataViewer } from "./dataViewer/DataViewer.js";
-let contador = 1;
-const dataViewer = new DataViewer();
-console.log(dataViewer);
-document.getElementById("svgContainer").appendChild(dataViewer.svg); 
+import { workingAloneComandManager as comandManager} from "./comandManager/working-alone-comandManager.js";
+import { Observer } from "./dataViewer/Observer.js";
+const dataViewer = new DataViewer(document.getElementById("svgContainer"));
+const observer = new Observer()
 document.getElementById("comandInput").addEventListener("change",(e) => {
-    if(dataViewer.svg.getElementById("emptyContainer")!==null){
-        dataViewer.initRepository();
+    comandManager.createMessage('comand',e.target.value);
+    try {
+        const comand = e.target.value;
+        const verify = verifyComand(comand);
+        if(verify instanceof Error)
+            throw verify;
+        const [_,gitComand, ...comandConfig] = comand.split(' ');
+        comandManager.executeCommand(gitComand,comandConfig);
+    } catch (error) {
+        comandManager.createMessage('error',error.message);
+    }finally{
+        e.target.value = "";
     }
-    const ultimoCommit = dataViewer.lastCommit();
-    const newLine = dataViewer.createLine(ultimoCommit);
-    const newCircle = dataViewer.createCommit(ultimoCommit);
-    document.getElementById("gContainerPointer").appendChild(newLine);
-    document.getElementById("gContainerCommit").appendChild(newCircle);
-    e.target.value = "";	
-    document.getElementById("contadorp").innerHTML = contador++;
-    dataViewer.resizeSVG(newCircle);
 });
+/**
+ * 
+ * @param {String} comand 
+ * @returns {Error|true}
+ */
+function verifyComand(comand="") {
+    if(comand === "")
+        return new Error('The command is empty');
+    const refex = /^(git) [a-z]* *(?: .*)?$/
+    if(!refex.test(comand))
+        return new Error('The command is not valid');
+    return true;
+}
+observer.subscribe("log",dataViewer)
+observer.subscribe("SVG",dataViewer)
+setInterval(() => {
+    observer.notify("SVG",localStorage.getItem('repository'))
+    observer.notify("log",localStorage.getItem('log'))
+}, 1000);
+window.addEventListener('load', () => {
+    dataViewer.currentData =  null;
+    localStorage.removeItem('repository');
+})

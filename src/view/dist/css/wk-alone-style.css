@@ -9,6 +9,10 @@
     scroll-behavior: smooth;
     font-family: 'Poppins',sans-serif;
 }
+@font-face {
+	font-family: "Virgil";
+	src: url("../assets/font/Virgil.woff2");
+}
 :root{
     --bg-color: #1B263B;
     --text-color: #fff;
@@ -42,9 +46,17 @@ body{
 .shell{
     border-radius: 5px;
     width: 100%;
-    font-style: oblique;
+    font-family: monospace;
     color: #51c22f;
     background-color: #0f141f;
+}
+.comand{
+    color: #51c22f;
+    font-weight: 100;
+}
+.error{
+    color: #ff3d3d;
+    font-weight: 200;
 }
 .input{
     background:none;
