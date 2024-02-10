@@ -1,6 +1,5 @@
 export class DataViewer{
     constructor(svgContainer){
-        localStorage.setItem('log',JSON.stringify([]));
         this._logComands = localStorage.getItem('log');
         this._currentData = localStorage.getItem('repository');
         this._svg = this.createSVG();
@@ -65,7 +64,7 @@ export class DataViewer{
         newCircle.id = this.createCod();
         return newCircle;   
     }
-    initRepository(svgDocumentElement = document.getElementById("svg")){
+    initRepository(svgDocumentElement){
         if(!svgDocumentElement)
             return
         svgDocumentElement.innerHTML= ''
@@ -75,11 +74,10 @@ export class DataViewer{
         gContainerCommit.id = "gContainerCommit";
         const line = document.createElementNS("http://www.w3.org/2000/svg","line");
         line.setAttribute("class", "line");
-        line.setAttribute("x1", "68");
+        line.setAttribute("x1", "50");
         line.setAttribute("y1", "334");
-        line.setAttribute("x2", "-5");
+        line.setAttribute("x2", "0");
         line.setAttribute("y2", "334");
-        line.setAttribute("marker-end", "url(#triangle)");
         gContainerPointer.appendChild(line);
         const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
         circle.setAttribute("class", "commit checked-out");
@@ -144,9 +142,9 @@ export class DataViewer{
     }
     createMessage(log){
         const p = document.createElement("p");
-        p.innerHTML = log[log.length-1].message;
-        p.classList.add(log[log.length-1].tag);
-        if(log[log.length-1].tag == "error")
+        p.innerHTML = log.message;
+        p.classList.add(log.tag);
+        if(log.tag == "error")
             p.innerHTML = "Error => "+ p.innerHTML
         else
             p.innerHTML = "$ "+ p.innerHTML
@@ -156,7 +154,10 @@ export class DataViewer{
         if(data == this.logComands)
             return
         if(data != this.logComands){
-            this.createMessage(JSON.parse(data));
+            document.getElementById("logContainer").innerHTML = "";
+            JSON.parse(data).forEach(element => {
+                this.createMessage(element);
+            });
             this.logComands = data;
         }
     };
@@ -164,7 +165,7 @@ export class DataViewer{
         if(data == this.currentData)
             return
         if(data == "{}"){
-            this.initRepository();
+            this.initRepository(this._svg);
             this.currentData = data;
         }else{
             // Logica para renderizar el SVG
