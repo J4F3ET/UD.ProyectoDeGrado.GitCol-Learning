@@ -1,8 +1,10 @@
 export class DataViewer{
-    constructor(){
-        this._logComands = []
-        this._currentData = [];
-        this._svg = this.createVSG();
+    constructor(svgContainer){
+        localStorage.setItem('log',JSON.stringify([]));
+        this._logComands = localStorage.getItem('log');
+        this._currentData = localStorage.getItem('repository');
+        this._svg = this.createSVG();
+        svgContainer.appendChild(this._svg);
     }
     get logComands(){
         return this._logComands;
@@ -24,7 +26,7 @@ export class DataViewer{
      * @description Crea el SVG y los containers para los commits, lineas y otros elementos del SVG 
      * @returns {SVGSVGElement} Elemento de tipo SVG con los containers para los commits, lineas y otros elementos del SVG
      */
-    createVSG(){
+    createSVG(){
         const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
         const widthSvg = window.innerWidth * 0.75;
         const heightSvg = window.innerHeight * 0.85;
@@ -140,7 +142,39 @@ export class DataViewer{
         svg.setAttribute("width", oldWidth + 70);
         svg.style.width = oldWidth + 70 + "px";
     }
-    notify(){
-
+    createMessage(log){
+        const p = document.createElement("p");
+        p.innerHTML = log[log.length-1].message;
+        p.classList.add(log[log.length-1].tag);
+        if(log[log.length-1].tag == "error")
+            p.innerHTML = "Error => "+ p.innerHTML
+        else
+            p.innerHTML = "$ "+ p.innerHTML
+        document.getElementById("logContainer").appendChild(p);
+    }
+    updateLog(data){
+        if(data == this.logComands)
+            return
+        if(data != this.logComands){
+            this.createMessage(JSON.parse(data));
+            this.logComands = data;
+        }
+    };
+    updateSVG(data){
+        if(data == this.currentData)
+            return
+        if(data == "{}"){
+            this.initRepository();
+            this.currentData = data;
+        }else{
+            // Logica para renderizar el SVG
+            
+        }
+    }
+    releaseNotification(tag,data){
+        if(tag == "log")
+            this.updateLog(data);
+        else
+            this.updateSVG(data);
     }
 }
