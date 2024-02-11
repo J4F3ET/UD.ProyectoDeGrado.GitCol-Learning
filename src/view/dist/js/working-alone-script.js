@@ -5,7 +5,9 @@ const dataViewer = new DataViewer(document.getElementById("svgContainer"));
 const observer = new Observer()
 document.getElementById("comandInput").addEventListener("change",(e) => {
     comandManager.createMessage('comand',e.target.value);
+    console.log(e.target.value);
     try {
+
         const comand = e.target.value;
         const verify = verifyComand(comand);
         if(verify instanceof Error)
@@ -39,5 +41,5 @@ setInterval(() => {
 }, 1000);
 window.addEventListener('load', () => {
     dataViewer.currentData =  null;
-    localStorage.removeItem('repository');
+    dataViewer.logComands = null;
 })

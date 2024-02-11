@@ -27,7 +27,7 @@ export class ComandManager {
     /**
      * Execute a command
      * @param {String} command 
-     * @param {String} config
+     * @param {String[]} config
      * @returns {Promise<Boolean>}
      * @throws {Error} Comand not found
      * @throws {Error} Error in the command execution
