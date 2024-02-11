@@ -1,3 +1,4 @@
+import { isEmptyObject } from "../util.js";
 export class DataViewer{
     constructor(svgContainer){
         this._logComands = localStorage.getItem('log');
@@ -19,6 +20,18 @@ export class DataViewer{
     }
     get svg(){
         return this._svg;
+    }
+    /**
+     * @name notify
+     * @description Triggers the notification of updates to the observers
+     * @param {String} tag Tag to identify the notification
+     * @param {String} data Data to send to the observers
+     */
+    notify(tag,data){
+        if(tag == "log")
+            this.updateLog(data);
+        else
+            this.updateSVG(data);
     }
     /**
      * @name createVSG
@@ -52,16 +65,17 @@ export class DataViewer{
     /**
      * @name createCommit
      * @description Crea un elemento svg de tipo circulo con las propiedades de un commit, se le asigna un id unico y se retorna con un radius de 2
-     * @param {SVGCircleElement} circleElementParent Debe ser un elemento de tipo circulo parent de los commits, el commit previo al que se va a crear
+     * @param {Object} dataCommit Debe ser un objeto con las propiedades de un commit
+     * @example {id: "parent",parent: "init",message: "First commit",tags: ["master", "HEAD"],cx: 140,cy: 360};
      * @returns {SVGCircleElement} Elemento de tipo circulo con las propiedades de un commit
      */
-    createCommit(circleElementParent){
+    createCommit(dataCommit){
         const newCircle = document.createElementNS("http://www.w3.org/2000/svg","circle");
-        newCircle.setAttribute("cx", parseInt(circleElementParent.getAttribute("cx")) + 80);
-        newCircle.setAttribute("cy", parseInt(circleElementParent.getAttribute("cy")));
+        newCircle.setAttribute("cx", dataCommit.cx);
+        newCircle.setAttribute("cy", dataCommit.cy);
         newCircle.setAttribute("r", "20");
         newCircle.classList.add("commit");
-        newCircle.id = this.createCod();
+        newCircle.id = dataCommit.id;
         return newCircle;   
     }
     initRepository(svgDocumentElement){
@@ -70,64 +84,56 @@ export class DataViewer{
         svgDocumentElement.innerHTML= ''
         const gContainerPointer = document.createElementNS("http://www.w3.org/2000/svg","g");
         gContainerPointer.id = "gContainerPointer";
+        const gContainerTag = document.createElementNS("http://www.w3.org/2000/svg","g");
+        gContainerTag.id = "gContainerTag";
         const gContainerCommit = document.createElementNS("http://www.w3.org/2000/svg","g");
         gContainerCommit.id = "gContainerCommit";
-        const line = document.createElementNS("http://www.w3.org/2000/svg","line");
-        line.setAttribute("class", "line");
-        line.setAttribute("x1", "50");
-        line.setAttribute("y1", "334");
-        line.setAttribute("x2", "0");
-        line.setAttribute("y2", "334");
-        gContainerPointer.appendChild(line);
         const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
-        circle.setAttribute("class", "commit checked-out");
-        circle.setAttribute("cx", "50");
+        circle.setAttribute("cx", "0");
         circle.setAttribute("cy", "334");
-        circle.setAttribute("r", "20");
-        circle.id = this.createCod();
+        circle.id = "init";
+        circle.setAttribute("r", "0");
         gContainerCommit.appendChild(circle);
         svgDocumentElement.appendChild(gContainerPointer);
+        svgDocumentElement.appendChild(gContainerTag);
         svgDocumentElement.appendChild(gContainerCommit);
     }
     /**
      * @name createLine
-     * @description Crea un elemento svg de tipo linea con las propiedades de una linea, se le asigna un id unico y se retorna
-     * @param {SVGCircleElement} circleElementParent Debe ser un elemento de tipo circulo parent de los commits, el commit previo al que se va a crear
+     * @description Create element SVG of type line with the properties of a line
+     * @param {Object} dataCommit Debe ser un elemento de tipo circulo parent de los commits, el commit previo al que se va a crear
+     * @example {id: "parent",parent: "init",message: "First commit",tags: ["master", "HEAD"],cx: 140,cy: 360};
      * @returns {SVGLineElement} Elemento de tipo linea con las propiedades de una linea
      */
-    createLine(circleElementParent){
+    createLine(dataCommit){
+        const parent = document.getElementById(dataCommit.parent);
+        console.log(dataCommit.parent);
         const newLine = document.createElementNS("http://www.w3.org/2000/svg","line");
         newLine.classList.add("line");
         //Para que la linea quede apuntando a la derecha se le suma 68 a x1 y a x2 se le suma 25, pero para la animacion esos valores se ponen despues agregar al contenedor
-        newLine.setAttribute("x1", parseInt(circleElementParent.getAttribute("cx"))+55);// x1 es el punto de inicio de la linea en x
-        newLine.setAttribute("y1", parseInt(circleElementParent.getAttribute("cy")));// y1 es el punto de inicio de la linea en y
-        newLine.setAttribute("x2", parseInt(circleElementParent.getAttribute("cx"))+28);// x2 es el punto final de la linea en x
-        newLine.setAttribute("y2", parseInt(circleElementParent.getAttribute("cy")));// y2 es el punto final de la linea en y
+        newLine.setAttribute("x1", parseInt(dataCommit.cx)-10);// x1 es el punto de inicio de la linea en x
+        newLine.setAttribute("y1", dataCommit.cy);// y1 es el punto de inicio de la linea en y
+        newLine.setAttribute("x2", parseInt(parent.getAttribute("cx"))+28);// x2 es el punto final de la linea en x
+        newLine.setAttribute("y2", parent.getAttribute("cy"));// y2 es el punto final de la linea en y
         newLine.setAttribute("marker-end", "url(#triangle)");
+        newLine.id = dataCommit.parent+"-"+dataCommit.id;
         return newLine;
     }
-        /**
-     * @name lastCommit
-     * @description Retorna el ultimo commit que se creo
-     * @returns {SVGCircleElement} Elemento de tipo circulo con las propiedades de un commit
-     */
-    lastCommit() {
-        const ultimo = document.querySelectorAll("circle");
-        return ultimo[ultimo.length - 1];
-    }
     /**
-     * @name createCod
-     * @description Crea un codigo de 7 caracteres aleatorios
-     * @returns {string} Codigo de 7 caracteres aleatorios
+     * @name createTag
+     * @description Create element SVG of type text with the properties of a tag
+     * @param {Object} dataCommit Debe ser un elemento de tipo circulo con las propiedades de un commit
+     * @example {id: "parent",parent: "parent",message: "First commit",tags: ["master", "HEAD"],cx: 140,cy: 360};
+     * @returns {SVGTextElement} Elemento de tipo texto con las propiedades de un tag
      */
-    createCod() {
-        const caracteres = 'abcdefghijklmnopqrstuvwxyz0123456789';
-        let codigo = '';
-        for (let i = 0; i < 7; i++) {
-            const indice = Math.floor(Math.random() * caracteres.length);
-            codigo += caracteres.charAt(indice);
-        }
-        return codigo;
+    createTag(dataCommit){
+        const newTag = document.createElementNS("http://www.w3.org/2000/svg","text");
+        newTag.classList.add("tag");
+        newTag.setAttribute("x", parseInt(dataCommit.cx)+25);
+        newTag.setAttribute("y", parseInt(dataCommit.cy)-10);
+        newTag.innerHTML = dataCommit.tags[0];
+        newTag.id = dataCommit.id+"-tag";
+        return newTag;
     }
     /**
      * @name resizeSVG
@@ -137,9 +143,15 @@ export class DataViewer{
     resizeSVG(){
         const oldWidth = parseInt(this._svg.getAttribute("width"));
         // Con esto renderiza mas de 100 commits
-        svg.setAttribute("width", oldWidth + 70);
-        svg.style.width = oldWidth + 70 + "px";
+        svg.setAttribute("width", oldWidth + 80);
+        svg.style.width = oldWidth + 80 + "px";
     }
+    /**
+     * @name createMessage
+     * @description Create one message in the log container
+     * @param {Object} log Object with the tag and the message
+     * @example {tag: "error", message: "Error message"} 
+     */
     createMessage(log){
         const p = document.createElement("p");
         p.innerHTML = log.message;
@@ -150,32 +162,76 @@ export class DataViewer{
             p.innerHTML = "$ "+ p.innerHTML
         document.getElementById("logContainer").appendChild(p);
     }
+    /**
+     * @name updateLog
+     * @description Update the log container with the new data
+     * @param {String} data String with the new data, this data is a JSON string
+     */
     updateLog(data){
         if(data == this.logComands)
             return
-        if(data != this.logComands){
-            document.getElementById("logContainer").innerHTML = "";
-            JSON.parse(data).forEach(element => {
-                this.createMessage(element);
-            });
-            this.logComands = data;
-        }
+        document.getElementById("logContainer").innerHTML = "";
+        JSON.parse(data).forEach(element => {
+            this.createMessage(element);
+        });
+        this.logComands = data;
     };
+    /**
+     * @name updateSVG
+     * @description Update the SVG with the new data
+     * @param {String} data String with the new data, this data is a JSON string
+     */
     updateSVG(data){
         if(data == this.currentData)
             return
-        if(data == "{}"){
+        if(data != undefined)
             this.initRepository(this._svg);
-            this.currentData = data;
+        console.log(JSON.parse(data));
+        if(!isEmptyObject(JSON.parse(data)))
+            this.renderSVG(JSON.parse(data));
+        this.currentData = data;
+    }
+    /**
+     * @name renderSVG
+     * @description Render the SVG with the new data.
+     * @param {JSON} data JSON with the new data
+     */
+    renderSVG(data){
+        // Si entra a rendesSVG es porque ya existe el repositorio
+        // La logica debe ser separada en lineas , commits, tags y branches
+        // Se crea una linea paralela Cuando el current commit un hijo y a dicho commit se le agrega un hijo
+        // Cada commit es un nodo y solo puede tener un padre y varios hijos 
+        // Solo puede existir un HEAD
+        const commitsCreated = document.querySelectorAll(".commit");
+        console.log(commitsCreated);
+        if(commitsCreated.length == 0){
+            data.array.forEach(commit => {
+                this.addCommitToSvg(commit);
+            });
         }else{
-            // Logica para renderizar el SVG
-            
+            const commits = data.array.filter(commit => !commitsCreated.array.some(element => element.id == commit.id));
+            commits.forEach(commit => {
+                this.addCommitToSvg(commit);
+            });
         }
     }
-    releaseNotification(tag,data){
-        if(tag == "log")
-            this.updateLog(data);
-        else
-            this.updateSVG(data);
+    addCommitToSvg(commit){
+        console.log("Bandera 1");
+        const commitElement = this.createCommit(commit);
+        console.log("Bandera 2 "+commitElement);
+        const lineElement = this.createLine(commit);
+        console.log("Bandera 3 "+lineElement);
+        const tagElement = this.createTag(commit);
+        console.log("Bandera 4 "+tagElement);
     }
+    addCircleToSvg(commit){
+        
+    }
+    addLineToSvg(line){
+        
+    }
+    addTagToSvg(tags){
+        
+    }
+
 }

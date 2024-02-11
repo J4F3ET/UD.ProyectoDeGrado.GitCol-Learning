@@ -10,7 +10,7 @@ export class Observer{
     }
     notify(key,data) {
         if(this.observers.has(key)){
-            this.observers.get(key).releaseNotification(key,data);
+            this.observers.get(key).notify(key,data);
         }
     }
 }
