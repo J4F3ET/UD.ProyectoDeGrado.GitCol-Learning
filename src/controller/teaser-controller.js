@@ -14,6 +14,6 @@ const router = Router();
  *             example: teaser-screen.ejs
  */
 router.get("/", (req, res) => {
-    res.render("working-alone-screen");
+    res.render("teaser-screen");
 });
 export default router;
