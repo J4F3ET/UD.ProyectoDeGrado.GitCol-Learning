@@ -1,16 +1,39 @@
+import { currentHead } from "../../util.js";
 export class Commit {
-
+    
     /**
      * @name constructor
-     * @description Create a new instance of the Commit class
-     * @param {NameRepository} nameRepository Name of the repository to be used in the local storage
+     * @description The constructor of the class, it receives the repository of the data
+     * @param {string} dataRepository Name variable of the local storage of the repository, by default is 'repository'
      */
-    constructor(nameRepository) {
-        this._repository = nameRepository;
+    constructor(dataRepository = "repository") {
         this.comand = 'commit';
+        this._configurations = ["m"];
+        this._dataRepository = dataRepository;
     }
-    execute(config) {
+    resolveConfigure(config) {
+        const configurations = config.split('-');
+        console.log(configurations);
         
+    }
+    /**
+     * @name execute
+     * @description Execute the command
+     * @param {String[]} config Configuration of the command
+     * @returns {JSON} New commit created
+     */
+    execute(config) {
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        const head = currentHead(storage);
+        const newCommit = this.createCommit(head,config);
+        this.addCommitToStorage(newCommit);
+    }
+    addCommitToStorage(commit){
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        if(storage.array === undefined)
+            storage.array = [];
+        storage.array.push(commit);
+        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
     /**
      * @name createCod
@@ -26,42 +49,31 @@ export class Commit {
         }
         return codigo;
     }
-    /**
-     * @name createCommit
-     * @description Create commit in the repository and save it in the local storage
-     * @param {String} message Commit message
+    /*
+    {
+        "id": "84c98fe",
+        "parent": "e137e9b",
+        "tags": [
+          "master"
+        ],
+        "cx": 140,
+        "cy": 360,
+        "branchless": false
+      },
      */
-    createComit(message){
-    }
     /**
-     * @name addCommitToLocalStorage
-     * @description Add commit to the local storage
-     * @param {JSON} newCommit New commit to be added
-     * @throws {Error} Repository not found
-     * @throws {Error} Error adding commit to the repository
+     * Create a new commit
+     * @param {JSON} parent  Commit parent to create the new commit
+     * @returns {JSON} New commit created
      */
-    addCommitToLocalStorage(newCommit){
-        if(localStorage.getItem(this._repository)===null)
-            throw new Error('Repository not found');
-        const repository = JSON.parse(localStorage.getItem(this._repository));
-        repository.push(newCommit);
-        localStorage.setItem('repository',JSON.stringify(repository));
-    }
-    /**
-     * @name existsCommitToLocalStorage
-     * @description Check if the commit exists in the local storage
-     * @param {JSON} commit Commit to be checked
-     * @returns {Boolean} Returns true if the commit exists in the local storage, otherwise returns false
-     * @throws {Error} Repository not found
-     */
-    existsCommitToLocalStorage(commit){
-        if(localStorage.getItem(this._repository)===null)
-            throw new Error('Repository not found');
-        const repository = JSON.parse(localStorage.getItem(this._repository));
-        repository.find(_commit => _commit.id === commit.id);
-        if(repository)
-            return false;
-        else
-            return true;
+    createCommit(parent,message) {
+        return {
+            id: this.createCod(),
+            message,
+            parent: parent.id,
+            tags: parent.tags,
+            cx : parseInt(parent.cx) + 80,
+            cy : parseInt(parent.cy)
+        };
     }
 }
