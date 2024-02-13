@@ -63,8 +63,8 @@ circle.commit.branchless.checked-out {
     fill: #FEFEFE;
 }
 circle.commit.checked-out {
-    fill: #8ce08c;
-    stroke: #339900;
+    fill: #8ce08ca2;
+    stroke: #339900bd;
     stroke-width: 3px;
 }
 circle.commit.logging {
