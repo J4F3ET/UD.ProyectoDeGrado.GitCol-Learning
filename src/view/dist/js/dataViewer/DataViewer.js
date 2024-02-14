@@ -107,7 +107,6 @@ export class DataViewer{
      */
     createLine(dataCommit){
         const parent = document.getElementById(dataCommit.parent);
-        console.log(dataCommit.parent);
         const newLine = document.createElementNS("http://www.w3.org/2000/svg","line");
         newLine.classList.add("line");
         //Para que la linea quede apuntando a la derecha se le suma 68 a x1 y a x2 se le suma 25, pero para la animacion esos valores se ponen despues agregar al contenedor
@@ -186,7 +185,6 @@ export class DataViewer{
             return
         if(data != undefined)
             this.initRepository(this._svg);
-        console.log(JSON.parse(data));
         if(!isEmptyObject(JSON.parse(data)))
             this.renderSVG(JSON.parse(data));
         this.currentData = data;
@@ -194,7 +192,7 @@ export class DataViewer{
     /**
      * @name renderSVG
      * @description Render the SVG with the new data.
-     * @param {JSON} data JSON with the new data
+     * @param {Object[]} data Array to commits
      */
     renderSVG(data){
         // Si entra a rendesSVG es porque ya existe el repositorio
@@ -203,35 +201,30 @@ export class DataViewer{
         // Cada commit es un nodo y solo puede tener un padre y varios hijos 
         // Solo puede existir un HEAD
         const commitsCreated = document.querySelectorAll(".commit");
-        console.log(commitsCreated);
-        if(commitsCreated.length == 0){
-            data.array.forEach(commit => {
+        if(commitsCreated.length == '0'){
+            data.forEach(commit => {
                 this.addCommitToSvg(commit);
             });
         }else{
-            const commits = data.array.filter(commit => !commitsCreated.array.some(element => element.id == commit.id));
+            const commits = data.filter(commit => !commitsCreated.array.some(element => element.id == commit.id));
             commits.forEach(commit => {
                 this.addCommitToSvg(commit);
             });
         }
     }
     addCommitToSvg(commit){
-        console.log("Bandera 1");
-        const commitElement = this.createCommit(commit);
-        console.log("Bandera 2 "+commitElement);
-        const lineElement = this.createLine(commit);
-        console.log("Bandera 3 "+lineElement);
-        const tagElement = this.createTag(commit);
-        console.log("Bandera 4 "+tagElement);
+        this.addCircleToSvg(this.createCommit(commit));
+        this.addLineToSvg(this.createLine(commit)); 
+        this.addTagToSvg(this.createTag(commit));
     }
     addCircleToSvg(commit){
-        
+        this._svg.getElementById("gContainerCommit").appendChild(commit)
     }
     addLineToSvg(line){
-        
+        this.svg.getElementById("gContainerPointer").appendChild(line)
     }
     addTagToSvg(tags){
-        
+        this._svg.getElementById("gContainerPointer").appendChild(tags)
     }
 
 }

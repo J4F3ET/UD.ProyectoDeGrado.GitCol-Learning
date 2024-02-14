@@ -1,4 +1,4 @@
-import { currentHead } from "../../util.js";
+import { currentHead,isEmptyObject } from "../../util.js";
 export class Commit {
     
     /**
@@ -23,17 +23,48 @@ export class Commit {
      * @returns {JSON} New commit created
      */
     execute(config) {
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        if(localStorage.getItem(this._dataRepository)===null)
+            throw new Error('The repository does not exist');
+        if(isEmptyObject(config))
+            throw new Error('The comand "commit" requires parameters');
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
+        if(storage.length == 0){
+            this.addCommitToStorage({
+                id: "parent",
+                parent: "init",
+                message: "First commit",
+                tags: ["master", "HEAD"],
+                cx: 140,
+                cy: 360,
+            });
+            return
+        }
         const head = currentHead(storage);
         const newCommit = this.createCommit(head,config);
         this.addCommitToStorage(newCommit);
+        if(!this.existsCommitToStorage(newCommit)){
+            throw new Error('Error in the command execution');
+        }
     }
+    /**
+     * @name addCommitToStorage
+     * @description Add a commit to the local storage
+     * @param {object} commit Commit to be added to the local storage 
+     */
     addCommitToStorage(commit){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        if(storage.array === undefined)
-            storage.array = [];
-        storage.array.push(commit);
+        storage.push(commit);
         localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+    }
+    /**
+     * @name existsCommitToStorage
+     * @description Check if a commit exists in the local storage
+     * @param {object} commit Commit to be checked
+     * @returns {boolean}
+     */
+    existsCommitToStorage(commit){
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        return storage.array.some(c => c.id === commit.id);
     }
     /**
      * @name createCod
@@ -49,18 +80,6 @@ export class Commit {
         }
         return codigo;
     }
-    /*
-    {
-        "id": "84c98fe",
-        "parent": "e137e9b",
-        "tags": [
-          "master"
-        ],
-        "cx": 140,
-        "cy": 360,
-        "branchless": false
-      },
-     */
     /**
      * Create a new commit
      * @param {JSON} parent  Commit parent to create the new commit

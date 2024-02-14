@@ -5,9 +5,7 @@ const dataViewer = new DataViewer(document.getElementById("svgContainer"));
 const observer = new Observer()
 document.getElementById("comandInput").addEventListener("change",(e) => {
     comandManager.createMessage('comand',e.target.value);
-    console.log(e.target.value);
     try {
-
         const comand = e.target.value;
         const verify = verifyComand(comand);
         if(verify instanceof Error)
@@ -21,7 +19,8 @@ document.getElementById("comandInput").addEventListener("change",(e) => {
     }
 });
 /**
- * 
+ * @name verifyComand
+ * @description Verify if the comand is valid syntax
  * @param {String} comand 
  * @returns {Error|true}
  */

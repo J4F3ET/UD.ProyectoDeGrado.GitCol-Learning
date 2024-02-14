@@ -7,6 +7,6 @@ export class Init{
             throw new Error('The comand "init" does not require parameters');
         if(localStorage.getItem('repository')!==null)
             throw new Error('The repository already exists');
-        localStorage.setItem('repository', JSON.stringify({}));
+        localStorage.setItem('repository', JSON.stringify([]));
     }
 }
