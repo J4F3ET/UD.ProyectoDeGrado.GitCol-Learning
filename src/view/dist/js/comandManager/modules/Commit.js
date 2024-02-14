@@ -34,13 +34,15 @@ export class Commit {
                 parent: "init",
                 message: "First commit",
                 tags: ["master", "HEAD"],
-                cx: 140,
-                cy: 360,
+                cx: 50,
+                cy: 334,
             });
             return
         }
-        const head = currentHead(storage);
+        var head = currentHead(storage);
         const newCommit = this.createCommit(head,config);
+        head = this.removeTag("HEAD",head);
+        this.updateCommitToStorage(head);
         this.addCommitToStorage(newCommit);
         if(!this.existsCommitToStorage(newCommit)){
             throw new Error('Error in the command execution');
@@ -56,6 +58,24 @@ export class Commit {
         storage.push(commit);
         localStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
+    removeTag(tag,commit){
+        commit.tags = commit.tags.filter(t => t != tag);
+        return commit;
+    }
+    addTag(tag,commit){
+        commit.tags.push(tag);
+        return commit;
+    }
+    updateCommitToStorage(newCommit){
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        storage.forEach(oldCommit => {
+            if(oldCommit.id == newCommit.id){
+                Object.assign(oldCommit, newCommit);
+            }
+        });
+        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+    }
+
     /**
      * @name existsCommitToStorage
      * @description Check if a commit exists in the local storage
@@ -64,7 +84,7 @@ export class Commit {
      */
     existsCommitToStorage(commit){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        return storage.array.some(c => c.id === commit.id);
+        return storage.some(c => c.id == commit.id);
     }
     /**
      * @name createCod

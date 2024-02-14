@@ -89,7 +89,7 @@ export class DataViewer{
         const gContainerCommit = document.createElementNS("http://www.w3.org/2000/svg","g");
         gContainerCommit.id = "gContainerCommit";
         const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
-        circle.setAttribute("cx", "0");
+        circle.setAttribute("cx", "-50");
         circle.setAttribute("cy", "334");
         circle.id = "init";
         circle.setAttribute("r", "0");

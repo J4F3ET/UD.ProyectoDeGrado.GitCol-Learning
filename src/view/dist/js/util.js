@@ -11,9 +11,5 @@ export function isEmptyObject(obj) {
  * @returns {JSON} Data of the current head
  */
 export function currentHead(storage) {
-    storage.find(element => {
-        console.log(element);
-        element.tags.includes('HEAD');
-    });
-    return 
+    return storage.find(element => element.tags.includes('HEAD')); 
 }
