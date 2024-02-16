@@ -58,6 +58,14 @@ body{
     color: #ff3d3d;
     font-weight: 200;
 }
+.info{
+    color: #0c94ee;
+    font-weight: 100;
+    font-size: small;
+    li{
+        padding-left: 1rem;
+    }
+}
 .input{
     background:none;
     color: #51c22f;

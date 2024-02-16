@@ -155,10 +155,8 @@ export class DataViewer{
         const p = document.createElement("p");
         p.innerHTML = log.message;
         p.classList.add(log.tag);
-        if(log.tag == "error")
-            p.innerHTML = "Error => "+ p.innerHTML
-        else
-            p.innerHTML = "$ "+ p.innerHTML
+        if(log.tag == "comand")
+            p.innerHTML = "$ "+ p.innerHTML;
         document.getElementById("logContainer").appendChild(p);
     }
     /**

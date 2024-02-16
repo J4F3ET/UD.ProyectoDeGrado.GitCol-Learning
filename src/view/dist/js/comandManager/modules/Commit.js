@@ -1,52 +1,92 @@
 import { currentHead,isEmptyObject } from "../../util.js";
-export class Commit {
-    
+import { ComandManager } from "../ComandManager.js";
+export class Commit{
     /**
      * @name constructor
      * @description The constructor of the class, it receives the repository of the data
      * @param {string} dataRepository Name variable of the local storage of the repository, by default is 'repository'
      */
-    constructor(dataRepository = "repository") {
+    constructor(dataRepository = "repository",logRepository = "log") {
         this.comand = 'commit';
-        this._configurations = ["m"];
+        this._configurations = {
+            m:{
+                message: "None",
+                callback: this.callBackConfigMessage,
+            },
+            a:{
+                files: ["index.html","style.css","script.js"],
+                callback: this.callBackConfigFiles,
+            },
+        };
         this._dataRepository = dataRepository;
-    }
-    resolveConfigure(config) {
-        const configurations = config.split('-');
-        console.log(configurations);
-        
+        this._logRepository = logRepository;
     }
     /**
-     * @name execute
-     * @description Execute the command
-     * @param {String[]} config Configuration of the command
-     * @returns {JSON} New commit created
+     * @name resolveConfigure
+     * @description Resolve the configuration of the command
+     * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
+     * @example resolveConfigure(['-m','"message"','-a']) // ['m','a']
+     * @returns {String[]} Array with the letters of the configuration
      */
-    execute(config) {
-        if(localStorage.getItem(this._dataRepository)===null)
-            throw new Error('The repository does not exist');
-        if(isEmptyObject(config))
-            throw new Error('The comand "commit" requires parameters');
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
-        if(storage.length == 0){
-            this.addCommitToStorage({
-                id: "parent",
-                parent: "init",
-                message: "First commit",
-                tags: ["master", "HEAD"],
-                cx: 50,
-                cy: 334,
-            });
-            return
-        }
-        var head = currentHead(storage);
-        const newCommit = this.createCommit(head,config);
-        head = this.removeTag("HEAD",head);
-        this.updateCommitToStorage(head);
-        this.addCommitToStorage(newCommit);
-        if(!this.existsCommitToStorage(newCommit)){
-            throw new Error('Error in the command execution');
-        }
+    resolveConfigure(dataComand) {
+        var configs = dataComand.filter(c => c.startsWith("-")||c.startsWith("--"));
+        var cleanConfigs = [];
+        configs.forEach(c => {
+            if(c.startsWith("--")){
+                cleanConfigs.push(c.replace("--",""));
+            }else{
+                cleanConfigs.push(...this.parseConfig(c));
+            }
+        });
+        if(cleanConfigs.length == 0)
+            throw new Error('The configuration is empty');
+        cleanConfigs.forEach(configuration => {
+            if(!Object.keys(this._configurations).includes(configuration))
+                throw new Error(`The configuration "${configuration}" is not valid`);
+        });
+        return cleanConfigs;
+    }
+    /**
+     * @name parseConfig
+     * @description Parse the configuration of the command and return an array with the letters of the configuration
+     * @param {String} configuracion Configuration of the command
+     * @example parseConfig('-masds') // ['m','a','s','d','s']
+     * @returns {String[]} Array with the letters of the configuration
+     */
+    parseConfig(configuracion) {
+        const matches = configuracion.match(/-([a-z]+)/);
+        if(matches && matches.length === 2)
+            return matches[1].split('');
+        return [];
+    }
+    /**
+     * @name callBackConfigMessage
+     * @description Callback to the configuration of the message
+     * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
+     */
+    callBackConfigMessage = (dataComand) =>{
+        dataComand.forEach((data,index) => {
+            if( this.parseConfig(data).includes('m')){
+                this._configurations.m.message = dataComand[index+1];
+                return;
+            }
+        });
+    }
+    /**
+     * @name callBackConfigFiles
+     * @description Callback to the configuration of the files
+     * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
+     */
+    callBackConfigFiles = () =>{
+        const files = this._configurations.a.files.map(file => `<li>>${file}</li>`).join('');
+        this.createMessageInfo('info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
+    }
+    createMessageInfo(tag,message){
+        if(localStorage.getItem(this._logRepository)===null)
+            return;
+        const log = JSON.parse(localStorage.getItem(this._logRepository));
+        log.push({tag,message});
+        localStorage.setItem(this._logRepository,JSON.stringify(log));
     }
     /**
      * @name addCommitToStorage
@@ -105,14 +145,47 @@ export class Commit {
      * @param {JSON} parent  Commit parent to create the new commit
      * @returns {JSON} New commit created
      */
-    createCommit(parent,message) {
+    createCommit(parent) {
         return {
             id: this.createCod(),
-            message,
+            message: this._configurations.m.message,
             parent: parent.id,
             tags: parent.tags,
             cx : parseInt(parent.cx) + 80,
             cy : parseInt(parent.cy)
         };
+    }
+    /**
+     * @name execute
+     * @description Execute the command
+     * @param {String[]} config Configuration of the command
+     * @returns {JSON} New commit created
+     */
+    execute(dataComand){
+        if(localStorage.getItem(this._dataRepository)===null)
+            throw new Error('The repository does not exist');
+        this.resolveConfigure(dataComand).forEach(config => {
+            this._configurations[config].callback(dataComand);
+        });
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
+        if(storage.length == 0){
+            this.addCommitToStorage({
+                id: "parent",
+                parent: "init",
+                message: "First commit",
+                tags: ["master", "HEAD"],
+                cx: 50,
+                cy: 334,
+            });
+            return
+        }
+        var head = currentHead(storage);
+        const newCommit = this.createCommit(head);
+        head = this.removeTag("HEAD",head);
+        this.updateCommitToStorage(head);
+        this.addCommitToStorage(newCommit);
+        if(!this.existsCommitToStorage(newCommit)){
+            throw new Error('Error in the command execution');
+        }
     }
 }
