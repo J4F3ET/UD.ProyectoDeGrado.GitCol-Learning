@@ -125,14 +125,46 @@ export class DataViewer{
      * @example {id: "parent",parent: "parent",message: "First commit",tags: ["master", "HEAD"],cx: 140,cy: 360};
      * @returns {SVGTextElement} Elemento de tipo texto con las propiedades de un tag
      */
-    createTag(dataCommit){
-        const newTag = document.createElementNS("http://www.w3.org/2000/svg","text");
-        newTag.classList.add("tag");
-        newTag.setAttribute("x", parseInt(dataCommit.cx)+25);
-        newTag.setAttribute("y", parseInt(dataCommit.cy)-10);
-        newTag.innerHTML = dataCommit.tags[0];
-        newTag.id = dataCommit.id+"-tag";
+    createTag(x,y,tagName){
+        const newText = this.createText(x,y,tagName);
+        const newRect = this.createRectTag(x,y);
+        const newTag = document.createElementNS("http://www.w3.org/2000/svg","g");
+        newTag.classList.add("branch-tag");
+        if(tagName == "HEAD")
+            newTag.classList.add("head-tag");
+        newTag.appendChild(newRect);
+        newTag.appendChild(newText);
         return newTag;
+    }
+    /**
+     * @name createText
+     * @description Create element SVG of type text with the properties of a text
+     * @param {Int} x Position in the x axis
+     * @param {Int} y Position in the y axis
+     * @param {String} text Text to be added to the element
+     * @returns {SVGTextElement} Elemento de tipo texto con las propiedades de un tag
+     */
+    createText(x,y,text){
+        const newText = document.createElementNS("http://www.w3.org/2000/svg","text");
+        newText.setAttribute("x", x);
+        newText.setAttribute("y", y);
+        newText.innerHTML = text;
+        return newText;
+    }
+    /**
+     * @name createRectTag
+     * @description Create element SVG of type rect with the properties of a rect
+     * @param {Int} x Position in the x axis
+     * @param {Int} y Position in the y axis
+     * @returns {SVGRectElement} Elemento de tipo rectangulo con las propiedades de un tag
+     */
+    createRectTag(x,y){
+        const newRect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+        newRect.setAttribute("x", x-20);// -20 para que el rectangulo quede centrado con el texto
+        newRect.setAttribute("y", y-15); // -15 para que el rectangulo quede centrado con el texto
+        newRect.setAttribute("width", "40");
+        newRect.setAttribute("height", "20");
+        return newRect;
     }
     /**
      * @name resizeSVG
@@ -140,10 +172,9 @@ export class DataViewer{
      * @param {SVGSVGElement} svgElement Elemento de tipo SVG
      */
     resizeSVG(){
-        const oldWidth = parseInt(this._svg.getAttribute("width"));
-        // Con esto renderiza mas de 100 commits
-        svg.setAttribute("width", oldWidth + 80);
-        svg.style.width = oldWidth + 80 + "px";
+        const maxCX = Math.max(...Array.from(this._svg.querySelectorAll(".commit")).map(commit => parseInt(commit.getAttribute("cx"))));
+        this.svg.setAttribute("width", maxCX + 150);
+        this.svg.style.width = maxCX + 150 + "px";
     }
     /**
      * @name createMessage
@@ -186,6 +217,7 @@ export class DataViewer{
         if(!isEmptyObject(JSON.parse(data)))
             this.renderSVG(JSON.parse(data));
         this.currentData = data;
+        this.resizeSVG();
     }
     /**
      * @name renderSVG
@@ -212,17 +244,26 @@ export class DataViewer{
     }
     addCommitToSvg(commit){
         this.addCircleToSvg(this.createCommit(commit));
-        this.addLineToSvg(this.createLine(commit)); 
-        this.addTagToSvg(this.createTag(commit));
+        this.addLineToSvg(this.createLine(commit));
+        const y = parseInt(commit.cy) + 40; 
+        commit.tags.forEach((tag,index) => {// Create the tags by number of tags
+            this.addTagToSvg(// Add the tag to the SVG container
+                this.createTag(// Create the tag element
+                    commit.cx,// Position in the x axis of the tag
+                    y+(index*25),// Position in the y axis of the tag
+                    tag// Text of the tag
+                )
+            );
+        });
     }
     addCircleToSvg(commit){
         this._svg.getElementById("gContainerCommit").appendChild(commit)
     }
     addLineToSvg(line){
-        this.svg.getElementById("gContainerPointer").appendChild(line)
+        this._svg.getElementById("gContainerPointer").appendChild(line)
     }
     addTagToSvg(tags){
-        this._svg.getElementById("gContainerPointer").appendChild(tags)
+        this._svg.getElementById("gContainerTag").appendChild(tags)
     }
 
 }
