@@ -40,7 +40,8 @@ body{
     padding: 0.5rem;
 }
 #logContainer{
-    height: 90%;
+    height: 90vh;
+    margin-bottom: 1vh;
     overflow: auto;
 }
 .shell{
@@ -70,11 +71,13 @@ body{
     background:none;
     color: #51c22f;
     width: 95%;
+    margin-left: .5rem;
 }
 #inputContainer{
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
     align-items: center;
+    padding: .5rem;
 }
 #contentContainer{
     grid-column: 2;
@@ -113,12 +116,12 @@ body{
 #svgContainer{
     display: inline-block;
     position: relative;
-    width: 100%;
+    width: 98%;
     height: 100%;
     overflow: auto;
 }
 #svg{
-    width: calc(100vw * 0.75);
+    width: calc(100vw * 0.95);
     height: calc(100vh * 0.85);
     border-radius: 5px;
     background-color: var(--second-bg-color);
@@ -140,7 +143,10 @@ body{
     }
     #svgContainer{
         border-radius: 5px;
-        background-color: var(--second-bg-color);
+    }
+    #svg{
+        width: 100vw;
+        height: 100vh;
     }
     #logContainer{
         height: 80%;

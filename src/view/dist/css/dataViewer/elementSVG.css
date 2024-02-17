@@ -16,8 +16,8 @@
     fill: var(--text-color);
 }   
 circle.commit {
-    fill: #CCCCCC;
-    stroke: #888888;
+    fill: #ffffff86;
+    stroke: #777777;
     stroke-width: 2px;
     animation: drop 0.5s ease-in-out;
 }

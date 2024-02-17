@@ -1,5 +1,4 @@
 import { currentHead,isEmptyObject } from "../../util.js";
-import { ComandManager } from "../ComandManager.js";
 export class Commit{
     /**
      * @name constructor
@@ -81,6 +80,12 @@ export class Commit{
         const files = this._configurations.a.files.map(file => `<li>>${file}</li>`).join('');
         this.createMessageInfo('info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
     }
+    /**
+     * @name createMessageInfo
+     * @description Create a message to the log
+     * @param {String} tag Tag of the message
+     * @param {String} message Message to be added to the log
+     */
     createMessageInfo(tag,message){
         if(localStorage.getItem(this._logRepository)===null)
             return;
@@ -98,14 +103,36 @@ export class Commit{
         storage.push(commit);
         localStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
+    /**
+     * @name removeTag
+     * @description Remove a tag from a commit
+     * @param {string} tag Tag to be removed
+     * @param {object} commit Commit to be removed the tag
+     * @returns {object} Commit with the tag removed
+     * @example removeTag('HEAD',commit) // {id: "parent", parent: "init", message: "First commit", tags: ["master"], cx: 50, cy: 334}
+     */
     removeTag(tag,commit){
         commit.tags = commit.tags.filter(t => t != tag);
         return commit;
     }
+    /**
+     * @name addTag
+     * @description Add a tag to a commit
+     * @param {string} tag Tag to be added
+     * @param {object} commit Commit to be added the tag
+     * @returns {object} Commit with the tag added
+     * @example addTag('HEAD',commit) // {id: "parent", parent: "init", message: "First commit", tags: ["master","HEAD"], cx: 50, cy: 334}
+     */
     addTag(tag,commit){
         commit.tags.push(tag);
         return commit;
     }
+    /**
+     * @name updateCommitToStorage
+     * @description Update a commit in the local storage
+     * @param {object} newCommit New commit to be updated in the local storage
+     * @returns {object} Commit updated in the local storage
+     */
     updateCommitToStorage(newCommit){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         storage.forEach(oldCommit => {
@@ -115,7 +142,6 @@ export class Commit{
         });
         localStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
-
     /**
      * @name existsCommitToStorage
      * @description Check if a commit exists in the local storage

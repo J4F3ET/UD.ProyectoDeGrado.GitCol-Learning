@@ -110,7 +110,7 @@ export class DataViewer{
         const newLine = document.createElementNS("http://www.w3.org/2000/svg","line");
         newLine.classList.add("line");
         //Para que la linea quede apuntando a la derecha se le suma 68 a x1 y a x2 se le suma 25, pero para la animacion esos valores se ponen despues agregar al contenedor
-        newLine.setAttribute("x1", parseInt(dataCommit.cx)-10);// x1 es el punto de inicio de la linea en x
+        newLine.setAttribute("x1", parseInt(dataCommit.cx)-24);// x1 es el punto de inicio de la linea en x
         newLine.setAttribute("y1", dataCommit.cy);// y1 es el punto de inicio de la linea en y
         newLine.setAttribute("x2", parseInt(parent.getAttribute("cx"))+28);// x2 es el punto final de la linea en x
         newLine.setAttribute("y2", parent.getAttribute("cy"));// y2 es el punto final de la linea en y

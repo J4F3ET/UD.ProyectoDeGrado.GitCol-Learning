@@ -42,3 +42,7 @@ window.addEventListener('load', () => {
     dataViewer.currentData =  null;
     dataViewer.logComands = null;
 })
+// ZONE VIEW
+const containerLogs = document.getElementById("logContainer");
+const observerScroll = new MutationObserver(()=>containerLogs.scrollTop = containerLogs.scrollHeight)
+observerScroll.observe(containerLogs,{childList:true})
