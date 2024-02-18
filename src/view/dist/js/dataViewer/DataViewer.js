@@ -126,9 +126,9 @@ export class DataViewer{
      * @returns {SVGTextElement} Elemento de tipo texto con las propiedades de un tag
      */
     createTag(x,y,tagName){
-        const newText = this.createText(x,y,tagName);
-        const newRect = this.createRectTag(x,y);
         const newTag = document.createElementNS("http://www.w3.org/2000/svg","g");
+        const newText = this.createText(x,y,tagName );
+        const newRect = this.createRectTag(x,y, this.widthText(tagName));
         newTag.classList.add("branch-tag");
         if(tagName == "HEAD")
             newTag.classList.add("head-tag");
@@ -152,18 +152,31 @@ export class DataViewer{
         return newText;
     }
     /**
+     * @name widthText
+     * @description Get the width of the text
+     * @param {String} text Text to get the width
+     * @returns {Int} Width of the text
+     * @example widthText("HEAD") // 30
+     */
+    widthText(text){
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        context.font = "16px Arial";
+        return context.measureText(text).width;
+    }
+    /**
      * @name createRectTag
      * @description Create element SVG of type rect with the properties of a rect
      * @param {Int} x Position in the x axis
      * @param {Int} y Position in the y axis
      * @returns {SVGRectElement} Elemento de tipo rectangulo con las propiedades de un tag
      */
-    createRectTag(x,y){
+    createRectTag(x,y,width = 40){
         const newRect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-        newRect.setAttribute("x", x-20);// -20 para que el rectangulo quede centrado con el texto
+        newRect.setAttribute("x", x-(width/2));// -20 para que el rectangulo quede centrado con el texto
         newRect.setAttribute("y", y-15); // -15 para que el rectangulo quede centrado con el texto
-        newRect.setAttribute("width", "40");
-        newRect.setAttribute("height", "20");
+        newRect.setAttribute("width", width);
+        newRect.setAttribute("height", 20);
         return newRect;
     }
     /**

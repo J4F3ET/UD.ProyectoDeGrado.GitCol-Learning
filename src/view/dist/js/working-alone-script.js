@@ -44,5 +44,8 @@ window.addEventListener('load', () => {
 })
 // ZONE VIEW
 const containerLogs = document.getElementById("logContainer");
+const containerSvg = document.getElementById("svgContainer");
 const observerScroll = new MutationObserver(()=>containerLogs.scrollTop = containerLogs.scrollHeight)
+const observerScrollSvgHorizontal = new MutationObserver(()=>containerSvg.scrollLeft = containerSvg.scrollWidth)
 observerScroll.observe(containerLogs,{childList:true})
+observerScrollSvgHorizontal.observe(containerSvg, { childList: true, subtree: true });

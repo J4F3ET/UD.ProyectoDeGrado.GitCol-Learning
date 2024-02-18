@@ -18,6 +18,7 @@
 circle.commit {
     fill: #ffffff86;
     stroke: #777777;
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.514));
     stroke-width: 2px;
     animation: drop 0.5s ease-in-out;
 }
@@ -118,6 +119,7 @@ g.branch-tag > text {
 g.head-tag > rect {
     fill: #a7ffa7;
     stroke: #339900;
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.514));
     stroke-width: 2;
 }
 
