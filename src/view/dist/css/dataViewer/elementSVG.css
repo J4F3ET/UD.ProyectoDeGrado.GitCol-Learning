@@ -20,7 +20,7 @@ circle.commit {
     stroke: #777777;
     filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.514));
     stroke-width: 2px;
-    animation: drop 0.5s ease-in-out;
+    
 }
 .line {
     stroke: var(--text-color);
@@ -64,9 +64,10 @@ circle.commit.branchless.checked-out {
     fill: #FEFEFE;
 }
 circle.commit.checked-out {
-    fill: #8ce08ca2;
+    fill: #8ce08c;
     stroke: #339900bd;
     stroke-width: 3px;
+    animation: drop 0.5s ease-in-out;
 }
 circle.commit.logging {
     stroke: #0066CC;

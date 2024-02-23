@@ -181,6 +181,11 @@ export class Commit{
             cy : parseInt(parent.cy)
         };
     }
+    updateHeadToStorage(newHead){
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        storage.information.head = newHead;
+        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+    }
     /**
      * @name execute
      * @description Execute the command
@@ -195,6 +200,7 @@ export class Commit{
         });
         const storage = JSON.parse(localStorage.getItem(this._dataRepository)).commits;// Array of commits
         if(storage.length == 0){
+            this.updateHeadToStorage("master");
             this.addCommitToStorage({
                 id: "parent",
                 parent: "init",
