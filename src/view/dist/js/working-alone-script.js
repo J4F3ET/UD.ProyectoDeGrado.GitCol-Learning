@@ -5,9 +5,7 @@ const dataViewer = new DataViewer(document.getElementById("svgContainer"));
 const observer = new Observer()
 document.getElementById("comandInput").addEventListener("change",(e) => {
     comandManager.createMessage('comand',e.target.value);
-    console.log(e.target.value);
     try {
-
         const comand = e.target.value;
         const verify = verifyComand(comand);
         if(verify instanceof Error)
@@ -21,7 +19,8 @@ document.getElementById("comandInput").addEventListener("change",(e) => {
     }
 });
 /**
- * 
+ * @name verifyComand
+ * @description Verify if the comand is valid syntax
  * @param {String} comand 
  * @returns {Error|true}
  */
@@ -36,10 +35,17 @@ function verifyComand(comand="") {
 observer.subscribe("log",dataViewer)
 observer.subscribe("SVG",dataViewer)
 setInterval(() => {
-    observer.notify("SVG",localStorage.getItem('repository'))
+    observer.notify("SVG",localStorage.getItem('local'))
     observer.notify("log",localStorage.getItem('log'))
 }, 1000);
 window.addEventListener('load', () => {
     dataViewer.currentData =  null;
     dataViewer.logComands = null;
 })
+// ZONE VIEW
+const containerLogs = document.getElementById("logContainer");
+const containerSvg = document.getElementById("svgContainer");
+const observerScroll = new MutationObserver(()=>containerLogs.scrollTop = containerLogs.scrollHeight)
+const observerScrollSvgHorizontal = new MutationObserver(()=>containerSvg.scrollLeft = containerSvg.scrollWidth)
+observerScroll.observe(containerLogs,{childList:true})
+observerScrollSvgHorizontal.observe(containerSvg, { childList: true, subtree: true });

@@ -7,19 +7,9 @@ export function isEmptyObject(obj) {
 /**
  * @name currentHead
  * @description Returns the current head of the repository
- * @param {JSON} storage Data of the local storage of the repository
+ * @param {Object[]} storage Data of the local storage of the repository
  * @returns {JSON} Data of the current head
  */
 export function currentHead(storage) {
-    if(isEmptyObject(storage))
-        return {
-            id: "parent",
-            parent: "init",
-            message: "First commit",
-            tags: ["master", "HEAD"],
-            cx: 140,
-            cy: 360,
-        };
-    return storage.array.find(element => {element.tags.includes('HEAD');});
-
+    return storage.find(element => element.tags.includes('HEAD')); 
 }
