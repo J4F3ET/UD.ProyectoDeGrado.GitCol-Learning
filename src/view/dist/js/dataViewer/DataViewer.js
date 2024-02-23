@@ -113,11 +113,10 @@ constructor(svgContainer){
         const parent = document.getElementById(dataCommit.parent);
         const newLine = document.createElementNS("http://www.w3.org/2000/svg","line");
         newLine.classList.add("line");
-        //Para que la linea quede apuntando a la derecha se le suma 68 a x1 y a x2 se le suma 25, pero para la animacion esos valores se ponen despues agregar al contenedor
-        newLine.setAttribute("x1", parseInt(dataCommit.cx)-24);// x1 es el punto de inicio de la linea en x
-        newLine.setAttribute("y1", dataCommit.cy);// y1 es el punto de inicio de la linea en y
-        newLine.setAttribute("x2", parseInt(parent.getAttribute("cx"))+28);// x2 es el punto final de la linea en x
-        newLine.setAttribute("y2", parent.getAttribute("cy"));// y2 es el punto final de la linea en y
+        newLine.setAttribute("x1", parseInt(dataCommit.cx)-24);
+        newLine.setAttribute("y1", dataCommit.cy);
+        newLine.setAttribute("x2", parseInt(parent.getAttribute("cx"))+28);
+        newLine.setAttribute("y2", parent.getAttribute("cy"));
         newLine.setAttribute("marker-end", "url(#triangle)");
         newLine.id = dataCommit.parent+"-"+dataCommit.id;
         return newLine;
@@ -125,8 +124,10 @@ constructor(svgContainer){
     /**
      * @name createTag
      * @description Create element SVG of type text with the properties of a tag
-     * @param {Object} dataCommit Debe ser un elemento de tipo circulo con las propiedades de un commit
-     * @example {id: "parent",parent: "parent",message: "First commit",tags: ["master", "HEAD"],cx: 140,cy: 360};
+     * @param {Int} x Position in the x axis
+     * @param {Int} y Position in the y axis
+     * @param {String} tagName Text to be added to the element
+     * @example createTag(50,50,"HEAD") // <g class="branch-tag" id="HEAD">...</g>
      * @returns {SVGTextElement} Elemento de tipo texto con las propiedades de un tag
      */
     createTag(x,y,tagName){
@@ -236,8 +237,7 @@ constructor(svgContainer){
      * @param {String} data String with the new data, this data is a JSON string
      */
     updateSVG(data){
-        if(data == this._currentData)
-            return
+        if(data == this._currentData)return
         const dataParsed = JSON.parse(data);
         if(this._svg.getElementById("emptyContainer")){
             this.initRepository(this._svg);
@@ -296,7 +296,7 @@ constructor(svgContainer){
             const xText =  this.widthText(key+": "+data[key])*1.5;
             const titleProperty = this.createText(xTitle,20*(index+1),`${key} :`);
             const textProperty = this.createText(xText,20*(index+1),data[key]);
-            gContainerData.querySelector(`#${key}`)?gContainerData.querySelector(`#${key}`).remove():null;
+            gContainerData.querySelector(`#${key}`)?.remove();
             gContainerText.id = key;
             gContainerText.classList.add("container-text-data-repository");
             titleProperty.classList.add("title-property");
@@ -311,15 +311,8 @@ constructor(svgContainer){
         this.addLineToSvg(this.createLine(commit));
         this.addMessageAndIdToCommit(commit);
         const y = parseInt(commit.cy) + 60; 
-        commit.tags.forEach((tag,index) => {// Create the tags by number of tags
-            this._svg.getElementById(tag)?this._svg.getElementById(tag).remove:null;
-            this.addTagToSvg(// Add the tag to the SVG container
-                this.createTag(// Create the tag element
-                    commit.cx,// Position in the x axis of the tag
-                    y+(index*25),// Position in the y axis of the tag
-                    tag// Text of the tag
-                )
-            );
+        commit.tags.forEach((tag,index) => {
+            this.addTagToSvg(this.createTag(commit.cx,y+(index*25),tag));
         });
     }
     addMessageAndIdToCommit(commit){
@@ -337,14 +330,15 @@ constructor(svgContainer){
         this._svg.getElementById("gContainerCommit").appendChild(id);
     }
     addCircleToSvg(commit){
-        this._svg.getElementById(commit.id)?this._svg.getElementById(commit.id).remove():null;
+        this._svg.getElementById(commit.id)?.remove();
         this._svg.getElementById("gContainerCommit").appendChild(commit)
     }
     addLineToSvg(line){
         this._svg.getElementById("gContainerPointer").appendChild(line)
     }
-    addTagToSvg(tags){
-        this._svg.getElementById("gContainerTag").appendChild(tags)
+    addTagToSvg(tag){
+        this._svg.getElementById(tag.id)?.remove();
+        this._svg.getElementById("gContainerTag").appendChild(tag)
     }
 
 }
