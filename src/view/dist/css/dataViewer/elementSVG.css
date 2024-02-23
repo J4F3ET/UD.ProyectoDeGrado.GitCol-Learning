@@ -16,8 +16,9 @@
     fill: var(--text-color);
 }   
 circle.commit {
-    fill: #CCCCCC;
-    stroke: #888888;
+    fill: #ffffff86;
+    stroke: #777777;
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.514));
     stroke-width: 2px;
     animation: drop 0.5s ease-in-out;
 }
@@ -63,8 +64,8 @@ circle.commit.branchless.checked-out {
     fill: #FEFEFE;
 }
 circle.commit.checked-out {
-    fill: #8ce08c;
-    stroke: #339900;
+    fill: #8ce08ca2;
+    stroke: #339900bd;
     stroke-width: 3px;
 }
 circle.commit.logging {
@@ -75,6 +76,72 @@ circle.commit.logging {
     stroke: rgba(100, 100, 100, 0.5);
     stroke-width: 4;
     stroke-dasharray: 15, 4;
+}
+
+text.id-label {
+    text-anchor: middle;
+    font-family: Courier New;
+    font-weight: bolder;
+    fill: #ffffff;
+    font-size: 10px;
+}
+text.message-label {
+    text-anchor: middle;
+    font-family: Courier New;
+    text-shadow: 0,0,.5 black;
+    fill: #ffffff;
+    font-size: 10px;
+}
+text.title-property {
+    font-weight: bolder;
+    fill: var(--main-color);
+}
+text.text-property{
+    fill: #ffffff;
+}
+g.container-text-data-repository {
+    text-anchor:middle;
+    font-family: Courier New;
+    font-size: 1.5rem;
+    fill: var(--text-color);
+}
+g.branch-tag > rect {
+    fill: #ffcc66fd;
+    stroke: #ebb000;
+    stroke-width: 1;
+}
+
+g.branch-tag.git-tag > rect {
+    fill: #7FC9FF;
+    stroke: #0026FF;
+}
+
+g.branch-tag.remote-branch > rect {
+    fill: #CCC;
+    stroke: #888;
+}
+
+g.branch-tag > text {
+    text-anchor: middle;
+    fill: #000;
+    font-size: 15px;
+    font-family: Arial;
+}
+
+g.head-tag > rect {
+    fill: #a7ffa7;
+    stroke: #339900;
+    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.514));
+    stroke-width: 2;
+}
+
+g.head-tag > text {
+    text-anchor: middle;
+    fill: #000;
+    font-size: 15px;
+    font-family: Arial;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 @media screen and (max-width: 1106px){
     .empyText{

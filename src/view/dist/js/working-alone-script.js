@@ -19,7 +19,8 @@ document.getElementById("comandInput").addEventListener("change",(e) => {
     }
 });
 /**
- * 
+ * @name verifyComand
+ * @description Verify if the comand is valid syntax
  * @param {String} comand 
  * @returns {Error|true}
  */
@@ -34,10 +35,17 @@ function verifyComand(comand="") {
 observer.subscribe("log",dataViewer)
 observer.subscribe("SVG",dataViewer)
 setInterval(() => {
-    observer.notify("SVG",localStorage.getItem('repository'))
+    observer.notify("SVG",localStorage.getItem('local'))
     observer.notify("log",localStorage.getItem('log'))
 }, 1000);
 window.addEventListener('load', () => {
     dataViewer.currentData =  null;
-    localStorage.removeItem('repository');
+    dataViewer.logComands = null;
 })
+// ZONE VIEW
+const containerLogs = document.getElementById("logContainer");
+const containerSvg = document.getElementById("svgContainer");
+const observerScroll = new MutationObserver(()=>containerLogs.scrollTop = containerLogs.scrollHeight)
+const observerScrollSvgHorizontal = new MutationObserver(()=>containerSvg.scrollLeft = containerSvg.scrollWidth)
+observerScroll.observe(containerLogs,{childList:true})
+observerScrollSvgHorizontal.observe(containerSvg, { childList: true, subtree: true });
