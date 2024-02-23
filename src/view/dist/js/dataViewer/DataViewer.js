@@ -74,6 +74,10 @@ constructor(svgContainer){
         newCircle.setAttribute("cx", dataCommit.cx);
         newCircle.setAttribute("cy", dataCommit.cy);
         newCircle.setAttribute("r", "20");
+        if(dataCommit.tags.includes("HEAD"))
+            newCircle.classList.add("checked-out");
+        else
+            newCircle.classList.remove("checked-out");
         newCircle.classList.add("commit");
         newCircle.id = dataCommit.id;
         return newCircle;   
@@ -293,9 +297,10 @@ constructor(svgContainer){
         keys.forEach((key,index) => {
             const gContainerText = document.createElementNS("http://www.w3.org/2000/svg","g");
             const xTitle = this.widthText(key);
-            const xText =  this.widthText(key+": "+data[key])*1.5;
-            const titleProperty = this.createText(xTitle,20*(index+1),`${key} :`);
-            const textProperty = this.createText(xText,20*(index+1),data[key]);
+            const xText =  this.widthText(data[key]) + (xTitle*2);
+            const y = 30*(index+1);
+            const titleProperty = this.createText(xTitle,y,`${key}:`);
+            const textProperty = this.createText(xText,y,data[key]);
             gContainerData.querySelector(`#${key}`)?.remove();
             gContainerText.id = key;
             gContainerText.classList.add("container-text-data-repository");
