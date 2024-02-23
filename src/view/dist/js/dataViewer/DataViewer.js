@@ -1,8 +1,8 @@
 import { isEmptyObject } from "../util.js";
 export class DataViewer{
-    constructor(svgContainer){
-        this._logComands = localStorage.getItem('log');
-        this._currentData = localStorage.getItem('repository');
+constructor(svgContainer){
+        this._logComands = "";
+        this._currentData = "";
         this._svg = this.createSVG();
         svgContainer.appendChild(this._svg);
     }
@@ -40,7 +40,7 @@ export class DataViewer{
      */
     createSVG(){
         const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-        const widthSvg = window.innerWidth * 0.75;
+        const widthSvg = window.innerWidth * 0.73;
         const heightSvg = window.innerHeight * 0.85;
         svg.setAttribute("id", "svg");
         svg.setAttribute("width", widthSvg);
@@ -82,6 +82,8 @@ export class DataViewer{
         if(!svgDocumentElement)
             return
         svgDocumentElement.innerHTML= ''
+        const gContainerData = document.createElementNS("http://www.w3.org/2000/svg","g");
+        gContainerData.id = "gContainerData";
         const gContainerPointer = document.createElementNS("http://www.w3.org/2000/svg","g");
         gContainerPointer.id = "gContainerPointer";
         const gContainerTag = document.createElementNS("http://www.w3.org/2000/svg","g");
@@ -94,6 +96,8 @@ export class DataViewer{
         circle.id = "init";
         circle.setAttribute("r", "0");
         gContainerCommit.appendChild(circle);
+        gContainerData.appendChild(this.createText(20,20,this._svg.getAttribute("id")));
+        svgDocumentElement.appendChild(gContainerData);
         svgDocumentElement.appendChild(gContainerPointer);
         svgDocumentElement.appendChild(gContainerTag);
         svgDocumentElement.appendChild(gContainerCommit);
@@ -134,6 +138,7 @@ export class DataViewer{
             newTag.classList.add("head-tag");
         newTag.appendChild(newRect);
         newTag.appendChild(newText);
+        newTag.id = tagName;
         return newTag;
     }
     /**
@@ -185,9 +190,17 @@ export class DataViewer{
      * @param {SVGSVGElement} svgElement Elemento de tipo SVG
      */
     resizeSVG(){
-        const maxCX = Math.max(...Array.from(this._svg.querySelectorAll(".commit")).map(commit => parseInt(commit.getAttribute("cx"))));
-        this.svg.setAttribute("width", maxCX + 150);
-        this.svg.style.width = maxCX + 150 + "px";
+        if(this._svg.querySelectorAll(".commit").length == 0 )
+            return
+        const maxCX = Math.max(...Array.from(
+            this._svg.querySelectorAll(".commit")).map(
+                commit => parseInt(commit.getAttribute("cx"))
+            )
+        ) + 150;
+        if(maxCX < parseInt(this._svg.getAttribute("width")))
+            return
+        this._svg.setAttribute("width", maxCX);
+        this._svg.style.width = maxCX + "px";
     }
     /**
      * @name createMessage
@@ -223,43 +236,83 @@ export class DataViewer{
      * @param {String} data String with the new data, this data is a JSON string
      */
     updateSVG(data){
-        if(data == this.currentData)
+        if(data == this._currentData)
             return
-        if(data != undefined)
+        const dataParsed = JSON.parse(data);
+        if(this._svg.getElementById("emptyContainer")){
             this.initRepository(this._svg);
-        if(!isEmptyObject(JSON.parse(data)))
-            this.renderSVG(JSON.parse(data));
-        this.currentData = data;
+            this.renderCommitsToSVG(dataParsed.commits);
+            this.renderInfoToSVG(dataParsed.information);
+            this._currentData = data;
+            this.resizeSVG();
+            return
+        }
+        const currentData = JSON.parse(this._currentData);
+        const currentCommitsData = currentData==null?[]:currentData.commits ?? [];
+        const currentInfoData = currentData==null?{}:currentData.information ?? {};
+        if(dataParsed.commits != currentCommitsData)
+            this.renderCommitsToSVG(dataParsed.commits,currentCommitsData)
+        if(dataParsed.information != currentInfoData)
+            this.renderInfoToSVG(dataParsed.information);
+        this._currentData = data;
         this.resizeSVG();
     }
     /**
-     * @name renderSVG
+     * @name renderCommitsToSVG
      * @description Render the SVG with the new data.
-     * @param {Object[]} data Array to commits
+     * @param {Object[]} commitsData Array with the commits data to be rendered
+     * @param {Object[]} currentCommits Array with the current commits data to be rendered
      */
-    renderSVG(data){
-        // Si entra a rendesSVG es porque ya existe el repositorio
-        // La logica debe ser separada en lineas , commits, tags y branches
-        // Se crea una linea paralela Cuando el current commit un hijo y a dicho commit se le agrega un hijo
-        // Cada commit es un nodo y solo puede tener un padre y varios hijos 
-        // Solo puede existir un HEAD
-        const commitsCreated = document.querySelectorAll(".commit");
-        if(commitsCreated.length == '0'){
-            data.forEach(commit => {
+    renderCommitsToSVG(commitsData,currentCommits = null){
+        if(!currentCommits){
+            commitsData.forEach(commit => {
                 this.addCommitToSvg(commit);
             });
-        }else{
-            const commits = data.filter(commit => !commitsCreated.array.some(element => element.id == commit.id));
-            commits.forEach(commit => {
-                this.addCommitToSvg(commit);
-            });
+            return
         }
+        commitsData.forEach((commit, index) => {
+            if(
+                currentCommits[index] == undefined || 
+                currentCommits[index].tags.length != commit.tags.length ||
+                currentCommits[index].cx != commit.cx ||
+                currentCommits[index].cy != commit.cy
+            ){
+                this.addCommitToSvg(commit);
+            };
+        });
+    }
+    /**
+     * @name renderInfoToSVG    
+     * @description Render the SVG with the new information
+     * @param {Object} data Object with the information to be rendered
+     * @example {head: "master", repository: "repositoryName"}
+     */
+    renderInfoToSVG(data){
+        const gContainerData = this._svg.getElementById("gContainerData");
+        const keys = Object.keys(data);
+        keys.forEach((key,index) => {
+            const gContainerText = document.createElementNS("http://www.w3.org/2000/svg","g");
+            const xTitle = this.widthText(key);
+            const xText =  this.widthText(key+": "+data[key])*1.5;
+            const titleProperty = this.createText(xTitle,20*(index+1),`${key} :`);
+            const textProperty = this.createText(xText,20*(index+1),data[key]);
+            gContainerData.querySelector(`#${key}`)?gContainerData.querySelector(`#${key}`).remove():null;
+            gContainerText.id = key;
+            gContainerText.classList.add("container-text-data-repository");
+            titleProperty.classList.add("title-property");
+            textProperty.classList.add("text-property");
+            gContainerText.appendChild(titleProperty);
+            gContainerText.appendChild(textProperty);
+            gContainerData.appendChild(gContainerText);
+        });
     }
     addCommitToSvg(commit){
         this.addCircleToSvg(this.createCommit(commit));
         this.addLineToSvg(this.createLine(commit));
-        const y = parseInt(commit.cy) + 40; 
+        this.addMessageAndIdToCommit(commit);
+        const y = parseInt(commit.cy) + 60; 
         commit.tags.forEach((tag,index) => {// Create the tags by number of tags
+            this._svg.getElementById(tag)?this._svg.getElementById(tag).remove:null;
             this.addTagToSvg(// Add the tag to the SVG container
                 this.createTag(// Create the tag element
                     commit.cx,// Position in the x axis of the tag
@@ -269,7 +322,22 @@ export class DataViewer{
             );
         });
     }
+    addMessageAndIdToCommit(commit){
+        if(this._svg.getElementById(commit.id+"-message")){
+            this._svg.getElementById(commit.id+"-message").remove()
+            this._svg.getElementById(commit.id+"-id").remove()
+        }
+        const message = this.createText(commit.cx,commit.cy+30,commit.message)
+        const id = this.createText(commit.cx,commit.cy+40,commit.id)
+        message.id = commit.id+"-message";
+        id.id = commit.id+"-id";
+        message.classList.add("message-label");
+        id.classList.add("id-label");
+        this._svg.getElementById("gContainerCommit").appendChild(message);
+        this._svg.getElementById("gContainerCommit").appendChild(id);
+    }
     addCircleToSvg(commit){
+        this._svg.getElementById(commit.id)?this._svg.getElementById(commit.id).remove():null;
         this._svg.getElementById("gContainerCommit").appendChild(commit)
     }
     addLineToSvg(line){

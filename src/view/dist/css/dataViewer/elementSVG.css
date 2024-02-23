@@ -82,17 +82,29 @@ text.id-label {
     text-anchor: middle;
     font-family: Courier New;
     font-weight: bolder;
-    fill: #666;
+    fill: #ffffff;
     font-size: 10px;
 }
-
 text.message-label {
     text-anchor: middle;
     font-family: Courier New;
-    fill: #666;
+    text-shadow: 0,0,.5 black;
+    fill: #ffffff;
     font-size: 10px;
 }
-
+text.title-property {
+    font-weight: bolder;
+    fill: var(--main-color);
+}
+text.text-property{
+    fill: #ffffff;
+}
+g.container-text-data-repository {
+    text-anchor:middle;
+    font-family: Courier New;
+    font-size: 1.5rem;
+    fill: var(--text-color);
+}
 g.branch-tag > rect {
     fill: #ffcc66fd;
     stroke: #ebb000;

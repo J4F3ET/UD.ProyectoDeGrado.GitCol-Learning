@@ -121,8 +121,8 @@ body{
     overflow: auto;
 }
 #svg{
-    width: calc(100vw * 0.95);
-    height: calc(100vh * 0.85);
+    width: 73vw;
+    height: 85vh;
     border-radius: 5px;
     background-color: var(--second-bg-color);
 }

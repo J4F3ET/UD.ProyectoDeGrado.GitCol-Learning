@@ -35,7 +35,7 @@ function verifyComand(comand="") {
 observer.subscribe("log",dataViewer)
 observer.subscribe("SVG",dataViewer)
 setInterval(() => {
-    observer.notify("SVG",localStorage.getItem('repository'))
+    observer.notify("SVG",localStorage.getItem('local'))
     observer.notify("log",localStorage.getItem('log'))
 }, 1000);
 window.addEventListener('load', () => {

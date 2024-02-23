@@ -65,7 +65,7 @@ export class Commit{
      */
     callBackConfigMessage = (dataComand) =>{
         dataComand.forEach((data,index) => {
-            if( this.parseConfig(data).includes('m')){
+            if( this.parseConfig(data).includes('m')&&dataComand[index+1]!=undefined){
                 this._configurations.m.message = dataComand[index+1];
                 return;
             }
@@ -100,7 +100,7 @@ export class Commit{
      */
     addCommitToStorage(commit){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        storage.push(commit);
+        storage.commits.push(commit);
         localStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
     /**
@@ -135,7 +135,7 @@ export class Commit{
      */
     updateCommitToStorage(newCommit){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        storage.forEach(oldCommit => {
+        storage.commits.forEach(oldCommit => {
             if(oldCommit.id == newCommit.id){
                 Object.assign(oldCommit, newCommit);
             }
@@ -150,7 +150,7 @@ export class Commit{
      */
     existsCommitToStorage(commit){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        return storage.some(c => c.id == commit.id);
+        return storage.commits.some(c => c.id == commit.id);
     }
     /**
      * @name createCod
@@ -193,12 +193,12 @@ export class Commit{
         this.resolveConfigure(dataComand).forEach(config => {
             this._configurations[config].callback(dataComand);
         });
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository)).commits;// Array of commits
         if(storage.length == 0){
             this.addCommitToStorage({
                 id: "parent",
                 parent: "init",
-                message: "First commit",
+                message: this._configurations.m.message,
                 tags: ["master", "HEAD"],
                 cx: 50,
                 cy: 334,
@@ -207,7 +207,9 @@ export class Commit{
         }
         var head = currentHead(storage);
         const newCommit = this.createCommit(head);
-        head = this.removeTag("HEAD",head);
+        head.tags.forEach((tag)=>{
+            head = this.removeTag(tag,head);
+        })
         this.updateCommitToStorage(head);
         this.addCommitToStorage(newCommit);
         if(!this.existsCommitToStorage(newCommit)){
