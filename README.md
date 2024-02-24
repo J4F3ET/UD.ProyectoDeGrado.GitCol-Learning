@@ -477,16 +477,16 @@ Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
 2. [x] **git commit**: Crea un commit con los archivos del área de preparación y un mensaje.
     - [x] **git commit -m "Mensaje"**: Crea un commit con los archivos del área de preparación y un mensaje.
     - [x] **git commit -am "Mensaje"**: Agrega los archivos al área de preparación y crea un commit con los archivos del área de preparación y un mensaje.
-3. [] **git status**: Muestra el estado actual del repositorio.
-4. [] **git log**: Muestra el historial de commits.
-5. [] **git branch**: Muestra las ramas del repositorio.
-    - [] **git branch "NombreRama"**: Crea una rama con el nombre especificado.
-    - [] **git branch -d "NombreRama"**: Elimina la rama con el nombre especificado.
-    - [] **git branch -m "NombreRama"**: Cambia el nombre de la rama actual.
-    - [] **git branch -a**: Muestra todas las ramas del repositorio.
-    - [] **git branch -l**: Muestra las ramas del repositorio.
-    - [] **git branch -r**: Muestra las ramas remotas del repositorio.
-6. [] **git checkout**: Cambia de rama.
+3. [ ] **git status**: Muestra el estado actual del repositorio.
+4. [ ] **git log**: Muestra el historial de commits.
+5. [ ] **git branch**: Muestra las ramas del repositorio.
+    - [ ] **git branch "NombreRama"**: Crea una rama con el nombre especificado.
+    - [ ] **git branch -d "NombreRama"**: Elimina la rama con el nombre especificado.
+    - [ ] **git branch -m "NombreRama"**: Cambia el nombre de la rama actual.
+    - [ ] **git branch -a**: Muestra todas las ramas del repositorio.
+    - [ ] **git branch -l**: Muestra las ramas del repositorio.
+    - [ ] **git branch -r**: Muestra las ramas remotas del repositorio.
+6. [ ] **git checkout**: Cambia de rama.
 
 > [!NOTE]
 > **Modulos MPV**
