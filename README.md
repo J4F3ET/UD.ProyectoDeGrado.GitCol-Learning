@@ -1,4 +1,5 @@
 # UD.ProyectoDeGrado.GitCol-Learning
+
 ## Indice
 
 1. [Mokaps](#mokaps)
@@ -7,8 +8,7 @@
 4. [Dependencias](#dependencias)
 5. [Scripts](#scripts)
 6. [Dockers](#dockers)
-7. [Arquitectura](#arquitectura)
-8. [Comandos de git que soporta la aplicación](#comandos-de-git-que-soporta-la-aplicación)
+7. [Comandos de git que soporta la aplicación](#comandos-de-git-que-soporta-la-aplicación)
 
 ## Mokaps
 
@@ -155,86 +155,11 @@ Sala
         "cx": 140,
         "cy": 330,
         "branchless": false
-      },
-      {
-        "id": "1c016b6",
-        "parent": "e137e9b",
-        "tags": [],
-        "cx": 140,
-        "cy": 240,
-        "branchless": false
-      },
-      {
-        "id": "fd0af32",
-        "parent": "1c016b6",
-        "tags": [],
-        "cx": 230,
-        "cy": 240,
-        "branchless": false
-      },
-      {
-        "id": "5041e4c",
-        "tags": [
-          "feature",
-          "origin/feature",
-          "HEAD"
-        ],
-        "parent": "fd0af32",
-        "cx": 320,
-        "cy": 240,
-        "branchless": false
-      }
-    ],
-    originData: [
-      {
-        "id": "e137e9b",
-        "tags": [],
-        "message": "first commit",
-        "parent": "initial",
-        "cx": 50,
-        "cy": 360,
-        "branchless": false
-      },
-      {
-        "id": "84c98fe",
-        "parent": "e137e9b",
-        "tags": [
-          "master"
-        ],
-        "cx": 140,
-        "cy": 360,
-        "branchless": false
-      },
-      {
-        "id": "1c016b6",
-        "parent": "e137e9b",
-        "tags": [],
-        "cx": 140,
-        "cy": 270,
-        "branchless": false
-      },
-      {
-        "id": "fd0af32",
-        "tags": [
-          "feature",
-          "HEAD"
-        ],
-        "parent": "1c016b6",
-        "cx": 230,
-        "cy": 270,
-        "branchless": false
-      },
-      {
-        "id": "5041e4c",
-        "tags": [],
-        "parent": "fd0af32",
-        "cx": 320,
-        "cy": 270,
-        "branchless": true
       }
     ]
 }
 ```
+
 JSON sacado de [Visualizing Git](https://git-school.github.io/visualizing-git/)
 
 ## Dependencias
@@ -311,6 +236,7 @@ npm install socket.io
 ```bash
 npm install swagger-jsdoc
 ```
+
 -**Swagger-ui-express**: Para visualizar la documentación de la API.
 
 ```bash
@@ -356,74 +282,6 @@ Socket.io permite crear salas con las cuales se pueden agrupar sockets. De esta 
 
 ![socket](./documetation/img/SocketRoom.png)
 Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
-
-## Arquitectura
-
-### Estructura
-
-```text
-└── 📁UD.ProyectoDeGrado.GitCol-Learning
-    └── .babelrc
-    └── .dockerignore
-    └── .env
-    └── Dockerfile
-    └── 📁documetation
-        └── 📁img
-            └── MokapAuth.png
-            └── MokapsMenus.png
-            └── MokapsScreens.png
-    └── firebase.json
-    └── package-lock.json
-    └── package.json
-    └── README.md
-    └── server.js
-    └── 📁src
-        └── 📁controller
-            └── home-controller.js
-            └── login-controller.js
-            └── teaser-controller.js
-            └── 📁util
-                └── login-middleware .js
-        └── 📁model
-            └── exercise-service.js
-            └── firebase-service.js
-            └── room-service.js
-        └── 📁view
-            └── home-screen.ejs
-            └── login-screen.ejs
-            └── rooms-screen.ejs
-            └── teaser-screen.ejs
-```
-
-### Estructura de carpetas
-
-- **src**: Contiene el código fuente de la aplicación.
-
-```text
-└── 📁src
-    └── 📁controller
-        └── home-controller.js
-        └── login-controller.js
-        └── teaser-controller.js    
-        └── 📁util
-            └── login-middleware .js
-    └── 📁model
-        └── exercise-service.js
-        └── firebase-service.js
-        └── room-service.js
-    └── 📁view
-        └── home-screen.ejs
-        └── login-screen.ejs
-        └── rooms-screen.ejs
-        └── teaser-screen.ejs
-```
-
-- **documetation**: Contiene la documentación del proyecto.
-
-```text
-└── 📁documetation
-    └── 📁img
-```
 
 ## Comandos de git que soporta la aplicación
 
