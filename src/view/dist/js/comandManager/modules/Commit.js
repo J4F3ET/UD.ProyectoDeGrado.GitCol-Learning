@@ -1,5 +1,7 @@
 import { currentHead,isEmptyObject } from "../../util.js";
 export class Commit{
+    SPACE_BETWEEN_COMMITS_X = 80;
+    SPACE_BETWEEN_COMMITS_Y = 80;
     /**
      * @name constructor
      * @description The constructor of the class, it receives the repository of the data
@@ -169,15 +171,16 @@ export class Commit{
     /**
      * Create a new commit
      * @param {JSON} parent  Commit parent to create the new commit
+     * @param {JSON[]} commits Array of commits
      * @returns {JSON} New commit created
      */
-    createCommit(parent) {
+    createCommit(parent,commits) {
         return {
             id: this.createCod(),
             message: this._configurations.m.message,
             parent: parent.id,
             tags: parent.tags,
-            cx : parseInt(parent.cx) + 80,
+            cx : parseInt(parent.cx) + this.SPACE_BETWEEN_COMMITS_X,
             cy : parseInt(parent.cy)
         };
     }
@@ -185,6 +188,29 @@ export class Commit{
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         storage.information.head = newHead;
         localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+    }
+    /**
+     * @name calculatePositionCommit
+     * @description Calculate the position of the new commit
+     * @param {JSON} parent Commit parent to create the new commit
+     * @param {JSON[]} commits Array of commits
+     * @returns {JSON} Position of the new commit
+     */
+    calculatePositionCommit(parent,commits){
+        const commitThisUbicationX = commits.find(commit => commit.cx == parent.cx + this.SPACE_BETWEEN_COMMITS_X && commit.cy == parent.cy);
+        const commitThisUbicationY = commits.find(commit => commit.cx == parent.cx + this.SPACE_BETWEEN_COMMITS_X && commit.cy == parent.cy + this.SPACE_BETWEEN_COMMITS_Y);
+        var cx = parent.cx + this.SPACE_BETWEEN_COMMITS_X;
+
+        if(commitThisUbicationX == undefined)
+            return {
+                cx: parent.cx + this.SPACE_BETWEEN_COMMITS_X,
+                cy: parent.cy
+            };
+        if(commitThisUbicationY == undefined)
+            return {
+                cx: parent.cx,
+                cy: parent.cy + this.SPACE_BETWEEN_COMMITS_Y
+            };
     }
     /**
      * @name execute
@@ -212,7 +238,7 @@ export class Commit{
             return
         }
         var head = currentHead(storage);
-        const newCommit = this.createCommit(head);
+        const newCommit = this.createCommit(head,storage);
         head.tags.forEach((tag)=>{
             head = this.removeTag(tag,head);
         })

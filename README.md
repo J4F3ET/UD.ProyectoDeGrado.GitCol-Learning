@@ -1,4 +1,5 @@
 # UD.ProyectoDeGrado.GitCol-Learning
+
 ## Indice
 
 1. [Mokaps](#mokaps)
@@ -7,8 +8,7 @@
 4. [Dependencias](#dependencias)
 5. [Scripts](#scripts)
 6. [Dockers](#dockers)
-7. [Arquitectura](#arquitectura)
-8. [Comandos de git que soporta la aplicación](#comandos-de-git-que-soporta-la-aplicación)
+7. [Comandos de git que soporta la aplicación](#comandos-de-git-que-soporta-la-aplicación)
 
 ## Mokaps
 
@@ -23,6 +23,10 @@
 ### [Mokap Visualizing Git](https://excalidraw.com/#room=977bcce490f934711f98,bvG7SJZBXeIBiKmduDb3ow)
 
 ![ImagenMokaps](./documetation/img/MokapsVisualizingGit.png)
+
+### [Mokap Ramificaciones](https://excalidraw.com/#room=3de5a49605badc01e214,Ez-gRLHN1gGFBWBnyPlZkA)
+
+![ImagenMokaps](./documetation/img/MokapRamificaciones.png)
 
 ### [Proceso Auth](https://excalidraw.com/#room=f5e9b3946bfb6efa7de6,sX_7Bvm6NW4Vg4j89S0uJA)
 
@@ -151,86 +155,11 @@ Sala
         "cx": 140,
         "cy": 330,
         "branchless": false
-      },
-      {
-        "id": "1c016b6",
-        "parent": "e137e9b",
-        "tags": [],
-        "cx": 140,
-        "cy": 240,
-        "branchless": false
-      },
-      {
-        "id": "fd0af32",
-        "parent": "1c016b6",
-        "tags": [],
-        "cx": 230,
-        "cy": 240,
-        "branchless": false
-      },
-      {
-        "id": "5041e4c",
-        "tags": [
-          "feature",
-          "origin/feature",
-          "HEAD"
-        ],
-        "parent": "fd0af32",
-        "cx": 320,
-        "cy": 240,
-        "branchless": false
-      }
-    ],
-    originData: [
-      {
-        "id": "e137e9b",
-        "tags": [],
-        "message": "first commit",
-        "parent": "initial",
-        "cx": 50,
-        "cy": 360,
-        "branchless": false
-      },
-      {
-        "id": "84c98fe",
-        "parent": "e137e9b",
-        "tags": [
-          "master"
-        ],
-        "cx": 140,
-        "cy": 360,
-        "branchless": false
-      },
-      {
-        "id": "1c016b6",
-        "parent": "e137e9b",
-        "tags": [],
-        "cx": 140,
-        "cy": 270,
-        "branchless": false
-      },
-      {
-        "id": "fd0af32",
-        "tags": [
-          "feature",
-          "HEAD"
-        ],
-        "parent": "1c016b6",
-        "cx": 230,
-        "cy": 270,
-        "branchless": false
-      },
-      {
-        "id": "5041e4c",
-        "tags": [],
-        "parent": "fd0af32",
-        "cx": 320,
-        "cy": 270,
-        "branchless": true
       }
     ]
 }
 ```
+
 JSON sacado de [Visualizing Git](https://git-school.github.io/visualizing-git/)
 
 ## Dependencias
@@ -307,6 +236,7 @@ npm install socket.io
 ```bash
 npm install swagger-jsdoc
 ```
+
 -**Swagger-ui-express**: Para visualizar la documentación de la API.
 
 ```bash
@@ -353,75 +283,9 @@ Socket.io permite crear salas con las cuales se pueden agrupar sockets. De esta 
 ![socket](./documetation/img/SocketRoom.png)
 Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
 
-## Arquitectura
-
-### Estructura
-
-```text
-└── 📁UD.ProyectoDeGrado.GitCol-Learning
-    └── .babelrc
-    └── .dockerignore
-    └── .env
-    └── Dockerfile
-    └── 📁documetation
-        └── 📁img
-            └── MokapAuth.png
-            └── MokapsMenus.png
-            └── MokapsScreens.png
-    └── firebase.json
-    └── package-lock.json
-    └── package.json
-    └── README.md
-    └── server.js
-    └── 📁src
-        └── 📁controller
-            └── home-controller.js
-            └── login-controller.js
-            └── teaser-controller.js
-            └── 📁util
-                └── login-middleware .js
-        └── 📁model
-            └── exercise-service.js
-            └── firebase-service.js
-            └── room-service.js
-        └── 📁view
-            └── home-screen.ejs
-            └── login-screen.ejs
-            └── rooms-screen.ejs
-            └── teaser-screen.ejs
-```
-
-### Estructura de carpetas
-
-- **src**: Contiene el código fuente de la aplicación.
-
-```text
-└── 📁src
-    └── 📁controller
-        └── home-controller.js
-        └── login-controller.js
-        └── teaser-controller.js    
-        └── 📁util
-            └── login-middleware .js
-    └── 📁model
-        └── exercise-service.js
-        └── firebase-service.js
-        └── room-service.js
-    └── 📁view
-        └── home-screen.ejs
-        └── login-screen.ejs
-        └── rooms-screen.ejs
-        └── teaser-screen.ejs
-```
-
-- **documetation**: Contiene la documentación del proyecto.
-
-```text
-└── 📁documetation
-    └── 📁img
-```
-
 ## Comandos de git que soporta la aplicación
+
+### Modulos que a futuro se implementaran
 
 1. **git init**: Inicializa un repositorio local de git en la carpeta actual.
 2. **git config**: Configura el nombre y el correo electrónico del usuario.
@@ -433,34 +297,56 @@ Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
     - **git config --global --unset user.name**: Elimina la configuración del nombre del usuario.
     - **git config --global --unset user.email**: Elimina la configuración del correo electrónico del usuario.
 3. **git add**: Agrega los archivos al área de preparación.
+4. **git rm**: Elimina los archivos del área de preparación.
+    - **git rm "NombreArchivo"**: Elimina el archivo del área de preparación.
+5. **git commit**: Crea un commit con los archivos del área de preparación y un mensaje.
+    - **git commit -m "Mensaje"**: Crea un commit con los archivos del área de preparación y un mensaje.
+    - **git commit -am "Mensaje"**: Agrega los archivos al área de preparación y crea un commit con los archivos del área de preparación y un mensaje.
+6. **git status**: Muestra el estado actual del repositorio.
+7. **git log**: Muestra el historial de commits.
+8. **git branch**: Muestra las ramas del repositorio.
+    - **git branch "NombreRama"**: Crea una rama con el nombre especificado.
+    - **git branch -d "NombreRama"**: Elimina la rama con el nombre especificado.
+    - **git branch -m "NombreRama"**: Cambia el nombre de la rama actual.
+    - **git branch -a**: Muestra todas las ramas del repositorio.
+    - **git branch -l**: Muestra las ramas del repositorio.
+    - **git branch -r**: Muestra las ramas remotas del repositorio.
+9. **git checkout**: Cambia de rama.
+10. **git switch**: Cambia de rama.
+11. **git merge**: Fusiona dos ramas.
+12. **git push**: Sube los cambios al repositorio remoto.
+13. **git pull**: Descarga los cambios del repositorio remoto.
+14. **git remote**: Muestra los repositorios remotos.
+    - **git remote add "NombreRepositorio" "URLRepositorio"**: Agrega un repositorio remoto.
+    - **git remote remove "NombreRepositorio"**: Elimina un repositorio remoto del repositorio local.
 
 > [!NOTE]
 > **Idea de implementacion**
 > Ya que nosotros no implementamos manejo de archivos la idea es que el comando simule agregar los archivos al área de
->preparación. Con archivos con nombres específicos. Con el fin de que el 
+>preparación. Con archivos con nombres específicos. Con el fin de que el
 >usuario pueda ejecutar los comandos de git.
 >
 > - **git add .**: Agrega todos los archivos al área de preparación.
 > - **git add "NombreArchivo"**: Agrega el archivo al área de preparación.
 
-4. **git rm**: Elimina los archivos del área de preparación.
-    - **git rm --cached "NombreArchivo"**: Elimina el archivo del área de preparación.
-5. **git restore**: Elimina los archivos del área de preparación.
+### Modulos implementados
 
-6. **git commit**: Crea un commit con los archivos del área de preparación.
-    - **git commit -m "Mensaje"**: Crea un commit con los archivos del área de preparación y un mensaje.
-    - **git commit -am "Mensaje"**: Agrega los archivos al área de preparación y crea un commit con los archivos del área de preparación y un mensaje.
-7. **git status**: Muestra el estado actual del repositorio.
-8. **git log**: Muestra el historial de commits.
-9. **git branch**: Muestra las ramas del repositorio.
-    - **git branch "NombreRama"**: Crea una rama con el nombre especificado.
-    - **git branch -d "NombreRama"**: Elimina la rama con el nombre especificado.
-10. **git checkout**: Cambia de rama.
-11. **git switch**: Cambia de rama.
-12. **git merge**: Fusiona dos ramas.
-13. **git push**: Sube los cambios al repositorio remoto.
-14. **git pull**: Descarga los cambios del repositorio remoto.
-15. **git clone**: Clona un repositorio remoto.
-16. **git remote**: Muestra los repositorios remotos.
-    - **git remote add "NombreRepositorio" "URLRepositorio"**: Agrega un repositorio remoto.
-    - **git remote remove "NombreRepositorio"**: Elimina un repositorio remoto del repositorio local.
+1. [x] **git init**: Inicializa un repositorio local de git en la carpeta actual.
+2. [x] **git commit**: Crea un commit con los archivos del área de preparación y un mensaje.
+    - [x] **git commit -m "Mensaje"**: Crea un commit con los archivos del área de preparación y un mensaje.
+    - [x] **git commit -am "Mensaje"**: Agrega los archivos al área de preparación y crea un commit con los archivos del área de preparación y un mensaje.
+3. [ ] **git status**: Muestra el estado actual del repositorio.
+4. [ ] **git log**: Muestra el historial de commits.
+5. [ ] **git branch**: Muestra las ramas del repositorio.
+    - [ ] **git branch "NombreRama"**: Crea una rama con el nombre especificado.
+    - [ ] **git branch -d "NombreRama"**: Elimina la rama con el nombre especificado.
+    - [ ] **git branch -m "NombreRama"**: Cambia el nombre de la rama actual.
+    - [ ] **git branch -a**: Muestra todas las ramas del repositorio.
+    - [ ] **git branch -l**: Muestra las ramas del repositorio.
+    - [ ] **git branch -r**: Muestra las ramas remotas del repositorio.
+6. [ ] **git checkout**: Cambia de rama.
+
+> [!NOTE]
+> **Modulos MPV**
+> Los modulos implementados son los que se consideran necesarios para el funcionamiento de la aplicación. Con el fin de
+>que el usuario pueda ejecutar los comandos de git.

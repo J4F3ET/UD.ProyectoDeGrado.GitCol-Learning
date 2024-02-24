@@ -11,12 +11,23 @@ export class Branch{
                 delete: false,
                 callback: this.callBackConfigDelete,
             },
-            c:{
-                create: false,
-                callback: this.callBackConfigCreate,
+            r:{
+                remote: false,
+                callback: this.callBackConfigRename,
             },
+            a:{
+                all: false,
+                callback: this.callBackConfigAll,
+            },
+            l:{
+                local: false,
+                callback: this.callBackConfigList,
+            }
         };
         this._dataRepository = dataRepository;
         this._logRepository = logRepository;
+    }
+    execute(dataComand){
+        
     }
 }
