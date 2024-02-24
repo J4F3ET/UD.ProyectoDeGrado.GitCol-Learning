@@ -10,18 +10,20 @@ var accountComands = 1;
 document.getElementById("comandInput").addEventListener("keyup",(e) => { 
     if(e.key === "ArrowUp"){
         const dataLog = JSON.parse(localStorage.getItem(REF_STORAGE_LOG))
-        const comands = dataLog.filter((log) => log.tag === "comand"&& log.tag != "").map((log) => log.message).filter((log,index,array) => array.indexOf(log) === index);
+        const comands = dataLog.reduce((uniqueComands, log) => {
+            if(log.tag === "comand" && log.message !== '' && !uniqueComands.includes(log.message))
+                uniqueComands.push(log.message);
+            return uniqueComands;
+        },[]);
         e.target.value = comands[comands.length-accountComands] || "";
         accountComands = accountComands === comands.length ? 1 : accountComands+1;
+        return;
     }
     if(e.key === "Enter"){
         executeCommand(e.target.value);
         e.target.value = "";
+        return;
     }
-});
-document.getElementById("comandInput").addEventListener("change",(e) => {
-    executeCommand(e.target.value);
-    e.target.value = "";
 });
 // FUNCTIONS
 /**
@@ -68,7 +70,7 @@ window.addEventListener('load', () => {
     dataViewer.currentData =  null;
     dataViewer.logComands = null;
 })
-// ZONE VIEW
+// ZONE VIEW (EFECS AND OBSERVERS)
 const containerLogs = document.getElementById("logContainer");
 const containerSvg = document.getElementById("svgContainer");
 const observerScroll = new MutationObserver(()=>containerLogs.scrollTop = containerLogs.scrollHeight)
