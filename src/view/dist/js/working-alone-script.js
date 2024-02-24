@@ -1,12 +1,37 @@
 import { DataViewer } from "./dataViewer/DataViewer.js";
 import { workingAloneComandManager as comandManager} from "./comandManager/working-alone-comandManager.js";
 import { Observer } from "./dataViewer/Observer.js";
+const REF_STORAGE_REPOSITORY = "local";
+const REF_STORAGE_LOG = "log";
 const dataViewer = new DataViewer(document.getElementById("svgContainer"));
 const observer = new Observer()
+var accountComands = 1;
+// EVENT LISTENERS
+document.getElementById("comandInput").addEventListener("keyup",(e) => { 
+    if(e.key === "ArrowUp"){
+        const dataLog = JSON.parse(localStorage.getItem(REF_STORAGE_LOG))
+        const comands = dataLog.filter((log) => log.tag === "comand"&& log.tag != "").map((log) => log.message).filter((log,index,array) => array.indexOf(log) === index);
+        e.target.value = comands[comands.length-accountComands] || "";
+        accountComands = accountComands === comands.length ? 1 : accountComands+1;
+    }
+    if(e.key === "Enter"){
+        executeCommand(e.target.value);
+        e.target.value = "";
+    }
+});
 document.getElementById("comandInput").addEventListener("change",(e) => {
-    comandManager.createMessage('comand',e.target.value);
+    executeCommand(e.target.value);
+    e.target.value = "";
+});
+// FUNCTIONS
+/**
+ * @name executeCommand
+ * @description Execute the comand and show the result
+ * @param {String} comand 
+ */
+const executeCommand = (comand) => {
+    comand??comandManager.createMessage('comand',comand);
     try {
-        const comand = e.target.value;
         const verify = verifyComand(comand);
         if(verify instanceof Error)
             throw verify;
@@ -15,9 +40,9 @@ document.getElementById("comandInput").addEventListener("change",(e) => {
     } catch (error) {
         comandManager.createMessage('error',error.message);
     }finally{
-        e.target.value = "";
+        accountComands = 1;
     }
-});
+};
 /**
  * @name verifyComand
  * @description Verify if the comand is valid syntax
@@ -32,11 +57,12 @@ function verifyComand(comand="") {
         return new Error('The command is not valid');
     return true;
 }
+// OBSERVER
 observer.subscribe("log",dataViewer)
 observer.subscribe("SVG",dataViewer)
 setInterval(() => {
-    observer.notify("SVG",localStorage.getItem('local'))
-    observer.notify("log",localStorage.getItem('log'))
+    observer.notify("SVG",localStorage.getItem(REF_STORAGE_REPOSITORY))
+    observer.notify("log",localStorage.getItem(REF_STORAGE_LOG))
 }, 1000);
 window.addEventListener('load', () => {
     dataViewer.currentData =  null;
