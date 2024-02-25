@@ -10,6 +10,9 @@ export class Branch{
     constructor(dataRepository = "repository",logRepository = "log",remoteRepository = null) {
         this.comand = 'branch';
         this._configurations = {
+            c:{
+                callback: this.callBackCreateBranch,
+            },
             d:{
                 callback: this.callBackConfigDelete,
             },
@@ -21,7 +24,7 @@ export class Branch{
                 callback: this.callBackConfigAllBranch,
             },
             l:{
-                callback: this.getLocalBranches,
+                callback: this.callBackConfigList,
             },
             m:{
                 callback: this.callBackConfigRename,
@@ -37,15 +40,22 @@ export class Branch{
             throw new Error('The repository is not initialized');
         if(storage.commits.length === 0)
             throw new Error('There are no branch master');
-        this.resolveConfig(dataComand);
+        const [comand,...value] = this.resolveConfig(dataComand);
+        console.log(value);
+        if(comand.callback)
+            comand.callback(value);
+
     }
-    resolveConfig(dataComand){ 
-        console.log(this._dataRepository);
-        this._configurations[dataComand[0].split('-')[1]].callback(dataComand[1],dataComand[2]);
+    resolveConfig(dataComand){
+        if(dataComand.length === 0)
+            return [this._configurations['l'],null];
+        if(dataComand[0].substring(0,1) !== '-')
+            return [this._configurations['c'],dataComand[0]];
+        const comand = dataComand[0].replace(/-/g,'');
+        return [this._configurations[comand],...dataComand.slice(1)];
     }
     getLocalBranches(){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        console.log(this._dataRepository);
         const branches = storage.commits.flatMap(commit => commit.tags.filter(tag => tag !== 'HEAD'));
         const headBranch = storage.information.head;
         branches.forEach(branch => {
@@ -70,6 +80,8 @@ export class Branch{
      */
     createBranch(name){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        if(storage.commits.some(commit => commit.tags.includes(name)))
+            throw new Error('The branch already exists');
         const head = currentHead(storage.commits);
         storage.commits = storage.commits.filter(commit => commit.id !== head.id);
         head.tags.push(name);
@@ -83,22 +95,60 @@ export class Branch{
      */
     deleteBranch(name){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        const commitsParents = this.findCommitsParents();
+        const commitObj = storage.commits.find(commit => commit.tags.includes(name));
+        if(!commitObj)
+            throw new Error('The branch does not exist');
+        if(commitObj.tags.length>0){
+            this.removeTagOfCommit(name,commitObj.id);
+            return;
+        }
+        this.removeCommitsUntilSpecificPoints(commitObj,commitsParents);
+    }
+    removeTagOfCommit(name,id){
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         storage.commits = storage.commits.map(commit => {
-            if(commit.tags.includes(name))
-                return {...commit,tags: commit.tags.filter(tag => tag !== name)}
+            if(commit.id === id && commit.tags.includes(name))
+                return {...commit,tags: commit.tags.filter(tag => tag !== name)};
             return commit;
         });
-        head.tags = head.tags.filter(tag => tag !== name);
-        storage.commits.push(head);
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+    }
+    findCommitsParents(){
+        const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
+        const [init,nodeInit,...parents] = commits.map(commit => commit.parent);
+        if(parents.length === 0)
+            return [init,nodeInit];
+        const repeatedParents = parents.filter((parent, index) => parents.indexOf(parent) !== index);
+        return [init,nodeInit,...(repeatedParents.flat())];
+    }
+    findCommitById(id){
+        const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
+        return commits.find(commitStorage => commitStorage.id === id);
+    }
+    findChildrens(id){
+        const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
+        return commits.filter(commitStorage => commitStorage.parent === id);
+    }
+    removeCommitsUntilSpecificPoints(commitObj,pointsObjetive){
+        if(pointsObjetive.includes(commitObj.id))
+            return;
+        if(commitObj.tags.includes())
+            return;
+        if(this.findChildrens(commitObj.id).length > 0)
+            return;
+        const parent = this.findCommitById(commitObj.parent);
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        storage.commits = storage.commits.filter(commit => commit.id !== commitObj.id);
+        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+        this.removeCommitsUntilSpecificPoints(parent,pointsObjetive);
     }
     /**
      * @name renameBranch
      * @description Rename a branch in the repository
-     * @param {string} name Name of the branch to rename
-     * @param {string} newName New name of the branch
+     * @param {Array} branchs Array with the name of the branch and the new name
      */
-    renameBranch(name,newName){
+    renameBranch([name,newName]){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         storage.commits = storage.commits.map(commit => {
             if(commit.tags.includes(name))
@@ -108,12 +158,25 @@ export class Branch{
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
     callBackConfigAllBranch = () => {
-        this.getLocalBranches();
-        if(this._remoteRepository)
-            this.getRemoteBranches();
+        this.callBackConfigList();
+        this.callBackConfigRemoteBranch();
     }
     callBackConfigList = () => this.getLocalBranches();
-    callBackConfigRemoteBranch = () => this.getRemoteBranches();
-    callBackConfigDelete = (branch) => this.deleteBranch(branch);
-    callBackConfigRename = (branch,newName) => this.renameBranch(branch,newName);
+    callBackConfigRemoteBranch = () => {
+        if(!this._remoteRepository)
+            throw new Error('The remote repository is not defined');
+        this.getRemoteBranches()
+    };
+    callBackConfigDelete = (branch) => {
+        if(branch === "")
+            throw new Error('The name of the branch is empty');
+        this.deleteBranch(branch);
+    }
+    callBackCreateBranch = (branch) => {
+        if(branch === "")
+            throw new Error('The name of the branch is empty');
+        this.createBranch(branch)
+    };
+    callBackConfigRename = (...branchs) => this.renameBranch(...branchs);
+    
 }
