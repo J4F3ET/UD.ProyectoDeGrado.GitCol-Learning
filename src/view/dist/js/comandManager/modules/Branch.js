@@ -17,7 +17,6 @@ export class Branch{
                 callback: this.callBackConfigDelete,
             },
             r:{
-                remote: this._remoteRepository !== null,
                 callback: this.callBackConfigRemoteBranch,
             },
             a:{
@@ -34,6 +33,11 @@ export class Branch{
         this._logRepository = logRepository;
         this._remoteRepository = remoteRepository;
     }
+    /**
+     * @name execute
+     * @description Execute the comand with the configurations
+     * @param {Array} dataComand Array with the comand and the configurations
+     */
     execute(dataComand){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         if(!storage)
@@ -46,6 +50,12 @@ export class Branch{
             comand.callback(value);
 
     }
+    /**
+     * @name resolveConfig
+     * @description Resolve the comand and return the configuration
+     * @param {Array} dataComand Array with the comand and the configurations
+     * @returns {Array} Array with the configuration and the value of the comand
+     */
     resolveConfig(dataComand){
         if(dataComand.length === 0)
             return [this._configurations['l'],null];
@@ -54,6 +64,10 @@ export class Branch{
         const comand = dataComand[0].replace(/-/g,'');
         return [this._configurations[comand],...dataComand.slice(1)];
     }
+    /**
+     * @name getLocalBranches
+     * @description Create messages with the local branches of the repository
+     */
     getLocalBranches(){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         const branches = storage.commits.flatMap(commit => commit.tags.filter(tag => tag !== 'HEAD'));
@@ -63,11 +77,20 @@ export class Branch{
             this.createMessageInfo(message);
         });
     }
+    /**
+     * @name getRemoteBranches
+     * @description Create messages with the remote branches of the repository
+     */
     getRemoteBranches(){
         const storage = JSON.parse(localStorage.getItem(this._remoteRepository));
         const branches = storage.commits.flatMap(commit => commit.tags.filter(tag => tag !== 'HEAD'));
         branches.forEach(branch => this.createMessageInfo(branch));
     }
+    /**
+     * @name createMessageInfo
+     * @description Create a message with the tag info
+     * @param {string} message Message to create
+     */
     createMessageInfo(message){
         const dataLog = JSON.parse(localStorage.getItem(this._logRepository)) || [];
         dataLog.push({tag: 'info',message});
@@ -105,6 +128,12 @@ export class Branch{
         }
         this.removeCommitsUntilSpecificPoints(commitObj,commitsParents);
     }
+    /**
+     * @name removeTagOfCommit
+     * @description Remove a tag of a commit
+     * @param {string} name Name of the tag to remove
+     * @param {string} id Id of the commit
+     */
     removeTagOfCommit(name,id){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         storage.commits = storage.commits.map(commit => {
@@ -114,6 +143,11 @@ export class Branch{
         });
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
+    /**
+     * @name findCommitsParents
+     * @description Find the parents of the commits
+     * @returns {Array} Array with the parents of the commits
+     */
     findCommitsParents(){
         const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
         const [init,nodeInit,...parents] = commits.map(commit => commit.parent);
@@ -122,14 +156,34 @@ export class Branch{
         const repeatedParents = parents.filter((parent, index) => parents.indexOf(parent) !== index);
         return [init,nodeInit,...(repeatedParents.flat())];
     }
+    /**
+     * @name findCommitById
+     * @description Find a commit by the id
+     * @param {string} id Id of the commit
+     * @returns {Object} Object with the commit
+     * @returns {undefined} If the commit does not exist
+     */
     findCommitById(id){
         const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
         return commits.find(commitStorage => commitStorage.id === id);
     }
+    /**
+     * @name findChildrens
+     * @description Find the childrens of the commit
+     * @param {string} id Id of the commit
+     * @returns {Array} Array with the childrens of the commit
+     * @returns {undefined} If the commit does not have childrens
+     */
     findChildrens(id){
         const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
         return commits.filter(commitStorage => commitStorage.parent === id);
     }
+    /**
+     * @name removeCommitsUntilSpecificPoints
+     * @description Remove the commits until a specific point
+     * @param {Object} commitObj Object with the commit
+     * @param {Array} pointsObjetive Array with the commits parents whit two or more childrens
+     */
     removeCommitsUntilSpecificPoints(commitObj,pointsObjetive){
         if(pointsObjetive.includes(commitObj.id))
             return;
@@ -157,26 +211,60 @@ export class Branch{
         });
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
+    /**
+     * @name callBackConfigList
+     * @description Call the method to create messages with the local branches of the repository and the remote branches
+     */
     callBackConfigAllBranch = () => {
         this.callBackConfigList();
         this.callBackConfigRemoteBranch();
     }
+    /**
+     * @name callBackConfigList
+     * @description Call the method to create messages with the local branches of the repository
+     */
     callBackConfigList = () => this.getLocalBranches();
+    /**
+     * @name callBackConfigRemoteBranch
+     * @description Call the method to create messages with the remote branches
+     * @throws {Error} If the remote repository is not defined
+     */
     callBackConfigRemoteBranch = () => {
         if(!this._remoteRepository)
             throw new Error('The remote repository is not defined');
         this.getRemoteBranches()
     };
+    /**
+     * @name callBackConfigDelete
+     * @description Call the method to delete a branch
+     * @param {string} branch Name of the branch to delete
+     * @throws {Error} If the name of the branch is empty
+     */
     callBackConfigDelete = (branch) => {
         if(branch === "")
             throw new Error('The name of the branch is empty');
         this.deleteBranch(branch);
     }
+    /**
+     * @name callBackCreateBranch
+     * @description Call the method to create a branch
+     * @param {string} branch Name of the branch to create
+     * @throws {Error} If the name of the branch is empty
+     */
     callBackCreateBranch = (branch) => {
         if(branch === "")
             throw new Error('The name of the branch is empty');
         this.createBranch(branch)
     };
-    callBackConfigRename = (...branchs) => this.renameBranch(...branchs);
-    
+    /**
+     * @name callBackConfigRename
+     * @description Call the method to rename a branch
+     * @param {Array} branchs Array with the name of the branch and the new name
+     * @throws {Error} If the command is not valid
+     */
+    callBackConfigRename = (...branchs) => {
+        if(branchs.length !== 2 || branchs.some(branch => branch === ''))
+            throw new Error('The command is not valid');
+        this.renameBranch(...branchs);
+    }
 }
