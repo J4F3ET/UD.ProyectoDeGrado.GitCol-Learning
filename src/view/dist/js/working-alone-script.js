@@ -32,7 +32,7 @@ document.getElementById("comandInput").addEventListener("keyup",(e) => {
  * @param {String} comand 
  */
 const executeCommand = (comand) => {
-    comand??comandManager.createMessage('comand',comand);
+    comand !== "" ? comandManager.createMessage('comand',comand) : null;
     try {
         const verify = verifyComand(comand);
         if(verify instanceof Error)

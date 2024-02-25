@@ -7,5 +7,5 @@ const LOGNAME = "log"
 const workingAloneComandManager = new ComandManager();
 workingAloneComandManager.addComand("init",new Init(REPOSITORYNAME));
 workingAloneComandManager.addComand("commit",new Commit(REPOSITORYNAME,LOGNAME));
-workingAloneComandManager.addComand("branch",new Branch(REPOSITORYNAME,LOGNAME));
+workingAloneComandManager.addComand("branch",new Branch(REPOSITORYNAME,LOGNAME,null));
 export { workingAloneComandManager };

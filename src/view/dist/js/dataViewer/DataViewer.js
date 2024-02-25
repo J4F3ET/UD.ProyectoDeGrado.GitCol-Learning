@@ -1,6 +1,5 @@
-import { isEmptyObject } from "../util.js";
 export class DataViewer{
-constructor(svgContainer){
+    constructor(svgContainer){
         this._logComands = "";
         this._currentData = "";
         this._svg = this.createSVG();
@@ -17,9 +16,6 @@ constructor(svgContainer){
     }
     set currentData(value){
         this._currentData = value;
-    }
-    get svg(){
-        return this._svg;
     }
     /**
      * @name notify
@@ -227,13 +223,13 @@ constructor(svgContainer){
      * @param {String} data String with the new data, this data is a JSON string
      */
     updateLog(data){
-        if(data == this.logComands)
+        if(data == this._logComands)
             return
         document.getElementById("logContainer").innerHTML = "";
         JSON.parse(data).forEach(element => {
             this.createMessage(element);
         });
-        this.logComands = data;
+        this._logComands = data;
     };
     /**
      * @name updateSVG
