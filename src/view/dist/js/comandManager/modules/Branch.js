@@ -45,10 +45,7 @@ export class Branch{
         if(storage.commits.length === 0)
             throw new Error('There are no branch master');
         const [comand,...value] = this.resolveConfig(dataComand);
-        console.log(value);
-        if(comand.callback)
-            comand.callback(value);
-
+        comand.callback(value);
     }
     /**
      * @name resolveConfig
@@ -61,7 +58,8 @@ export class Branch{
             return [this._configurations['l'],null];
         if(dataComand[0].substring(0,1) !== '-')
             return [this._configurations['c'],dataComand[0]];
-        const comand = dataComand[0].replace(/-/g,'');
+        const comand = (dataComand[0].replace(/^--?/,'')).charAt(0);
+        console.log(comand);
         return [this._configurations[comand],...dataComand.slice(1)];
     }
     /**
@@ -103,8 +101,6 @@ export class Branch{
      */
     createBranch(name){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        if(storage.commits.some(commit => commit.tags.includes(name)))
-            throw new Error('The branch already exists');
         const head = currentHead(storage.commits);
         storage.commits = storage.commits.filter(commit => commit.id !== head.id);
         head.tags.push(name);
@@ -155,6 +151,10 @@ export class Branch{
             return [init,nodeInit];
         const repeatedParents = parents.filter((parent, index) => parents.indexOf(parent) !== index);
         return [init,nodeInit,...(repeatedParents.flat())];
+    }
+    existBranch(name){
+        const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
+        return commits.some(commit => commit.tags.includes(name));
     }
     /**
      * @name findCommitById
@@ -240,7 +240,8 @@ export class Branch{
      * @param {string} branch Name of the branch to delete
      * @throws {Error} If the name of the branch is empty
      */
-    callBackConfigDelete = (branch) => {
+    callBackConfigDelete = (values) => {
+        const branch = values[0];
         if(branch === "")
             throw new Error('The name of the branch is empty');
         this.deleteBranch(branch);
@@ -251,9 +252,12 @@ export class Branch{
      * @param {string} branch Name of the branch to create
      * @throws {Error} If the name of the branch is empty
      */
-    callBackCreateBranch = (branch) => {
+    callBackCreateBranch = (values) => {
+        const branch = values[0];
         if(branch === "")
             throw new Error('The name of the branch is empty');
+        if(this.existBranch(branch))
+            throw new Error('The branch already exist');
         this.createBranch(branch)
     };
     /**
