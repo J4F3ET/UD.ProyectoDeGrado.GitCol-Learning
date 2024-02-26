@@ -59,7 +59,6 @@ export class Branch{
         if(dataComand[0].substring(0,1) !== '-')
             return [this._configurations['c'],dataComand[0]];
         const comand = (dataComand[0].replace(/^--?/,'')).charAt(0);
-        console.log(comand);
         return [this._configurations[comand],...dataComand.slice(1)];
     }
     /**
@@ -122,6 +121,7 @@ export class Branch{
             this.removeTagOfCommit(name,commitObj.id);
             return;
         }
+
         this.removeCommitsUntilSpecificPoints(commitObj,commitsParents);
     }
     /**
@@ -186,8 +186,6 @@ export class Branch{
      */
     removeCommitsUntilSpecificPoints(commitObj,pointsObjetive){
         if(pointsObjetive.includes(commitObj.id))
-            return;
-        if(commitObj.tags.includes())
             return;
         if(this.findChildrens(commitObj.id).length > 0)
             return;
@@ -266,9 +264,9 @@ export class Branch{
      * @param {Array} branchs Array with the name of the branch and the new name
      * @throws {Error} If the command is not valid
      */
-    callBackConfigRename = (...branchs) => {
-        if(branchs.length !== 2 || branchs.some(branch => branch === ''))
+    callBackConfigRename = (branchs) => {
+        if(branchs.length != 2 || branchs.some(branch => branch === ''))
             throw new Error('The command is not valid');
-        this.renameBranch(...branchs);
+        this.renameBranch(branchs);
     }
 }
