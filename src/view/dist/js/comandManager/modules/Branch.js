@@ -242,6 +242,8 @@ export class Branch{
         const branch = values[0];
         if(branch === "")
             throw new Error('The name of the branch is empty');
+        if(branch === 'master' || branch === 'HEAD')
+            throw new Error(`The branch can not be deleted ${branch}`);
         this.deleteBranch(branch);
     }
     /**
