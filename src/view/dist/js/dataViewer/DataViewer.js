@@ -283,17 +283,17 @@ export class DataViewer{
             });
             return
         }
+        this.removesTags(commitsData.map(commit => commit.tags).flat());
         commitsData.forEach((commit, index) => {
             if(
                 currentCommits[index] == undefined || 
-                currentCommits[index].tags.length != commit.tags.length ||
+                JSON.stringify(currentCommits[index].tags) != JSON.stringify(commit.tags) ||
                 currentCommits[index].cx != commit.cx ||
                 currentCommits[index].cy != commit.cy
             ){
                 this.addCommitToSvg(commit);
             };
         });
-        this.removesTags(commitsData.map(commit => commit.tags).flat());
     }
     /**
      * @name renderInfoToSVG    
