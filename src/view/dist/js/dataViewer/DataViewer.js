@@ -218,6 +218,19 @@ export class DataViewer{
         document.getElementById("logContainer").appendChild(p);
     }
     /**
+     * @name removesTags
+     * @description Remove the tags that are not in the new data
+     * @param {String[]} branchs Array with the tags to be removed
+     */
+    removesTags(branchs){
+        console.log(this._svg.querySelectorAll('.branch-tag')[0].id)
+        const branchsInSvg = [...this._svg.querySelectorAll('.branch-tag')].map(branch => branch.id);
+        branchsInSvg.forEach(branchInSvg => {
+            if(!branchs.includes(branchInSvg))
+                this._svg.getElementById(branchInSvg).remove()
+        });
+    }
+    /**
      * @name updateLog
      * @description Update the log container with the new data
      * @param {String} data String with the new data, this data is a JSON string
@@ -280,6 +293,7 @@ export class DataViewer{
                 this.addCommitToSvg(commit);
             };
         });
+        this.removesTags(commitsData.map(commit => commit.tags).flat());
     }
     /**
      * @name renderInfoToSVG    
