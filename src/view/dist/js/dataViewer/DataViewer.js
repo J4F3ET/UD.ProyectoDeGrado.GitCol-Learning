@@ -1,6 +1,5 @@
-import { isEmptyObject } from "../util.js";
 export class DataViewer{
-constructor(svgContainer){
+    constructor(svgContainer){
         this._logComands = "";
         this._currentData = "";
         this._svg = this.createSVG();
@@ -17,9 +16,6 @@ constructor(svgContainer){
     }
     set currentData(value){
         this._currentData = value;
-    }
-    get svg(){
-        return this._svg;
     }
     /**
      * @name notify
@@ -222,18 +218,31 @@ constructor(svgContainer){
         document.getElementById("logContainer").appendChild(p);
     }
     /**
+     * @name removesTags
+     * @description Remove the tags that are not in the new data
+     * @param {String[]} branchs Array with the tags to be removed
+     */
+    removesTags(branchs){
+        console.log(this._svg.querySelectorAll('.branch-tag')[0].id)
+        const branchsInSvg = [...this._svg.querySelectorAll('.branch-tag')].map(branch => branch.id);
+        branchsInSvg.forEach(branchInSvg => {
+            if(!branchs.includes(branchInSvg))
+                this._svg.getElementById(branchInSvg).remove()
+        });
+    }
+    /**
      * @name updateLog
      * @description Update the log container with the new data
      * @param {String} data String with the new data, this data is a JSON string
      */
     updateLog(data){
-        if(data == this.logComands)
+        if(data == this._logComands)
             return
         document.getElementById("logContainer").innerHTML = "";
         JSON.parse(data).forEach(element => {
             this.createMessage(element);
         });
-        this.logComands = data;
+        this._logComands = data;
     };
     /**
      * @name updateSVG
@@ -274,10 +283,11 @@ constructor(svgContainer){
             });
             return
         }
+        this.removesTags(commitsData.map(commit => commit.tags).flat());
         commitsData.forEach((commit, index) => {
             if(
                 currentCommits[index] == undefined || 
-                currentCommits[index].tags.length != commit.tags.length ||
+                JSON.stringify(currentCommits[index].tags) != JSON.stringify(commit.tags) ||
                 currentCommits[index].cx != commit.cx ||
                 currentCommits[index].cy != commit.cy
             ){
