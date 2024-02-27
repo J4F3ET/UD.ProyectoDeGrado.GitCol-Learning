@@ -174,12 +174,12 @@ export class Commit{
      * @param {JSON[]} commits Array of commits
      * @returns {JSON} New commit created
      */
-    createCommit(parent,commits) {
+    createCommit(parent,tags) {
         return {
             id: this.createCod(),
             message: this._configurations.m.message,
             parent: parent.id,
-            tags: parent.tags,
+            tags,
             cx : parseInt(parent.cx) + this.SPACE_BETWEEN_COMMITS_X,
             cy : parseInt(parent.cy)
         };
@@ -224,8 +224,8 @@ export class Commit{
         this.resolveConfigure(dataComand).forEach(config => {
             this._configurations[config].callback(dataComand);
         });
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository)).commits;// Array of commits
-        if(storage.length == 0){
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
+        if(storage.commits.length == 0){
             this.updateHeadToStorage("master");
             this.addCommitToStorage({
                 id: "parent",
@@ -237,11 +237,10 @@ export class Commit{
             });
             return
         }
-        var head = currentHead(storage);
-        const newCommit = this.createCommit(head,storage);
-        head.tags.forEach((tag)=>{
-            head = this.removeTag(tag,head);
-        })
+        var head = currentHead(storage.commits);
+        const newCommit = this.createCommit(head,["HEAD",storage.information.head]);
+        head = this.removeTag("HEAD",head);
+        head = this.removeTag(storage.information.head,head);
         this.updateCommitToStorage(head);
         this.addCommitToStorage(newCommit);
         if(!this.existsCommitToStorage(newCommit)){
