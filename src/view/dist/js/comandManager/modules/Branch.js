@@ -152,6 +152,12 @@ export class Branch{
         const repeatedParents = parents.filter((parent, index) => parents.indexOf(parent) !== index);
         return [init,nodeInit,...(repeatedParents.flat())];
     }
+    /**
+     * @name existBranch
+     * @description Verify if the branch exist in the repository
+     * @param {string} name Name of the branch
+     * @returns {boolean} If the branch exist
+    */
     existBranch(name){
         const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
         return commits.some(commit => commit.tags.includes(name));
