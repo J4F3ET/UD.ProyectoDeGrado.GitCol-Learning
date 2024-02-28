@@ -70,7 +70,7 @@ export class Branch{
         const branches = storage.commits.flatMap(commit => commit.tags.filter(tag => tag !== 'HEAD'));
         const headBranch = storage.information.head;
         branches.forEach(branch => {
-            const message = branch !== headBranch ? branch : 'HEAD -> ' + headBranch;
+            const message = branch !== headBranch ? branch : `<p style="color:#49be25">*${headBranch}</p>`;
             this.createMessageInfo(message);
         });
     }
