@@ -223,7 +223,6 @@ export class DataViewer{
      * @param {String[]} branchs Array with the tags to be removed
      */
     removesTags(branchs){
-        console.log(this._svg.querySelectorAll('.branch-tag')[0].id)
         const branchsInSvg = [...this._svg.querySelectorAll('.branch-tag')].map(branch => branch.id);
         branchsInSvg.forEach(branchInSvg => {
             if(!branchs.includes(branchInSvg))
