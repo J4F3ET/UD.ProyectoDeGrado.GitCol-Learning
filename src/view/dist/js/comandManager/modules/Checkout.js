@@ -23,26 +23,20 @@ export class Checkout {
     execute(dataComand){
         if(localStorage.getItem(this._dataRepository)===null)
             throw new Error('The repository does not exist');
-        this.resolveConfig(dataComand);
+        const goToObject = this.resolveConfig(dataComand);
         if(this._configurations.b.nameBranch != null)
             this.createBranch(this._configurations.b.nameBranch);
         const commitCurrentHead = currentHead(JSON.parse(localStorage.getItem(this._dataRepository)).commits);
-        const commitObjetive = this.findCommitByBranch(dataComand[0]);
-        if(commitObjetive === undefined){
-            this.updateHeadInformation("detached head");
-            this.createMessageInfo(`Note: switching to 'detached HEAD'`);
-            this.goToCommit(dataComand[0]);
-            this.removeHeadTag(commitCurrentHead);
-            console.log('EXECUTE DETACHED HEAD');
-            return
-        }
-        this.createMessageInfo(`Switched to branch '${dataComand[0]}'`);
-        this.goToCommit(commitObjetive.id);
+        const commitByBranch = this.findCommitByBranch(goToObject);
+        const commitObjetive = commitByBranch??goToObject;
         if(commitObjetive == commitCurrentHead.id)
-            return
+            throw new Error(`Already on '${commitByBranch?goToObject:commitObjetive}'`);
+        this.updateHeadInformation(commitByBranch?goToObject:'detached head');
+        this.createMessageInfo(`Note: switched to '${commitByBranch?goToObject:commitObjetive}'`);   
+        this.goToCommit(commitObjetive);
         this.removeHeadTag(commitCurrentHead);
-        this.updateHeadInformation(dataComand[0]);
-        console.log('EXECUTE NORMAL');
+        if(this._configurations.b.nameBranch != null)
+            this._configurations.b.callback();
     }
     resolveConfig(dataComand){
         dataComand.includes('-q',)||dataComand.includes('--quiet')?this._configurations.q.useConfig = true:null;
@@ -51,6 +45,7 @@ export class Checkout {
                 throw new Error('The name of the branch is required');
             this._configurations.b.nameBranch = dataComand[dataComand.indexOf('-b')+1];
         }
+        return dataComand.filter(value => value.substring(0,1) !== '-').pop();
     }
     updateHeadInformation(nameBranch){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
@@ -66,9 +61,8 @@ export class Checkout {
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
     findCommitByBranch(nameBranch){
-        console.log(nameBranch);
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        return storage.commits.find(commit => commit.tags.includes(nameBranch));
+        return storage.commits.find(commit => commit.tags.includes(nameBranch))?.id;
     }
     /**
      * @name goToCommit
@@ -107,8 +101,14 @@ export class Checkout {
         log.push({tag: 'info',message: message});
         localStorage.setItem(this._logRepository,JSON.stringify(log));
     }
+    findBranch(nameBranch){
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        return storage.commits.find(commit => commit.tags.includes(nameBranch))?true:false;
+    }
     callbackCreateBranch = () =>{
-        console.log('Create branch',this._configurations.b.nameBranch,this._configurations.q.useConfig);
-
+        if(this.findBranch(this._configurations.b.nameBranch))
+            throw new Error(`Already exist the branch '${this._configurations.b.nameBranch}'`);
+        this.createBranch(this._configurations.b.nameBranch);
+        this._configurations.b.nameBranch = null;
     }
 }

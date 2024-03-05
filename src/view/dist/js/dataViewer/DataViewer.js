@@ -107,7 +107,6 @@ export class DataViewer{
      * @returns {SVGLineElement} Elemento de tipo linea con las propiedades de una linea
      */
     createLine(dataCommit,parent){
-        console.log(parent)
         const newLine = document.createElementNS("http://www.w3.org/2000/svg","line");
         newLine.classList.add("line");
         newLine.setAttribute("x1", parseInt(dataCommit.cx)-24);
