@@ -20,24 +20,41 @@ export class Checkout {
             }
         };
     }
+    /** 
+     * @name execute
+     * @description Execute the command
+     * @param {Array} dataComand Data of the command
+     * @throws {Error} The repository does not exist
+     * @throws {Error} The repository does not have commits
+    */
     execute(dataComand){
         if(localStorage.getItem(this._dataRepository)===null)
             throw new Error('The repository does not exist');
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository))
+        if(storage.commits.length == 0)
+            throw new Error('The repository does not have commits');
         const goToObject = this.resolveConfig(dataComand);
-        if(this._configurations.b.nameBranch != null)
-            this.createBranch(this._configurations.b.nameBranch);
         const commitCurrentHead = currentHead(JSON.parse(localStorage.getItem(this._dataRepository)).commits);
         const commitByBranch = this.findCommitByBranch(goToObject);
         const commitObjetive = commitByBranch??goToObject;
-        if(commitObjetive == commitCurrentHead.id)
-            throw new Error(`Already on '${commitByBranch?goToObject:commitObjetive}'`);
-        this.updateHeadInformation(commitByBranch?goToObject:'detached head');
-        this.createMessageInfo(`Note: switched to '${commitByBranch?goToObject:commitObjetive}'`);   
-        this.goToCommit(commitObjetive);
-        this.removeHeadTag(commitCurrentHead);
+        if(commitObjetive == commitCurrentHead.id){
+            this.createMessageInfo(`Already on '${commitByBranch?goToObject:commitObjetive}'`);
+        }else{
+            this.updateHeadInformation(commitByBranch?goToObject:'detached head');
+            this.createMessageInfo(`Switched to '${commitByBranch?goToObject:commitObjetive}'`);   
+            this.goToCommit(commitObjetive);
+            this.removeHeadTag(commitCurrentHead);
+        }
         if(this._configurations.b.nameBranch != null)
-            this._configurations.b.callback();
+            this._configurations.b.callback(this._configurations.b.nameBranch);
+        this.resetConfig();
     }
+    /**
+     * @name resolveConfig
+     * @description Resolve the configurations of the command
+     * @param {Array} dataComand Data of the command
+     * @returns {string} The commit id to go or the name of the branch
+     */
     resolveConfig(dataComand){
         dataComand.includes('-q',)||dataComand.includes('--quiet')?this._configurations.q.useConfig = true:null;
         if(dataComand.includes('-b')||dataComand.includes('--branch')){
@@ -47,11 +64,21 @@ export class Checkout {
         }
         return dataComand.filter(value => value.substring(0,1) !== '-').pop();
     }
+    /**
+     * @name updateHeadInformation
+     * @description Update the head information in the repository
+     * @param {string} nameBranch Name of the branch
+     */
     updateHeadInformation(nameBranch){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         storage.information.head = nameBranch;
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
+    /**
+     * @name removeHeadTag
+     * @description Remove the tag HEAD from the commit
+     * @param {object} head Commit to remove the tag
+     */
 
     removeHeadTag(head){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
@@ -60,6 +87,13 @@ export class Checkout {
         storage.commits.push(head);
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
+    /**
+     * @name findCommitByBranch
+     * @description Find the commit by the branch
+     * @param {string} nameBranch Name of the branch
+     * @returns {string} Id of the commit
+     * @returns {undefined} If the branch does not exist
+     */
     findCommitByBranch(nameBranch){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         return storage.commits.find(commit => commit.tags.includes(nameBranch))?.id;
@@ -94,6 +128,11 @@ export class Checkout {
         storage.commits.push(head);
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
+    /**
+     * @name createMessageInfo
+     * @description Create a new message in the log
+     * @param {string} message Message to add
+     */
     createMessageInfo(message){
         if(this._configurations.q.useConfig)
             return
@@ -101,14 +140,37 @@ export class Checkout {
         log.push({tag: 'info',message: message});
         localStorage.setItem(this._logRepository,JSON.stringify(log));
     }
+    /**
+     * @name findBranch
+     * @description Find a branch in the repository
+     * @param {string} nameBranch Name of the branch to find
+     * @returns {boolean} True if the branch exist, false otherwise
+     */
     findBranch(nameBranch){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         return storage.commits.find(commit => commit.tags.includes(nameBranch))?true:false;
     }
-    callbackCreateBranch = () =>{
-        if(this.findBranch(this._configurations.b.nameBranch))
-            throw new Error(`Already exist the branch '${this._configurations.b.nameBranch}'`);
-        this.createBranch(this._configurations.b.nameBranch);
+    /**
+     * @name callbackCreateBranch
+     * @description Callback to create a new branch
+     * @param {string} name Name of the new branch
+     * @throws {Error} The branch already exist
+     */
+    callbackCreateBranch = (name) =>{
+        if(!this.findBranch(name))
+            this.createBranch(name);
+        else{
+            this.resetConfig();
+            throw new Error(`Already exist the branch '${name}'`);
+        }
+            
+    }
+    /**
+     * @name resetConfig
+     * @description Reset the configurations
+     */
+    resetConfig(){
+        this._configurations.q.useConfig = false;
         this._configurations.b.nameBranch = null;
     }
 }
