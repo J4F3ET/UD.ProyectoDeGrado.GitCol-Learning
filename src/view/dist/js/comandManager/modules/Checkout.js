@@ -37,6 +37,7 @@ export class Checkout {
         this.removeHeadTag(commitCurrentHead);
         if(this._configurations.b.nameBranch != null)
             this._configurations.b.callback();
+        this.resetConfig();
     }
     resolveConfig(dataComand){
         dataComand.includes('-q',)||dataComand.includes('--quiet')?this._configurations.q.useConfig = true:null;
@@ -109,6 +110,9 @@ export class Checkout {
         if(this.findBranch(this._configurations.b.nameBranch))
             throw new Error(`Already exist the branch '${this._configurations.b.nameBranch}'`);
         this.createBranch(this._configurations.b.nameBranch);
+    }
+    resetConfig(){
+        this._configurations.q.useConfig = false;
         this._configurations.b.nameBranch = null;
     }
 }
