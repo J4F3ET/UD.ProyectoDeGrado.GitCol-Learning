@@ -23,20 +23,23 @@ export class Checkout {
     execute(dataComand){
         if(localStorage.getItem(this._dataRepository)===null)
             throw new Error('The repository does not exist');
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository))
+        if(storage.commits.length == 0)
+            throw new Error('The repository does not have commits');
         const goToObject = this.resolveConfig(dataComand);
-        if(this._configurations.b.nameBranch != null)
-            this.createBranch(this._configurations.b.nameBranch);
         const commitCurrentHead = currentHead(JSON.parse(localStorage.getItem(this._dataRepository)).commits);
         const commitByBranch = this.findCommitByBranch(goToObject);
         const commitObjetive = commitByBranch??goToObject;
-        if(commitObjetive == commitCurrentHead.id)
-            throw new Error(`Already on '${commitByBranch?goToObject:commitObjetive}'`);
-        this.updateHeadInformation(commitByBranch?goToObject:'detached head');
-        this.createMessageInfo(`Note: switched to '${commitByBranch?goToObject:commitObjetive}'`);   
-        this.goToCommit(commitObjetive);
-        this.removeHeadTag(commitCurrentHead);
+        if(commitObjetive == commitCurrentHead.id){
+            this.createMessageInfo(`Already on '${commitByBranch?goToObject:commitObjetive}'`);
+        }else{
+            this.updateHeadInformation(commitByBranch?goToObject:'detached head');
+            this.createMessageInfo(`Switched to '${commitByBranch?goToObject:commitObjetive}'`);   
+            this.goToCommit(commitObjetive);
+            this.removeHeadTag(commitCurrentHead);
+        }
         if(this._configurations.b.nameBranch != null)
-            this._configurations.b.callback();
+            this._configurations.b.callback(this._configurations.b.nameBranch);
         this.resetConfig();
     }
     resolveConfig(dataComand){
@@ -106,10 +109,14 @@ export class Checkout {
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         return storage.commits.find(commit => commit.tags.includes(nameBranch))?true:false;
     }
-    callbackCreateBranch = () =>{
-        if(this.findBranch(this._configurations.b.nameBranch))
-            throw new Error(`Already exist the branch '${this._configurations.b.nameBranch}'`);
-        this.createBranch(this._configurations.b.nameBranch);
+    callbackCreateBranch = (name) =>{
+        if(!this.findBranch(name))
+            this.createBranch(name);
+        else{
+            this.resetConfig();
+            throw new Error(`Already exist the branch '${name}'`);
+        }
+            
     }
     resetConfig(){
         this._configurations.q.useConfig = false;

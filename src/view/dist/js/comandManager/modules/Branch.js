@@ -45,6 +45,8 @@ export class Branch{
         if(storage.commits.length === 0)
             throw new Error('There are no branch master');
         const [comand,...value] = this.resolveConfig(dataComand);
+        if(!comand)
+            throw new Error('The comand is not valid');
         comand.callback(value);
     }
     /**
