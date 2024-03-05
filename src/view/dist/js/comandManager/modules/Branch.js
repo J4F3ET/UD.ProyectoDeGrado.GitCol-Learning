@@ -70,7 +70,9 @@ export class Branch{
         const branches = storage.commits.flatMap(commit => commit.tags.filter(tag => tag !== 'HEAD'));
         const headBranch = storage.information.head;
         branches.forEach(branch => {
-            const message = branch !== headBranch ? branch : 'HEAD -> ' + headBranch;
+            const message = branch !== headBranch 
+                ? `<p>${branch}</p>`
+                :`<p style="color:#49be25">*${headBranch}</p>`;
             this.createMessageInfo(message);
         });
     }
@@ -152,6 +154,12 @@ export class Branch{
         const repeatedParents = parents.filter((parent, index) => parents.indexOf(parent) !== index);
         return [init,nodeInit,...(repeatedParents.flat())];
     }
+    /**
+     * @name existBranch
+     * @description Verify if the branch exist in the repository
+     * @param {string} name Name of the branch
+     * @returns {boolean} If the branch exist
+    */
     existBranch(name){
         const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
         return commits.some(commit => commit.tags.includes(name));
@@ -242,6 +250,8 @@ export class Branch{
         const branch = values[0];
         if(branch === "")
             throw new Error('The name of the branch is empty');
+        if(branch === 'master' || branch === 'HEAD')
+            throw new Error(`The branch can not be deleted ${branch}`);
         this.deleteBranch(branch);
     }
     /**

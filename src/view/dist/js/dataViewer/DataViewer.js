@@ -1,5 +1,6 @@
 export class DataViewer{
     constructor(svgContainer){
+        this._commitParent = {cx:-50,cy:334,id:"init",tags:[]}
         this._logComands = "";
         this._currentData = "";
         this._svg = this.createSVG();
@@ -90,12 +91,8 @@ export class DataViewer{
         gContainerTag.id = "gContainerTag";
         const gContainerCommit = document.createElementNS("http://www.w3.org/2000/svg","g");
         gContainerCommit.id = "gContainerCommit";
-        const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
-        circle.setAttribute("cx", "-50");
-        circle.setAttribute("cy", "334");
-        circle.id = "init";
-        circle.setAttribute("r", "0");
-        gContainerCommit.appendChild(circle);
+        const commit = this.createCommit(this._commitParent)
+        gContainerCommit.appendChild(commit);
         gContainerData.appendChild(this.createText(20,20,this._svg.getAttribute("id")));
         svgDocumentElement.appendChild(gContainerData);
         svgDocumentElement.appendChild(gContainerPointer);
@@ -109,14 +106,13 @@ export class DataViewer{
      * @example {id: "parent",parent: "init",message: "First commit",tags: ["master", "HEAD"],cx: 140,cy: 360};
      * @returns {SVGLineElement} Elemento de tipo linea con las propiedades de una linea
      */
-    createLine(dataCommit){
-        const parent = document.getElementById(dataCommit.parent);
+    createLine(dataCommit,parent){
         const newLine = document.createElementNS("http://www.w3.org/2000/svg","line");
         newLine.classList.add("line");
         newLine.setAttribute("x1", parseInt(dataCommit.cx)-24);
         newLine.setAttribute("y1", dataCommit.cy);
-        newLine.setAttribute("x2", parseInt(parent.getAttribute("cx"))+28);
-        newLine.setAttribute("y2", parent.getAttribute("cy"));
+        newLine.setAttribute("x2", parseInt(parent.cx)+28);
+        newLine.setAttribute("y2", parent.cy);
         newLine.setAttribute("marker-end", "url(#triangle)");
         newLine.id = dataCommit.parent+"-"+dataCommit.id;
         return newLine;
@@ -223,7 +219,6 @@ export class DataViewer{
      * @param {String[]} branchs Array with the tags to be removed
      */
     removesTags(branchs){
-        console.log(this._svg.querySelectorAll('.branch-tag')[0].id)
         const branchsInSvg = [...this._svg.querySelectorAll('.branch-tag')].map(branch => branch.id);
         branchsInSvg.forEach(branchInSvg => {
             if(!branchs.includes(branchInSvg))
@@ -279,7 +274,8 @@ export class DataViewer{
     renderCommitsToSVG(commitsData,currentCommits = null){
         if(!currentCommits){
             commitsData.forEach(commit => {
-                this.addCommitToSvg(commit);
+                const parent = commitsData.find(c => c.id === commit.parent)??this._commitParent
+                this.addCommitToSvg(commit,parent);
             });
             return
         }
@@ -291,7 +287,8 @@ export class DataViewer{
                 currentCommits[index].cx != commit.cx ||
                 currentCommits[index].cy != commit.cy
             ){
-                this.addCommitToSvg(commit);
+                const parent = commitsData.find(c => c.id === commit.parent)??this._commitParent
+                this.addCommitToSvg(commit,parent);
             };
         });
     }
@@ -321,9 +318,9 @@ export class DataViewer{
             gContainerData.appendChild(gContainerText);
         });
     }
-    addCommitToSvg(commit){
+    addCommitToSvg(commit,parent){
         this.addCircleToSvg(this.createCommit(commit));
-        this.addLineToSvg(this.createLine(commit));
+        this.addLineToSvg(this.createLine(commit,parent)); 
         this.addMessageAndIdToCommit(commit);
         const y = parseInt(commit.cy) + 60; 
         commit.tags.forEach((tag,index) => {
