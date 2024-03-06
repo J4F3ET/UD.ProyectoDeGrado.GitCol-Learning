@@ -22,7 +22,21 @@
 
 ### [Mokap Visualizing Git](https://excalidraw.com/#room=977bcce490f934711f98,bvG7SJZBXeIBiKmduDb3ow)
 
-![ImagenMokaps](./documetation/img/MokapsVisualizingGit.png)
+#### Mokap parte 1
+
+![ImagenMokaps](./documetation/img/MokapsVisualizingGitPart1.png)
+
+#### Mokap parte 2 Local
+
+![ImagenMokaps](./documetation/img/MokapsVisualizingGitPart2Local.png)
+
+#### Mokap parte 2 Remote
+
+![ImagenMokaps](./documetation/img/MokapsVisualizingGitPart2Remote.png)
+
+#### Mokap parte 3
+
+![ImagenMokaps](./documetation/img/MokapsVisualizingGitPart3.png)
 
 ### [Mokap Ramificaciones](https://excalidraw.com/#room=3de5a49605badc01e214,Ez-gRLHN1gGFBWBnyPlZkA)
 
