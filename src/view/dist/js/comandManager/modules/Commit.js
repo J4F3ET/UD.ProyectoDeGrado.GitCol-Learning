@@ -184,6 +184,43 @@ export class Commit{
             cy : parseInt(parent.cy)
         };
     }
+    /**
+     * @name resolveLocationCommit
+     * @description 
+     * @param {Int} parentCx
+     * @param {Int} parentCy
+     */
+    resolveLocationCommit(parentCx,parentCy){
+        //Caso 1
+        const commits = localStorage.getItem(this._dataRepository).commits;
+        const possibleX = parentCx + this.SPACE_BETWEEN_COMMITS_X;
+        const commitThisUbicationX = commits.find(commit => commit.cx == possibleX && commit.cy == parentCy);
+        if(commitThisUbicationX == undefined)
+            return {
+                cx: parentCx + this.SPACE_BETWEEN_COMMITS_X,
+                cy: parentCy
+            };
+        //Caso 2
+        const commitThisUbicationPossitiveY = commits.filter(commit => commit.cx == possibleX && commit.cy > parentCy);
+        const commitThisUbicationNegativeY = commits.filter(commit => commit.cx == possibleX && commit.cy < parentCy);
+        const commitThisUbicationOnParentPossitiveY = commits.filter(commit => commit.cx == parentCx && commit.cy > parentCy);
+        const commitThisUbicationOnParentNegativeY = commits.filter(commit => commit.cx == parentCx && commit.cy < parentCy);
+        if(commitThisUbicationOnParentPossitiveY == undefined &&  commitThisUbicationPossitiveY.length >= commitThisUbicationNegativeY.length){
+            return {
+                cx: possibleX,
+                cy: parentCy + this.SPACE_BETWEEN_COMMITS_Y
+            };
+        }
+        if(commitThisUbicationOnParentNegativeY == undefined && commitThisUbicationPossitiveY.length < commitThisUbicationNegativeY.length){
+            return {
+                cx: possibleX,
+                cy: parentCy - this.SPACE_BETWEEN_COMMITS_Y
+            };
+        }
+        //Caso 3
+        
+        
+    }
     updateHeadToStorage(newHead){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         storage.information.head = newHead;
