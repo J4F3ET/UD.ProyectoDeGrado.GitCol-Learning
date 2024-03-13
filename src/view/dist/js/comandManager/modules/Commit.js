@@ -175,13 +175,15 @@ export class Commit{
      * @returns {JSON} New commit created
      */
     createCommit(parent,tags) {
+        const [cx,cy] = this.resolveLocationCommit(parent.cx,parent.cy);
+        console.log(cx,cy);
         return {
             id: this.createCod(),
             message: this._configurations.m.message,
             parent: parent.id,
             tags,
-            cx : parseInt(parent.cx) + this.SPACE_BETWEEN_COMMITS_X,
-            cy : parseInt(parent.cy)
+            cx,
+            cy
         };
     }
     /**
@@ -192,33 +194,27 @@ export class Commit{
      */
     resolveLocationCommit(parentCx,parentCy){
         //Caso 1
-        const commits = localStorage.getItem(this._dataRepository).commits;
+        const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
         const possibleX = parentCx + this.SPACE_BETWEEN_COMMITS_X;
-        const commitThisUbicationX = commits.find(commit => commit.cx == possibleX && commit.cy == parentCy);
-        if(commitThisUbicationX == undefined)
-            return {
-                cx: parentCx + this.SPACE_BETWEEN_COMMITS_X,
-                cy: parentCy
-            };
+        if(commits.find(commit => commit.cx == possibleX && commit.cy == parentCy) == undefined)
+            return[possibleX,parentCy];	
         //Caso 2
-        const commitThisUbicationPossitiveY = commits.filter(commit => commit.cx == possibleX && commit.cy > parentCy);
-        const commitThisUbicationNegativeY = commits.filter(commit => commit.cx == possibleX && commit.cy < parentCy);
+        const commitThisUbicationPossitiveY = commits.filter(commit => commit.cx == possibleX && commit.cy < parentCy);
+        const commitThisUbicationNegativeY = commits.filter(commit => commit.cx == possibleX && commit.cy > parentCy);
         const commitThisUbicationOnParentPossitiveY = commits.filter(commit => commit.cx == parentCx && commit.cy > parentCy);
         const commitThisUbicationOnParentNegativeY = commits.filter(commit => commit.cx == parentCx && commit.cy < parentCy);
-        if(commitThisUbicationOnParentPossitiveY == undefined &&  commitThisUbicationPossitiveY.length >= commitThisUbicationNegativeY.length){
-            return {
-                cx: possibleX,
-                cy: parentCy + this.SPACE_BETWEEN_COMMITS_Y
-            };
-        }
-        if(commitThisUbicationOnParentNegativeY == undefined && commitThisUbicationPossitiveY.length < commitThisUbicationNegativeY.length){
-            return {
-                cx: possibleX,
-                cy: parentCy - this.SPACE_BETWEEN_COMMITS_Y
-            };
-        }
+        if(commitThisUbicationOnParentPossitiveY.length == 0 && commitThisUbicationOnParentNegativeY.length == 0)
+            return [possibleX,generateLocationCommitCase2(commitThisUbicationPossitiveY,commitThisUbicationNegativeY)];
         //Caso 3
-        
+        return [possibleX,generateLocationCommitCase3()];
+    }
+    generateLocationCommitCase2(commitsInPossiteY,commitsInNegativeY){
+        if(commitsInPossiteY.length > commitsInNegativeY.length)
+            return commitsInPossiteY.pop().cy + this.SPACE_BETWEEN_COMMITS_Y;
+        else
+            return commitsInNegativeY.pop().cy - this.SPACE_BETWEEN_COMMITS_Y;
+    }
+    generateLocationCommitCase3(parentCx,parentCy){
         
     }
     updateHeadToStorage(newHead){
