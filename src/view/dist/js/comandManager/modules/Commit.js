@@ -1,4 +1,4 @@
-import { currentHead,isEmptyObject } from "../../util.js";
+import { currentHead } from "../../util.js";
 export class Commit{
     SPACE_BETWEEN_COMMITS_X = 80;
     SPACE_BETWEEN_COMMITS_Y = 80;
@@ -176,7 +176,6 @@ export class Commit{
      */
     createCommit(parent,tags) {
         const [cx,cy] = this.resolveLocationCommit(parent.cx,parent.cy);   
-        console.log(cx,cy);
         return {
             id: this.createCod(),
             message: this._configurations.m.message,
@@ -205,11 +204,16 @@ export class Commit{
         if(commitThisUbicationOnParentY.length == 0)
             return [possibleX,this.generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativeY)];
         //Caso 3
-        const commitsOnParentInPossiteY = commitThisUbicationOnParentY.filter(commit => commit.cy < parentCy);
-        const commitsOnParentInNegativeY = commitThisUbicationOnParentY.filter(commit => commit.cy > parentCy);
-        const possibleY = this.generateLocationCommitCase3(parentCy,commitsInPossiteY,commitsInNegativeY,commitsOnParentInPossiteY,commitsOnParentInNegativeY);
-        return [possibleX,possibleY];
+        return [possibleX,this.generateLocationCommitCase3(parentCy,commitsInPossiteY,commitsInNegativeY)];
     }
+    /**
+     * @name generateLocationCommitCase2
+     * @description Generate the location "Y" of the commit in the case 2 
+     * @param {Int} parentCy Coordenate "Y" of the parent commit(HEAD)
+     * @param {JSON[]} commitsInPossiteY Commits that are above the "X" possible location
+     * @param {JSON[]} commitsInNegativeY Commits that are below the "X" possible location
+     * @returns {Int} Coordenate "Y" of the new commit
+     */
     generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativeY){
         if(commitsInPossiteY.length == 0)
             return parentCy - this.SPACE_BETWEEN_COMMITS_Y;
@@ -220,8 +224,16 @@ export class Commit{
         else
             return commitsInNegativeY[commitsInNegativeY.length -1].cy + this.SPACE_BETWEEN_COMMITS_Y;
     }
-    generateLocationCommitCase3(parentCy,commitsInPossiteY,commitsInNegativeY,commitsOnParentInPossiteY,commitsOnParentInNegativeY){
-        if(commitsOnParentInPossiteY.length <= commitsOnParentInNegativeY.length){
+    /**
+     * @name generateLocationCommitCase3
+     * @description Generate the location "Y" of the commit in the case 3
+     * @param {Int} parentCy Coordenate "Y" of the parent commit(HEAD)
+     * @param {JSON[]} commitsInPossiteY array of commits that are above the "X" possible location 
+     * @param {JSON[]} commitsInNegativeY array of commits that are below the "X" possible location 
+     * @returns {Int} Coordenate "Y" of the new commit
+     */
+    generateLocationCommitCase3(parentCy,commitsInPossiteY,commitsInNegativeY){
+        if(commitsInPossiteY.length <= commitsInNegativeY.length){
             // Cuando existen mas nodos en la parte negativa
             const SPACE_BETWEEN_COMMITS_Y_NEGATIVE = this.SPACE_BETWEEN_COMMITS_Y * (-1)
             commitsInPossiteY.forEach(commit => {
@@ -236,6 +248,14 @@ export class Commit{
             return parentCy + this.SPACE_BETWEEN_COMMITS_Y;
         }
     }
+    /**
+     * @name updateLocationChildsOfCommit
+     * @description Update the location of the childs of a commit
+     * @param {Int} SPACE_BETWEEN_COMMITS_Y Space between commits in the "Y" axis
+     * @param {String} idCommitParent Id of the commit parent
+     * @example updateLocationChildsOfCommit(80,"parent") // Update the location of the childs of the commit with id "parent"
+     * @returns {void}
+     */
     updateLocationChildsOfCommit(SPACE_BETWEEN_COMMITS_Y,idCommitParent){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         let commits = storage.commits;
@@ -262,33 +282,16 @@ export class Commit{
         storage.commits = commits;
         localStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
+    /**
+     * @name updateHeadToStorage
+     * @description Update the head of the repository
+     * @param {String} newHead New head of the repository
+     * @returns {void}
+     */
     updateHeadToStorage(newHead){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         storage.information.head = newHead;
         localStorage.setItem(this._dataRepository, JSON.stringify(storage));
-    }
-    /**
-     * @name calculatePositionCommit
-     * @description Calculate the position of the new commit
-     * @param {JSON} parent Commit parent to create the new commit
-     * @param {JSON[]} commits Array of commits
-     * @returns {JSON} Position of the new commit
-     */
-    calculatePositionCommit(parent,commits){
-        const commitThisUbicationX = commits.find(commit => commit.cx == parent.cx + this.SPACE_BETWEEN_COMMITS_X && commit.cy == parent.cy);
-        const commitThisUbicationY = commits.find(commit => commit.cx == parent.cx + this.SPACE_BETWEEN_COMMITS_X && commit.cy == parent.cy + this.SPACE_BETWEEN_COMMITS_Y);
-        var cx = parent.cx + this.SPACE_BETWEEN_COMMITS_X;
-
-        if(commitThisUbicationX == undefined)
-            return {
-                cx: parent.cx + this.SPACE_BETWEEN_COMMITS_X,
-                cy: parent.cy
-            };
-        if(commitThisUbicationY == undefined)
-            return {
-                cx: parent.cx,
-                cy: parent.cy + this.SPACE_BETWEEN_COMMITS_Y
-            };
     }
     /**
      * @name execute
