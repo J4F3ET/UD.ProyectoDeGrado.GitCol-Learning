@@ -109,12 +109,12 @@ export class DataViewer{
     createLine(dataCommit,parent){
         const newLine = document.createElementNS("http://www.w3.org/2000/svg","line");
         newLine.classList.add("line");
-        newLine.setAttribute("x1", parseInt(dataCommit.cx)-24);
+        newLine.setAttribute("x1", dataCommit.cx);
         newLine.setAttribute("y1", dataCommit.cy);
-        newLine.setAttribute("x2", parseInt(parent.cx)+28);
+        newLine.setAttribute("x2", parent.cx);
         newLine.setAttribute("y2", parent.cy);
-        newLine.setAttribute("marker-end", "url(#triangle)");
         newLine.id = dataCommit.parent+"-"+dataCommit.id;
+        this._svg.getElementById(newLine.id)?.remove();
         return newLine;
     }
     /**
