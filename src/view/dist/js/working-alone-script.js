@@ -3,25 +3,33 @@ import { workingAloneComandManager as comandManager} from "./comandManager/worki
 import { Observer } from "./dataViewer/Observer.js";
 const REF_STORAGE_REPOSITORY = "local";
 const REF_STORAGE_LOG = "log";
+let listComands = JSON.parse(localStorage.getItem(REF_STORAGE_LOG))?.filter(log => log.tag === "comand")?.map(log => log.message)|| [];
 const dataViewer = new DataViewer(document.getElementById("svgContainer"));
 const observer = new Observer()
-var accountComands = 1;
+let accountComands = listComands.length;
 // EVENT LISTENERS
-document.getElementById("comandInput").addEventListener("keyup",(e) => { 
+document.addEventListener("DOMContentLoaded", () => {
+    dataViewer.currentData =  null;
+    dataViewer.logComands = null;
+    observer.notify("SVG",localStorage.getItem(REF_STORAGE_REPOSITORY))
+    observer.notify("log",localStorage.getItem(REF_STORAGE_LOG))
+});
+document.getElementById("comandInput").addEventListener("keyup",(e) => {
     if(e.key === "ArrowUp"){
-        const dataLog = JSON.parse(localStorage.getItem(REF_STORAGE_LOG))
-        const comands = dataLog.reduce((uniqueComands, log) => {
-            if(log.tag === "comand" && log.message !== '' && !uniqueComands.includes(log.message))
-                uniqueComands.push(log.message);
-            return uniqueComands;
-        },[]);
-        e.target.value = comands[comands.length-accountComands] || "";
-        accountComands = accountComands === comands.length ? 1 : accountComands+1;
+        accountComands= accountComands === 0 ? listComands.length-1 : accountComands-1;
+        e.target.value = listComands[accountComands] || "";
         return;
+    }
+    if(e.key === "ArrowDown"){
+        accountComands= accountComands >= listComands.length-1 ? 0 : accountComands+1;
+        e.target.value = listComands[accountComands] || "";
+        return
     }
     if(e.key === "Enter"){
         executeCommand(e.target.value);
         e.target.value = "";
+        listComands = JSON.parse(localStorage.getItem(REF_STORAGE_LOG)).filter(log => log.tag === "comand").map(log => log.message);
+        accountComands = listComands.length;
         return;
     }
 });
@@ -39,10 +47,12 @@ const executeCommand = (comand) => {
             throw verify;
         const [_,gitComand, ...comandConfig] = comand.split(' ');
         comandManager.executeCommand(gitComand,comandConfig);
+        observer.notify("SVG",localStorage.getItem(REF_STORAGE_REPOSITORY))
     } catch (error) {
         comandManager.createMessage('error',error.message);
     }finally{
         accountComands = 1;
+        observer.notify("log",localStorage.getItem(REF_STORAGE_LOG))
     }
 };
 /**
@@ -62,14 +72,6 @@ function verifyComand(comand="") {
 // OBSERVER
 observer.subscribe("log",dataViewer)
 observer.subscribe("SVG",dataViewer)
-setInterval(() => {
-    observer.notify("SVG",localStorage.getItem(REF_STORAGE_REPOSITORY))
-    observer.notify("log",localStorage.getItem(REF_STORAGE_LOG))
-}, 1000);
-window.addEventListener('load', () => {
-    dataViewer.currentData =  null;
-    dataViewer.logComands = null;
-})
 // ZONE VIEW (EFECS AND OBSERVERS)
 const containerLogs = document.getElementById("logContainer");
 const containerSvg = document.getElementById("svgContainer");

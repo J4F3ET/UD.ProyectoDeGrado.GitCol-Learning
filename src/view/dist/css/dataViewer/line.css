@@ -1,0 +1,32 @@
+.line {
+    stroke: #FEFEFE;
+    stroke-width: 3px;
+    stroke-linecap:round;
+    animation: dash 0.5s linear;
+}
+.line.branch {
+    stroke:var(--main-color);
+}
+.merge-pointer {
+    stroke: rgba(100, 100, 100, 0.5);
+    stroke-width: 4;
+    stroke-dasharray: 15, 4;
+}
+@keyframes dash {
+    0% {
+        stroke-dasharray: 0, 100;
+    }
+    25% {
+        stroke-dasharray: 25, 75;
+    }
+    50% {
+        stroke-dasharray: 50, 50;
+    }
+    75% {
+        stroke-dasharray: 75, 25;
+    }
+    100% {
+        stroke-dasharray: 100, 0;
+    }
+    
+}

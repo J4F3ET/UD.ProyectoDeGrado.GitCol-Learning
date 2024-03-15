@@ -14,71 +14,7 @@
     color: var(--text-color);
     stroke: var(--text-color);
     fill: var(--text-color);
-}   
-circle.commit {
-    fill: rgba(255, 165, 81, 0.5);
-    stroke: var(--main-color);
-    filter: drop-shadow(0px 0px 3px rgba(68, 68, 68, 0.514));
-    stroke-width: 2px;
-    transition: cx 0.5s, cy 0.5s;
 }
-.line {
-    stroke: #FEFEFE;
-    stroke-width: 3px;
-    stroke-linecap:round;
-    animation: dash 0.5s linear;
-}
-.line.branch {
-    stroke:var(--main-color);
-}
-circle.commit.reverted {
-    fill: #CCEEFF;
-    stroke: #0066CC;
-}
-
-circle.commit.reverted.checked-out {
-    fill: #CCEEFF;
-}
-
-circle.commit.rebased {
-    stroke: #560066;
-    fill: #b907a4;
-}
-
-circle.commit.rebased.checked-out {
-    fill: #CCCCFF;
-}
-circle.commit.cherry-picked {
-    stroke: #660000;
-    fill: #ff5151;
-}
-circle.commit.cherry-picked.checked-out {
-    fill: #ff5151;
-}
-circle.commit.branchless {
-    fill: #FEFEFE;
-    stroke: #888888;
-    stroke-dasharray: 5, 5;
-}
-circle.commit.branchless.checked-out {
-    fill: #FEFEFE;
-}
-circle.commit.checked-out {
-    fill: #89f7899d;
-    stroke: #339900bd;
-    stroke-width: 3px;
-    animation: drop 0.5s ease-in-out;
-}
-circle.commit.logging {
-    stroke: #0066CC;
-    fill: #0099EE;
-}
-.merge-pointer {
-    stroke: rgba(100, 100, 100, 0.5);
-    stroke-width: 4;
-    stroke-dasharray: 15, 4;
-}
-
 text.id-label {
     text-anchor: middle;
     font-family: Courier New;
@@ -106,81 +42,9 @@ g.container-text-data-repository {
     font-size: 1.5rem;
     fill: var(--text-color);
 }
-g.branch-tag > rect {
-    fill: #ffcc66fd;
-    stroke: #ebb000;
-    stroke-width: 1;
-}
 
-g.branch-tag.git-tag > rect {
-    fill: #7FC9FF;
-    stroke: #0026FF;
-}
-
-g.branch-tag.remote-branch > rect {
-    fill: #CCC;
-    stroke: #888;
-}
-
-g.branch-tag > text {
-    text-anchor: middle;
-    fill: #000;
-    font-size: 15px;
-    font-family: Arial;
-}
-
-g.head-tag > rect {
-    fill: #a7ffa7;
-    stroke: #339900;
-    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.514));
-    stroke-width: 2;
-}
-
-g.head-tag > text {
-    text-anchor: middle;
-    fill: #000;
-    font-size: 15px;
-    font-family: Arial;
-    font-weight: bold;
-    text-transform: uppercase;
-}
 @media screen and (max-width: 1106px){
     .empyText{
         font-weight: 100;
     }
-}
-@keyframes drop {
-    0% {
-        r: 0;
-    }
-    25% {
-        r: 5;
-    }
-    50% {
-        r: 15;
-    }
-    75% {
-        r: 18;
-    }
-    100% {
-        r: 20;
-    }
-}
-@keyframes dash {
-    0% {
-        stroke-dasharray: 0, 100;
-    }
-    25% {
-        stroke-dasharray: 25, 75;
-    }
-    50% {
-        stroke-dasharray: 50, 50;
-    }
-    75% {
-        stroke-dasharray: 75, 25;
-    }
-    100% {
-        stroke-dasharray: 100, 0;
-    }
-    
 }
