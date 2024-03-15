@@ -16,15 +16,15 @@
     fill: var(--text-color);
 }   
 circle.commit {
-    fill: #ffffff86;
-    stroke: #777777;
-    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.514));
+    fill: rgba(255, 165, 81, 0.5);
+    stroke: var(--main-color);
+    filter: drop-shadow(0px 0px 3px rgba(68, 68, 68, 0.514));
     stroke-width: 2px;
-    
+    transition: cx 0.5s, cy 0.5s;
 }
 .line {
-    stroke: var(--text-color);
-    stroke-width: 1.2px;
+    stroke: #FEFEFE;
+    stroke-width: 3px;
     stroke-linecap:round;
     animation: dash 0.5s linear;
 }
@@ -64,7 +64,7 @@ circle.commit.branchless.checked-out {
     fill: #FEFEFE;
 }
 circle.commit.checked-out {
-    fill: #8ce08c;
+    fill: #89f7899d;
     stroke: #339900bd;
     stroke-width: 3px;
     animation: drop 0.5s ease-in-out;
@@ -153,6 +153,15 @@ g.head-tag > text {
     0% {
         r: 0;
     }
+    25% {
+        r: 5;
+    }
+    50% {
+        r: 15;
+    }
+    75% {
+        r: 18;
+    }
     100% {
         r: 20;
     }
@@ -161,10 +170,17 @@ g.head-tag > text {
     0% {
         stroke-dasharray: 0, 100;
     }
+    25% {
+        stroke-dasharray: 25, 75;
+    }
     50% {
-        stroke-dasharray: 100, 100;
+        stroke-dasharray: 50, 50;
+    }
+    75% {
+        stroke-dasharray: 75, 25;
     }
     100% {
         stroke-dasharray: 100, 0;
     }
+    
 }
