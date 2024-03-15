@@ -79,7 +79,6 @@ export class Checkout {
      * @description Remove the tag HEAD from the commit
      * @param {object} head Commit to remove the tag
      */
-
     removeHeadTag(head){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         storage.commits = storage.commits.filter(commit => commit.id !== head.id);
