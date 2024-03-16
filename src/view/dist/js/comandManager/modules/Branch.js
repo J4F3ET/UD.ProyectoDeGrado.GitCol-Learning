@@ -108,6 +108,7 @@ export class Branch{
         storage.commits = storage.commits.filter(commit => commit.id !== head.id);
         head.tags.push(name);
         storage.commits.push(head);
+        storage.information.head = name;
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
     /**

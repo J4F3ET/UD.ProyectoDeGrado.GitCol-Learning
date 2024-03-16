@@ -37,16 +37,17 @@ export class Checkout {
         const commitCurrentHead = currentHead(JSON.parse(localStorage.getItem(this._dataRepository)).commits);
         const commitByBranch = this.findCommitByBranch(goToObject);
         const commitObjetive = commitByBranch??goToObject;
-        if(commitObjetive == commitCurrentHead.id){
-            this.createMessageInfo(`Already on '${commitByBranch?goToObject:commitObjetive}'`);
-        }else{
-            this.updateHeadInformation(commitByBranch?goToObject:'detached head');
-            this.createMessageInfo(`Switched to '${commitByBranch?goToObject:commitObjetive}'`);   
-            this.goToCommit(commitObjetive);
-            this.removeHeadTag(commitCurrentHead);
-        }
+        this.updateHeadInformation(commitByBranch?goToObject:'detached head');
         if(this._configurations.b.nameBranch != null)
             this._configurations.b.callback(this._configurations.b.nameBranch);
+        if(commitObjetive == commitCurrentHead.id){
+        }else{
+            this.removeHeadTag(commitCurrentHead);
+            this.goToCommit(commitObjetive);
+            
+        }
+        
+        this.createMessageInfo(`Switched to '${commitByBranch?goToObject:commitObjetive}'`); 
         this.resetConfig();
     }
     /**
@@ -83,6 +84,7 @@ export class Checkout {
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
         storage.commits = storage.commits.filter(commit => commit.id !== head.id);
         head.tags = head.tags.filter(tag => tag !== 'HEAD');
+        head.class = head.class.filter(classC => classC !== 'checked-out');
         storage.commits.push(head);
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
@@ -110,6 +112,7 @@ export class Checkout {
         if(commit === undefined)
             throw new Error('The commit does not exist');
         commit.tags.push('HEAD');
+        commit.class.push('checked-out');
         storage.commits = storage.commits.filter(commit => commit.id !== id);
         storage.commits.push(commit);
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
@@ -156,13 +159,13 @@ export class Checkout {
      * @throws {Error} The branch already exist
      */
     callbackCreateBranch = (name) =>{
-        if(!this.findBranch(name))
+        if(!this.findBranch(name)){
             this.createBranch(name);
-        else{
+            this.updateHeadInformation(name);
+        }else{
             this.resetConfig();
             throw new Error(`Already exist the branch '${name}'`);
         }
-            
     }
     /**
      * @name resetConfig

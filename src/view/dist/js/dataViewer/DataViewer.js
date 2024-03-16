@@ -1,6 +1,6 @@
 export class DataViewer{
     constructor(svgContainer){
-        this._commitParent = {cx:-50,cy:334,id:"init",tags:[]}
+        this._commitParent = {cx:-50,cy:334,id:"init",tags:[],class:[]}
         this._logComands = "";
         this._currentData = "";
         this._svg = this.createSVG();
@@ -71,11 +71,7 @@ export class DataViewer{
         newCircle.setAttribute("cx", dataCommit.cx);
         newCircle.setAttribute("cy", dataCommit.cy);
         newCircle.setAttribute("r", "20");
-        if(dataCommit.tags.includes("HEAD"))
-            newCircle.classList.add("checked-out");
-        else
-            newCircle.classList.remove("checked-out");
-        newCircle.classList.add("commit");
+        newCircle.classList.add(...dataCommit.class);
         newCircle.id = dataCommit.id;
         return newCircle;   
     }
@@ -135,7 +131,7 @@ export class DataViewer{
             newTag.classList.add("head-tag");
         newTag.appendChild(newRect);
         newTag.appendChild(newText);
-        newTag.id = tagName;
+        newTag.id = tagName+"-tag";
         return newTag;
     }
     /**
@@ -279,16 +275,17 @@ export class DataViewer{
             });
             return
         }
-        this.removesTags(commitsData.map(commit => commit.tags).flat());
         commitsData.forEach((commit, index) => {
+            const parent = commitsData.find(c => c.id === commit.parent)??this._commitParent
+            if(currentCommits[index] == undefined){
+                return this.addCommitToSvg(commit,parent);
+            }
             if(
-                currentCommits[index] == undefined || 
-                JSON.stringify(currentCommits[index].tags) != JSON.stringify(commit.tags) ||
-                currentCommits[index].cx != commit.cx ||
-                currentCommits[index].cy != commit.cy
+                JSON.stringify(currentCommits[index].tags) != JSON.stringify(commit.tags)||
+                currentCommits[index].cy != commit.cy||
+                JSON.stringify(currentCommits[index].class) != JSON.stringify(commit.class)
             ){
-                const parent = commitsData.find(c => c.id === commit.parent)??this._commitParent
-                this.addCommitToSvg(commit,parent);
+                this.updateCommitToSvg(commit,parent);
             };
         });
     }
@@ -318,14 +315,38 @@ export class DataViewer{
             gContainerData.appendChild(gContainerText);
         });
     }
+    updateCommitToSvg(commit,parent){
+        const commitSvg = this._svg.getElementById(commit.id);
+        commitSvg.classList.remove("checked-out");
+        if(commit.tags.includes("HEAD"))
+            commitSvg.classList.add("checked-out");
+            commitSvg.setAttribute("cy",commit.cy);
+        this.updateMeesageAndIdToCommit(commit);
+        this.updateLineOfCommit(commit,parent);
+        this.resolveTagsInSVG(commit);
+    }
+    resolveTagsInSVG(commit){
+        const y = parseInt(commit.cy) + 60;
+        const tagsInSvg = Array.from(this._svg.querySelectorAll('.branch-tag')).map(tag => tag.id);
+        commit.tags.forEach((tag,index) => {
+            if(tagsInSvg.includes(`${tag}-tag`))
+                this.updateTagToSvg(tag,commit.cx,y+(index*25));
+            else
+                this.addTagToSvg(this.createTag(commit.cx,y+(index*25),tag));
+        });
+    }
     addCommitToSvg(commit,parent){
         this.addCircleToSvg(this.createCommit(commit));
         this.addLineToSvg(this.createLine(commit,parent)); 
         this.addMessageAndIdToCommit(commit);
-        const y = parseInt(commit.cy) + 60; 
-        commit.tags.forEach((tag,index) => {
-            this.addTagToSvg(this.createTag(commit.cx,y+(index*25),tag));
-        });
+        this.resolveTagsInSVG(commit);
+    }
+    updateMeesageAndIdToCommit(commit){
+        const message = this._svg.getElementById(commit.id+"-message")
+        const id = this._svg.getElementById(commit.id+"-id")
+        message.setAttribute("y",commit.cy+30);
+        id.setAttribute("y",commit.cy+40);
+        message.innerHTML = commit.message;
     }
     addMessageAndIdToCommit(commit){
         if(this._svg.getElementById(commit.id+"-message")){
@@ -345,12 +366,47 @@ export class DataViewer{
         this._svg.getElementById(commit.id)?.remove();
         this._svg.getElementById("gContainerCommit").appendChild(commit)
     }
+    updateLineOfCommit(dataCommit,parent){
+        const line = this._svg.getElementById(dataCommit.parent+"-"+dataCommit.id);
+        line.setAttribute("x1", dataCommit.cx);
+        line.setAttribute("y1", dataCommit.cy);
+        line.setAttribute("x2", parent.cx);
+        line.setAttribute("y2", parent.cy);
+    }
     addLineToSvg(line){
         this._svg.getElementById("gContainerPointer").appendChild(line)
+    }
+    updateTagToSvg(tag,x,y){
+        const width = this.widthText(tag);
+        const xRect = x-(width/2);
+        const yRect = y-15;
+        const tagSVG = this._svg.getElementById(tag+"-tag");
+        this.animateElement(tagSVG.getElementsByTagName("text")[0],"x","y",x,y);
+        this.animateElement(tagSVG.getElementsByTagName("rect")[0],"x","y",xRect,yRect);
     }
     addTagToSvg(tag){
         this._svg.getElementById(tag.id)?.remove();
         this._svg.getElementById("gContainerTag").appendChild(tag)
     }
-
+    animateElement(element,nameAttributeX,nameAttributeY, finalX, finalY) {
+        const initialX = parseFloat(element.getAttribute(nameAttributeX));
+        const initialY = parseFloat(element.getAttribute(nameAttributeY));
+        const startTime = performance.now();
+        const duration = 350;
+        function updatePosition(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                if (elapsedTime >= duration) {
+                    element.setAttribute(nameAttributeX, finalX);
+                    element.setAttribute(nameAttributeY, finalY);
+                    return;
+                }
+            const progress = elapsedTime / duration;
+            const newX = initialX + (finalX - initialX) * progress;
+            const newY = initialY + (finalY - initialY) * progress;
+            element.setAttribute(nameAttributeX, newX);
+            element.setAttribute(nameAttributeY, newY);
+            requestAnimationFrame(updatePosition);
+        }
+        requestAnimationFrame(updatePosition);
+    }
 }

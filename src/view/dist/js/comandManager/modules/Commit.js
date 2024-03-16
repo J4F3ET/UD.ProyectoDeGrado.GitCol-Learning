@@ -174,13 +174,20 @@ export class Commit{
      * @param {JSON[]} commits Array of commits
      * @returns {JSON} New commit created
      */
-    createCommit(parent,tags) {
-        const [cx,cy] = this.resolveLocationCommit(parent.cx,parent.cy);   
+    createCommit(parent,currentHeadBranch){
+        let tags = [currentHeadBranch,"HEAD"];
+        const classList = ["commit","checked-out"];
+        if(currentHeadBranch == "detached head"){
+            tags = tags.filter(tag => tag != currentHeadBranch);
+            classList.push("detached-head");
+        }
+        const [cx,cy] = this.resolveLocationCommit(parent.cx,parent.cy);
         return {
             id: this.createCod(),
             message: this._configurations.m.message,
             parent: parent.id,
-            tags: tags.filter(tag => tag != null),
+            tags,
+            class: classList,
             cx,
             cy
         };
@@ -278,6 +285,10 @@ export class Commit{
         storage.information.head = newHead;
         localStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
+    remoteClassFromCommit(commit,classToRemove){
+        commit.class = commit.class.filter(classC => classC !== classToRemove);
+        return commit;
+    };
     /**
      * @name execute
      * @description Execute the command
@@ -298,15 +309,17 @@ export class Commit{
                 parent: "init",
                 message: this._configurations.m.message,
                 tags: ["master", "HEAD"],
+                class: ["commit","checked-out"],
                 cx: 50,
                 cy: 334,
             });
             return
         }
         var head = currentHead(storage.commits);
-        const newCommit = this.createCommit(head,["HEAD",storage.information.head != "detached head"?storage.information.head:null]);
+        const newCommit = this.createCommit(head,storage.information.head);
         head = this.removeTag("HEAD",head);
         head = this.removeTag(storage.information.head,head);
+        head = this.remoteClassFromCommit(head,"checked-out");
         this.updateCommitToStorage(head);
         this.addCommitToStorage(newCommit);
         if(!this.existsCommitToStorage(newCommit)){

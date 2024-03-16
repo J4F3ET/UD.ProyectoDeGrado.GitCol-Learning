@@ -11,8 +11,6 @@ let accountComands = listComands.length;
 document.addEventListener("DOMContentLoaded", () => {
     dataViewer.currentData =  null;
     dataViewer.logComands = null;
-    observer.notify("SVG",localStorage.getItem(REF_STORAGE_REPOSITORY))
-    observer.notify("log",localStorage.getItem(REF_STORAGE_LOG))
 });
 document.getElementById("comandInput").addEventListener("keyup",(e) => {
     if(e.key === "ArrowUp"){
@@ -47,12 +45,10 @@ const executeCommand = (comand) => {
             throw verify;
         const [_,gitComand, ...comandConfig] = comand.split(' ');
         comandManager.executeCommand(gitComand,comandConfig);
-        observer.notify("SVG",localStorage.getItem(REF_STORAGE_REPOSITORY))
     } catch (error) {
         comandManager.createMessage('error',error.message);
     }finally{
         accountComands = 1;
-        observer.notify("log",localStorage.getItem(REF_STORAGE_LOG))
     }
 };
 /**
@@ -72,6 +68,10 @@ function verifyComand(comand="") {
 // OBSERVER
 observer.subscribe("log",dataViewer)
 observer.subscribe("SVG",dataViewer)
+setInterval(()=>{
+    observer.notify("SVG",localStorage.getItem(REF_STORAGE_REPOSITORY))
+    observer.notify("log",localStorage.getItem(REF_STORAGE_LOG))
+},500);
 // ZONE VIEW (EFECS AND OBSERVERS)
 const containerLogs = document.getElementById("logContainer");
 const containerSvg = document.getElementById("svgContainer");
