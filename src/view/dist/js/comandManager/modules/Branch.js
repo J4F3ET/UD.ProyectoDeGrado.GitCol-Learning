@@ -118,16 +118,17 @@ export class Branch{
      */
     deleteBranch(name){
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        const commitsParents = this.findCommitsParents();
         const commitObj = storage.commits.find(commit => commit.tags.includes(name));
         if(!commitObj)
             throw new Error('The branch does not exist');
-        if(commitObj.tags.length>0){
+        if(commitObj.tags.includes('HEAD'))
+            throw new Error('The branch is the HEAD');
+        if(commitObj.tags.length >= 1 && this.findChildrens(commitObj.id).length != 0){
             this.removeTagOfCommit(name,commitObj.id);
             return;
         }
-
-        this.removeCommitsUntilSpecificPoints(commitObj,commitsParents);
+        const idCommitsExceptionsDelete = this.findExceptionCommitsDelete(storage.commits);
+        this.removeCommitsUntilSpecificPoints(commitObj,idCommitsExceptionsDelete);
     }
     /**
      * @name removeTagOfCommit
@@ -149,13 +150,13 @@ export class Branch{
      * @description Find the parents of the commits
      * @returns {Array} Array with the parents of the commits
      */
-    findCommitsParents(){
-        const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
-        const [init,nodeInit,...parents] = commits.map(commit => commit.parent);
+    findExceptionCommitsDelete(commits){
+        const parents = commits.map(commit => commit.parent);
         if(parents.length === 0)
-            return [init,nodeInit];
-        const repeatedParents = parents.filter((parent, index) => parents.indexOf(parent) !== index);
-        return [init,nodeInit,...(repeatedParents.flat())];
+            return commits.filter(commit => commit.id == 'parent'|| commit.id == 'init');
+        const repeatedParents = parents.filter((parent, index) => parents.indexOf(parent) != index);
+        const parentsWithTags = commits.filter(commit => commit.tags.length > 0 && parents.includes(commit.id)).map(commit => commit.id);
+        return [...new Set([...repeatedParents,...parentsWithTags])];
     }
     /**
      * @name existBranch
@@ -197,8 +198,6 @@ export class Branch{
      */
     removeCommitsUntilSpecificPoints(commitObj,pointsObjetive){
         if(pointsObjetive.includes(commitObj.id))
-            return;
-        if(this.findChildrens(commitObj.id).length > 0)
             return;
         const parent = this.findCommitById(commitObj.parent);
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));

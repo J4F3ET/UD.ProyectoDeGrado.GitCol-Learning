@@ -87,7 +87,7 @@ export class DataViewer{
         gContainerTag.id = "gContainerTag";
         const gContainerCommit = document.createElementNS("http://www.w3.org/2000/svg","g");
         gContainerCommit.id = "gContainerCommit";
-        const commit = this.createCommit(this._commitParent)
+        const commit = this.createCommit(this._commitParent);
         gContainerCommit.appendChild(commit);
         gContainerData.appendChild(this.createText(20,20,this._svg.getAttribute("id")));
         svgDocumentElement.appendChild(gContainerData);
@@ -210,18 +210,6 @@ export class DataViewer{
         document.getElementById("logContainer").appendChild(p);
     }
     /**
-     * @name removesTags
-     * @description Remove the tags that are not in the new data
-     * @param {String[]} branchs Array with the tags to be removed
-     */
-    removesTags(branchs){
-        const branchsInSvg = [...this._svg.querySelectorAll('.branch-tag')].map(branch => branch.id);
-        branchsInSvg.forEach(branchInSvg => {
-            if(!branchs.includes(branchInSvg))
-                this._svg.getElementById(branchInSvg).remove()
-        });
-    }
-    /**
      * @name updateLog
      * @description Update the log container with the new data
      * @param {String} data String with the new data, this data is a JSON string
@@ -244,6 +232,7 @@ export class DataViewer{
         if(data == this._currentData)return
         const dataParsed = JSON.parse(data);
         if(this._svg.getElementById("emptyContainer")){
+            console.log("init")
             this.initRepository(this._svg);
             this.renderCommitsToSVG(dataParsed.commits);
             this.renderInfoToSVG(dataParsed.information);
@@ -287,6 +276,41 @@ export class DataViewer{
             ){
                 this.updateCommitToSvg(commit,parent);
             };
+        });
+        this.removeElementsFromSVG(commitsData);
+    }
+    removeElementsFromSVG(commitsData){
+        const idsCommits = commitsData.map(commit => commit.id);
+        const tagsInSVG = commitsData.map(commit => commit.tags).flat();
+        console.log(idsCommits)
+        this.removeLineFromSVG(idsCommits);
+        this.removeTagsFromSVG(tagsInSVG);
+        this.removeCommitsFromSVG(idsCommits);
+    };
+    removeLineFromSVG(idsCommits){
+        const linesInSVG = Array.from(this._svg.querySelectorAll('.line')).map(line => line.id);
+        linesInSVG.forEach(line => {
+            const ids = line.split("-");
+            if(!idsCommits.includes(ids[1]) || !idsCommits.includes(ids[0])&&ids[0] != "init")
+                this._svg.getElementById(line).remove();
+        });
+    }
+    removeTagsFromSVG(tagsInData){
+        const tagsInSVG = Array.from(this._svg.querySelectorAll('.branch-tag')).map(tag => tag.id);
+        tagsInSVG.forEach(tag => {
+            if(!tagsInData.includes(tag.split("-")[0]))
+                this._svg.getElementById(tag).remove();
+        });
+    }
+    removeCommitsFromSVG(idsCommits){
+        const commitInSVG = Array.from(this._svg.querySelectorAll('.commit')).map(commit => commit.id);
+        console.log(commitInSVG)
+        commitInSVG.forEach(commit => {
+            if(!idsCommits.includes(commit)){
+                this._svg.getElementById(commit).remove();
+                this._svg.getElementById(commit+"-message").remove();
+                this._svg.getElementById(commit+"-id").remove();
+            }
         });
     }
     /**
@@ -344,8 +368,8 @@ export class DataViewer{
     updateMeesageAndIdToCommit(commit){
         const message = this._svg.getElementById(commit.id+"-message")
         const id = this._svg.getElementById(commit.id+"-id")
-        message.setAttribute("y",commit.cy+30);
-        id.setAttribute("y",commit.cy+40);
+        this.animateElement(message,"x","y",message.getAttribute("x"),commit.cy+30);
+        this.animateElement(id,"x","y",id.getAttribute("x"),commit.cy+40);
         message.innerHTML = commit.message;
     }
     addMessageAndIdToCommit(commit){
