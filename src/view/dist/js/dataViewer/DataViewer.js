@@ -338,10 +338,8 @@ export class DataViewer{
     }
     updateCommitToSvg(commit,parent){
         const commitSvg = this._svg.getElementById(commit.id);
-        commitSvg.classList.remove("checked-out");
-        if(commit.tags.includes("HEAD"))
-            commitSvg.classList.add("checked-out");
-            commitSvg.setAttribute("cy",commit.cy);
+        commitSvg.setAttribute("class",commit.class.join(" "));
+        commitSvg.setAttribute("cy",commit.cy);
         this.updateMeesageAndIdToCommit(commit);
         this.updateLineOfCommit(commit,parent);
         this.resolveTagsInSVG(commit);
