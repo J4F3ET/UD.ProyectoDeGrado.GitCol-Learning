@@ -232,7 +232,6 @@ export class DataViewer{
         if(data == this._currentData)return
         const dataParsed = JSON.parse(data);
         if(this._svg.getElementById("emptyContainer")){
-            console.log("init")
             this.initRepository(this._svg);
             this.renderCommitsToSVG(dataParsed.commits);
             this.renderInfoToSVG(dataParsed.information);
@@ -282,7 +281,6 @@ export class DataViewer{
     removeElementsFromSVG(commitsData){
         const idsCommits = commitsData.map(commit => commit.id);
         const tagsInSVG = commitsData.map(commit => commit.tags).flat();
-        console.log(idsCommits)
         this.removeLineFromSVG(idsCommits);
         this.removeTagsFromSVG(tagsInSVG);
         this.removeCommitsFromSVG(idsCommits);
@@ -304,7 +302,6 @@ export class DataViewer{
     }
     removeCommitsFromSVG(idsCommits){
         const commitInSVG = Array.from(this._svg.querySelectorAll('.commit')).map(commit => commit.id);
-        console.log(commitInSVG)
         commitInSVG.forEach(commit => {
             if(!idsCommits.includes(commit)){
                 this._svg.getElementById(commit).remove();

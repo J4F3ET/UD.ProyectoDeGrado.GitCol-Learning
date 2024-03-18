@@ -30,35 +30,31 @@ export class Commit{
      * @returns {String[]} Array with the letters of the configuration
      */
     resolveConfigure(dataComand) {
-        var configs = dataComand.filter(c => c.startsWith("-")||c.startsWith("--"));
-        var cleanConfigs = [];
-        configs.forEach(c => {
-            if(c.startsWith("--")){
-                cleanConfigs.push(c.replace("--",""));
-            }else{
-                cleanConfigs.push(...this.parseConfig(c));
-            }
+        let configs = [] 
+        dataComand.forEach(c => {
+            if(c.startsWith("-")||c.startsWith("--"))
+                configs.push(c.replace(/^(-{1,2})([a-zA-Z])/, "$2").charAt(0))//Remove the "-" or "--" of the configuration and select second group 
         });
-        if(cleanConfigs.length == 0)
-            throw new Error('The configuration is empty');
-        cleanConfigs.forEach(configuration => {
-            if(!Object.keys(this._configurations).includes(configuration))
-                throw new Error(`The configuration "${configuration}" is not valid`);
-        });
-        return cleanConfigs;
+        this.validateConfig(configs);
+        configs = configs.filter((c,i,self) => self.indexOf(c) === i);
+        return configs;
     }
     /**
-     * @name parseConfig
-     * @description Parse the configuration of the command and return an array with the letters of the configuration
-     * @param {String} configuracion Configuration of the command
-     * @example parseConfig('-masds') // ['m','a','s','d','s']
-     * @returns {String[]} Array with the letters of the configuration
+     * @name validateConfig
+     * @description Validate the configuration of the command
+     * @param {String[]} configs Array with the letters of the configuration
+     * @example validateConfig(['m','a']) // true
+     * @throws {Error} The configuration is empty
+     * @throws {Error} The configuration "${config}" is not valid
      */
-    parseConfig(configuracion) {
-        const matches = configuracion.match(/-([a-z]+)/);
-        if(matches && matches.length === 2)
-            return matches[1].split('');
-        return [];
+    validateConfig(configs){
+        if(configs.length == 0)
+            throw new Error('The configuration is empty');
+        const currentConfig = Object.keys(this._configurations);
+        configs.forEach(config => {
+            if(!currentConfig.includes(config))
+                throw new Error(`The configuration "${config}" is not valid`);
+        });
     }
     /**
      * @name callBackConfigMessage
@@ -66,12 +62,12 @@ export class Commit{
      * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
      */
     callBackConfigMessage = (dataComand) =>{
-        dataComand.forEach((data,index) => {
-            if( this.parseConfig(data).includes('m')&&dataComand[index+1]!=undefined){
-                this._configurations.m.message = dataComand[index+1];
-                return;
-            }
-        });
+        const indexConfig = dataComand.findIndex(data => data.includes('-m'));
+        const message = dataComand[indexConfig+1];
+        if(message == undefined || message == ""){
+            throw new Error('The message is empty');
+        }
+        this._configurations.m.message = dataComand[indexConfig+1]
     }
     /**
      * @name callBackConfigFiles
