@@ -108,8 +108,29 @@ export class Branch{
         storage.commits = storage.commits.filter(commit => commit.id !== head.id);
         head.tags.push(name);
         storage.commits.push(head);
+        if(head.class.includes("detached-head"))
+            storage.commits = this.changeDetachedCommitToCommit(head,storage.commits)
         storage.information.head = name;
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+    }
+    /**
+     * @name changeDetachedCommitToCommit
+     * @param {JSON} commit 
+     * @param {JSON[]} commits 
+     * @returns {JSON[]}
+     */
+    changeDetachedCommitToCommit(commit,commits){
+        if(!commit.class.includes("detached-head"))
+            return commits
+        let parent;
+        const newListCommits = commits.map(c=>{
+            if(c.id == commit.id)
+                c.class = c.class.filter(item=> item !="detached-head")
+            if(c.id == commit.parent)
+                parent = c
+            return c
+        })
+        return this.changeDetachedCommitToCommit(parent,newListCommits);
     }
     /**
      * @name deleteBranch
