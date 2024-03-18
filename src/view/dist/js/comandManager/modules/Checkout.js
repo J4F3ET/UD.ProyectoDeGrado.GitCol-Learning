@@ -34,19 +34,17 @@ export class Checkout {
         if(storage.commits.length == 0)
             throw new Error('The repository does not have commits');
         const goToObject = this.resolveConfig(dataComand);
-        const commitCurrentHead = currentHead(JSON.parse(localStorage.getItem(this._dataRepository)).commits);
+        const commitCurrentHead = currentHead(storage.commits);
         const commitByBranch = this.findCommitByBranch(goToObject);
         const commitObjetive = commitByBranch??goToObject;
         this.updateHeadInformation(commitByBranch?goToObject:'detached head');
-        if(this._configurations.b.nameBranch != null)
-            this._configurations.b.callback(this._configurations.b.nameBranch);
-        if(commitObjetive == commitCurrentHead.id){
-        }else{
+        if(commitObjetive !== commitCurrentHead.id){
             this.removeHeadTag(commitCurrentHead);
             this.goToCommit(commitObjetive);
-            
         }
-        
+        if(this._configurations.b.nameBranch !== null){
+            this._configurations.b.callback(this._configurations.b.nameBranch,storage.commits);
+        }
         this.createMessageInfo(`Switched to '${commitByBranch?goToObject:commitObjetive}'`); 
         this.resetConfig();
     }
@@ -128,7 +126,29 @@ export class Checkout {
         storage.commits = storage.commits.filter(commit => commit.id !== head.id);
         head.tags.push(name);
         storage.commits.push(head);
+        storage.information.head = name;
+        if(head.class.includes("detached-head"))
+            storage.commits = this.changeDetachedCommitToCommit(head,storage.commits)
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+    }
+    /**
+     * @name changeDetachedCommitToCommit
+     * @param {JSON} commit 
+     * @param {JSON[]} commits 
+     * @returns {JSON[]}
+     */
+    changeDetachedCommitToCommit(commit,commits){
+        if(!commit.class.includes("detached-head"))
+            return commits
+        let parent;
+        const newListCommits = commits.map(c=>{
+            if(c.id == commit.id)
+                c.class = c.class.filter(item=> item !="detached-head")
+            if(c.id == commit.parent)
+                parent = c
+            return c
+        })
+        return this.changeDetachedCommitToCommit(parent,newListCommits);
     }
     /**
      * @name createMessageInfo
@@ -161,7 +181,6 @@ export class Checkout {
     callbackCreateBranch = (name) =>{
         if(!this.findBranch(name)){
             this.createBranch(name);
-            this.updateHeadInformation(name);
         }else{
             this.resetConfig();
             throw new Error(`Already exist the branch '${name}'`);
