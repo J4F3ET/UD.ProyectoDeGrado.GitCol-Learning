@@ -265,13 +265,14 @@ export class DataViewer{
         }
         commitsData.forEach((commit, index) => {
             const parent = commitsData.find(c => c.id === commit.parent)??this._commitParent
-            if(currentCommits[index] == undefined){
+            const currentCommit = currentCommits.find(c => c.id === commit.id);
+            if(currentCommit == undefined){
                 return this.addCommitToSvg(commit,parent);
             }
             if(
-                JSON.stringify(currentCommits[index].tags) != JSON.stringify(commit.tags)||
-                currentCommits[index].cy != commit.cy||
-                JSON.stringify(currentCommits[index].class) != JSON.stringify(commit.class)
+                JSON.stringify(currentCommit.tags) != JSON.stringify(commit.tags)||
+                currentCommit.cy != commit.cy||
+                JSON.stringify(currentCommit.class) != JSON.stringify(commit.class)
             ){
                 this.updateCommitToSvg(commit,parent);
             };

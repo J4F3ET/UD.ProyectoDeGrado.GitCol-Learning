@@ -2,6 +2,5 @@ text.id-label,text.message-label{
     text-anchor: middle;
     font-family: Courier New;
     fill: #ffffff;
-    filter: drop-shadow(0px 0px 5px #000000);
-    font-size: 10px;
+    font-size: .7rem;
 }

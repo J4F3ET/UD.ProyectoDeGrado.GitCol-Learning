@@ -4,17 +4,18 @@ circle.commit {
     filter: drop-shadow(0px 0px 3px rgba(68, 68, 68, 0.514));
     stroke-width: 2px;
     transition: cy 0.5s;
-    transition: fill 0.5s ease-in-out;
+    transition: fill 0.2s ease-in-out;
 }
 circle.commit.detached-head {
-    fill: #465166ad;
-    stroke: #ff638a;
+    fill: #1e222983;
+    stroke: #ff4949;
     stroke-dasharray: 8, 8;
     stroke-width: 3px;
+    transition: stroke 0.5s ease-in-out;
 }
 circle.commit.detached-head.checked-out {
     stroke: #89f789;
-    fill: #465166ad;
+    fill: #1e222983;
 }
 circle.commit.checked-out {
     fill: #89f7899d;
