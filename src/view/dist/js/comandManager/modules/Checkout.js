@@ -28,6 +28,7 @@ export class Checkout {
      * @throws {Error} The repository does not have commits
     */
     execute(dataComand){
+        //console.time('Execution time of checkout command');
         if(localStorage.getItem(this._dataRepository)===null)
             throw new Error('The repository does not exist');
         const storage = JSON.parse(localStorage.getItem(this._dataRepository))
@@ -35,18 +36,23 @@ export class Checkout {
             throw new Error('The repository does not have commits');
         const goToObject = this.resolveConfig(dataComand);
         const commitCurrentHead = currentHead(storage.commits);
-        const commitByBranch = this.findCommitByBranch(goToObject);
+        const commitByBranch = storage.commits.find(commit => commit.tags.includes(goToObject))?.id;
         const commitObjetive = commitByBranch??goToObject;
-        this.updateHeadInformation(commitByBranch?goToObject:'detached head');
+        storage.information.head = commitByBranch?goToObject:'detached head';
         if(commitObjetive !== commitCurrentHead.id){
-            this.removeHeadTag(commitCurrentHead);
-            this.goToCommit(commitObjetive);
+            storage.commits = this.goToCommit(
+                this.removeHeadTag(storage.commits,commitCurrentHead),//Remove the tag HEAD from the commit, array of commits
+                commitObjetive
+            );
         }
         if(this._configurations.b.nameBranch !== null){
-            this._configurations.b.callback(this._configurations.b.nameBranch,storage.commits);
+            storage.commits = this._configurations.b.callback(storage.commits,this._configurations.b.nameBranch);
+            storage.information.head = this._configurations.b.nameBranch;
         }
         this.createMessageInfo(`Switched to '${commitByBranch?goToObject:commitObjetive}'`); 
         this.resetConfig();
+        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+        //console.timeEnd('Execution time of checkout command');
     }
     /**
      * @name resolveConfig
@@ -64,38 +70,28 @@ export class Checkout {
         return dataComand.filter(value => value.substring(0,1) !== '-').pop();
     }
     /**
-     * @name updateHeadInformation
-     * @description Update the head information in the repository
-     * @param {string} nameBranch Name of the branch
+     * @name createMessageInfo
+     * @description Create a new message in the log
+     * @param {string} message Message to add
      */
-    updateHeadInformation(nameBranch){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        storage.information.head = nameBranch;
-        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+    createMessageInfo(message){
+        if(this._configurations.q.useConfig)
+            return
+        const log = JSON.parse(localStorage.getItem(this._logRepository));
+        log.push({tag: 'info',message: message});
+        localStorage.setItem(this._logRepository,JSON.stringify(log));
     }
     /**
      * @name removeHeadTag
      * @description Remove the tag HEAD from the commit
      * @param {object} head Commit to remove the tag
      */
-    removeHeadTag(head){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        storage.commits = storage.commits.filter(commit => commit.id !== head.id);
+    removeHeadTag(commits,head){
+        commits = commits.filter(commit => commit.id !== head.id);
         head.tags = head.tags.filter(tag => tag !== 'HEAD');
         head.class = head.class.filter(classC => classC !== 'checked-out');
-        storage.commits.push(head);
-        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
-    }
-    /**
-     * @name findCommitByBranch
-     * @description Find the commit by the branch
-     * @param {string} nameBranch Name of the branch
-     * @returns {string} Id of the commit
-     * @returns {undefined} If the branch does not exist
-     */
-    findCommitByBranch(nameBranch){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        return storage.commits.find(commit => commit.tags.includes(nameBranch))?.id;
+        commits.push(head);
+        return commits;
     }
     /**
      * @name goToCommit
@@ -104,32 +100,29 @@ export class Checkout {
      * @throws {Error} The commit does not exist
      * @returns {void}
      */
-    goToCommit(id){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        const commit = storage.commits.find(commit => commit.id === id);
+    goToCommit(commits,id){
+        const commit = commits.find(commit => commit.id === id);
         if(commit === undefined)
             throw new Error('The commit does not exist');
         commit.tags.push('HEAD');
         commit.class.push('checked-out');
-        storage.commits = storage.commits.filter(commit => commit.id !== id);
-        storage.commits.push(commit);
-        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+        commits = commits.filter(commit => commit.id !== id);
+        commits.push(commit);
+        return commits;
     }
     /**
      * @name createBranch
      * @description Create a new branch in the repository 
      * @param {string} name Name of the new branch
      */
-    createBranch(name){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        const head = currentHead(storage.commits);
-        storage.commits = storage.commits.filter(commit => commit.id !== head.id);
+    createBranch(commits,name){
+        const head = currentHead(commits);
+        commits = commits.filter(commit => commit.id !== head.id);
         head.tags.push(name);
-        storage.commits.push(head);
-        storage.information.head = name;
+        commits.push(head);
         if(head.class.includes("detached-head"))
-            storage.commits = this.changeDetachedCommitToCommit(head,storage.commits)
-        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+            commits = this.changeDetachedCommitToCommit(head,commits)
+        return commits;
     }
     /**
      * @name changeDetachedCommitToCommit
@@ -150,27 +143,15 @@ export class Checkout {
         })
         return this.changeDetachedCommitToCommit(parent,newListCommits);
     }
-    /**
-     * @name createMessageInfo
-     * @description Create a new message in the log
-     * @param {string} message Message to add
-     */
-    createMessageInfo(message){
-        if(this._configurations.q.useConfig)
-            return
-        const log = JSON.parse(localStorage.getItem(this._logRepository));
-        log.push({tag: 'info',message: message});
-        localStorage.setItem(this._logRepository,JSON.stringify(log));
-    }
+    
     /**
      * @name findBranch
      * @description Find a branch in the repository
      * @param {string} nameBranch Name of the branch to find
      * @returns {boolean} True if the branch exist, false otherwise
      */
-    findBranch(nameBranch){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        return storage.commits.find(commit => commit.tags.includes(nameBranch))?true:false;
+    findBranch(commits,nameBranch){
+        return commits.find(commit => commit.tags.includes(nameBranch))?true:false;
     }
     /**
      * @name callbackCreateBranch
@@ -178,13 +159,11 @@ export class Checkout {
      * @param {string} name Name of the new branch
      * @throws {Error} The branch already exist
      */
-    callbackCreateBranch = (name) =>{
-        if(!this.findBranch(name)){
-            this.createBranch(name);
-        }else{
-            this.resetConfig();
-            throw new Error(`Already exist the branch '${name}'`);
-        }
+    callbackCreateBranch = (commits,name) =>{
+        if(!this.findBranch(commits,name))
+            return this.createBranch(commits,name);
+        this.resetConfig();
+        throw new Error(`Already exist the branch '${name}'`);
     }
     /**
      * @name resetConfig

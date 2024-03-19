@@ -7,7 +7,7 @@ export class Commit{
      * @description The constructor of the class, it receives the repository of the data
      * @param {string} dataRepository Name variable of the local storage of the repository, by default is 'repository'
      */
-    constructor(dataRepository = "repository",logRepository = "log") {
+    constructor(dataRepository = "repository",logRepository = "log"){
         this.comand = 'commit';
         this._configurations = {
             m:{
@@ -21,6 +21,44 @@ export class Commit{
         };
         this._dataRepository = dataRepository;
         this._logRepository = logRepository;
+    }
+    /**
+     * @name execute
+     * @description Execute the command
+     * @param {String[]} config Configuration of the command
+     * @returns {JSON} New commit created
+     */
+    execute(dataComand){
+        //console.time('Execution time of commit');
+        if(localStorage.getItem(this._dataRepository)===null)
+            throw new Error('The repository does not exist');
+        this.resolveConfigure(dataComand).forEach(config => {
+            this._configurations[config].callback(dataComand);
+        });
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
+        if(storage.commits.length == 0){
+            storage.information.head = "master";
+            storage.commits.push({
+                id: "parent",
+                parent: "init",
+                message: this._configurations.m.message,
+                tags: ["master", "HEAD"],
+                class: ["commit","checked-out"],
+                cx: 50,
+                cy: 334,
+            });
+            localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+            //console.timeEnd('Execution time of commit');
+            return
+        }
+        var head = currentHead(storage.commits);
+        const response = this.createCommit(storage.commits,head,storage.information.head);
+        head = this.removeTags(["HEAD",storage.information.head],head);
+        head = this.remoteClassFromCommit(head,"checked-out");
+        storage.commits = this.updateCommitToStorage(response.commits,head);
+        storage.commits.push(response.commit);
+        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+        //console.timeEnd('Execution time of commit');
     }
     /**
      * @name resolveConfigure
@@ -38,6 +76,19 @@ export class Commit{
         this.validateConfig(configs);
         configs = configs.filter((c,i,self) => self.indexOf(c) === i);
         return configs;
+    }
+    /**
+     * @name createMessageInfo
+     * @description Create a message to the log
+     * @param {String} tag Tag of the message
+     * @param {String} message Message to be added to the log
+     */
+    createMessageInfo(tag,message){
+        if(localStorage.getItem(this._logRepository)===null)
+            return;
+        const log = JSON.parse(localStorage.getItem(this._logRepository));
+        log.push({tag,message});
+        localStorage.setItem(this._logRepository,JSON.stringify(log));
     }
     /**
      * @name validateConfig
@@ -79,40 +130,16 @@ export class Commit{
         this.createMessageInfo('info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
     }
     /**
-     * @name createMessageInfo
-     * @description Create a message to the log
-     * @param {String} tag Tag of the message
-     * @param {String} message Message to be added to the log
-     */
-    createMessageInfo(tag,message){
-        if(localStorage.getItem(this._logRepository)===null)
-            return;
-        const log = JSON.parse(localStorage.getItem(this._logRepository));
-        log.push({tag,message});
-        localStorage.setItem(this._logRepository,JSON.stringify(log));
-    }
-    /**
-     * @name removeTag
+     * @name removeTags
      * @description Remove a tag from a commit
-     * @param {string} tag Tag to be removed
-     * @param {object} commit Commit to be removed the tag
-     * @returns {object} Commit with the tag removed
-     * @example removeTag('HEAD',commit) // {id: "parent", parent: "init", message: "First commit", tags: ["master"], cx: 50, cy: 334}
+     * @param {String[]} tag Tag to be removed
+     * @param {JSON} commit Commit to be removed the tag
+     * @returns {JSON} Commit with the tag removed
      */
-    removeTag(tag,commit){
-        commit.tags = commit.tags.filter(t => t != tag);
-        return commit;
-    }
-    /**
-     * @name addTag
-     * @description Add a tag to a commit
-     * @param {string} tag Tag to be added
-     * @param {object} commit Commit to be added the tag
-     * @returns {object} Commit with the tag added
-     * @example addTag('HEAD',commit) // {id: "parent", parent: "init", message: "First commit", tags: ["master","HEAD"], cx: 50, cy: 334}
-     */
-    addTag(tag,commit){
-        commit.tags.push(tag);
+    removeTags(tags,commit){
+        tags.forEach(tag => {
+            commit.tags = commit.tags.filter(t => t != tag)
+        });
         return commit;
     }
     /**
@@ -261,44 +288,5 @@ export class Commit{
      */
     remoteClassFromCommit(commit,classToRemove){
         return commit.class = commit.class.filter(classC => classC !== classToRemove); ;
-    };
-    /**
-     * @name execute
-     * @description Execute the command
-     * @param {String[]} config Configuration of the command
-     * @returns {JSON} New commit created
-     */
-    execute(dataComand){
-        //console.time('Execution time of commit');
-        if(localStorage.getItem(this._dataRepository)===null)
-            throw new Error('The repository does not exist');
-        this.resolveConfigure(dataComand).forEach(config => {
-            this._configurations[config].callback(dataComand);
-        });
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
-        if(storage.commits.length == 0){
-            storage.information.head = "master";
-            storage.commits.push({
-                id: "parent",
-                parent: "init",
-                message: this._configurations.m.message,
-                tags: ["master", "HEAD"],
-                class: ["commit","checked-out"],
-                cx: 50,
-                cy: 334,
-            });
-            localStorage.setItem(this._dataRepository, JSON.stringify(storage));
-            //console.timeEnd('Execution time of commit');
-            return
-        }
-        var head = currentHead(storage.commits);
-        const response = this.createCommit(storage.commits,head,storage.information.head);
-        head = this.removeTag("HEAD",head);
-        head = this.removeTag(storage.information.head,head);
-        head = this.remoteClassFromCommit(head,"checked-out");
-        storage.commits = this.updateCommitToStorage(response.commits,head);
-        storage.commits.push(response.commit);
-        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
-        //console.timeEnd('Execution time of commit');
     }
 }
