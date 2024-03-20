@@ -39,7 +39,7 @@ export class Branch{
      * @param {Array} dataComand Array with the comand and the configurations
      */
     execute(dataComand){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        let storage = JSON.parse(localStorage.getItem(this._dataRepository));
         if(!storage)
             throw new Error('The repository is not initialized');
         if(storage.commits.length === 0)
@@ -47,7 +47,8 @@ export class Branch{
         const [comand,...value] = this.resolveConfig(dataComand);
         if(!comand)
             throw new Error('The comand is not valid');
-        comand.callback(value);
+        storage = comand.callback(storage,value)??storage;
+        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
     /**
      * @name resolveConfig
@@ -66,11 +67,11 @@ export class Branch{
     /**
      * @name getLocalBranches
      * @description Create messages with the local branches of the repository
+     * @param {JSON} storage Storage of the repository
      */
-    getLocalBranches(){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        const branches = storage.commits.flatMap(commit => commit.tags.filter(tag => tag !== 'HEAD'));
+    getLocalBranches(storage){
         const headBranch = storage.information.head;
+        const branches = storage.commits.flatMap(commit => commit.tags.filter(tag => tag !== 'HEAD'));
         branches.forEach(branch => {
             const message = branch !== headBranch 
                 ? `<p>${branch}</p>`
@@ -99,25 +100,26 @@ export class Branch{
     }
     /**
      * @name createBranch
-     * @description Create a new branch in the repository 
+     * @description Create a new branch in the repository
+     * @param {JSON[]} commits Array with the commits of the repository
      * @param {string} name Name of the new branch
+     * @returns {JSON[]} Array with the new commits of the repository  and the new branch
      */
-    createBranch(name){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        const head = currentHead(storage.commits);
-        storage.commits = storage.commits.filter(commit => commit.id !== head.id);
+    createBranch(commits,name){
+        const head = currentHead(commits);
+        commits = commits.filter(commit => commit.id !== head.id);
         head.tags.push(name);
-        storage.commits.push(head);
+        commits.push(head);
         if(head.class.includes("detached-head"))
-            storage.commits = this.changeDetachedCommitToCommit(head,storage.commits)
-        storage.information.head = name;
-        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+            commits = this.changeDetachedCommitToCommit(head,commits)
+        return commits
     }
     /**
      * @name changeDetachedCommitToCommit
-     * @param {JSON} commit 
-     * @param {JSON[]} commits 
-     * @returns {JSON[]}
+     * @description Change the class of the commit detached to commit
+     * @param {JSON} commit  Commit to change the class
+     * @param {JSON[]} commits Array with the commits of the repository 
+     * @returns {JSON[]} Array with the new commits of the repository
      */
     changeDetachedCommitToCommit(commit,commits){
         if(!commit.class.includes("detached-head"))
@@ -135,44 +137,50 @@ export class Branch{
     /**
      * @name deleteBranch
      * @description Delete a branch in the repository
+     * @param {JSON[]} commits Array with the commits of the repository
      * @param {string} name Name of the branch to delete
+     * @returns {JSON[]} Array with the new commits of the repository
      */
-    deleteBranch(name){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        const commitObj = storage.commits.find(commit => commit.tags.includes(name));
+    deleteBranch(commits,name){
+        const commitObj = commits.find(commit => commit.tags.includes(name));
         if(!commitObj)
             throw new Error('The branch does not exist');
         if(commitObj.tags.includes('HEAD'))
             throw new Error('The branch is the HEAD');
-        if(commitObj.tags.length >= 1 && this.findChildrens(commitObj.id).length != 0){
-            this.removeTagOfCommit(name,commitObj.id);
-            return;
-        }
-        const idCommitsExceptionsDelete = this.findExceptionCommitsDelete(storage.commits);
-        this.removeCommitsUntilSpecificPoints(commitObj,idCommitsExceptionsDelete);
+        const childrens = this.findChildrens(commits,commitObj.id);
+        if((childrens.some(commit => !commit.class.includes('detached-head')) && childrens.length > 0)||
+        commitObj.tags.length > 1)
+            return this.removeTagOfCommit(commits,name,commitObj.id);
+        const idCommitsExceptionsDelete = this.findExceptionCommitsDelete(commits);
+        return this.removeCommitsUntilSpecificPoints(
+            this.removeTagOfCommit(commits,name,commitObj.id),
+            commitObj,
+            idCommitsExceptionsDelete
+        );
     }
     /**
      * @name removeTagOfCommit
      * @description Remove a tag of a commit
+     * @param {JSON[]} commits Array with the commits of the repository
      * @param {string} name Name of the tag to remove
      * @param {string} id Id of the commit
+     * @returns {JSON[]} Array with the new commits of the repository
      */
-    removeTagOfCommit(name,id){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        storage.commits = storage.commits.map(commit => {
+    removeTagOfCommit(commits,name,id){
+        return commits.map(commit => {
             if(commit.id === id && commit.tags.includes(name))
-                return {...commit,tags: commit.tags.filter(tag => tag !== name)};
+                commit.tags = commit.tags.filter(tag => tag !== name);
             return commit;
         });
-        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
     /**
      * @name findCommitsParents
      * @description Find the parents of the commits
-     * @returns {Array} Array with the parents of the commits
+     * @param {JSON[]} commits Array with the commits of the repository
+     * @returns {Array} Array with the ID parents of the commits
      */
     findExceptionCommitsDelete(commits){
-        const parents = commits.map(commit => commit.parent);
+        const parents = commits.map(commit => commit.parent&&!commit.class.includes('detached-head')?commit.parent:[]).flat();
         if(parents.length === 0)
             return commits.filter(commit => commit.id == 'parent'|| commit.id == 'init');
         const repeatedParents = parents.filter((parent, index) => parents.indexOf(parent) != index);
@@ -180,83 +188,81 @@ export class Branch{
         return [...new Set([...repeatedParents,...parentsWithTags])];
     }
     /**
-     * @name existBranch
-     * @description Verify if the branch exist in the repository
-     * @param {string} name Name of the branch
-     * @returns {boolean} If the branch exist
-    */
-    existBranch(name){
-        const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
-        return commits.some(commit => commit.tags.includes(name));
-    }
-    /**
-     * @name findCommitById
-     * @description Find a commit by the id
-     * @param {string} id Id of the commit
-     * @returns {Object} Object with the commit
-     * @returns {undefined} If the commit does not exist
-     */
-    findCommitById(id){
-        const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
-        return commits.find(commitStorage => commitStorage.id === id);
-    }
-    /**
      * @name findChildrens
      * @description Find the childrens of the commit
+     * @param {JSON[]} commits Array with the commits of the repository
      * @param {string} id Id of the commit
-     * @returns {Array} Array with the childrens of the commit
-     * @returns {undefined} If the commit does not have childrens
+     * @param {JSON[]} childrens Array with the childrens of the commit
      */
-    findChildrens(id){
-        const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
-        return commits.filter(commitStorage => commitStorage.parent === id);
+    findChildrens(commits,id,childrens = []){
+        const childrensFisrtGen = commits.filter(commitStorage => commitStorage.parent == id);
+        if(childrensFisrtGen.length==0)
+            return childrens;
+        childrensFisrtGen.forEach(commit => {
+            childrens.push(commit);
+            this.findChildrens(commits,commit.id,childrens);
+        });
+        return childrens;
     }
     /**
      * @name removeCommitsUntilSpecificPoints
      * @description Remove the commits until a specific point
-     * @param {Object} commitObj Object with the commit
-     * @param {Array} pointsObjetive Array with the commits parents whit two or more childrens
+     * @param {JSON[]} commits Array with the commits of the repository
+     * @param {JSON} commitObj Object with the commit
+     * @param {String[]} pointsObjetive Array with the commits id parents whit two or more childrens
+     * @returns {JSON[]} Array with the new commits of the repository
      */
-    removeCommitsUntilSpecificPoints(commitObj,pointsObjetive){
+    removeCommitsUntilSpecificPoints(commits,commitObj,pointsObjetive){
         if(pointsObjetive.includes(commitObj.id))
-            return;
-        const parent = this.findCommitById(commitObj.parent);
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        storage.commits = storage.commits.filter(commit => commit.id !== commitObj.id);
-        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
-        this.removeCommitsUntilSpecificPoints(parent,pointsObjetive);
+            return commits;
+        const parent = commits.find(commit => commit.id === commitObj.parent);
+        commits = commits.map(commit => {
+            if(commit.id === commitObj.id)
+                commitObj.class.push('detached-head');
+            return commit;
+        });
+        return this.removeCommitsUntilSpecificPoints(commits,parent,pointsObjetive);
     }
     /**
      * @name renameBranch
      * @description Rename a branch in the repository
+     * @param {JSON} storage Storage of the repository
      * @param {Array} branchs Array with the name of the branch and the new name
+     * @returns {JSON} Storage of the repository with the new name of the branch
      */
-    renameBranch([name,newName]){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
+    renameBranch(storage,[name,newName]){
         storage.commits = storage.commits.map(commit => {
             if(commit.tags.includes(name))
-                return {...commit,tags: commit.tags.map(tag => tag === name ? newName : tag)}
+                commit.tags = commit.tags.map(tag => tag === name ? newName : tag)
             return commit;
         });
-        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+        if(storage.information.head === name)
+            storage.information.head = newName;
+        return storage;
     }
     /**
      * @name callBackConfigList
      * @description Call the method to create messages with the local branches of the repository and the remote branches
+     * @param {JSON} storage Storage of the repository
+     * @throws {Error} If the remote repository is not defined
+     * @returns {void}
      */
-    callBackConfigAllBranch = () => {
-        this.callBackConfigList();
+    callBackConfigAllBranch = (storage) => {
+        this.callBackConfigList(storage);
         this.callBackConfigRemoteBranch();
     }
     /**
      * @name callBackConfigList
      * @description Call the method to create messages with the local branches of the repository
+     * @param {JSON} storage Storage of the repository
+     * @returns {void}
      */
-    callBackConfigList = () => this.getLocalBranches();
+    callBackConfigList = (storage) => this.getLocalBranches(storage);
     /**
      * @name callBackConfigRemoteBranch
      * @description Call the method to create messages with the remote branches
      * @throws {Error} If the remote repository is not defined
+     * @returns {void}
      */
     callBackConfigRemoteBranch = () => {
         if(!this._remoteRepository)
@@ -266,40 +272,51 @@ export class Branch{
     /**
      * @name callBackConfigDelete
      * @description Call the method to delete a branch
-     * @param {string} branch Name of the branch to delete
+     * @param {JSON} storage Storage of the repository
+     * @param {String[]} values Name of the branch to delete
      * @throws {Error} If the name of the branch is empty
+     * @throws {Error} If the branch can not be deleted
+     * @returns {JSON} Storage of the repository with the branch deleted
      */
-    callBackConfigDelete = (values) => {
+    callBackConfigDelete = (storage,values) => {
         const branch = values[0];
         if(branch === "")
             throw new Error('The name of the branch is empty');
-        if(branch === 'master' || branch === 'HEAD')
+        if(branch === 'master' || branch === 'HEAD' ||branch === storage.information.head)
             throw new Error(`The branch can not be deleted ${branch}`);
-        this.deleteBranch(branch);
+        storage.commits = this.deleteBranch(storage.commits,branch);
+        return storage;
     }
     /**
      * @name callBackCreateBranch
      * @description Call the method to create a branch
-     * @param {string} branch Name of the branch to create
+     * @param {JSON} storage Storage of the repository
+     * @param {String[]} values Name of the branch to create
      * @throws {Error} If the name of the branch is empty
+     * @throws {Error} If the branch already exist
+     * @returns {JSON} Storage of the repository with the new branch
      */
-    callBackCreateBranch = (values) => {
+    callBackCreateBranch = (storage,values) => {
         const branch = values[0];
         if(branch === "")
             throw new Error('The name of the branch is empty');
-        if(this.existBranch(branch))
+        if(storage.commits.some(commit => commit.tags.includes(branch)))
             throw new Error('The branch already exist');
-        this.createBranch(branch)
+        storage.commits = this.createBranch(storage.commits,branch)
+        storage.information.head = branch;
+        return storage;
     };
     /**
      * @name callBackConfigRename
      * @description Call the method to rename a branch
-     * @param {Array} branchs Array with the name of the branch and the new name
+     * @param {JSON} storage Storage of the repository
+     * @param {String[]} branchs Array with the name of the branch and the new name
      * @throws {Error} If the command is not valid
+     * @returns {JSON} Storage of the repository with the branch renamed
      */
-    callBackConfigRename = (branchs) => {
+    callBackConfigRename = (storage,branchs) => {
         if(branchs.length != 2 || branchs.some(branch => branch === ''))
             throw new Error('The command is not valid');
-        this.renameBranch(branchs);
+        return this.renameBranch(storage,branchs);
     }
 }
