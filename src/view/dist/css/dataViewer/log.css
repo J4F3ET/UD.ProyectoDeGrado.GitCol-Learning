@@ -1,0 +1,22 @@
+.shell{
+    border-radius: 5px;
+    width: 100%;
+    font-family: monospace;
+    color: #51c22f;
+    background-color:var(--second-bg-color);
+}
+.comand{
+    color: #51c22f;
+    font-weight: 100;
+}
+.error{
+    color: #ff3d3d;
+    font-weight: 200;
+}
+.info{
+    color: #7fccff;
+    font-weight: 100;
+    li{
+        padding-left: 1rem;
+    }
+}

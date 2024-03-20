@@ -1,0 +1,6 @@
+text.id-label,text.message-label{
+    text-anchor: middle;
+    font-family: Courier New;
+    fill: #ffffff;
+    font-size: .7rem;
+}

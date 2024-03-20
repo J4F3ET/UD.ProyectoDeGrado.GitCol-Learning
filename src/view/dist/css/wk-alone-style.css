@@ -17,7 +17,7 @@
     --bg-color: #1B263B;
     --text-color: #fff;
     --comand-color: #465166;
-    --second-bg-color: #465166;
+    --second-bg-color: #1e2229;
     --main-color: #FA8E5F;
 }
 body{
@@ -43,29 +43,6 @@ body{
     height: 90vh;
     margin-bottom: 1vh;
     overflow: auto;
-}
-.shell{
-    border-radius: 5px;
-    width: 100%;
-    font-family: monospace;
-    color: #51c22f;
-    background-color: #0f141f;
-}
-.comand{
-    color: #51c22f;
-    font-weight: 100;
-}
-.error{
-    color: #ff3d3d;
-    font-weight: 200;
-}
-.info{
-    color: #0c94ee;
-    font-weight: 100;
-    font-size: small;
-    li{
-        padding-left: 1rem;
-    }
 }
 .input{
     background:none;
