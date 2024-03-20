@@ -26,7 +26,7 @@ export class Commit{
      * @name execute
      * @description Execute the command
      * @param {String[]} config Configuration of the command
-     * @returns {JSON} New commit created
+     * @throws {Error} The repository does not exist
      */
     execute(dataComand){
         //console.time('Execution time of commit');
@@ -111,19 +111,18 @@ export class Commit{
      * @name callBackConfigMessage
      * @description Callback to the configuration of the message
      * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
+     * @throws {Error} The message is empty
      */
     callBackConfigMessage = (dataComand) =>{
         const indexConfig = dataComand.findIndex(data => data.includes('-m'));
         const message = dataComand[indexConfig+1];
-        if(message == undefined || message == ""){
+        if(message == undefined || message == "")
             throw new Error('The message is empty');
-        }
-        this._configurations.m.message = dataComand[indexConfig+1]
+        this._configurations.m.message = message;
     }
     /**
      * @name callBackConfigFiles
      * @description Callback to the configuration of the files
-     * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
      */
     callBackConfigFiles = () =>{
         const files = this._configurations.a.files.map(file => `<li>>${file}</li>`).join('');
@@ -131,8 +130,8 @@ export class Commit{
     }
     /**
      * @name removeTags
-     * @description Remove a tag from a commit
-     * @param {String[]} tag Tag to be removed
+     * @description Remove tags from a commit
+     * @param {String[]} tags Tags to be removed
      * @param {JSON} commit Commit to be removed the tag
      * @returns {JSON} Commit with the tag removed
      */
@@ -174,9 +173,10 @@ export class Commit{
     /**
      * @name createCommit
      * @description Create a new commit and update the array of commits if it is necessary
-     * @param {JSON} parent  Commit parent to create the new commit
      * @param {JSON[]} commits Array of commits
-     * @returns {JSON} Commit created and the array of commits updated
+     * @param {JSON} parent  Commit parent to create the new commit
+     * @param {String} currentHeadBranch Name of the current head branch
+     * @returns {JSON} Array of commits and JSON the new commit, the return Object contains whit the key "commits" and "commit"
      */
     createCommit(commits,parent,currentHeadBranch){
         let tags = [currentHeadBranch,"HEAD"];
@@ -202,20 +202,20 @@ export class Commit{
      * @param {JSON[]} commits Array of commits
      * @param {Int} parentCx Coordenate "X" of the parent commit(HEAD)
      * @param {Int} parentCy Coordenate "Y" of the parent commit(HEAD)
-     * @returns {JSON} Array of commits and the location of the new commit
+     * @returns {JSON} Array of commits and the location of the new commit, the return Object contains whit the key "commits" and "location"
      */
     resolveLocationCommit(commits,parentCx,parentCy){
-        //Caso 1
+        //Case 1
         const possibleX = parentCx + this.SPACE_BETWEEN_COMMITS_X;
         if(commits.find(commit => commit.cx == possibleX && commit.cy == parentCy) == undefined)
             return {commits,location:[possibleX,parentCy]};	
-        //Caso 2
+        //Case 2
         const commitsInPossiteY = commits.filter(commit => commit.cx == possibleX && commit.cy < parentCy);
         const commitsInNegativeY = commits.filter(commit => commit.cx == possibleX && commit.cy > parentCy);
         const commitThisUbicationOnParentY = commits.filter(commit => commit.cx == parentCx && commit.cy != parentCy);
         if(commitThisUbicationOnParentY.length == 0)
             return {commits,location:[possibleX,this.generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativeY)]};
-        //Caso 3
+        //Case 3
         const response = this.generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsInNegativeY);
         return {commits:(response.commits),location:[possibleX,response.cy]};
     }
@@ -244,7 +244,7 @@ export class Commit{
      * @param {Int} parentCy Coordenate "Y" of the parent commit(HEAD)
      * @param {JSON[]} commitsInPossiteY array of commits that are above the "X" possible location 
      * @param {JSON[]} commitsInNegativeY array of commits that are below the "X" possible location 
-     * @returns {JSON} Coordenate "Y" of the new commit and the array of commits updated
+     * @returns {JSON} Coordenate "Y" of the new commit and the array of commits updated, the return Object contains whit the key "commits" and "cy"
      */
     generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsInNegativeY){
         if(commitsInPossiteY.length <= commitsInNegativeY.length){
@@ -264,7 +264,7 @@ export class Commit{
      * @name updateLocationChildsOfCommit
      * @description Update the location of the childs of a commit
      * @param {JSON[]} commits Array of commits
-     * @param {Int} SPACE_BETWEEN_COMMITS_Y Space between commits in the "Y" axis
+     * @param {Int} SPACE_BETWEEN_COMMITS_Y Space between commits in the "Y" axis(positive or negative)
      * @param {String} idCommitParent Id of the commit parent
      * @returns {JSON[]} Array of commits updated
      */

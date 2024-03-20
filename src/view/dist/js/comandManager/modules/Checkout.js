@@ -57,7 +57,7 @@ export class Checkout {
     /**
      * @name resolveConfig
      * @description Resolve the configurations of the command
-     * @param {Array} dataComand Data of the command
+     * @param {string[]} dataComand Data of the command
      * @returns {string} The commit id to go or the name of the branch
      */
     resolveConfig(dataComand){
@@ -83,8 +83,10 @@ export class Checkout {
     }
     /**
      * @name removeHeadTag
-     * @description Remove the tag HEAD from the commit
-     * @param {object} head Commit to remove the tag
+     * @description Remove the tag HEAD from the commit and remove the class "checked-out"
+     * @param {JSON[]} commits Array of commits
+     * @param {JSON} head Commit to remove the tag
+     * @returns {JSON[]} Array of commits
      */
     removeHeadTag(commits,head){
         commits = commits.filter(commit => commit.id !== head.id);
@@ -96,9 +98,10 @@ export class Checkout {
     /**
      * @name goToCommit
      * @description Change the current head to the commit
+     * @param {JSON[]} commits Array of commits
      * @param {string} id Id of the commit
      * @throws {Error} The commit does not exist
-     * @returns {void}
+     * @returns {JSON[]} Array of commits with the new head
      */
     goToCommit(commits,id){
         const commit = commits.find(commit => commit.id === id);
@@ -112,8 +115,10 @@ export class Checkout {
     }
     /**
      * @name createBranch
-     * @description Create a new branch in the repository 
+     * @description Create a new branch in the repository
+     * @param {JSON[]} commits Array of commits
      * @param {string} name Name of the new branch
+     * @returns {JSON[]} Array of commits with the new branch
      */
     createBranch(commits,name){
         const head = currentHead(commits);
@@ -126,9 +131,10 @@ export class Checkout {
     }
     /**
      * @name changeDetachedCommitToCommit
-     * @param {JSON} commit 
-     * @param {JSON[]} commits 
-     * @returns {JSON[]}
+     * @description Change the class of the commit "detached-head" recursively to the parent commit
+     * @param {JSON} commit Commit to change the class
+     * @param {JSON[]} commits Array of commits
+     * @returns {JSON[]} Array of commits with the new class
      */
     changeDetachedCommitToCommit(commit,commits){
         if(!commit.class.includes("detached-head"))
@@ -143,24 +149,15 @@ export class Checkout {
         })
         return this.changeDetachedCommitToCommit(parent,newListCommits);
     }
-    
-    /**
-     * @name findBranch
-     * @description Find a branch in the repository
-     * @param {string} nameBranch Name of the branch to find
-     * @returns {boolean} True if the branch exist, false otherwise
-     */
-    findBranch(commits,nameBranch){
-        return commits.find(commit => commit.tags.includes(nameBranch))?true:false;
-    }
     /**
      * @name callbackCreateBranch
      * @description Callback to create a new branch
      * @param {string} name Name of the new branch
      * @throws {Error} The branch already exist
+     * @returns {JSON[]} Array of commits with the new branch
      */
     callbackCreateBranch = (commits,name) =>{
-        if(!this.findBranch(commits,name))
+        if(!commits.some(commit => commit.tags.includes(name)))
             return this.createBranch(commits,name);
         this.resetConfig();
         throw new Error(`Already exist the branch '${name}'`);
