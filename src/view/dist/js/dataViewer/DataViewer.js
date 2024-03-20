@@ -1,6 +1,6 @@
 export class DataViewer{
     constructor(svgContainer){
-        this._commitParent = {cx:-50,cy:334,id:"init",tags:[]}
+        this._commitParent = {cx:-50,cy:334,id:"init",tags:[],class:[]}
         this._logComands = "";
         this._currentData = "";
         this._svg = this.createSVG();
@@ -71,11 +71,7 @@ export class DataViewer{
         newCircle.setAttribute("cx", dataCommit.cx);
         newCircle.setAttribute("cy", dataCommit.cy);
         newCircle.setAttribute("r", "20");
-        if(dataCommit.tags.includes("HEAD"))
-            newCircle.classList.add("checked-out");
-        else
-            newCircle.classList.remove("checked-out");
-        newCircle.classList.add("commit");
+        newCircle.classList.add(...dataCommit.class);
         newCircle.id = dataCommit.id;
         return newCircle;   
     }
@@ -91,7 +87,7 @@ export class DataViewer{
         gContainerTag.id = "gContainerTag";
         const gContainerCommit = document.createElementNS("http://www.w3.org/2000/svg","g");
         gContainerCommit.id = "gContainerCommit";
-        const commit = this.createCommit(this._commitParent)
+        const commit = this.createCommit(this._commitParent);
         gContainerCommit.appendChild(commit);
         gContainerData.appendChild(this.createText(20,20,this._svg.getAttribute("id")));
         svgDocumentElement.appendChild(gContainerData);
@@ -135,7 +131,7 @@ export class DataViewer{
             newTag.classList.add("head-tag");
         newTag.appendChild(newRect);
         newTag.appendChild(newText);
-        newTag.id = tagName;
+        newTag.id = tagName+"-tag";
         return newTag;
     }
     /**
@@ -214,18 +210,6 @@ export class DataViewer{
         document.getElementById("logContainer").appendChild(p);
     }
     /**
-     * @name removesTags
-     * @description Remove the tags that are not in the new data
-     * @param {String[]} branchs Array with the tags to be removed
-     */
-    removesTags(branchs){
-        const branchsInSvg = [...this._svg.querySelectorAll('.branch-tag')].map(branch => branch.id);
-        branchsInSvg.forEach(branchInSvg => {
-            if(!branchs.includes(branchInSvg))
-                this._svg.getElementById(branchInSvg).remove()
-        });
-    }
-    /**
      * @name updateLog
      * @description Update the log container with the new data
      * @param {String} data String with the new data, this data is a JSON string
@@ -279,17 +263,52 @@ export class DataViewer{
             });
             return
         }
-        this.removesTags(commitsData.map(commit => commit.tags).flat());
         commitsData.forEach((commit, index) => {
+            const parent = commitsData.find(c => c.id === commit.parent)??this._commitParent
+            const currentCommit = currentCommits.find(c => c.id === commit.id);
+            if(currentCommit == undefined){
+                return this.addCommitToSvg(commit,parent);
+            }
             if(
-                currentCommits[index] == undefined || 
-                JSON.stringify(currentCommits[index].tags) != JSON.stringify(commit.tags) ||
-                currentCommits[index].cx != commit.cx ||
-                currentCommits[index].cy != commit.cy
+                JSON.stringify(currentCommit.tags) != JSON.stringify(commit.tags)||
+                currentCommit.cy != commit.cy||
+                JSON.stringify(currentCommit.class) != JSON.stringify(commit.class)
             ){
-                const parent = commitsData.find(c => c.id === commit.parent)??this._commitParent
-                this.addCommitToSvg(commit,parent);
+                this.updateCommitToSvg(commit,parent);
             };
+        });
+        this.removeElementsFromSVG(commitsData);
+    }
+    removeElementsFromSVG(commitsData){
+        const idsCommits = commitsData.map(commit => commit.id);
+        const tagsInSVG = commitsData.map(commit => commit.tags).flat();
+        this.removeLineFromSVG(idsCommits);
+        this.removeTagsFromSVG(tagsInSVG);
+        this.removeCommitsFromSVG(idsCommits);
+    };
+    removeLineFromSVG(idsCommits){
+        const linesInSVG = Array.from(this._svg.querySelectorAll('.line')).map(line => line.id);
+        linesInSVG.forEach(line => {
+            const ids = line.split("-");
+            if(!idsCommits.includes(ids[1]) || !idsCommits.includes(ids[0])&&ids[0] != "init")
+                this._svg.getElementById(line).remove();
+        });
+    }
+    removeTagsFromSVG(tagsInData){
+        const tagsInSVG = Array.from(this._svg.querySelectorAll('.branch-tag')).map(tag => tag.id);
+        tagsInSVG.forEach(tag => {
+            if(!tagsInData.includes(tag.split("-")[0]))
+                this._svg.getElementById(tag).remove();
+        });
+    }
+    removeCommitsFromSVG(idsCommits){
+        const commitInSVG = Array.from(this._svg.querySelectorAll('.commit')).map(commit => commit.id);
+        commitInSVG.forEach(commit => {
+            if(!idsCommits.includes(commit)){
+                this._svg.getElementById(commit).remove();
+                this._svg.getElementById(commit+"-message").remove();
+                this._svg.getElementById(commit+"-id").remove();
+            }
         });
     }
     /**
@@ -318,14 +337,36 @@ export class DataViewer{
             gContainerData.appendChild(gContainerText);
         });
     }
+    updateCommitToSvg(commit,parent){
+        const commitSvg = this._svg.getElementById(commit.id);
+        commitSvg.setAttribute("class",commit.class.join(" "));
+        commitSvg.setAttribute("cy",commit.cy);
+        this.updateMeesageAndIdToCommit(commit);
+        this.updateLineOfCommit(commit,parent);
+        this.resolveTagsInSVG(commit);
+    }
+    resolveTagsInSVG(commit){
+        const y = parseInt(commit.cy) + 60;
+        const tagsInSvg = Array.from(this._svg.querySelectorAll('.branch-tag')).map(tag => tag.id);
+        commit.tags.forEach((tag,index) => {
+            if(tagsInSvg.includes(`${tag}-tag`))
+                this.updateTagToSvg(tag,commit.cx,y+(index*25));
+            else
+                this.addTagToSvg(this.createTag(commit.cx,y+(index*25),tag));
+        });
+    }
     addCommitToSvg(commit,parent){
         this.addCircleToSvg(this.createCommit(commit));
         this.addLineToSvg(this.createLine(commit,parent)); 
         this.addMessageAndIdToCommit(commit);
-        const y = parseInt(commit.cy) + 60; 
-        commit.tags.forEach((tag,index) => {
-            this.addTagToSvg(this.createTag(commit.cx,y+(index*25),tag));
-        });
+        this.resolveTagsInSVG(commit);
+    }
+    updateMeesageAndIdToCommit(commit){
+        const message = this._svg.getElementById(commit.id+"-message")
+        const id = this._svg.getElementById(commit.id+"-id")
+        this.animateElement(message,"x","y",message.getAttribute("x"),commit.cy+30);
+        this.animateElement(id,"x","y",id.getAttribute("x"),commit.cy+40);
+        message.innerHTML = commit.message;
     }
     addMessageAndIdToCommit(commit){
         if(this._svg.getElementById(commit.id+"-message")){
@@ -345,12 +386,47 @@ export class DataViewer{
         this._svg.getElementById(commit.id)?.remove();
         this._svg.getElementById("gContainerCommit").appendChild(commit)
     }
+    updateLineOfCommit(dataCommit,parent){
+        const line = this._svg.getElementById(dataCommit.parent+"-"+dataCommit.id);
+        line.setAttribute("x1", dataCommit.cx);
+        line.setAttribute("y1", dataCommit.cy);
+        line.setAttribute("x2", parent.cx);
+        line.setAttribute("y2", parent.cy);
+    }
     addLineToSvg(line){
         this._svg.getElementById("gContainerPointer").appendChild(line)
+    }
+    updateTagToSvg(tag,x,y){
+        const width = this.widthText(tag);
+        const xRect = x-(width/2);
+        const yRect = y-15;
+        const tagSVG = this._svg.getElementById(tag+"-tag");
+        this.animateElement(tagSVG.getElementsByTagName("text")[0],"x","y",x,y);
+        this.animateElement(tagSVG.getElementsByTagName("rect")[0],"x","y",xRect,yRect);
     }
     addTagToSvg(tag){
         this._svg.getElementById(tag.id)?.remove();
         this._svg.getElementById("gContainerTag").appendChild(tag)
     }
-
+    animateElement(element,nameAttributeX,nameAttributeY, finalX, finalY) {
+        const initialX = parseFloat(element.getAttribute(nameAttributeX));
+        const initialY = parseFloat(element.getAttribute(nameAttributeY));
+        const startTime = performance.now();
+        const duration = 350;
+        function updatePosition(currentTime) {
+                const elapsedTime = currentTime - startTime;
+                if (elapsedTime >= duration) {
+                    element.setAttribute(nameAttributeX, finalX);
+                    element.setAttribute(nameAttributeY, finalY);
+                    return;
+                }
+            const progress = elapsedTime / duration;
+            const newX = initialX + (finalX - initialX) * progress;
+            const newY = initialY + (finalY - initialY) * progress;
+            element.setAttribute(nameAttributeX, newX);
+            element.setAttribute(nameAttributeY, newY);
+            requestAnimationFrame(updatePosition);
+        }
+        requestAnimationFrame(updatePosition);
+    }
 }

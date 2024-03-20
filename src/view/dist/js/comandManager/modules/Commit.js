@@ -7,7 +7,7 @@ export class Commit{
      * @description The constructor of the class, it receives the repository of the data
      * @param {string} dataRepository Name variable of the local storage of the repository, by default is 'repository'
      */
-    constructor(dataRepository = "repository",logRepository = "log") {
+    constructor(dataRepository = "repository",logRepository = "log"){
         this.comand = 'commit';
         this._configurations = {
             m:{
@@ -23,6 +23,44 @@ export class Commit{
         this._logRepository = logRepository;
     }
     /**
+     * @name execute
+     * @description Execute the command
+     * @param {String[]} config Configuration of the command
+     * @throws {Error} The repository does not exist
+     */
+    execute(dataComand){
+        //console.time('Execution time of commit');
+        if(localStorage.getItem(this._dataRepository)===null)
+            throw new Error('The repository does not exist');
+        this.resolveConfigure(dataComand).forEach(config => {
+            this._configurations[config].callback(dataComand);
+        });
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
+        if(storage.commits.length == 0){
+            storage.information.head = "master";
+            storage.commits.push({
+                id: "parent",
+                parent: "init",
+                message: this._configurations.m.message,
+                tags: ["master", "HEAD"],
+                class: ["commit","checked-out"],
+                cx: 50,
+                cy: 334,
+            });
+            localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+            //console.timeEnd('Execution time of commit');
+            return
+        }
+        var head = currentHead(storage.commits);
+        const response = this.createCommit(storage.commits,head,storage.information.head);
+        head = this.removeTags(["HEAD",storage.information.head],head);
+        head = this.remoteClassFromCommit(head,"checked-out");
+        storage.commits = this.updateCommitToStorage(response.commits,head);
+        storage.commits.push(response.commit);
+        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+        //console.timeEnd('Execution time of commit');
+    }
+    /**
      * @name resolveConfigure
      * @description Resolve the configuration of the command
      * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
@@ -30,57 +68,14 @@ export class Commit{
      * @returns {String[]} Array with the letters of the configuration
      */
     resolveConfigure(dataComand) {
-        var configs = dataComand.filter(c => c.startsWith("-")||c.startsWith("--"));
-        var cleanConfigs = [];
-        configs.forEach(c => {
-            if(c.startsWith("--")){
-                cleanConfigs.push(c.replace("--",""));
-            }else{
-                cleanConfigs.push(...this.parseConfig(c));
-            }
+        let configs = [] 
+        dataComand.forEach(c => {
+            if(c.startsWith("-")||c.startsWith("--"))
+                configs.push(c.replace(/^(-{1,2})([a-zA-Z])/, "$2").charAt(0))//Remove the "-" or "--" of the configuration and select second group 
         });
-        if(cleanConfigs.length == 0)
-            throw new Error('The configuration is empty');
-        cleanConfigs.forEach(configuration => {
-            if(!Object.keys(this._configurations).includes(configuration))
-                throw new Error(`The configuration "${configuration}" is not valid`);
-        });
-        return cleanConfigs;
-    }
-    /**
-     * @name parseConfig
-     * @description Parse the configuration of the command and return an array with the letters of the configuration
-     * @param {String} configuracion Configuration of the command
-     * @example parseConfig('-masds') // ['m','a','s','d','s']
-     * @returns {String[]} Array with the letters of the configuration
-     */
-    parseConfig(configuracion) {
-        const matches = configuracion.match(/-([a-z]+)/);
-        if(matches && matches.length === 2)
-            return matches[1].split('');
-        return [];
-    }
-    /**
-     * @name callBackConfigMessage
-     * @description Callback to the configuration of the message
-     * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
-     */
-    callBackConfigMessage = (dataComand) =>{
-        dataComand.forEach((data,index) => {
-            if( this.parseConfig(data).includes('m')&&dataComand[index+1]!=undefined){
-                this._configurations.m.message = dataComand[index+1];
-                return;
-            }
-        });
-    }
-    /**
-     * @name callBackConfigFiles
-     * @description Callback to the configuration of the files
-     * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
-     */
-    callBackConfigFiles = () =>{
-        const files = this._configurations.a.files.map(file => `<li>>${file}</li>`).join('');
-        this.createMessageInfo('info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
+        this.validateConfig(configs);
+        configs = configs.filter((c,i,self) => self.indexOf(c) === i);
+        return configs;
     }
     /**
      * @name createMessageInfo
@@ -96,63 +91,70 @@ export class Commit{
         localStorage.setItem(this._logRepository,JSON.stringify(log));
     }
     /**
-     * @name addCommitToStorage
-     * @description Add a commit to the local storage
-     * @param {object} commit Commit to be added to the local storage 
+     * @name validateConfig
+     * @description Validate the configuration of the command
+     * @param {String[]} configs Array with the letters of the configuration
+     * @example validateConfig(['m','a']) // true
+     * @throws {Error} The configuration is empty
+     * @throws {Error} The configuration "${config}" is not valid
      */
-    addCommitToStorage(commit){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        storage.commits.push(commit);
-        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+    validateConfig(configs){
+        if(configs.length == 0)
+            throw new Error('The configuration is empty');
+        const currentConfig = Object.keys(this._configurations);
+        configs.forEach(config => {
+            if(!currentConfig.includes(config))
+                throw new Error(`The configuration "${config}" is not valid`);
+        });
     }
     /**
-     * @name removeTag
-     * @description Remove a tag from a commit
-     * @param {string} tag Tag to be removed
-     * @param {object} commit Commit to be removed the tag
-     * @returns {object} Commit with the tag removed
-     * @example removeTag('HEAD',commit) // {id: "parent", parent: "init", message: "First commit", tags: ["master"], cx: 50, cy: 334}
+     * @name callBackConfigMessage
+     * @description Callback to the configuration of the message
+     * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
+     * @throws {Error} The message is empty
      */
-    removeTag(tag,commit){
-        commit.tags = commit.tags.filter(t => t != tag);
-        return commit;
+    callBackConfigMessage = (dataComand) =>{
+        const indexConfig = dataComand.findIndex(data => data.includes('-m'));
+        const message = dataComand[indexConfig+1];
+        if(message == undefined || message == "")
+            throw new Error('The message is empty');
+        this._configurations.m.message = message;
     }
     /**
-     * @name addTag
-     * @description Add a tag to a commit
-     * @param {string} tag Tag to be added
-     * @param {object} commit Commit to be added the tag
-     * @returns {object} Commit with the tag added
-     * @example addTag('HEAD',commit) // {id: "parent", parent: "init", message: "First commit", tags: ["master","HEAD"], cx: 50, cy: 334}
+     * @name callBackConfigFiles
+     * @description Callback to the configuration of the files
      */
-    addTag(tag,commit){
-        commit.tags.push(tag);
+    callBackConfigFiles = () =>{
+        const files = this._configurations.a.files.map(file => `<li>>${file}</li>`).join('');
+        this.createMessageInfo('info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
+    }
+    /**
+     * @name removeTags
+     * @description Remove tags from a commit
+     * @param {String[]} tags Tags to be removed
+     * @param {JSON} commit Commit to be removed the tag
+     * @returns {JSON} Commit with the tag removed
+     */
+    removeTags(tags,commit){
+        tags.forEach(tag => {
+            commit.tags = commit.tags.filter(t => t != tag)
+        });
         return commit;
     }
     /**
      * @name updateCommitToStorage
      * @description Update a commit in the local storage
-     * @param {object} newCommit New commit to be updated in the local storage
-     * @returns {object} Commit updated in the local storage
+     * @param {JSON[]} commits Array of commits
+     * @param {JSON} newCommit New commit to be updated in the local storage
+     * @returns {JSON[]} Commit updated in the local storage
      */
-    updateCommitToStorage(newCommit){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        storage.commits.forEach(oldCommit => {
+    updateCommitToStorage(commits,newCommit){
+        commits.forEach(oldCommit => {
             if(oldCommit.id == newCommit.id){
                 Object.assign(oldCommit, newCommit);
             }
         });
-        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
-    }
-    /**
-     * @name existsCommitToStorage
-     * @description Check if a commit exists in the local storage
-     * @param {object} commit Commit to be checked
-     * @returns {boolean}
-     */
-    existsCommitToStorage(commit){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        return storage.commits.some(c => c.id == commit.id);
+        return commits
     }
     /**
      * @name createCod
@@ -169,42 +171,53 @@ export class Commit{
         return codigo;
     }
     /**
-     * Create a new commit
-     * @param {JSON} parent  Commit parent to create the new commit
+     * @name createCommit
+     * @description Create a new commit and update the array of commits if it is necessary
      * @param {JSON[]} commits Array of commits
-     * @returns {JSON} New commit created
+     * @param {JSON} parent  Commit parent to create the new commit
+     * @param {String} currentHeadBranch Name of the current head branch
+     * @returns {JSON} Array of commits and JSON the new commit, the return Object contains whit the key "commits" and "commit"
      */
-    createCommit(parent,tags) {
-        const [cx,cy] = this.resolveLocationCommit(parent.cx,parent.cy);   
-        return {
+    createCommit(commits,parent,currentHeadBranch){
+        let tags = [currentHeadBranch,"HEAD"];
+        const classList = ["commit","checked-out"];
+        if(currentHeadBranch == "detached head"){
+            tags = tags.filter(tag => tag != currentHeadBranch);
+            classList.push("detached-head");
+        }
+        const response = this.resolveLocationCommit(commits,parent.cx,parent.cy);
+        return {commits:(response.commits),commit:{
             id: this.createCod(),
             message: this._configurations.m.message,
             parent: parent.id,
-            tags: tags.filter(tag => tag != null),
-            cx,
-            cy
-        };
+            tags,
+            class: classList,
+            cx:response.location[0],
+            cy:response.location[1]
+        }};
     }
     /**
      * @name resolveLocationCommit
-     * @description 
-     * @param {Int} parentCx
-     * @param {Int} parentCy
+     * @description Resolve the location of the commit, dividing the problem in 3 cases
+     * @param {JSON[]} commits Array of commits
+     * @param {Int} parentCx Coordenate "X" of the parent commit(HEAD)
+     * @param {Int} parentCy Coordenate "Y" of the parent commit(HEAD)
+     * @returns {JSON} Array of commits and the location of the new commit, the return Object contains whit the key "commits" and "location"
      */
-    resolveLocationCommit(parentCx,parentCy){
-        //Caso 1
-        const commits = JSON.parse(localStorage.getItem(this._dataRepository)).commits;
+    resolveLocationCommit(commits,parentCx,parentCy){
+        //Case 1
         const possibleX = parentCx + this.SPACE_BETWEEN_COMMITS_X;
         if(commits.find(commit => commit.cx == possibleX && commit.cy == parentCy) == undefined)
-            return[possibleX,parentCy];	
-        //Caso 2
+            return {commits,location:[possibleX,parentCy]};	
+        //Case 2
         const commitsInPossiteY = commits.filter(commit => commit.cx == possibleX && commit.cy < parentCy);
         const commitsInNegativeY = commits.filter(commit => commit.cx == possibleX && commit.cy > parentCy);
         const commitThisUbicationOnParentY = commits.filter(commit => commit.cx == parentCx && commit.cy != parentCy);
         if(commitThisUbicationOnParentY.length == 0)
-            return [possibleX,this.generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativeY)];
-        //Caso 3
-        return [possibleX,this.generateLocationCommitCase3(parentCy,commitsInPossiteY,commitsInNegativeY)];
+            return {commits,location:[possibleX,this.generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativeY)]};
+        //Case 3
+        const response = this.generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsInNegativeY);
+        return {commits:(response.commits),location:[possibleX,response.cy]};
     }
     /**
      * @name generateLocationCommitCase2
@@ -226,91 +239,54 @@ export class Commit{
     }
     /**
      * @name generateLocationCommitCase3
-     * @description Generate the location "Y" of the commit in the case 3
+     * @description Generate the location "Y" of the commit in the case 3 and update the location of the childs of the commit
+     * @param {JSON[]} commits Array of commits
      * @param {Int} parentCy Coordenate "Y" of the parent commit(HEAD)
      * @param {JSON[]} commitsInPossiteY array of commits that are above the "X" possible location 
      * @param {JSON[]} commitsInNegativeY array of commits that are below the "X" possible location 
-     * @returns {Int} Coordenate "Y" of the new commit
+     * @returns {JSON} Coordenate "Y" of the new commit and the array of commits updated, the return Object contains whit the key "commits" and "cy"
      */
-    generateLocationCommitCase3(parentCy,commitsInPossiteY,commitsInNegativeY){
+    generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsInNegativeY){
         if(commitsInPossiteY.length <= commitsInNegativeY.length){
             const SPACE_BETWEEN_COMMITS_Y_NEGATIVE = this.SPACE_BETWEEN_COMMITS_Y * (-1)
             commitsInPossiteY.forEach(commit => {
-                this.updateLocationChildsOfCommit(SPACE_BETWEEN_COMMITS_Y_NEGATIVE,commit.id);
+                commits = this.updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y_NEGATIVE,commit.id);
             });
-            return parentCy - this.SPACE_BETWEEN_COMMITS_Y;
+            return {commits,cy:(parentCy - this.SPACE_BETWEEN_COMMITS_Y)}; 
         }else{  
             commitsInNegativeY.forEach(commit => {
-                this.updateLocationChildsOfCommit(this.SPACE_BETWEEN_COMMITS_Y,commit.id);
+                commits = this.updateLocationChildsOfCommit(commits,this.SPACE_BETWEEN_COMMITS_Y,commit.id);
             });
-            return parentCy + this.SPACE_BETWEEN_COMMITS_Y;
+            return {commits,cy: (parentCy + this.SPACE_BETWEEN_COMMITS_Y)};
         }
     }
     /**
      * @name updateLocationChildsOfCommit
      * @description Update the location of the childs of a commit
-     * @param {Int} SPACE_BETWEEN_COMMITS_Y Space between commits in the "Y" axis
+     * @param {JSON[]} commits Array of commits
+     * @param {Int} SPACE_BETWEEN_COMMITS_Y Space between commits in the "Y" axis(positive or negative)
      * @param {String} idCommitParent Id of the commit parent
-     * @example updateLocationChildsOfCommit(80,"parent") // Update the location of the childs of the commit with id "parent"
-     * @returns {void}
+     * @returns {JSON[]} Array of commits updated
      */
-    updateLocationChildsOfCommit(SPACE_BETWEEN_COMMITS_Y,idCommitParent){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        let commits = storage.commits;
+    updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y,idCommitParent){
         const childs = commits.filter(commit => commit.parent == idCommitParent);
         const commitParent = commits.find(c => c.id == idCommitParent);
         commitParent.cy = commitParent.cy + SPACE_BETWEEN_COMMITS_Y;
         if(childs.length != 0){
             childs.forEach(child => {
-                this.updateLocationChildsOfCommit(SPACE_BETWEEN_COMMITS_Y,child.id);
+                commits = this.updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y,child.id);
             });
         }
-        this.updateCommitToStorage(commitParent);
+        return this.updateCommitToStorage(commits,commitParent);
     }
     /**
-     * @name updateHeadToStorage
-     * @description Update the head of the repository
-     * @param {String} newHead New head of the repository
-     * @returns {void}
+     * @name remoteClassFromCommit
+     * @description Remove a class from a commit
+     * @param {JSON} commit Commit to be removed the class
+     * @param {String} classToRemove Class to be removed
+     * @returns {JSON} Commit with the class removed
      */
-    updateHeadToStorage(newHead){
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));
-        storage.information.head = newHead;
-        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
-    }
-    /**
-     * @name execute
-     * @description Execute the command
-     * @param {String[]} config Configuration of the command
-     * @returns {JSON} New commit created
-     */
-    execute(dataComand){
-        if(localStorage.getItem(this._dataRepository)===null)
-            throw new Error('The repository does not exist');
-        this.resolveConfigure(dataComand).forEach(config => {
-            this._configurations[config].callback(dataComand);
-        });
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
-        if(storage.commits.length == 0){
-            this.updateHeadToStorage("master");
-            this.addCommitToStorage({
-                id: "parent",
-                parent: "init",
-                message: this._configurations.m.message,
-                tags: ["master", "HEAD"],
-                cx: 50,
-                cy: 334,
-            });
-            return
-        }
-        var head = currentHead(storage.commits);
-        const newCommit = this.createCommit(head,["HEAD",storage.information.head != "detached head"?storage.information.head:null]);
-        head = this.removeTag("HEAD",head);
-        head = this.removeTag(storage.information.head,head);
-        this.updateCommitToStorage(head);
-        this.addCommitToStorage(newCommit);
-        if(!this.existsCommitToStorage(newCommit)){
-            throw new Error('Error in the command execution');
-        }
+    remoteClassFromCommit(commit,classToRemove){
+        return commit.class = commit.class.filter(classC => classC !== classToRemove); ;
     }
 }
