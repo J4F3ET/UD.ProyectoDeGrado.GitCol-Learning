@@ -155,7 +155,7 @@ export class Commit{
         <h5>Concept</h5>
         <p class="help">Record changes to the repository</p>
         <h5>Syntax</h5>
-        <p class="help">git commit [-m &lt;message&gt;] [-a] [-h|--help]</p>
+        <p class="help">git commit [-m &lt;message&gt;] [-a] [-h | --help]</p>
         <h5>Configurations</h5>
         <h6 class="help">Obligatory</h6>
         <ul>
@@ -163,8 +163,8 @@ export class Commit{
         </ul>
         <h6 class="help">Optional</h6>
         <ul>
-            <li class="help">-a&nbsp;&nbsp;&nbsp;Add all files to the commit(files system no implemented)</li>
-            <li class="help">-h&nbsp;&nbsp;&nbsp;Show the help</li>
+            <li class="help">[-a]&nbsp;&nbsp;&nbsp;Add all files to the commit(files system no implemented)</li>
+            <li class="help">[-h | --help]&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>`
         this.createMessageInfo('info',message);
         return dataComand.includes('-m');
