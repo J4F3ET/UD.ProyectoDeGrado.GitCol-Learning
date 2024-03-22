@@ -40,31 +40,14 @@ document.getElementById("comandInput").addEventListener("keyup",(e) => {
 const executeCommand = (comand) => {
     comand !== "" ? comandManager.createMessage('comand',comand) : null;
     try {
-        const verify = verifyComand(comand);
-        if(verify instanceof Error)
-            throw verify;
         const [_,gitComand, ...comandConfig] = comand.split(' ');
-        comandManager.executeCommand(gitComand,comandConfig);
+        comandManager.executeCommand(comand,gitComand,comandConfig);
     } catch (error) {
         comandManager.createMessage('error',error.message);
     }finally{
         accountComands = 1;
     }
 };
-/**
- * @name verifyComand
- * @description Verify if the comand is valid syntax
- * @param {String} comand 
- * @returns {Error|true}
- */
-function verifyComand(comand="") {
-    if(comand === "")
-        return new Error('The command is empty');
-    const refex = /^(git) [a-z]* *(?: .*)?$/
-    if(!refex.test(comand))
-        return new Error('The command is not valid');
-    return true;
-}
 // OBSERVER
 observer.subscribe("log",dataViewer)
 observer.subscribe("SVG",dataViewer)
