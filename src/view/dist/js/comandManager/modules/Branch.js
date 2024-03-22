@@ -27,6 +27,9 @@ export class Branch{
             },
             m:{
                 callback: this.callBackConfigRename,
+            },
+            h:{
+                callback:this.callbackHelp
             }
         };
         this._dataRepository = dataRepository;
@@ -230,7 +233,11 @@ export class Branch{
      * @param {Array} branchs Array with the name of the branch and the new name
      * @returns {JSON} Storage of the repository with the new name of the branch
      */
-    renameBranch(storage,[name,newName]){
+    renameBranch(storage,[name,newName]){;
+        if(!newName){
+            newName = name;
+            name = storage.information.head.includes("detached")?this.detachedBranchAsoociated(storage):storage.information.head;
+        }
         storage.commits = storage.commits.map(commit => {
             if(commit.tags.includes(name))
                 commit.tags = commit.tags.map(tag => tag === name ? newName : tag)
@@ -239,6 +246,44 @@ export class Branch{
         if(storage.information.head === name)
             storage.information.head = newName;
         return storage;
+    }
+    /**
+     * @name detachedBranchAsoociated
+     * @description Find the branch associated to the detached head
+     * @param {JSON} storage Storage of the repository
+     * @returns {String} Name of the branch associated to the detached head
+     */
+    detachedBranchAsoociated(storage){
+        const idCurrentDetached = currentHead(storage.commits).id;
+        const firstCommit = this.findFirstCommitAssociatedToDeteached(storage.commits,idCurrentDetached);
+        const branch = this.findBranchAssociatedToCommit(storage.commits,firstCommit.id);
+        return branch;
+    }
+    /**
+     * @name findFirstCommitAssociatedToDeteached
+     * @description Find the first commit associated to the detached head
+     * @param {JSON[]} commits Array with the commits of the repository
+     * @param {String} id Id of the commit
+     * @returns {JSON} Object with the commit associated to the detached head
+     */
+    findFirstCommitAssociatedToDeteached(commits,id){
+        const parent = commits.find(commit => commit.id == id);
+        if(!parent.class.includes('detached-head'))
+            return parent;
+        return this.findFirstCommitAssociatedToDeteached(commits,parent.parent);
+    }
+    /**
+     * @name findBranchAssociatedToCommit
+     * @description Find the branch associated to the commit
+     * @param {JSON[]} commits Array with the commits of the repository
+     * @param {String} id Id of the commit
+     * @returns {String} Name of the branch associated to the commit
+     */
+    findBranchAssociatedToCommit(commits,id){
+        const child = commits.find(commit => commit.parent == id&&!commit.class.includes('detached-head'));
+        if(child.tags.length > 0)
+            return child.tags[0];
+        return this.findBranchAssociatedToCommit(commits,child.id);
     }
     /**
      * @name callBackConfigList
@@ -315,8 +360,30 @@ export class Branch{
      * @returns {JSON} Storage of the repository with the branch renamed
      */
     callBackConfigRename = (storage,branchs) => {
-        if(branchs.length != 2 || branchs.some(branch => branch === ''))
+        if(branchs.length > 0)
             throw new Error('The command is not valid');
         return this.renameBranch(storage,branchs);
+    }
+    /**
+     * @name callbackHelp
+     * @description Create a message with the help of the comand
+     */
+    callbackHelp=()=>{
+        const message = `
+        <h5>Concept</h5>
+        <p class="help">List, create, or delete branches
+        <h5>Syntax</h5>
+        <p class="help">git branch [ (-a | --all) | (-r | --remote) | (-l | --list) ]</p>
+        <p class="help">git branch [(-d | --delete)] &lt;branch-name&gt;</p>
+        <p class="help">git branch (-m | --move) [&lt;branch-name&gt;] &lt;new-branch-name&gt;</p>
+        <h5>Configurations</h5>
+        <ul>
+            <li><p class="help">-a, --all &nbsp;&nbsp;&nbsp;List all branches</p></li>
+            <li><p class="help">-r, --remote&nbsp;&nbsp;&nbsp;List remote branches</p> </li>
+            <li><p class="help">-l, --list&nbsp;&nbsp;&nbsp;List local branches</p> </li>
+            <li><p class="help">-d, --delete&nbsp;&nbsp;&nbsp;Delete a branch</p> </li>
+            <li><p class="help">-m, --move&nbsp;&nbsp;&nbsp;Rename a branch</p> </li>
+        </ul>`;
+        this.createMessageInfo(message);
     }
 }

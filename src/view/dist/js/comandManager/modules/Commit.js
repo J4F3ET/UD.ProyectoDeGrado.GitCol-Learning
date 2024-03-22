@@ -44,7 +44,7 @@ export class Commit{
         if(storage.commits.length == 0){
             storage.information.head = "master";
             storage.commits.push({
-                id: "parent",
+                id: this.createCod(),
                 parent: "init",
                 message: this._configurations.m.message,
                 tags: ["master", "HEAD"],
@@ -222,7 +222,7 @@ export class Commit{
     createCommit(commits,parent,currentHeadBranch){
         let tags = [currentHeadBranch,"HEAD"];
         const classList = ["commit","checked-out"];
-        if(currentHeadBranch == "detached head"){
+        if(currentHeadBranch.includes("detached")){
             tags = tags.filter(tag => tag != currentHeadBranch);
             classList.push("detached-head");
         }
