@@ -41,6 +41,8 @@ export class Checkout {
         this.resetConfig;
         this.resolveConfig(dataComand);
         const {branch,commit} = this.resolveObjetiveToGo(storage.commits,dataComand);
+        if(commit === undefined)
+            throw new Error(`The star-point "${dataComand.pop()}" does not exist`);
         const commitCurrentHead = currentHead(storage.commits);
         storage.information.head = this._configurations.b.nameBranch??branch??`detached at ${commit.id}`;
         if(commit.id !== commitCurrentHead.id){
