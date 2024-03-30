@@ -49,6 +49,8 @@ export class Commit{
                 message: this._configurations.m.message,
                 tags: ["master", "HEAD"],
                 class: ["commit","checked-out"],
+                autor: storage.information.config.user.autor??JSON.parse(localStorage.getItem('config')).autor??null,
+                date: new Date().toLocaleString(),
                 cx: 50,
                 cy: 334,
             });
@@ -57,7 +59,7 @@ export class Commit{
             return
         }
         var head = currentHead(storage.commits);
-        const response = this.createCommit(storage.commits,head,storage.information.head);
+        const response = this.createCommit(storage.commits,head,storage.information);
         head = this.removeTags(["HEAD",storage.information.head],head);
         head = this.remoteClassFromCommit(head,"checked-out");
         storage.commits = this.updateCommitToStorage(response.commits,head);
@@ -163,8 +165,8 @@ export class Commit{
         </ul>
         <h6 class="help">Optional</h6>
         <ul>
-            <li class="help">[-a]&nbsp;&nbsp;&nbsp;Add all files to the commit(files system no implemented)</li>
-            <li class="help">[-h | --help]&nbsp;&nbsp;&nbsp;Show the help</li>
+            <li class="help">-a&nbsp;&nbsp;&nbsp;Add all files to the commit(files system no implemented)</li>
+            <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>`
         this.createMessageInfo('info',message);
         return dataComand.includes('-m');
@@ -219,20 +221,23 @@ export class Commit{
      * @param {String} currentHeadBranch Name of the current head branch
      * @returns {JSON} Array of commits and JSON the new commit, the return Object contains whit the key "commits" and "commit"
      */
-    createCommit(commits,parent,currentHeadBranch){
-        let tags = [currentHeadBranch,"HEAD"];
+    createCommit(commits,parent,information){
+        let tags = [information.head,"HEAD"];
         const classList = ["commit","checked-out"];
-        if(currentHeadBranch.includes("detached")){
-            tags = tags.filter(tag => tag != currentHeadBranch);
+        if(information.head.includes("detached")){
+            tags = tags.filter(tag => tag != information.head);
             classList.push("detached-head");
         }
         const response = this.resolveLocationCommit(commits,parent.cx,parent.cy);
+        console.log(information);
         return {commits:(response.commits),commit:{
             id: this.createCod(),
             message: this._configurations.m.message,
             parent: parent.id,
             tags,
             class: classList,
+            autor: information.config.user.autor??JSON.parse(localStorage.getItem('config')).user.autor??null,
+            date: new Date().toLocaleString(),
             cx:response.location[0],
             cy:response.location[1]
         }};

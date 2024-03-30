@@ -19,7 +19,14 @@ export class Init{
             {
                 information:{
                     head:"",
-                    repository:this._repositoryName
+                    repository:this._repositoryName,
+                    config:{
+                        user:{
+                            name:null,
+                            email:null
+                        }
+                    }
+                    
                 },
                 commits:[]
             }    

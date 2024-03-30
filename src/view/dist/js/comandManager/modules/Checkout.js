@@ -41,6 +41,8 @@ export class Checkout {
         this.resetConfig;
         this.resolveConfig(dataComand);
         const {branch,commit} = this.resolveObjetiveToGo(storage.commits,dataComand);
+        if(commit === undefined)
+            throw new Error(`The star-point "${dataComand.pop()}" does not exist`);
         const commitCurrentHead = currentHead(storage.commits);
         storage.information.head = this._configurations.b.nameBranch??branch??`detached at ${commit.id}`;
         if(commit.id !== commitCurrentHead.id){
@@ -189,9 +191,9 @@ export class Checkout {
         <h5>Configurations</h5>
         <h6 class="help">Optional</h6>
         <ul>
-            <li class="help">[-b | --orphan &lt;new-branch&gt;]&nbsp;&nbsp;&nbsp;Create a new branch with the name &lt;new-branch&gt;</li>
-            <li class="help">[-q | --quiet]&nbsp;&nbsp;&nbsp;Only print error and warning messages; all other output will be suppressed.</li>
-            <li class="help">[-h | --help]&nbsp;&nbsp;&nbsp;Show the help</li>
+            <li class="help">-b, --orphan &lt;new-branch&gt;]&nbsp;&nbsp;&nbsp;Create a new branch with the name &lt;new-branch&gt;</li>
+            <li class="help">-q, --quiet&nbsp;&nbsp;&nbsp;Only print error and warning messages; all other output will be suppressed.</li>
+            <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>`
         this.createMessageInfo(message);
         throw new Error('');

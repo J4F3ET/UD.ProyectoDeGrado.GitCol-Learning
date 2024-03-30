@@ -319,7 +319,7 @@ export class DataViewer{
      */
     renderInfoToSVG(data){
         const gContainerData = this._svg.getElementById("gContainerData");
-        const keys = Object.keys(data);
+        const keys = Object.keys(data).filter(key => key != "config");
         keys.forEach((key,index) => {
             const gContainerText = document.createElementNS("http://www.w3.org/2000/svg","g");
             const xTitle = this.widthText(key);
