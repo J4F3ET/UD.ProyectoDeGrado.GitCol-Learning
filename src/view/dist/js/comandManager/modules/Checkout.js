@@ -180,14 +180,10 @@ export class Checkout {
         const message = `
         <h5>Concept</h5>
         <p class="help">Switch branches or restore working tree files</p>
+        <p class="help"><b>Start-point:</b> Can be a commit id or branch name</p>
         <h5>Syntax</h5>
         <p class="help">git checkout [-q] [-b &lt;new-branch&gt;] &lt;start-point&gt;</p>
         <p class="help">git checkout [-h] </p>
-        <h5>Concept</h5>
-        <p class="help">Create an empty Git repository or reinitialize an existing one</p>
-        <p class="help"><b>Start-point:</b> Can be a commit id or branch name</p>
-        <h5>Syntax</h5>
-        <p class="help">git init [-q | --quiet] [-h | --help]</p>
         <h5>Configurations</h5>
         <h6 class="help">Optional</h6>
         <ul>

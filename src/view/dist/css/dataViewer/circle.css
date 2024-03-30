@@ -23,6 +23,10 @@ circle.commit.checked-out {
     stroke-width: 3px;
     animation: drop 0.5s ease-in-out;
 }
+circle.commit.logging {
+    stroke: #0074e7b9;
+    fill: #009beec2;
+}
 @keyframes drop {
     0% {
         r: 0;
@@ -42,10 +46,7 @@ circle.commit.checked-out {
 }
 
 /* COSAS QUE NO SE USAN */
-/* circle.commit.logging {
-    stroke: #0066CC;
-    fill: #0099EE;
-}
+/* 
 circle.commit.reverted {
     fill: #CCEEFF;
     stroke: #0066CC;
