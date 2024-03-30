@@ -10,11 +10,11 @@
     font-weight: 100;
 }
 .error{
-    color: #ff3d3d;
+    color: #ff3d3d; 
     font-weight: 200;
 }
 .info{
-    color: #7fccff;
+    color: #ffffff;
     font-weight: 100;
     li{
         padding-left: 1rem;

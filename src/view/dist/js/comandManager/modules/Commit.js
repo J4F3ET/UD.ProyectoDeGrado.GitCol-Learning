@@ -18,6 +18,9 @@ export class Commit{
                 files: ["index.html","style.css","script.js"],
                 callback: this.callBackConfigFiles,
             },
+            h:{
+                callback: this.callBackHelp
+            }
         };
         this._dataRepository = dataRepository;
         this._logRepository = logRepository;
@@ -32,18 +35,22 @@ export class Commit{
         //console.time('Execution time of commit');
         if(localStorage.getItem(this._dataRepository)===null)
             throw new Error('The repository does not exist');
+        let continueExecution = true;
         this.resolveConfigure(dataComand).forEach(config => {
-            this._configurations[config].callback(dataComand);
+            continueExecution = this._configurations[config].callback(dataComand);
         });
+        if(!continueExecution) return;
         const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
         if(storage.commits.length == 0){
             storage.information.head = "master";
             storage.commits.push({
-                id: "parent",
+                id: this.createCod(),
                 parent: "init",
                 message: this._configurations.m.message,
                 tags: ["master", "HEAD"],
                 class: ["commit","checked-out"],
+                autor: storage.information.config.user.autor??JSON.parse(localStorage.getItem('config')).autor??null,
+                date: new Date().toLocaleString(),
                 cx: 50,
                 cy: 334,
             });
@@ -52,7 +59,7 @@ export class Commit{
             return
         }
         var head = currentHead(storage.commits);
-        const response = this.createCommit(storage.commits,head,storage.information.head);
+        const response = this.createCommit(storage.commits,head,storage.information);
         head = this.removeTags(["HEAD",storage.information.head],head);
         head = this.remoteClassFromCommit(head,"checked-out");
         storage.commits = this.updateCommitToStorage(response.commits,head);
@@ -112,6 +119,7 @@ export class Commit{
      * @description Callback to the configuration of the message
      * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
      * @throws {Error} The message is empty
+     * @returns {Boolean} True if the configuration is valid
      */
     callBackConfigMessage = (dataComand) =>{
         const indexConfig = dataComand.findIndex(data => data.includes('-m'));
@@ -119,14 +127,49 @@ export class Commit{
         if(message == undefined || message == "")
             throw new Error('The message is empty');
         this._configurations.m.message = message;
+        return true;
     }
     /**
      * @name callBackConfigFiles
      * @description Callback to the configuration of the files
+     * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
+     * @returns {Boolean} True if the configuration is valid for continue the execution of the command
+     * @example callBackConfigFiles(['-m','"message"','-a']) // true
+     * @example callBackConfigFiles(['-a']) // false
      */
-    callBackConfigFiles = () =>{
+    callBackConfigFiles = (dataComand) =>{
+        if(!dataComand.includes('m'))
+            throw new Error('The configuration "-m" is obligatory for use the configuration "-a"');
         const files = this._configurations.a.files.map(file => `<li>>${file}</li>`).join('');
         this.createMessageInfo('info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
+        return true;
+    }
+    /**
+     * @name callBackHelp
+     * @description Callback to the help of the command
+     * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
+     * @returns {Boolean} True if the configuration is valid for continue the execution of the command
+     * @example callBackHelp(['-h']) // false
+     * @example callBackHelp(['-m','"message"','-h']) // true
+     */
+    callBackHelp = (dataComand) =>{
+        let message = `
+        <h5>Concept</h5>
+        <p class="help">Record changes to the repository</p>
+        <h5>Syntax</h5>
+        <p class="help">git commit [-m &lt;message&gt;] [-a] [-h | --help]</p>
+        <h5>Configurations</h5>
+        <h6 class="help">Obligatory</h6>
+        <ul>
+            <li class="help">-m &lt;message&gt;&nbsp;&nbsp;&nbsp;Commit message</li>
+        </ul>
+        <h6 class="help">Optional</h6>
+        <ul>
+            <li class="help">-a&nbsp;&nbsp;&nbsp;Add all files to the commit(files system no implemented)</li>
+            <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
+        </ul>`
+        this.createMessageInfo('info',message);
+        return dataComand.includes('-m');
     }
     /**
      * @name removeTags
@@ -178,20 +221,23 @@ export class Commit{
      * @param {String} currentHeadBranch Name of the current head branch
      * @returns {JSON} Array of commits and JSON the new commit, the return Object contains whit the key "commits" and "commit"
      */
-    createCommit(commits,parent,currentHeadBranch){
-        let tags = [currentHeadBranch,"HEAD"];
+    createCommit(commits,parent,information){
+        let tags = [information.head,"HEAD"];
         const classList = ["commit","checked-out"];
-        if(currentHeadBranch == "detached head"){
-            tags = tags.filter(tag => tag != currentHeadBranch);
+        if(information.head.includes("detached")){
+            tags = tags.filter(tag => tag != information.head);
             classList.push("detached-head");
         }
         const response = this.resolveLocationCommit(commits,parent.cx,parent.cy);
+        console.log(information);
         return {commits:(response.commits),commit:{
             id: this.createCod(),
             message: this._configurations.m.message,
             parent: parent.id,
             tags,
             class: classList,
+            autor: information.config.user.autor??JSON.parse(localStorage.getItem('config')).user.autor??null,
+            date: new Date().toLocaleString(),
             cx:response.location[0],
             cy:response.location[1]
         }};

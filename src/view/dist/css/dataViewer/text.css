@@ -4,3 +4,21 @@ text.id-label,text.message-label{
     fill: #ffffff;
     font-size: .7rem;
 }
+h6.help{
+    font-size: .8rem;
+    margin-left: .5rem;
+}
+p.help{
+    font-size: .75rem;
+}
+p.help.underline{
+    color: var(--main-color);
+}
+b{
+    color: #5bdd5b;
+}
+li.help{
+    list-style: none;
+    margin-left: 1rem;
+    font-size: .75rem;
+}

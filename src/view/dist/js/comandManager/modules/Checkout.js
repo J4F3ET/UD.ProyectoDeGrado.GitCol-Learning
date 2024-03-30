@@ -13,10 +13,14 @@ export class Checkout {
         this._configurations = {
             q:{
                 useConfig: false,
+                callback: ()=> this._configurations.q.useConfig = true
             },
             b:{
                 nameBranch: null,
-                callback: this.callbackCreateBranch
+                callback: (name=null)=>this._configurations.b.nameBranch = name
+            },
+            h:{
+                callback:this.callbackHelp
             }
         };
     }
@@ -34,23 +38,27 @@ export class Checkout {
         const storage = JSON.parse(localStorage.getItem(this._dataRepository))
         if(storage.commits.length == 0)
             throw new Error('The repository does not have commits');
-        const goToObject = this.resolveConfig(dataComand);
+        this.resetConfig;
+        this.resolveConfig(dataComand);
+        const {branch,commit} = this.resolveObjetiveToGo(storage.commits,dataComand);
+        if(commit === undefined)
+            throw new Error(`The star-point "${dataComand.pop()}" does not exist`);
         const commitCurrentHead = currentHead(storage.commits);
-        const commitByBranch = storage.commits.find(commit => commit.tags.includes(goToObject))?.id;
-        const commitObjetive = commitByBranch??goToObject;
-        storage.information.head = commitByBranch?goToObject:'detached head';
-        if(commitObjetive !== commitCurrentHead.id){
+        storage.information.head = this._configurations.b.nameBranch??branch??`detached at ${commit.id}`;
+        if(commit.id !== commitCurrentHead.id){
             storage.commits = this.goToCommit(
-                this.removeHeadTag(storage.commits,commitCurrentHead),//Remove the tag HEAD from the commit, array of commits
-                commitObjetive
+                this.removeHeadTag(
+                    storage.commits,
+                    commitCurrentHead
+                    ),//Remove the tag HEAD from the commit, array of commits
+                commit.id
             );
         }
         if(this._configurations.b.nameBranch !== null){
-            storage.commits = this._configurations.b.callback(storage.commits,this._configurations.b.nameBranch);
+            storage.commits = this.createBranch(storage.commits,this._configurations.b.nameBranch);
             storage.information.head = this._configurations.b.nameBranch;
         }
-        this.createMessageInfo(`Switched to '${commitByBranch?goToObject:commitObjetive}'`); 
-        this.resetConfig();
+        this.createMessageInfo(`Switched to '${this._configurations.b.nameBranch??branch??commit.id}'`);
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
         //console.timeEnd('Execution time of checkout command');
     }
@@ -61,13 +69,20 @@ export class Checkout {
      * @returns {string} The commit id to go or the name of the branch
      */
     resolveConfig(dataComand){
-        dataComand.includes('-q',)||dataComand.includes('--quiet')?this._configurations.q.useConfig = true:null;
-        if(dataComand.includes('-b')||dataComand.includes('--branch')){
-            if(dataComand[dataComand.indexOf('-b')+1]===undefined)
-                throw new Error('The name of the branch is required');
-            this._configurations.b.nameBranch = dataComand[dataComand.indexOf('-b')+1];
-        }
-        return dataComand.filter(value => value.substring(0,1) !== '-').pop();
+        let clearConfig = new Map();
+        dataComand.forEach((data,index) => {
+            if(data.substring(0,1) == '-')
+                clearConfig.set(
+                    (data.replace(/^(-{1,2})([a-zA-Z])/, "$2").charAt(0)),
+                    dataComand[index+1]	
+                );
+        });
+        clearConfig.forEach((value,key) => {
+            key=key=='o'?'b':key;
+            if(this._configurations[key] === undefined)
+                throw new Error(`The option '--${key}' does not exist`);
+            this._configurations[key].callback(value);
+        });
     }
     /**
      * @name createMessageInfo
@@ -80,6 +95,12 @@ export class Checkout {
         const log = JSON.parse(localStorage.getItem(this._logRepository));
         log.push({tag: 'info',message: message});
         localStorage.setItem(this._logRepository,JSON.stringify(log));
+    }
+    resolveObjetiveToGo(commits,dataComand){
+        const startPoint = dataComand.filter(value => value.substring(0,1) !== '-').pop();
+        const commitByBranch = commits.find(commit => commit.tags.includes(startPoint));
+        const commitObjetive = commitByBranch??commits.find(commit => commit.id === startPoint);
+        return {branch:commitByBranch?startPoint:null,commit:commitObjetive};
     }
     /**
      * @name removeHeadTag
@@ -121,6 +142,8 @@ export class Checkout {
      * @returns {JSON[]} Array of commits with the new branch
      */
     createBranch(commits,name){
+        if(commits.some(commit => commit.tags.includes(name)))
+            throw new Error(`Already exist the branch '${name}'`);
         const head = currentHead(commits);
         commits = commits.filter(commit => commit.id !== head.id);
         head.tags.push(name);
@@ -150,23 +173,32 @@ export class Checkout {
         return this.changeDetachedCommitToCommit(parent,newListCommits);
     }
     /**
-     * @name callbackCreateBranch
-     * @description Callback to create a new branch
-     * @param {string} name Name of the new branch
-     * @throws {Error} The branch already exist
-     * @returns {JSON[]} Array of commits with the new branch
+     * @name callbackHelp
+     * @description Callback to show the help
      */
-    callbackCreateBranch = (commits,name) =>{
-        if(!commits.some(commit => commit.tags.includes(name)))
-            return this.createBranch(commits,name);
-        this.resetConfig();
-        throw new Error(`Already exist the branch '${name}'`);
+    callbackHelp=()=>{
+        const message = `
+        <h5>Concept</h5>
+        <p class="help">Switch branches or restore working tree files</p>
+        <p class="help"><b>Start-point:</b> Can be a commit id or branch name</p>
+        <h5>Syntax</h5>
+        <p class="help">git checkout [-q] [-b &lt;new-branch&gt;] &lt;start-point&gt;</p>
+        <p class="help">git checkout [-h] </p>
+        <h5>Configurations</h5>
+        <h6 class="help">Optional</h6>
+        <ul>
+            <li class="help">-b, --orphan &lt;new-branch&gt;]&nbsp;&nbsp;&nbsp;Create a new branch with the name &lt;new-branch&gt;</li>
+            <li class="help">-q, --quiet&nbsp;&nbsp;&nbsp;Only print error and warning messages; all other output will be suppressed.</li>
+            <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
+        </ul>`
+        this.createMessageInfo(message);
+        throw new Error('');
     }
     /**
      * @name resetConfig
      * @description Reset the configurations
      */
-    resetConfig(){
+    resetConfig=()=>{
         this._configurations.q.useConfig = false;
         this._configurations.b.nameBranch = null;
     }
