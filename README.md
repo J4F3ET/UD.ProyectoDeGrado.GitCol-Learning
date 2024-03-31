@@ -349,7 +349,8 @@ Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
 2. [x] **git commit**: Crea un commit con los archivos del área de preparación y un mensaje.
     - [x] **git commit -m "Mensaje"**: Crea un commit con los archivos del área de preparación y un mensaje.
     - [x] **git commit -am "Mensaje"**: Agrega los archivos al área de preparación y crea un commit con los archivos del área de preparación y un mensaje.
-3. [ ] **git log**: Muestra el historial de commits.
+3. [x] **git log**: Muestra el historial de commits.
+    - [x] **git log -n number**: Crea una rama con el nombre especificado.
 4. [x] **git branch**: Muestra las ramas del repositorio.
     - [x] **git branch "NombreRama"**: Crea una rama con el nombre especificado.
     - [x] **git branch -d "NombreRama"**: Elimina la rama con el nombre especificado.
@@ -357,9 +358,9 @@ Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
     - [x] **git branch -a**: Muestra todas las ramas del repositorio.
     - [x] **git branch -l**: Muestra las ramas del repositorio.
     - [x] **git branch -r**: Muestra las ramas remotas del repositorio.
-5. [ ] **git checkout**: Cambia de rama.
-    - [ ] **git checkout -b "NombreRama"**: Crea una rama con el nombre especificado y cambia a la rama creada.
-    - [ ] **git checkout -q "NombreRama"**: Cambia a la rama con el nombre especificado, ocultando los mensajes de cambio de rama.
+5. [x] **git checkout**: Cambia de rama.
+    - [x] **git checkout -b "NombreRama"**: Crea una rama con el nombre especificado y cambia a la rama creada.
+    - [x] **git checkout -q "NombreRama"**: Cambia a la rama con el nombre especificado, ocultando los mensajes de cambio de rama.
 6. [ ] **git push**: Sube los cambios al repositorio remoto.
 7. [ ] **git pull**: Descarga los cambios del repositorio remoto.
 8. [ ] **git merge**: Fusiona dos ramas.
