@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: comandManager/modules/Checkout.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: comandManager/modules/Checkout.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { currentHead } from '../../util.js';
+export class Checkout {
+    /**
+     * @name constructor
+     * @description Constructor to the class
+     * @param {string} dataRepository Reference to the repository
+     * @param {string} logRepository Reference to the log repository
+    */
+    constructor(dataRepository = "repository",logRepository = "log") {
+        this.comand = "checkout";
+        this._dataRepository = dataRepository;
+        this._logRepository = logRepository;
+        this._configurations = {
+            q:{
+                useConfig: false,
+                callback: ()=> this._configurations.q.useConfig = true
+            },
+            b:{
+                nameBranch: null,
+                callback: (name=null)=>this._configurations.b.nameBranch = name
+            },
+            h:{
+                callback:this.callbackHelp
+            }
+        };
+    }
+    /** 
+     * @name execute
+     * @description Execute the command
+     * @param {Array} dataComand Data of the command
+     * @throws {Error} The repository does not exist
+     * @throws {Error} The repository does not have commits
+    */
+    execute(dataComand){
+        //console.time('Execution time of checkout command');
+        if(localStorage.getItem(this._dataRepository)===null)
+            throw new Error('The repository does not exist');
+        const storage = JSON.parse(localStorage.getItem(this._dataRepository))
+        if(storage.commits.length == 0)
+            throw new Error('The repository does not have commits');
+        this.resetConfig;
+        this.resolveConfig(dataComand);
+        const {branch,commit} = this.resolveObjetiveToGo(storage.commits,dataComand);
+        if(commit === undefined)
+            throw new Error(`The star-point "${dataComand.pop()}" does not exist`);
+        const commitCurrentHead = currentHead(storage.commits);
+        storage.information.head = this._configurations.b.nameBranch??branch??`detached at ${commit.id}`;
+        if(commit.id !== commitCurrentHead.id){
+            storage.commits = this.goToCommit(
+                this.removeHeadTag(
+                    storage.commits,
+                    commitCurrentHead
+                    ),//Remove the tag HEAD from the commit, array of commits
+                commit.id
+            );
+        }
+        if(this._configurations.b.nameBranch !== null){
+            storage.commits = this.createBranch(storage.commits,this._configurations.b.nameBranch);
+            storage.information.head = this._configurations.b.nameBranch;
+        }
+        this.createMessageInfo(`Switched to '${this._configurations.b.nameBranch??branch??commit.id}'`);
+        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+        //console.timeEnd('Execution time of checkout command');
+    }
+    /**
+     * @name resolveConfig
+     * @description Resolve the configurations of the command
+     * @param {string[]} dataComand Data of the command
+     * @returns {string} The commit id to go or the name of the branch
+     */
+    resolveConfig(dataComand){
+        let clearConfig = new Map();
+        dataComand.forEach((data,index) => {
+            if(data.substring(0,1) == '-')
+                clearConfig.set(
+                    (data.replace(/^(-{1,2})([a-zA-Z])/, "$2").charAt(0)),
+                    dataComand[index+1]	
+                );
+        });
+        clearConfig.forEach((value,key) => {
+            key=key=='o'?'b':key;
+            if(this._configurations[key] === undefined)
+                throw new Error(`The option '--${key}' does not exist`);
+            this._configurations[key].callback(value);
+        });
+    }
+    /**
+     * @name createMessageInfo
+     * @description Create a new message in the log
+     * @param {string} message Message to add
+     */
+    createMessageInfo(message){
+        if(this._configurations.q.useConfig)
+            return
+        const log = JSON.parse(localStorage.getItem(this._logRepository));
+        log.push({tag: 'info',message: message});
+        localStorage.setItem(this._logRepository,JSON.stringify(log));
+    }
+    resolveObjetiveToGo(commits,dataComand){
+        const startPoint = dataComand.filter(value => value.substring(0,1) !== '-').pop();
+        const commitByBranch = commits.find(commit => commit.tags.includes(startPoint));
+        const commitObjetive = commitByBranch??commits.find(commit => commit.id === startPoint);
+        return {branch:commitByBranch?startPoint:null,commit:commitObjetive};
+    }
+    /**
+     * @name removeHeadTag
+     * @description Remove the tag HEAD from the commit and remove the class "checked-out"
+     * @param {JSON[]} commits Array of commits
+     * @param {JSON} head Commit to remove the tag
+     * @returns {JSON[]} Array of commits
+     */
+    removeHeadTag(commits,head){
+        commits = commits.filter(commit => commit.id !== head.id);
+        head.tags = head.tags.filter(tag => tag !== 'HEAD');
+        head.class = head.class.filter(classC => classC !== 'checked-out');
+        commits.push(head);
+        return commits;
+    }
+    /**
+     * @name goToCommit
+     * @description Change the current head to the commit
+     * @param {JSON[]} commits Array of commits
+     * @param {string} id Id of the commit
+     * @throws {Error} The commit does not exist
+     * @returns {JSON[]} Array of commits with the new head
+     */
+    goToCommit(commits,id){
+        const commit = commits.find(commit => commit.id === id);
+        if(commit === undefined)
+            throw new Error('The commit does not exist');
+        commit.tags.push('HEAD');
+        commit.class.push('checked-out');
+        commits = commits.filter(commit => commit.id !== id);
+        commits.push(commit);
+        return commits;
+    }
+    /**
+     * @name createBranch
+     * @description Create a new branch in the repository
+     * @param {JSON[]} commits Array of commits
+     * @param {string} name Name of the new branch
+     * @returns {JSON[]} Array of commits with the new branch
+     */
+    createBranch(commits,name){
+        if(commits.some(commit => commit.tags.includes(name)))
+            throw new Error(`Already exist the branch '${name}'`);
+        const head = currentHead(commits);
+        commits = commits.filter(commit => commit.id !== head.id);
+        head.tags.push(name);
+        commits.push(head);
+        if(head.class.includes("detached-head"))
+            commits = this.changeDetachedCommitToCommit(head,commits)
+        return commits;
+    }
+    /**
+     * @name changeDetachedCommitToCommit
+     * @description Change the class of the commit "detached-head" recursively to the parent commit
+     * @param {JSON} commit Commit to change the class
+     * @param {JSON[]} commits Array of commits
+     * @returns {JSON[]} Array of commits with the new class
+     */
+    changeDetachedCommitToCommit(commit,commits){
+        if(!commit.class.includes("detached-head"))
+            return commits
+        let parent;
+        const newListCommits = commits.map(c=>{
+            if(c.id == commit.id)
+                c.class = c.class.filter(item=> item !="detached-head")
+            if(c.id == commit.parent)
+                parent = c
+            return c
+        })
+        return this.changeDetachedCommitToCommit(parent,newListCommits);
+    }
+    /**
+     * @name callbackHelp
+     * @description Callback to show the help
+     */
+    callbackHelp=()=>{
+        const message = `
+        &lt;h5>Concept&lt;/h5>
+        &lt;p class="help">Switch branches or restore working tree files&lt;/p>
+        &lt;p class="help">&lt;b>Start-point:&lt;/b> Can be a commit id or branch name&lt;/p>
+        &lt;h5>Syntax&lt;/h5>
+        &lt;p class="help">git checkout [-q] [-b &amp;lt;new-branch&amp;gt;] &amp;lt;start-point&amp;gt;&lt;/p>
+        &lt;p class="help">git checkout [-h] &lt;/p>
+        &lt;h5>Configurations&lt;/h5>
+        &lt;h6 class="help">Optional&lt;/h6>
+        &lt;ul>
+            &lt;li class="help">-b, --orphan &amp;lt;new-branch&amp;gt;]&amp;nbsp;&amp;nbsp;&amp;nbsp;Create a new branch with the name &amp;lt;new-branch&amp;gt;&lt;/li>
+            &lt;li class="help">-q, --quiet&amp;nbsp;&amp;nbsp;&amp;nbsp;Only print error and warning messages; all other output will be suppressed.&lt;/li>
+            &lt;li class="help">-h, --help&amp;nbsp;&amp;nbsp;&amp;nbsp;Show the help&lt;/li>
+        &lt;/ul>`
+        this.createMessageInfo(message);
+        throw new Error('');
+    }
+    /**
+     * @name resetConfig
+     * @description Reset the configurations
+     */
+    resetConfig=()=>{
+        this._configurations.q.useConfig = false;
+        this._configurations.b.nameBranch = null;
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Commit_Commit.html">Commit</a></li></ul><h3>Global</h3><ul><li><a href="global.html#callBackConfigDelete">callBackConfigDelete</a></li><li><a href="global.html#callBackConfigFiles">callBackConfigFiles</a></li><li><a href="global.html#callBackConfigList">callBackConfigList</a></li><li><a href="global.html#callBackConfigMessage">callBackConfigMessage</a></li><li><a href="global.html#callBackConfigRemoteBranch">callBackConfigRemoteBranch</a></li><li><a href="global.html#callBackConfigRename">callBackConfigRename</a></li><li><a href="global.html#callBackCreateBranch">callBackCreateBranch</a></li><li><a href="global.html#callBackHelp">callBackHelp</a></li><li><a href="global.html#callbackHelp">callbackHelp</a></li><li><a href="global.html#changeDetachedCommitToCommit">changeDetachedCommitToCommit</a></li><li><a href="global.html#constructor">constructor</a></li><li><a href="global.html#createBranch">createBranch</a></li><li><a href="global.html#createCod">createCod</a></li><li><a href="global.html#createCommit">createCommit</a></li><li><a href="global.html#createLine">createLine</a></li><li><a href="global.html#createMessage">createMessage</a></li><li><a href="global.html#createMessageInfo">createMessageInfo</a></li><li><a href="global.html#createRectTag">createRectTag</a></li><li><a href="global.html#createTag">createTag</a></li><li><a href="global.html#createText">createText</a></li><li><a href="global.html#createVSG">createVSG</a></li><li><a href="global.html#currentHead">currentHead</a></li><li><a href="global.html#deleteBranch">deleteBranch</a></li><li><a href="global.html#detachedBranchAsoociated">detachedBranchAsoociated</a></li><li><a href="global.html#execute">execute</a></li><li><a href="global.html#executeCommand">executeCommand</a></li><li><a href="global.html#findBranchAssociatedToCommit">findBranchAssociatedToCommit</a></li><li><a href="global.html#findChildrens">findChildrens</a></li><li><a href="global.html#findCommitsParents">findCommitsParents</a></li><li><a href="global.html#findFirstCommitAssociatedToDeteached">findFirstCommitAssociatedToDeteached</a></li><li><a href="global.html#generateLocationCommitCase2">generateLocationCommitCase2</a></li><li><a href="global.html#generateLocationCommitCase3">generateLocationCommitCase3</a></li><li><a href="global.html#getLocalBranches">getLocalBranches</a></li><li><a href="global.html#getRemoteBranches">getRemoteBranches</a></li><li><a href="global.html#goToCommit">goToCommit</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#remoteClassFromCommit">remoteClassFromCommit</a></li><li><a href="global.html#removeCommitsUntilSpecificPoints">removeCommitsUntilSpecificPoints</a></li><li><a href="global.html#removeHeadTag">removeHeadTag</a></li><li><a href="global.html#removeTagOfCommit">removeTagOfCommit</a></li><li><a href="global.html#removeTags">removeTags</a></li><li><a href="global.html#renameBranch">renameBranch</a></li><li><a href="global.html#renderCommitsToSVG">renderCommitsToSVG</a></li><li><a href="global.html#renderInfoToSVG">renderInfoToSVG</a></li><li><a href="global.html#resetConfig">resetConfig</a></li><li><a href="global.html#resizeSVG">resizeSVG</a></li><li><a href="global.html#resolveConfig">resolveConfig</a></li><li><a href="global.html#resolveConfigure">resolveConfigure</a></li><li><a href="global.html#resolveLocationCommit">resolveLocationCommit</a></li><li><a href="global.html#updateCommitToStorage">updateCommitToStorage</a></li><li><a href="global.html#updateLocationChildsOfCommit">updateLocationChildsOfCommit</a></li><li><a href="global.html#updateLog">updateLog</a></li><li><a href="global.html#updateSVG">updateSVG</a></li><li><a href="global.html#validateConfig">validateConfig</a></li><li><a href="global.html#verifyComand">verifyComand</a></li><li><a href="global.html#widthText">widthText</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Mar 31 2024 11:11:30 GMT-0500 (hora estándar de Colombia)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
