@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 import path from "path";
 import { createServer } from 'node:http';
 import { socketRoomController } from "./src/controller/teamWorking-socket-server.js";
-import { swaggerDoc } from "./documetation/swagger.js";
+import { swaggerDoc } from "./doc/swagger.js";
 
 const app = express();
 const server = createServer(app);

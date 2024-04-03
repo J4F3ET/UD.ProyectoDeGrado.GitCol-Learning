@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: comandManager/ComandManager.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: comandManager/ComandManager.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>export class ComandManager {
+    constructor() {
+        this.comands = new Map();
+        this.shellCommands={
+            'clear':()=>localStorage.setItem('log',JSON.stringify([])),
+            'help': ()=>this.callBackHelp()
+        };
+    }
+    /**
+     * Add a command to the command manager
+     * @param {String} comand
+     * @param {Object} module
+     */
+    addComand(comand,module){
+        this.comands.set(comand,module);
+    }
+    /**
+     * @name callBackHelp
+     * @description Generate a help message with all the commands
+     * @returns {void}
+     */
+    callBackHelp(){
+        let message = `&lt;h5 class="help">Commands shell&lt;/h5>`
+        Object.keys(this.shellCommands).forEach(key=>message+=`&lt;p class="help">>${key}&lt;/p>`);
+        message += `&lt;h5 class="help">Commands git&lt;/h5>`
+        this.comands.keys().forEach(key=>message+=`&lt;p class="help">>git ${key}&lt;/p>`);
+        message += `&lt;p class="help">More information using 'git &amp;lt;comand&amp;gt; [-h|--help]'&lt;/p>`
+        this.createMessage("info",message); 
+    }
+    /**
+     * Remove a command from the command manager
+     * @param {String} comand
+     */
+    removeComand(comand) {
+        this.comands.delete(comand);
+    }
+    /**
+     * Get all the commands
+     * @returns {Array&lt;String>}
+     */
+    getComands() {
+        return Array.from(this.comands.keys());
+    }
+    /**
+     * Execute a command
+     * @param {String} command 
+     * @param {String[]} config
+     * @returns {Promise&lt;Boolean>}
+     * @throws {Error} Comand not found
+     * @throws {Error} Error in the command execution
+     */
+    executeCommand(sentence,command, config){
+        if (this.comands.has(command)) {
+            this.verifyComand(sentence);
+            const commandModule = this.comands.get(command);
+            return commandModule.execute(config);
+        }
+        if(this.shellCommands[sentence]){
+            this.shellCommands[sentence]();
+            return
+        }
+        throw new Error('Command not found');
+    }
+    /** 
+     * Create a message and save it in the local storage
+     * @name createMessage
+     * @param {String} tag Tag of the message
+     * @param {String} message Message to be saved
+     */
+    createMessage(tag,message){
+        if(localStorage.getItem('log')===null)
+            localStorage.setItem('log',JSON.stringify([]));
+        const log = JSON.parse(localStorage.getItem('log'));
+        log.push({tag,message});
+        localStorage.setItem('log',JSON.stringify(log));
+    }
+    /**
+     * @name verifyComand
+     * @description Verify if the comand is valid syntax
+     * @param {String} comand 
+     * @throws {Error} The command is empty
+     * @throws {Error} The command is not valid
+     */
+    verifyComand(comand="") {
+        if(comand === "")
+            throw new Error('The command is empty');
+        const refex = /^(git) [a-z]* *(?: .*)?$/
+        if(!refex.test(comand))
+            throw new Error('The command is not valid');
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Commit_Commit.html">Commit</a></li></ul><h3>Global</h3><ul><li><a href="global.html#callBackConfigDelete">callBackConfigDelete</a></li><li><a href="global.html#callBackConfigFiles">callBackConfigFiles</a></li><li><a href="global.html#callBackConfigList">callBackConfigList</a></li><li><a href="global.html#callBackConfigMessage">callBackConfigMessage</a></li><li><a href="global.html#callBackConfigRemoteBranch">callBackConfigRemoteBranch</a></li><li><a href="global.html#callBackConfigRename">callBackConfigRename</a></li><li><a href="global.html#callBackCreateBranch">callBackCreateBranch</a></li><li><a href="global.html#callBackHelp">callBackHelp</a></li><li><a href="global.html#callbackHelp">callbackHelp</a></li><li><a href="global.html#changeDetachedCommitToCommit">changeDetachedCommitToCommit</a></li><li><a href="global.html#constructor">constructor</a></li><li><a href="global.html#createBranch">createBranch</a></li><li><a href="global.html#createCod">createCod</a></li><li><a href="global.html#createCommit">createCommit</a></li><li><a href="global.html#createLine">createLine</a></li><li><a href="global.html#createMessage">createMessage</a></li><li><a href="global.html#createMessageInfo">createMessageInfo</a></li><li><a href="global.html#createRectTag">createRectTag</a></li><li><a href="global.html#createTag">createTag</a></li><li><a href="global.html#createText">createText</a></li><li><a href="global.html#createVSG">createVSG</a></li><li><a href="global.html#currentHead">currentHead</a></li><li><a href="global.html#deleteBranch">deleteBranch</a></li><li><a href="global.html#detachedBranchAsoociated">detachedBranchAsoociated</a></li><li><a href="global.html#execute">execute</a></li><li><a href="global.html#executeCommand">executeCommand</a></li><li><a href="global.html#findBranchAssociatedToCommit">findBranchAssociatedToCommit</a></li><li><a href="global.html#findChildrens">findChildrens</a></li><li><a href="global.html#findCommitsParents">findCommitsParents</a></li><li><a href="global.html#findFirstCommitAssociatedToDeteached">findFirstCommitAssociatedToDeteached</a></li><li><a href="global.html#generateLocationCommitCase2">generateLocationCommitCase2</a></li><li><a href="global.html#generateLocationCommitCase3">generateLocationCommitCase3</a></li><li><a href="global.html#getLocalBranches">getLocalBranches</a></li><li><a href="global.html#getRemoteBranches">getRemoteBranches</a></li><li><a href="global.html#goToCommit">goToCommit</a></li><li><a href="global.html#notify">notify</a></li><li><a href="global.html#remoteClassFromCommit">remoteClassFromCommit</a></li><li><a href="global.html#removeCommitsUntilSpecificPoints">removeCommitsUntilSpecificPoints</a></li><li><a href="global.html#removeHeadTag">removeHeadTag</a></li><li><a href="global.html#removeTagOfCommit">removeTagOfCommit</a></li><li><a href="global.html#removeTags">removeTags</a></li><li><a href="global.html#renameBranch">renameBranch</a></li><li><a href="global.html#renderCommitsToSVG">renderCommitsToSVG</a></li><li><a href="global.html#renderInfoToSVG">renderInfoToSVG</a></li><li><a href="global.html#resetConfig">resetConfig</a></li><li><a href="global.html#resizeSVG">resizeSVG</a></li><li><a href="global.html#resolveConfig">resolveConfig</a></li><li><a href="global.html#resolveConfigure">resolveConfigure</a></li><li><a href="global.html#resolveLocationCommit">resolveLocationCommit</a></li><li><a href="global.html#updateCommitToStorage">updateCommitToStorage</a></li><li><a href="global.html#updateLocationChildsOfCommit">updateLocationChildsOfCommit</a></li><li><a href="global.html#updateLog">updateLog</a></li><li><a href="global.html#updateSVG">updateSVG</a></li><li><a href="global.html#validateConfig">validateConfig</a></li><li><a href="global.html#verifyComand">verifyComand</a></li><li><a href="global.html#widthText">widthText</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Mar 31 2024 11:11:30 GMT-0500 (hora estándar de Colombia)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

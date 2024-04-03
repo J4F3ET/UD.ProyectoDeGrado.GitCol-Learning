@@ -1,7 +1,7 @@
 node_modules
 npm-debug.log
 Dockerfile
-documentation
+doc
 README.md
 .gitignore
 .git
