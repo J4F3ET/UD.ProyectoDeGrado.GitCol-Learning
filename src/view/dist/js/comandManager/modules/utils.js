@@ -13,19 +13,51 @@ function removeTags(tags,commit){
     return commit;
 }
 /**
- * @name createMessageInfo
+ * @name removeTagOfCommit
+ * @description Remove a tag of a commit
+ * @param {JSON[]} commits Array with the commits of the repository
+ * @param {string} name Name of the tag to remove
+ * @param {string} id Id of the commit
+ * @returns {JSON[]} Array with the new commits of the repository
+ */
+function removeTagById(commits,name,id){
+    return commits.map(commit => {
+        if(commit.id === id && commit.tags.includes(name))
+            commit.tags = commit.tags.filter(tag => tag !== name);
+        return commit;
+    });
+}
+/**
+ * @name findChildrens
+ * @description Find the childrens of the commit
+ * @param {JSON[]} commits Array with the commits of the repository
+ * @param {string} id Id of the commit
+ * @param {JSON[]} childrens Array with the childrens of the commit
+ */
+function findAllChildrens(commits,id,childrens = []){
+    const childrensFisrtGen = commits.filter(commitStorage => commitStorage.parent == id);
+    if(childrensFisrtGen.length==0)
+        return childrens;
+    childrensFisrtGen.forEach(commit => {
+        childrens.push(commit);
+        this.findAllChildrens(commits,commit.id,childrens);
+    });
+    return childrens;
+}
+/**
+ * @name createMessage
  * @method
  * @description Create a message to the log 
  * @param {String} tag Tag of the message
  * @param {String} message Message to be added to the log
- * @example createMessageInfo('info','<div class="files"><h5>Add files to the commit</h5><ul><li>>index.html</li><li>>style.css</li><li>>script.js</li></ul></div>')
+ * @example createMessage('info','<div class="files"><h5>Add files to the commit</h5><ul><li>>index.html</li><li>>style.css</li><li>>script.js</li></ul></div>')
  */
-function createMessageInfo(tag,message){
-    if(localStorage.getItem(_logRepository)===null)
+function createMessage(tag,message){
+    if(localStorage.getItem('log')===null)
         return;
-    const log = JSON.parse(localStorage.getItem(_logRepository));
+    const log = JSON.parse(localStorage.getItem('log'));
     log.push({tag,message});
-    localStorage.setItem(_logRepository,JSON.stringify(log));
+    localStorage.setItem('log',JSON.stringify(log));
 }
 /**
  * @name updateCommitToCommits
@@ -182,12 +214,49 @@ function createCod() {
             cy:response.location[1]
         }};
     }
+/**
+ * @name findAllExceptionCommitsDelete
+ * @description Find the parents of the commits
+ * @param {JSON[]} commits Array with the commits of the repository
+ * @returns {Array} Array with the ID parents of the commits
+ */
+function findAllExceptionCommitsDelete(commits){
+    const parents = commits.map(commit => commit.parent&&!commit.class.includes('detached-head')?commit.parent:[]).flat();
+    if(parents.length === 0)
+        return commits.filter(commit => commit.id == 'parent'|| commit.id == 'init');
+    const repeatedParents = parents.filter((parent, index) => parents.indexOf(parent) != index);
+    const parentsWithTags = commits.filter(commit => commit.tags.length > 0 && parents.includes(commit.id)).map(commit => commit.id);
+    return [...new Set([...repeatedParents,...parentsWithTags])];
+}
+/**
+ * @name deleteCommitsRecursivelyUntil
+ * @description Remove the commits who it parent is not pertenecing to the array of points exceptions 
+ * @param {JSON[]} commits Array with the commits of the repository
+ * @param {JSON} commitObj Object with the commit
+ * @param {String[]} pointsObjetive Array with the commits id parents whit two or more childrens
+ * @returns {JSON[]} Array with the new commits of the repository
+ */
+function deleteCommitsRecursivelyUntil(commits,commitObj,pointsObjetive){
+    if(pointsObjetive.includes(commitObj.id))
+        return commits;
+    const parent = commits.find(commit => commit.id === commitObj.parent);
+    commits = commits.map(commit => {
+        if(commit.id === commitObj.id)
+            commitObj.class.push('detached-head');
+        return commit;
+    });
+    return deleteCommitsRecursivelyUntil(commits,parent,pointsObjetive);
+}
 export {
     removeTags,
-    createMessageInfo,
+    removeTagById,
+    createMessage,
     updateCommitToCommits,
     removeClassFromCommit,
     resolveLocationCommit,
     createRegister,
+    findAllChildrens,
+    deleteCommitsRecursivelyUntil,
+    findAllExceptionCommitsDelete,
     createCod
 }

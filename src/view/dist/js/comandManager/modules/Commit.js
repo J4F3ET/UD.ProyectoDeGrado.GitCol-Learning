@@ -1,11 +1,41 @@
 import { currentHead } from "../../util.js";
-import { removeTags, createMessageInfo, updateCommitToCommits, removeClassFromCommit,createRegister,createCod} from "./utils.js";
+import { removeTags, createMessage, updateCommitToCommits, removeClassFromCommit,createRegister,createCod} from "./utils.js";
 /**
  * @class
  * @classdesc This class is responsible for creating a new commit in the repository. Represents the command "commit" of the git
+ * @requires util
  * @example const commit = new Commit("local","log");
  */
 export class Commit{
+    _comand = 'commit';
+    /**
+     * @typedef {Object} _configurationsOfCommit  
+     * @description Configurations who can be supported by the command, it is an object with the following properties
+     * @property {Object<String,Function>} m Message of the commit. The property is the similitude with Git. [-m <message> | --message <message>]
+     * @property {string} m.message Value of the message of the commit
+     * @property {Function} m.callback Callback do resposability of assign the value of the message.
+     * @property {Object<String[],Function>} a Files to be added to the commit. The property is the similitude with Git. [-a | --all] (NOT IMPLEMENTED) 
+     * @property {String[]} a.files List of files to be added to the commit, by default is ["index.html","style.css","script.js"] 
+     * @property {Function} a.callback Callback do responsability of generate a message in the console.
+     * @property {Object<Function>} h Help of the command. The property is the similitude with Git. [-h | --help]
+     * @property {Function} h.callback Callback do responsability of generate a message in the console. With items as the concept, syntax and configurations.
+     * @alias _configurations
+     * @readonly
+     * @memberof! Commit#
+    */
+    _configurations = {
+        m:{
+            message: "None",
+            callback:(dataComand)=>this.callBackConfigMessage(dataComand),
+        },
+        a:{
+            files: ["index.html","style.css","script.js"],
+            callback: (dataComand)=>this.callBackConfigFiles(dataComand),
+        },
+        h:{
+            callback:(dataComand)=>this.callBackHelp(dataComand)
+        }
+    };
     /**
      *  The constructor of the class, it receives the repository of the data
      * @constructor
@@ -13,50 +43,6 @@ export class Commit{
      * @param {string} logRepository Name the space of the local storage who contain the history messages of application, by default is 'log'
      */
     constructor(dataRepository = "repository",logRepository = "log"){
-        /** 
-         * @member {string}
-         * @description Name of the command
-         * @default commit
-         * @memberof! Commit#
-         * @readonly
-        */
-        this.comand = 'commit';
-        /**
-         * @typedef {Object} _configurationsOfCommit  
-         * @property {messageConfigOfCommit} m Configuration of the message
-         * @property {filesConfigOfCommit} a Configuration of the files
-         * @property {helpConfig} h Configuration of the help
-         * @alias _configurations
-         * @readonly
-         * @memberof! Commit#
-        */
-        this._configurations = {
-            /**
-             * @typedef {Object} messageConfigOfCommit
-             * @property {string} message Message of the commit
-             * @property {Function} callback Callback to the configuration of the message, responsable to extract the message of the command
-             */
-            m:{
-                message: "None",
-                callback: this.callBackConfigMessage,
-            },
-            /**
-             * @typedef {Object} filesConfigOfCommit
-             * @property {string[]} files Files to be added to the commit
-             * @property {Function} callback Callback to the configuration of the files, responsable to show message at the log
-             */
-            a:{
-                files: ["index.html","style.css","script.js"],
-                callback: this.callBackConfigFiles,
-            },
-            /**
-             * @typedef {Object} helpConfig
-             * @property {Function} callback Callback to the help of the command, responsable to show the help of the command
-             */
-            h:{
-                callback: this.callBackHelp
-            }
-        };
         /**
          * @member {string}
          * @description Name of space the local storage who contain the data referent to history of the commits(register but not commands)
@@ -70,6 +56,15 @@ export class Commit{
          */
         this._logRepository = logRepository;
     }
+    /** 
+     * @name comand
+     * @type {string}
+     * @description Name of the command
+     * @default commit
+     * @memberof! Commit#
+     * @readonly
+    */
+    get comand(){this._comand}
     /**
      * @name execute
      * @description Execute the command, responsible to create a new commit in the repository
@@ -86,7 +81,7 @@ export class Commit{
         if(localStorage.getItem(this._dataRepository)===null)
             throw new Error('The repository does not exist');
         let continueExecution = true;
-        this.resolveConfigure(dataComand).forEach(config => {
+        this.resolveConfiguration(dataComand).forEach(config => {
             continueExecution = this._configurations[config].callback(dataComand);
         });
         if(!continueExecution) return;
@@ -118,15 +113,15 @@ export class Commit{
         //console.timeEnd('Execution time of commit');
     }
     /**
-     * @name resolveConfigure
+     * @name resolveConfiguration
      * @method
      * @memberof! Commit#
      * @description Resolve the configuration of the command, extract the configuration of the command and validate it
      * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
-     * @example resolveConfigure(['-m','"message"','-a']) // ['m','a']
+     * @example resolveConfiguration(['-m','"message"','-a']) // ['m','a']
      * @returns {String[]} Array with the letters of the configuration
      */
-    resolveConfigure(dataComand) {
+    resolveConfiguration(dataComand) {
         let configs = [] 
         dataComand.forEach(c => {
             if(c.startsWith("-")||c.startsWith("--"))
@@ -186,7 +181,7 @@ export class Commit{
         if(!dataComand.includes('m'))
             throw new Error('The configuration "-m" is obligatory for use the configuration "-a"');
         const files = this._configurations.a.files.map(file => `<li>>${file}</li>`).join('');
-        createMessageInfo('info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
+        createMessage('info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
         return true;
     }
     /**
@@ -215,7 +210,7 @@ export class Commit{
             <li class="help">-a&nbsp;&nbsp;&nbsp;Add all files to the commit(files system no implemented)</li>
             <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>`
-        createMessageInfo('info',message);
+        createMessage('info',message);
         return dataComand.includes('-m');
     }
 
