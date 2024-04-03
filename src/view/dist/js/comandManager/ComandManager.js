@@ -1,3 +1,13 @@
+/**
+ * @name ComandManager
+ * @description Class to manage the commands
+ * @param {Map<String,Object>} comands
+ * @param {Object} shellCommands
+ * @returns {ComandManager}
+ * @throws {Error} The command is empty
+ * @throws {Error} The command is not valid
+ * @throws {Error} Command not found
+ */
 export class ComandManager {
     constructor() {
         this.comands = new Map();

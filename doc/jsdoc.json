@@ -1,5 +1,5 @@
 {
-    "plugins": [],
+    "plugins": ["plugins/markdown"],
     "source": {
         "include": ["./src/view"],
         "includePattern": ".js$",
@@ -10,7 +10,18 @@
         "monospaceLinks": false
     },
     "opts": {
+        "encoding": "utf8",
+        "readme": "./README.md",
         "destination": "./doc/jsdocs/",
-        "recurse": true
+        "recurse": true,
+        "verbose": true,
+        "template": "./node_modules/clean-jsdoc-theme",
+        "theme_opts": {
+            "default_theme": "dark"
+        }
+    },
+    "markdown": {
+        "hardwrap": false,
+        "idInHeadings": true
     }
 }

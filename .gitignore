@@ -197,5 +197,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # JsDoc
-.doc/jsdocs
+**/jsdocs/**
 # End of https://www.toptal.com/developers/gitignore/api/windows,node,firebase,visualstudiocode
