@@ -1,5 +1,12 @@
-import { currentHead } from "../../util.js";
-import { removeTags, createMessage, updateCommitToCommits, removeClassFromCommit,createRegister,createCod} from "./utils.js";
+import { 
+    currentHead,
+    removeTags,
+    createMessage,
+    updateCommitToCommits, 
+    removeClassFromCommit,
+    createRegister,
+    createCod
+} from "./utils.js";
 /**
  * @class
  * @classdesc This class is responsible for creating a new commit in the repository. Represents the command "commit" of the git
@@ -37,23 +44,25 @@ export class Commit{
         }
     };
     /**
+         * @member {string}
+         * @description Name of space the local storage who contain the data referent to history of the commits(register but not commands)
+         * @memberof! Commit# 
+        */
+    _dataRepository = 'repository';
+    /**
+     * @member {string}
+     * @description Name of space the local storage who contain the history messages of application
+     * @memberof! Commit#
+     */
+    _logRepository = 'log';
+    /**
      *  The constructor of the class, it receives the repository of the data
      * @constructor
      * @param {string} dataRepository Name the space of the local storage who contain the data referent to history of the commits(register but not commands), by default is 'repository'
      * @param {string} logRepository Name the space of the local storage who contain the history messages of application, by default is 'log'
      */
     constructor(dataRepository = "repository",logRepository = "log"){
-        /**
-         * @member {string}
-         * @description Name of space the local storage who contain the data referent to history of the commits(register but not commands)
-         * @memberof! Commit# 
-        */
         this._dataRepository = dataRepository;
-        /**
-         * @member {string}
-         * @description Name of space the local storage who contain the history messages of application
-         * @memberof! Commit#
-         */
         this._logRepository = logRepository;
     }
     /** 

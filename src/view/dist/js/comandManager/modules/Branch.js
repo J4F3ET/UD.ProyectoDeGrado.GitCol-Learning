@@ -1,5 +1,11 @@
-import { currentHead } from "../../util.js";
-import { createMessage ,findAllChildrens,deleteCommitsRecursivelyUntil,findAllExceptionCommitsDelete,removeTagById} from "./utils.js";
+import {
+    currentHead, 
+    createMessage ,
+    findAllChildrens,
+    deleteCommitsRecursivelyUntil,
+    findAllExceptionCommitsToDelete,
+    removeTagById
+} from "./utils.js";
 /**
  * @class
  * @classdesc Class to manage the branch of the repository
@@ -8,7 +14,7 @@ import { createMessage ,findAllChildrens,deleteCommitsRecursivelyUntil,findAllEx
 export class Branch{
     _comand = 'branch';
     /**
-     * @typedef {Object} _configurationsOfCommit  
+     * @typedef {Object} _configurationsOfBranch  
      * @description Configurations who can be supported by the command, it is an object with the following properties
      * @property {Object<Function>} c Configurations to create a branch.
      * @property {Function} c.callback Callback do resposability to create a new branch.
@@ -51,6 +57,33 @@ export class Branch{
             callback:()=>this.callbackHelp()
         }
     };
+    /**
+     * @type {string}
+     * @description Name of the space where the repository is saved
+     * @default 'repository'
+     * @memberof! Branch#
+     * @member
+     * @readonly
+    */
+    _dataRepository = "repository";
+    /**
+     * @type {string}
+     * @description Name of the space where the log is saved
+     * @default 'log'
+     * @memberof! Branch#
+     * @member
+     * @readonly
+     */
+    _logRepository = "log";
+    /**
+     * @type {string}
+     * @description Name of the space where the remote repository is saved
+     * @default null
+     * @memberof! Branch#
+     * @member
+     * @readonly
+     */
+    _remoteRepository = null;
     /**
      * @constructor
      * @description The constructor of the class, it receives the repository of the data
@@ -256,7 +289,7 @@ export class Branch{
         storage.commits =  deleteCommitsRecursivelyUntil(
             commitsWithoutBranch,
             commitObj,
-            findAllExceptionCommitsDelete(storage.commits)
+            findAllExceptionCommitsToDelete(storage.commits)
         );
         return storage;
     }
