@@ -1,8 +1,55 @@
+/**
+ * @class
+ * @classdesc Class to render the data in the SVG and the log container
+ */
 export class DataViewer{
+    /**
+     * @memberof DataViewer#
+     * @name _svg
+     * @member
+     * @description SVG element to render the commits
+     * @type {SVGSVGElement}
+     * @default null
+     * @readonly
+     */
+    _svg = null;
+    /**
+     * @memberof DataViewer#
+     * @name _logComands
+     * @member
+     * @description Name of the reference the space to store the log commands
+     * @type {String}
+     * @default ""
+     * @readonly
+     */
+    _logComands = "";
+    /**
+     * @memberof DataViewer#
+     * @name _currentData
+     * @member
+     * @description Data that currently has the SVG, this data is a JSON string with the commits and the information
+     * @type {String}
+     * @default ""
+     * @readonly
+     * @example {"commits":[{id: "parent",parent: "init",message: "First commit",tags: ["master", "HEAD"],cx: 140,cy: 360}],information:{head: "master", repository: "repositoryName"}}
+     */
+    _currentData = "";
+    /**
+     * @memberof DataViewer#
+     * @name _commitParent
+     * @member
+     * @description Object with the properties of the parent commit
+     * @type {Object}
+     * @default {cx:-50,cy:334,id:"init",tags:[],class:[]}
+     * @readonly
+     */
+    _commitParent = {cx:-50,cy:334,id:"init",tags:[],class:[]}
+    /**
+     * @constructor
+     * @description Create a new instance of the DataViewer
+     * @param {HTMLElement} svgContainer Container to add the SVG
+     */
     constructor(svgContainer){
-        this._commitParent = {cx:-50,cy:334,id:"init",tags:[],class:[]}
-        this._logComands = "";
-        this._currentData = "";
         this._svg = this.createSVG();
         svgContainer.appendChild(this._svg);
     }
@@ -20,6 +67,8 @@ export class DataViewer{
     }
     /**
      * @name notify
+     * @memberof DataViewer#
+     * @method
      * @description Triggers the notification of updates to the observers
      * @param {String} tag Tag to identify the notification
      * @param {String} data Data to send to the observers
@@ -32,8 +81,10 @@ export class DataViewer{
     }
     /**
      * @name createVSG
-     * @description Crea el SVG y los containers para los commits, lineas y otros elementos del SVG 
-     * @returns {SVGSVGElement} Elemento de tipo SVG con los containers para los commits, lineas y otros elementos del SVG
+     * @memberof DataViewer#
+     * @method
+     * @description Create the SVG void
+     * @returns {SVGSVGElement} Element SVG with the containers
      */
     createSVG(){
         const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -61,10 +112,12 @@ export class DataViewer{
     };
     /**
      * @name createCommit
-     * @description Crea un elemento svg de tipo circulo con las propiedades de un commit, se le asigna un id unico y se retorna con un radius de 2
-     * @param {Object} dataCommit Debe ser un objeto con las propiedades de un commit
+     * @memberof DataViewer#
+     * @method
+     * @description Create element SVG of type circle with the properties of a commit
+     * @param {Object} dataCommit Object with the properties of the commit
      * @example {id: "parent",parent: "init",message: "First commit",tags: ["master", "HEAD"],cx: 140,cy: 360};
-     * @returns {SVGCircleElement} Elemento de tipo circulo con las propiedades de un commit
+     * @returns {SVGCircleElement} Element of type circle SVG with the properties of a commit
      */
     createCommit(dataCommit){
         const newCircle = document.createElementNS("http://www.w3.org/2000/svg","circle");
@@ -75,6 +128,15 @@ export class DataViewer{
         newCircle.id = dataCommit.id;
         return newCircle;   
     }
+    /**
+     * @name initRepository
+     * @memberof DataViewer#
+     * @method
+     * @description Initialize the repository with the SVG and the containers
+     * @param {SVGSVGElement} svgDocumentElement Element SVG void before to be initialized with the containers
+     * @example <svg id="svg" width="1000" height="1000" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>
+     * @returns {void}
+     */
     initRepository(svgDocumentElement){
         if(!svgDocumentElement)
             return
@@ -97,10 +159,12 @@ export class DataViewer{
     }
     /**
      * @name createLine
+     * @memberof DataViewer#
+     * @method
      * @description Create element SVG of type line with the properties of a line
-     * @param {Object} dataCommit Debe ser un elemento de tipo circulo parent de los commits, el commit previo al que se va a crear
+     * @param {Object} dataCommit Object with the properties of the commit
      * @example {id: "parent",parent: "init",message: "First commit",tags: ["master", "HEAD"],cx: 140,cy: 360};
-     * @returns {SVGLineElement} Elemento de tipo linea con las propiedades de una linea
+     * @returns {SVGLineElement} Element of type line SVG with the properties of a line
      */
     createLine(dataCommit,parent){
         const newLine = document.createElementNS("http://www.w3.org/2000/svg","line");
@@ -115,6 +179,8 @@ export class DataViewer{
     }
     /**
      * @name createTag
+     * @memberof DataViewer#
+     * @method
      * @description Create element SVG of type text with the properties of a tag
      * @param {Int} x Position in the x axis
      * @param {Int} y Position in the y axis
@@ -136,11 +202,13 @@ export class DataViewer{
     }
     /**
      * @name createText
+     * @memberof DataViewer#
+     * @method
      * @description Create element SVG of type text with the properties of a text
      * @param {Int} x Position in the x axis
      * @param {Int} y Position in the y axis
      * @param {String} text Text to be added to the element
-     * @returns {SVGTextElement} Elemento de tipo texto con las propiedades de un tag
+     * @returns {SVGTextElement} Element type text SVG with the properties of a text
      */
     createText(x,y,text){
         const newText = document.createElementNS("http://www.w3.org/2000/svg","text");
@@ -151,6 +219,8 @@ export class DataViewer{
     }
     /**
      * @name widthText
+     * @memberof DataViewer#
+     * @method
      * @description Get the width of the text
      * @param {String} text Text to get the width
      * @returns {Int} Width of the text
@@ -164,10 +234,13 @@ export class DataViewer{
     }
     /**
      * @name createRectTag
+     * @memberof DataViewer#
+     * @method
      * @description Create element SVG of type rect with the properties of a rect
      * @param {Int} x Position in the x axis
      * @param {Int} y Position in the y axis
-     * @returns {SVGRectElement} Elemento de tipo rectangulo con las propiedades de un tag
+     * @param {Int} width Width of the rect element by default is 40
+     * @returns {SVGRectElement} Element of type rect SVG with the properties of a possition and a size
      */
     createRectTag(x,y,width = 40){
         const newRect = document.createElementNS("http://www.w3.org/2000/svg","rect");
@@ -179,7 +252,9 @@ export class DataViewer{
     }
     /**
      * @name resizeSVG
-     * @description Aumenta el ancho del SVG para que quepan mas commits
+     * @memberof DataViewer#
+     * @method
+     * @description Resize the SVG to the maximum width of the commits
      * @param {SVGSVGElement} svgElement Elemento de tipo SVG
      */
     resizeSVG(){
@@ -197,6 +272,8 @@ export class DataViewer{
     }
     /**
      * @name createMessage
+     * @memberof DataViewer#
+     * @method
      * @description Create one message in the log container
      * @param {Object} log Object with the tag and the message
      * @example {tag: "error", message: "Error message"} 
@@ -211,8 +288,11 @@ export class DataViewer{
     }
     /**
      * @name updateLog
+     * @memberof DataViewer#
+     * @method
      * @description Update the log container with the new data
      * @param {String} data String with the new data, this data is a JSON string
+     * @example '[{"tag":"comand","message":"git init"},{"tag":"info","message":"Repository created"}]'
      */
     updateLog(data){
         if(data == this._logComands)
@@ -225,6 +305,8 @@ export class DataViewer{
     };
     /**
      * @name updateSVG
+     * @memberof DataViewer#
+     * @method
      * @description Update the SVG with the new data
      * @param {String} data String with the new data, this data is a JSON string
      */
@@ -251,6 +333,8 @@ export class DataViewer{
     }
     /**
      * @name renderCommitsToSVG
+     * @memberof DataViewer#
+     * @method
      * @description Render the SVG with the new data.
      * @param {Object[]} commitsData Array with the commits data to be rendered
      * @param {Object[]} currentCommits Array with the current commits data to be rendered
@@ -279,6 +363,13 @@ export class DataViewer{
         });
         this.removeElementsFromSVG(commitsData);
     }
+    /**
+     * @name removeElementsFromSVG
+     * @memberof DataViewer#
+     * @method
+     * @description Remove elements from the SVG that are not in the new data
+     * @param {Object[]} commitsData Array with the commits data to be rendered
+     */
     removeElementsFromSVG(commitsData){
         const idsCommits = commitsData.map(commit => commit.id);
         const tagsInSVG = commitsData.map(commit => commit.tags).flat();
@@ -286,6 +377,15 @@ export class DataViewer{
         this.removeTagsFromSVG(tagsInSVG);
         this.removeCommitsFromSVG(idsCommits);
     };
+    /**
+     * @name removeLineFromSVG
+     * @memberof DataViewer#
+     * @method
+     * @description Remove lines from the SVG that are not in the new data
+     * @param {String[]} idsCommits Array with the ids of the commits
+     * @example ["parent","commit1","commit2"]
+     * @returns {void}
+     */
     removeLineFromSVG(idsCommits){
         const linesInSVG = Array.from(this._svg.querySelectorAll('.line')).map(line => line.id);
         linesInSVG.forEach(line => {
@@ -294,6 +394,15 @@ export class DataViewer{
                 this._svg.getElementById(line).remove();
         });
     }
+    /**
+     * @name removeTagsFromSVG
+     * @memberof DataViewer#
+     * @method
+     * @description Remove tags from the SVG that are not in the new data
+     * @param {String[]} tagsInData Array with the tags of the commits
+     * @example ["master","HEAD"]
+     * @returns {void}
+     */
     removeTagsFromSVG(tagsInData){
         const tagsInSVG = Array.from(this._svg.querySelectorAll('.branch-tag')).map(tag => tag.id);
         tagsInSVG.forEach(tag => {
@@ -301,6 +410,15 @@ export class DataViewer{
                 this._svg.getElementById(tag).remove();
         });
     }
+    /**
+     * @name removeCommitsFromSVG
+     * @memberof DataViewer#
+     * @method
+     * @description Remove commits from the SVG that are not in the new data
+     * @param {String[]} idsCommits Array with the ids of the commits
+     * @example ["parent","commit1","commit2"]
+     * @returns {void} 
+     */
     removeCommitsFromSVG(idsCommits){
         const commitInSVG = Array.from(this._svg.querySelectorAll('.commit')).map(commit => commit.id);
         commitInSVG.forEach(commit => {
@@ -313,6 +431,8 @@ export class DataViewer{
     }
     /**
      * @name renderInfoToSVG    
+     * @memberof DataViewer#
+     * @method
      * @description Render the SVG with the new information
      * @param {Object} data Object with the information to be rendered
      * @example {head: "master", repository: "repositoryName"}
@@ -337,6 +457,15 @@ export class DataViewer{
             gContainerData.appendChild(gContainerText);
         });
     }
+    /**
+     * @name updateCommitToSvg
+     * @memberof DataViewer#
+     * @method
+     * @description Update the commit in the SVG with the new data
+     * @param {Object} commit Object with the properties of the commit
+     * @param {Object} parent Object with the properties of the parent commit
+     * @return {void}
+     */
     updateCommitToSvg(commit,parent){
         const commitSvg = this._svg.getElementById(commit.id);
         commitSvg.setAttribute("class",commit.class.join(" "));
@@ -345,6 +474,14 @@ export class DataViewer{
         this.updateLineOfCommit(commit,parent);
         this.resolveTagsInSVG(commit);
     }
+    /**
+     * @name resolveTagsInSVG
+     * @memberof DataViewer#
+     * @method
+     * @description Resolve the tags in the SVG, add or update the tags
+     * @param {Object} commit Object with the properties of the commit
+     * @return {void}
+     */
     resolveTagsInSVG(commit){
         const y = parseInt(commit.cy) + 60;
         const tagsInSvg = Array.from(this._svg.querySelectorAll('.branch-tag')).map(tag => tag.id);
@@ -355,12 +492,29 @@ export class DataViewer{
                 this.addTagToSvg(this.createTag(commit.cx,y+(index*25),tag));
         });
     }
+    /**
+     * @name addCommitToSvg
+     * @memberof DataViewer#
+     * @method
+     * @description Add the commit to the SVG
+     * @param {Object} commit Object with the properties of the commit
+     * @param {Object} parent Object with the properties of the parent commit
+     * @return {void}
+     */
     addCommitToSvg(commit,parent){
         this.addCircleToSvg(this.createCommit(commit));
         this.addLineToSvg(this.createLine(commit,parent)); 
         this.addMessageAndIdToCommit(commit);
         this.resolveTagsInSVG(commit);
     }
+    /**
+     * @name updateMeesageAndIdToCommit
+     * @memberof DataViewer#
+     * @method
+     * @description Update the message and the id of the commit
+     * @param {Object} commit Object with the properties of the commit
+     * @return {void}
+     */
     updateMeesageAndIdToCommit(commit){
         const message = this._svg.getElementById(commit.id+"-message")
         const id = this._svg.getElementById(commit.id+"-id")
@@ -368,6 +522,14 @@ export class DataViewer{
         this.animateElement(id,"x","y",id.getAttribute("x"),commit.cy+40);
         message.innerHTML = commit.message;
     }
+    /**
+     * @name addMessageAndIdToCommit
+     * @memberof DataViewer#
+     * @method
+     * @description Add the message and the id of the commit
+     * @param {Object} commit Object with the properties of the commit
+     * @return {void}
+     */
     addMessageAndIdToCommit(commit){
         if(this._svg.getElementById(commit.id+"-message")){
             this._svg.getElementById(commit.id+"-message").remove()
@@ -382,10 +544,27 @@ export class DataViewer{
         this._svg.getElementById("gContainerCommit").appendChild(message);
         this._svg.getElementById("gContainerCommit").appendChild(id);
     }
+    /**
+     * @name addCircleToSvg
+     * @memberof DataViewer#
+     * @method
+     * @description Add the circle to the SVG
+     * @param {SVGCircleElement} commit Element of type circle SVG with the properties of a commit
+     * @return {void}
+     */
     addCircleToSvg(commit){
         this._svg.getElementById(commit.id)?.remove();
         this._svg.getElementById("gContainerCommit").appendChild(commit)
     }
+    /**
+     * @name updateLineOfCommit
+     * @memberof DataViewer#
+     * @method
+     * @description Update the line of the commit
+     * @param {Object} dataCommit Object with the properties of the commit
+     * @param {Object} parent Object with the properties of the parent commit
+     * @return {void}
+     */
     updateLineOfCommit(dataCommit,parent){
         const line = this._svg.getElementById(dataCommit.parent+"-"+dataCommit.id);
         line.setAttribute("x1", dataCommit.cx);
@@ -393,9 +572,26 @@ export class DataViewer{
         line.setAttribute("x2", parent.cx);
         line.setAttribute("y2", parent.cy);
     }
+    /**
+     * @name addLineToSvg
+     * @memberof DataViewer#
+     * @method
+     * @description Add the line to the SVG
+     * @param {SVGAElement} line Element of type line SVG with the properties of a line
+     * @return {void}
+     */
     addLineToSvg(line){
         this._svg.getElementById("gContainerPointer").appendChild(line)
     }
+    /**
+     * @name updateTagToSvg
+     * @memberof DataViewer#
+     * @method
+     * @description Update the tag in the SVG
+     * @param {String} tag Tag to identify the tag
+     * @param {Int} x Position in the x axis
+     * @param {Int} y Position in the y axis
+     */
     updateTagToSvg(tag,x,y){
         const width = this.widthText(tag);
         const xRect = x-(width/2);
@@ -404,10 +600,30 @@ export class DataViewer{
         this.animateElement(tagSVG.getElementsByTagName("text")[0],"x","y",x,y);
         this.animateElement(tagSVG.getElementsByTagName("rect")[0],"x","y",xRect,yRect);
     }
+    /**
+     * @name addTagToSvg
+     * @memberof DataViewer#
+     * @method
+     * @description Add the tag to the SVG
+     * @param {SVGTextElement} tag Element of type text SVG with the properties of a tag
+     * @return {void}
+     */
     addTagToSvg(tag){
         this._svg.getElementById(tag.id)?.remove();
         this._svg.getElementById("gContainerTag").appendChild(tag)
     }
+    /**
+     * @name animateElement
+     * @memberof DataViewer#
+     * @method
+     * @description Animate the element in the SVG
+     * @param {HTMLElement} element Element to be animated
+     * @param {String} nameAttributeX Name of the attribute in the x axis to be animated("x" or "cx")
+     * @param {String} nameAttributeY Name of the attribute in the y axis to be animated("y" or "cy")
+     * @param {Int} finalX Final position in the x axis
+     * @param {Int} finalY Final position in the y axis
+     * @return {void}
+     */
     animateElement(element,nameAttributeX,nameAttributeY, finalX, finalY) {
         const initialX = parseFloat(element.getAttribute(nameAttributeX));
         const initialY = parseFloat(element.getAttribute(nameAttributeY));
