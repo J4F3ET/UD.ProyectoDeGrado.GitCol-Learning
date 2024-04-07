@@ -2,330 +2,62 @@
 
 ## Why is this project being made?
 
+This project is initiated to help students learn git commands in a more interactive way by providing them with a platform where they can practice git commands and learn how to use them in real-world scenarios.
 
 ## Content
 
-1. Description
-2. Getting Started
-    - Dependencies
-    - Installation
-    - Usage
-3. Usage
-4. Support
-5. Documentation
+1. [Getting Started](#getting-started)
+    - [Installation](#installation)
+    - [Dependencies](#dependencies)
+    - [Usage](#usage)
+2. [Commits](#commits)
+3. [Documentation](#documentation)
+    - [Commands supported by minimun viable product](#commands-supported-by-minimum-viable-product)
+    - [Possible commands to be implemented in the future](#possible-commands-to-be-implemented-in-the-future)
+4. [Tecnologies](#tecnologies)
 
-## Indice
+## Getting Started
 
-1. [Dependencias](#dependencias)
-2. [Scripts](#scripts)
-3. [Dockers](#dockers)
-4. [Comandos de git que soporta la aplicación](#comandos-de-git-que-soporta-la-aplicación)
-5. [Commits](#commits)
+### Installation
 
-#### JSON PROTOTYPE Ejercicio
-
-Ejercicio
-
-```JSON
-{
- "id": 1,
- "name": "",
- "generator": {
-  "1": "git commit",
-  "2": "..."
- },
- "level": 1,
- "solution": {
-  "1": "git commit",
-  "2": "..."
- },
- "files":["README.md","style.css","index.html"]
-}
-```
-
-> [!NOTE]
-> Prototype del ejercicio
->
-> - challenge: Problema
-> - id: identificador del problema
-> - name: nombre del problema
-> - generator: lista de comando que genera la solución problema
-> - level: nivel del problema
-> - solution: lista de soluciones de problemas
-
-#### JSON PROTOTYPE Sala
-
-Sala
-
-```JSON
-{
-    "id": 1,
-    "name": "",
-    "owner": "",
-    "members": {
-        "1": "user1",
-        "2": "user2"
-    },
-    "challenge":1,
-    "status": "active",
-    "chat": {
-        "1": {
-            "user": "user1",
-            "message": "message1"
-        },
-        "2": {
-            "user": "user2",
-            "message": "message2"
-        }
-    },
-    "code": {
-        "1": {
-            "user": "user1",
-            "code": "code1"
-        },
-        "2": {
-            "user": "user2",
-            "code": "code2"
-        }
-    }
-}
-```
-
-> [!NOTE]
-> Prototype de la sala
->
-> - id: identificador de la sala
-> - name: nombre de la sala
-> - owner: usuario que creo la sala
-> - members: lista de usuarios que pertenecen a la sala
-> - challenge: identificador del problema
-> - status: estado de la sala
-> - chat: lista de mensajes de la sala
-> - code: lista de códigos de la sala
-
-#### JSON PROTOTYPE Generator
-
-```JSON
-{ [
-      {
-        "id": "e137e9b",
-        "tags": [],
-        "message": "first commit",
-        "parent": "initial",
-        "cx": 50,
-        "cy": 330,
-        "branchless": false
-      },
-      {
-        "id": "84c98fe",
-        "parent": "e137e9b",
-        "tags": [
-          "master",
-          "origin/master"
-        ],
-        "cx": 140,
-        "cy": 330,
-        "branchless": false
-      }
-    ]
-}
-```
-
-JSON sacado de [Visualizing Git](https://git-school.github.io/visualizing-git/)
-
-## Dependencias
-
-> [!IMPORTANT]
-> Comando para instalar las dependencias del proyecto.
+In order to install the project, you need to clone the repository and install the dependencies.
 
 ```bash
-npm install --save-dev @babel/core @babel/cli @babel/preset-env @babel/node &&
-npm install express morgan ejs firebase-admin dotenv socket.io swagger-jsdoc swagger-ui-express &&
-npm install -g nodemon
+git clone https://github.com/J4F3ET/UD.ProyectoDeGrado.GitCol-Learning
 ```
 
-### Dependencias de desarrollo
-
-- **Nodemon**: Para reiniciar el servidor cuando se detectan cambios en el código, permite agilizar el desarrollo.
+> [!CAUTION]
+> Is it necessary to install the dependencies of the project and need to have node.js installed on the computer.
 
 ```bash
-npm install -g nodemon
+npm install
 ```
 
-- **Babel**: Para transpilar el código de ES6 a ES5, permite utilizar las nuevas características de JavaScript. Con el fin de que el código sea compatible con navegadores antiguos.
+The commands of the project are the following:
+| Command | Description |
+|---------|-------------|
+| `npm run start` | Run the project in production mode :rocket: |
+| `npm run dev` | Run the project in development mode :wrench: |
+| `npm run docs` | Generate the documentation of the frontend :books: |
 
-```bash
-npm install --save-dev @babel/core @babel/cli @babel/preset-env
-```
+### Dependencies
 
-- **Babel Node**: Para ejecutar el código transpilado por Babel.
+The dependencies of the project are the following:
 
-```bash
-npm install --save-dev @babel/node
-```
+- **Nodemon**: To restart the server when changes are detected in the code, it speeds up development.
+- **Babel**: To transpile the ES6 code to ES5, it allows using the new features of JavaScript. In order for the code to be compatible with older browsers.
+- **Babel Node**: To run the code transpiled by Babel.
+- **Express**: To create the web server.
+- **Morgan**: To display in the console the requests that arrive at the server.
+- **EJS**: To render the views.
+- **Firebase-admin**: To connect the application with the Firebase database.
+- **dotenv**: To load environment variables.
+- **Socket.io**: To create the real-time connection between the server and the client.
+- **Swagger-jsdoc**: To document the API.
+- **Swagger-ui-express**: To visualize the API documentation.
+- **jsDoc**: To document the code.
 
-### Dependencias de producción
-
-- **Express**: Para crear el servidor web.
-
-```bash
-npm install express
-```
-
-- **Morgan**: Para mostrar en consola las peticiones que llegan al servidor.
-
-```bash
-npm install morgan
-```
-
-- **EJS**: Para renderizar las vistas.
-
-```bash
-npm install ejs
-```
-
-- **Firebase-admin**: Para conectar la aplicación con la base de datos de Firebase.
-
-```bash
-npm install firebase-admin --save
-```
-
-- **dotenv**: Para cargar las variables de entorno.
-
-```bash
-npm install --save dotenv
-```
-
-- **Socket.io**: Para crear la conexión en tiempo real entre el servidor y el cliente.
-
-```bash
-npm install socket.io
-```
-
--**Swagger-jsdoc**: Para documentar la API.
-
-```bash
-npm install swagger-jsdoc
-```
-
--**Swagger-ui-express**: Para visualizar la documentación de la API.
-
-```bash
-npm install swagger-ui-express
-```
-
-## Scripts
-
-- **start**: Ejecuta el servidor en modo producción.
-
-```bash
-npm run start
-```
-
-## Dockers
-
-![docker-architecture](./docs/assets/docker-architecture.webp)
-Imagene tomada de [Docker](https://docs.docker.com/get-started/overview/)
-
-Para construir la imagen de docker se debe ejecutar el siguiente comando:
-
-```bash
-docker build . -t gitcol_learning_image
-```
-
-Para ejecutar la imagen de docker se debe ejecutar el siguiente comando:
-
-```bash
-docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_learning_image
-```
-
-## Socket
-
-Un socket es un canal de comunicación bidireccional entre un cliente y un servidor. El servidor crea un socket para cada cliente que se conecta. De esta forma, el servidor puede enviar información a un cliente específico. Y el cliente puede enviar información al servidor.
-![socket](./docs/assets/Socket.png)
-Imagene tomada de [Socket.io](https://socket.io/docs/v4)
-
-### Eventos
-
-Socket.io permite crear eventos personalizados. Los eventos son mensajes que se envían entre el cliente y el servidor. Los eventos se pueden enviar con o sin datos. Pues es un canal de comunicación bidireccional abierta.
-
-Socket.io permite crear salas con las cuales se pueden agrupar sockets. De esta forma, se puede enviar un evento a todos los sockets de una sala específica.
-
-![socket](./docs/assets/SocketRoom.png)
-Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
-
-## Comandos de git que soporta la aplicación
-
-### Modulos que a futuro se implementaran
-
-1. **git init**: Inicializa un repositorio local de git en la carpeta actual.
-2. **git config**: Configura el nombre y el correo electrónico del usuario.
-    - **git config --global user.name "Nombre"**: Configura el nombre del usuario de forma global.
-    - **git config --global user.email "Correo"**: Configura el correo electrónico del usuario de forma global.
-    - **git config user.name "Nombre"**: Configura el nombre del usuario de forma local en el repositorio actual.
-    - **git config user.email "Correo"**: Configura el correo electrónico del usuario de forma local en el repositorio actual.
-    - **git config --list**: Muestra la configuración actual.
-    - **git config --global --unset user.name**: Elimina la configuración del nombre del usuario.
-    - **git config --global --unset user.email**: Elimina la configuración del correo electrónico del usuario.
-3. **git add**: Agrega los archivos al área de preparación.
-4. **git rm**: Elimina los archivos del área de preparación.
-    - **git rm "NombreArchivo"**: Elimina el archivo del área de preparación.
-5. **git commit**: Crea un commit con los archivos del área de preparación y un mensaje.
-    - **git commit -m "Mensaje"**: Crea un commit con los archivos del área de preparación y un mensaje.
-    - **git commit -am "Mensaje"**: Agrega los archivos al área de preparación y crea un commit con los archivos del área de preparación y un mensaje.
-6. **git status**: Muestra el estado actual del repositorio.
-7. **git log**: Muestra el historial de commits.
-8. **git branch**: Muestra las ramas del repositorio.
-    - **git branch "NombreRama"**: Crea una rama con el nombre especificado.
-    - **git branch -d "NombreRama"**: Elimina la rama con el nombre especificado.
-    - **git branch -m "NombreRama"**: Cambia el nombre de la rama actual.
-    - **git branch -a**: Muestra todas las ramas del repositorio.
-    - **git branch -l**: Muestra las ramas del repositorio.
-    - **git branch -r**: Muestra las ramas remotas del repositorio.
-9. **git checkout**: Cambia de rama.
-10. **git switch**: Cambia de rama.
-11. **git merge**: Fusiona dos ramas.
-12. **git push**: Sube los cambios al repositorio remoto.
-13. **git pull**: Descarga los cambios del repositorio remoto.
-14. **git remote**: Muestra los repositorios remotos.
-    - **git remote add "NombreRepositorio" "URLRepositorio"**: Agrega un repositorio remoto.
-    - **git remote remove "NombreRepositorio"**: Elimina un repositorio remoto del repositorio local.
-
-> [!NOTE]
-> **Idea de implementacion**
-> Ya que nosotros no implementamos manejo de archivos la idea es que el comando simule agregar los archivos al área de
->preparación. Con archivos con nombres específicos. Con el fin de que el
->usuario pueda ejecutar los comandos de git.
->
-> - **git add .**: Agrega todos los archivos al área de preparación.
-> - **git add "NombreArchivo"**: Agrega el archivo al área de preparación.
-
-### Modulos implementados
-
-1. [x] **git init**: Inicializa un repositorio local de git en la carpeta actual.
-2. [x] **git commit**: Crea un commit con los archivos del área de preparación y un mensaje.
-    - [x] **git commit -m "Mensaje"**: Crea un commit con los archivos del área de preparación y un mensaje.
-    - [x] **git commit -am "Mensaje"**: Agrega los archivos al área de preparación y crea un commit con los archivos del área de preparación y un mensaje.
-3. [x] **git log**: Muestra el historial de commits.
-    - [x] **git log -n number**: Crea una rama con el nombre especificado.
-4. [x] **git branch**: Muestra las ramas del repositorio.
-    - [x] **git branch "NombreRama"**: Crea una rama con el nombre especificado.
-    - [x] **git branch -d "NombreRama"**: Elimina la rama con el nombre especificado.
-    - [x] **git branch -m "NombreRama"**: Cambia el nombre de la rama actual.
-    - [x] **git branch -a**: Muestra todas las ramas del repositorio.
-    - [x] **git branch -l**: Muestra las ramas del repositorio.
-    - [x] **git branch -r**: Muestra las ramas remotas del repositorio.
-5. [x] **git checkout**: Cambia de rama.
-    - [x] **git checkout -b "NombreRama"**: Crea una rama con el nombre especificado y cambia a la rama creada.
-    - [x] **git checkout -q "NombreRama"**: Cambia a la rama con el nombre especificado, ocultando los mensajes de cambio de rama.
-6. [ ] **git push**: Sube los cambios al repositorio remoto.
-7. [ ] **git pull**: Descarga los cambios del repositorio remoto.
-8. [ ] **git merge**: Fusiona dos ramas.
-
-> [!NOTE]
-> **Modulos MPV**
-> Los modulos implementados son los que se consideran necesarios para el funcionamiento de la aplicación. Con el fin de
->que el usuario pueda ejecutar los comandos de git.
+### Usage
 
 ## Commits
 
@@ -344,3 +76,83 @@ Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
 | **Remove files**                     | feat     | `:fire:`        | feat: :fire: Remove file                   |
 | **Reverting changes**                | revert   | `:rewind:`      | revert: :rewind: I shouldn't do that again |
 | **Improving Performance**            | perf     | `:zap:`         | perf: :zap: Optimizing code                |
+
+## Tecnologies
+
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=010101)![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
+
+## Documentation
+
+The documentation of the project is generated with jsDoc and Swagger-jsdoc.
+
+### Markdown extra documentation
+
+1. [Branching System](./docs/markdown/Branching%20System.md)
+2. [Object prototype](./docs/markdown/Objects%20Prototype.md)
+3. [Communication Design](./docs/markdown/Communication%20Design.md)
+4. [Oauth2](./docs/markdown/Oauth%20Desing.md)
+5. [Prototype Design](./docs/markdown/Prototype%20Designs.md)
+6. [Exercise](./docs/markdown/exercise.md)
+
+### Url Swagger Documentation API REST
+
+- [Swagger Documentation](http://localhost:3000/api-docs)
+
+> [!NOTE]
+> The documentation is generated with Swagger-jsdoc and Swagger-ui-express.
+> Is necessary to run the project to see the documentation.
+> `http://localhost:3000/api-docs`
+
+### Comand generated documentation frontend
+
+```bash
+npm run docs
+```
+
+> [!NOTE]
+> The documentation is generated with jsDoc.
+> Is necessary to run the project to see the documentation.
+> Folder: /docs/jsdocs, open index.html
+
+### Commands supported by minimum viable product
+
+1. [x] **git init**: Inicilization a local git repository in the current folder.
+    - [x] **git init -h**: Show the help of the command.
+2. [x] **git commit**: Create a commit with the files in the staging area and a message.
+    - [x] **git commit -h**: Show the help of the command.
+    - [x] **git commit -m "Message"**: Create a commit with the files in the staging area and a message.
+    - [x] **git commit -am "Message"**: Add the files to the staging area and create a commit with the files in the staging area and a message.
+3. [x] **git log**: Show the commit history.
+    - [x] **git log -h**: Show the help of the command.
+    - [x] **git log -n number**: Show the commit history with the number of commits specified.
+4. [x] **git branch**: Show the branches of the repository.
+    - [x] **git branch -h**: Show the help of the command.
+    - [x] **git branch "BranchName"**: Create a branch with the specified name.
+    - [x] **git branch -d "BranchName"**: Delete the branch with the specified name.
+    - [x] **git branch -m "BranchName"**: Change the name of the current branch.
+    - [x] **git branch -a**: Show all the branches of the repository.
+    - [x] **git branch -l**: Show the branches of the repository.
+    - [x] **git branch -r**: Show the remote branches of the repository.
+5. [x] **git checkout**: Change the branch.
+    - [x] **git checkout -h**: Show the help of the command.
+    - [x] **git checkout -b "BranchName"**: Create a branch with the specified name and change to it.
+    - [x] **git checkout -q "BranchName"**: Change to the branch with the specified name.
+6. [ ] **git push**: Upload the changes to the remote repository.
+    - [ ] **git push -h**: Show the help of the command.
+7. [ ] **git pull**: Download the changes from the remote repository.
+    - [ ] **git pull -h**: Show the help of the command.
+8. [ ] **git merge**: Merge two branches.
+    - [ ] **git merge -h**: Show the help of the command.
+
+### Possible commands to be implemented in the future
+
+1. **git config**: Configura el nombre y el correo electrónico del usuario.
+    - **git config --global user.name "Nombre"**: Configura el nombre del usuario de forma global.
+    - **git config --global user.email "Correo"**: Configura el correo electrónico del usuario de forma global.
+    - **git config user.name "Nombre"**: Configura el nombre del usuario de forma local en el repositorio actual.
+    - **git config user.email "Correo"**: Configura el correo electrónico del usuario de forma local en el repositorio actual.
+    - **git config --list**: Muestra la configuración actual.
+    - **git config --global --unset user.name**: Elimina la configuración del nombre del usuario.
+    - **git config --global --unset user.email**: Elimina la configuración del correo electrónico del usuario.
+    - **git rm "NombreArchivo"**: Elimina el archivo del área de preparación.
+2. **git switch**: Cambia de rama.
