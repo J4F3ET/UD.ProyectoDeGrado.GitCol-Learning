@@ -1,70 +1,26 @@
-# UD.ProyectoDeGrado.GitCol-Learning
+# Git-Col Learning
+
+## Why is this project being made?
+
+
+## Content
+
+1. Description
+2. Getting Started
+    - Dependencies
+    - Installation
+    - Usage
+3. Usage
+4. Support
+5. Documentation
 
 ## Indice
 
-1. [Mokaps](#mokaps)
-2. [Diseño UI/UX](#diseño-uiux)
-3. [Assets](#assets)
-4. [Dependencias](#dependencias)
-5. [Scripts](#scripts)
-6. [Dockers](#dockers)
-7. [Comandos de git que soporta la aplicación](#comandos-de-git-que-soporta-la-aplicación)
-8. [Commits](#commits)
-
-## Mokaps
-
-### [Mokap Screens](https://excalidraw.com/#room=aa8cb898b51ca15e7332,cJnn7SoDPItVCLnpyTbKOA)
-
-![ImagenMokaps](./docs/assets/MokapsScreens.png)
-
-### [Mokap Menus](https://excalidraw.com/#room=799f024d570de905f1eb,IKaxeORRUyZTSAEUkV_AiQ)
-
-![ImagenMokaps](./docs/assets/MokapsMenus.png)
-
-### [Mokap Visualizing Git](https://excalidraw.com/#room=977bcce490f934711f98,bvG7SJZBXeIBiKmduDb3ow)
-
-#### Mokap parte 1
-
-![ImagenMokaps](./docs/assets/MokapsVisualizingGitPart1.png)
-
-#### Mokap parte 2 Local
-
-![ImagenMokaps](./docs/assets/MokapsVisualizingGitPart2Local.png)
-
-#### Mokap parte 2 Remote
-
-![ImagenMokaps](./docs/assets/MokapsVisualizingGitPart2Remote.png)
-
-#### Mokap parte 3
-
-![ImagenMokaps](./docs/assets/MokapsVisualizingGitPart3.png)
-
-### [Mokap Ramificaciones](https://excalidraw.com/#room=3de5a49605badc01e214,Ez-gRLHN1gGFBWBnyPlZkA)
-
-![ImagenMokaps](./docs/assets/MokapRamificaciones.png)
-
-### [Proceso Auth](https://excalidraw.com/#room=f5e9b3946bfb6efa7de6,sX_7Bvm6NW4Vg4j89S0uJA)
-
-![ImagenMokaps](./docs/assets/MokapAuth.png)
-
-## Diseño UI/UX
-
-### Paleta de colores
-
-![Static Badge](https://img.shields.io/badge/%23D45050%20-%23D45050?style=for-the-badge)![Static Badge](https://img.shields.io/badge/%23FA8E5F%20-%23FA8E5F?style=for-the-badge)![Static Badge](https://img.shields.io/badge/%23FACA89%20-%23FACA89?style=for-the-badge)![Static Badge](https://img.shields.io/badge/%2383BD86%20-%2383BD86?style=for-the-badge)![Static Badge](https://img.shields.io/badge/%2354C6B8%20-%2354C6B8?style=for-the-badge)
-
-![Static Badge](https://img.shields.io/badge/%236A95D6%20-%236A95D6%20?style=for-the-badge)![Static Badge](https://img.shields.io/badge/%23C398C8%20-%23C398C8?style=for-the-badge)![Static Badge](https://img.shields.io/badge/%23E891BD%20-%23E891BD?style=for-the-badge)![Static Badge](https://img.shields.io/badge/%23C4BDB7-%23C4BDB7?style=for-the-badge)![Static Badge](https://img.shields.io/badge/%23FFFDF9%20-%23FFFDF9?style=for-the-badge)
-
-## Assets
-
-### Tipografía
-
-- [Virgil](https://virgil.excalidraw.com/)
-- [Roboto](https://fonts.google.com/specimen/Roboto?query=Rob)
-
-### Iconos
-
-### Logo
+1. [Dependencias](#dependencias)
+2. [Scripts](#scripts)
+3. [Dockers](#dockers)
+4. [Comandos de git que soporta la aplicación](#comandos-de-git-que-soporta-la-aplicación)
+5. [Commits](#commits)
 
 #### JSON PROTOTYPE Ejercicio
 

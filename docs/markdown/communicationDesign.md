@@ -1,6 +1,6 @@
 # Communication Design System
 
-![Static Badge](https://img.shields.io/badge/Excalidraw-black?style=flat-square&logo=excalidraw)
+![Static Badge](https://img.shields.io/badge/Excalidraw-black?style=for-the-badge&logo=excalidraw)
 
 This documentation contains the communication design system for the project. The communication design system is created using Excalidraw.
 
@@ -12,10 +12,10 @@ This documentation contains the communication design system for the project. The
 
 This is image shows the general architecture of the system emulate git. It have three parts:
 
-    1. The first part describes part of style of system.
-    2. The second part describes the communication parts of the system.
-        - This part have the componets that exist in the system.
-    3. The third part describe responsabilities of the parts of the system.
+1. The first part describes part of style of system.
+2. The second part describes the communication parts of the system.
+    - This part have the componets that exist in the system.
+3. The third part describe responsabilities of the parts of the system.
 
 ### Architecture Diagram Part 1
 
