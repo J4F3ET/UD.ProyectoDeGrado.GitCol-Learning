@@ -15,37 +15,37 @@
 
 ### [Mokap Screens](https://excalidraw.com/#room=aa8cb898b51ca15e7332,cJnn7SoDPItVCLnpyTbKOA)
 
-![ImagenMokaps](./doc/img/MokapsScreens.png)
+![ImagenMokaps](./docs/img/MokapsScreens.png)
 
 ### [Mokap Menus](https://excalidraw.com/#room=799f024d570de905f1eb,IKaxeORRUyZTSAEUkV_AiQ)
 
-![ImagenMokaps](./doc/img/MokapsMenus.png)
+![ImagenMokaps](./docs/img/MokapsMenus.png)
 
 ### [Mokap Visualizing Git](https://excalidraw.com/#room=977bcce490f934711f98,bvG7SJZBXeIBiKmduDb3ow)
 
 #### Mokap parte 1
 
-![ImagenMokaps](./doc/img/MokapsVisualizingGitPart1.png)
+![ImagenMokaps](./docs/img/MokapsVisualizingGitPart1.png)
 
 #### Mokap parte 2 Local
 
-![ImagenMokaps](./doc/img/MokapsVisualizingGitPart2Local.png)
+![ImagenMokaps](./docs/img/MokapsVisualizingGitPart2Local.png)
 
 #### Mokap parte 2 Remote
 
-![ImagenMokaps](./doc/img/MokapsVisualizingGitPart2Remote.png)
+![ImagenMokaps](./docs/img/MokapsVisualizingGitPart2Remote.png)
 
 #### Mokap parte 3
 
-![ImagenMokaps](./doc/img/MokapsVisualizingGitPart3.png)
+![ImagenMokaps](./docs/img/MokapsVisualizingGitPart3.png)
 
 ### [Mokap Ramificaciones](https://excalidraw.com/#room=3de5a49605badc01e214,Ez-gRLHN1gGFBWBnyPlZkA)
 
-![ImagenMokaps](./doc/img/MokapRamificaciones.png)
+![ImagenMokaps](./docs/img/MokapRamificaciones.png)
 
 ### [Proceso Auth](https://excalidraw.com/#room=f5e9b3946bfb6efa7de6,sX_7Bvm6NW4Vg4j89S0uJA)
 
-![ImagenMokaps](./doc/img/MokapAuth.png)
+![ImagenMokaps](./docs/img/MokapAuth.png)
 
 ## Diseño UI/UX
 
@@ -268,7 +268,7 @@ npm run start
 
 ## Dockers
 
-![docker-architecture](./doc/img/docker-architecture.webp)
+![docker-architecture](./docs/img/docker-architecture.webp)
 Imagene tomada de [Docker](https://docs.docker.com/get-started/overview/)
 
 Para construir la imagen de docker se debe ejecutar el siguiente comando:
@@ -286,7 +286,7 @@ docker run -p 3000:8080 -e PORT=8080 --name gitcol_learning_container gitcol_lea
 ## Socket
 
 Un socket es un canal de comunicación bidireccional entre un cliente y un servidor. El servidor crea un socket para cada cliente que se conecta. De esta forma, el servidor puede enviar información a un cliente específico. Y el cliente puede enviar información al servidor.
-![socket](./doc/img/Socket.png)
+![socket](./docs/img/Socket.png)
 Imagene tomada de [Socket.io](https://socket.io/docs/v4)
 
 ### Eventos
@@ -295,7 +295,7 @@ Socket.io permite crear eventos personalizados. Los eventos son mensajes que se 
 
 Socket.io permite crear salas con las cuales se pueden agrupar sockets. De esta forma, se puede enviar un evento a todos los sockets de una sala específica.
 
-![socket](./doc/img/SocketRoom.png)
+![socket](./docs/img/SocketRoom.png)
 Imagene tomada de [Socket.io](https://socket.io/docs/v4/rooms/)
 
 ## Comandos de git que soporta la aplicación
