@@ -13,7 +13,7 @@
     },
     "opts": {
         "encoding": "utf8",
-        "readme": "./README.md",
+        "readme": "./docs/README_jsDocs.md",
         "tutorials": "./docs/markdown/",
         "destination": "./docs/jsdocs/",
         "recurse": true,
