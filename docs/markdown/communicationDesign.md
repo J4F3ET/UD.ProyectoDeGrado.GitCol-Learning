@@ -81,4 +81,4 @@ This is image describe ideas of parts of the system and the communication betwee
 
 ![Architecture Diagram Part 3](../assests/MokapsVisualizingGitPart3.png)
 
-This is image describe ideas of the responsabilities of the parts of the system. It have the following parts
+This is image describe ideas of the responsabilities of the parts of the system. It have the following parts.
