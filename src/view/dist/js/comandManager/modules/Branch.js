@@ -96,12 +96,14 @@ export class Branch{
         this._logRepository = logRepository;
         this._remoteRepository = remoteRepository;
     }
-    /**
+    /** 
      * @name comand
-     * @description Get the comand of the class
-     * @returns {string} Comand of the class
+     * @type {string}
+     * @description Name of the command
+     * @default branch
+     * @memberof! Branch##
      * @readonly
-     */
+    */
     get comand(){return this._comand}
     /**
      * @name execute
