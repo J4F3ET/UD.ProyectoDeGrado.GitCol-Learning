@@ -2,7 +2,6 @@
 
 ![Static Badge](https://img.shields.io/badge/Excalidraw-black?style=for-the-badge&logo=excalidraw)
 
-
 This documentation contains the prototypes mockups for the project. The prototypes are created using Excalidraw.
 
 ## Palette Colors
