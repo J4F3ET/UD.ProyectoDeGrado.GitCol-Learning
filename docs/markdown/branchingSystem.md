@@ -4,7 +4,7 @@
 
 This documentation contains the branching system for the project. The branching system is created using Excalidraw.
 
-![Branching System](../assests/MokapRamificaciones.png)
+![Branching System](../assets/MokapRamificaciones.png)
 
 ## Case 1
 
@@ -14,7 +14,7 @@ Case happens when the user create commit and possible possition of the commit is
 
 ## Case 2
 
-![Branching System Case 2](../assests/MokapRamificacionesCaso2.png)
+![Branching System Case 2](../assets/MokapRamificacionesCaso2.png)
 
 The second case happend when commit not have a first possition free had to be created in the possible position is in the 80 points in 'x' axis to right and 80 points in 'y' axis to down or up.
 
@@ -22,6 +22,6 @@ The priority possition is the 80 points in 'x' axis to right and 80 points in 'y
 
 ## Case 3
 
-![Branching System Case 3](../assests/MokapRamificacionesCaso3.png)
+![Branching System Case 3](../assets/MokapRamificacionesCaso3.png)
 
 The third case happend when commit not have a first possition free had to be created in the possible position of second case is not possible beacuse the position is occupied and up or down the HEAD is occupied by another commit or branchs then of same second case the priority is of up HEAD but will move to the occupied position to up (80 points to 'y' axis) or down.

@@ -8,7 +8,7 @@ This documentation contains the communication design system for the project. The
 
 ### Architecture Diagram general
 
-![Architecture Diagram](../assests/MokapsVisualizingGit.png)
+![Architecture Diagram](../assets/MokapsVisualizingGit.png)
 
 This is image shows the general architecture of the system emulate git. It have three parts:
 
@@ -19,7 +19,7 @@ This is image shows the general architecture of the system emulate git. It have 
 
 ### Architecture Diagram Part 1
 
-![Architecture Diagram Part 1](../assests/MokapsVisualizingGitPart1.png)
+![Architecture Diagram Part 1](../assets/MokapsVisualizingGitPart1.png)
 
 This is image describe ideas of the style of the system. It have the following parts:
 
@@ -29,7 +29,7 @@ This is image describe ideas of the style of the system. It have the following p
 
 ### Architecture Diagram Part 2 Local
 
-![Architecture Diagram Part 2](../assests/MokapsVisualizingGitPart2Local.png)
+![Architecture Diagram Part 2](../assets/MokapsVisualizingGitPart2Local.png)
 
 This is image describe ideas of parts of the system and the communication between the parts. It have the following parts:
 
@@ -56,7 +56,7 @@ This is image describe ideas of parts of the system and the communication betwee
 
 ### Architecture Diagram Part 2 Remote
 
-![Architecture Diagram Part 2](../assests/MokapsVisualizingGitPart2Remote.png)
+![Architecture Diagram Part 2](../assets/MokapsVisualizingGitPart2Remote.png)
 
 This is image describe ideas of parts of the system and the communication between the parts. It have the following parts:
 
@@ -79,6 +79,6 @@ This is image describe ideas of parts of the system and the communication betwee
 
 ### Architecture Diagram Part 3
 
-![Architecture Diagram Part 3](../assests/MokapsVisualizingGitPart3.png)
+![Architecture Diagram Part 3](../assets/MokapsVisualizingGitPart3.png)
 
 This is image describe ideas of the responsabilities of the parts of the system. It have the following parts.

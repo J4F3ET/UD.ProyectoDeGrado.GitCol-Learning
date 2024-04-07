@@ -6,7 +6,7 @@ This documentation contains the prototypes mockups for the project. The prototyp
 
 ## Navigation Flow
 
-![Navigatin flow](../assests/MokapsScreens.png)
+![Navigatin flow](../assets/MokapsScreens.png)
 
 ### Home Page
 
@@ -30,10 +30,10 @@ The dialog boix contains opcion for the configurate the project.
 
 ### Dialog Box
 
-![Dialog Box](../assests/MokapsMenus.png)
+![Dialog Box](../assets/MokapsMenus.png)
 
 ## Preview Page
 
 ### Teaser
 
-![Preview Teaser](../assests/preview-pages/teaser-preview.png)
+![Preview Teaser](../assets/preview-pages/teaser-preview.png)
