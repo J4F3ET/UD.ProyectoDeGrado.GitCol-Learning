@@ -10,7 +10,8 @@
 	"scripts": {
 		"dev": "nodemon --exec babel-node server.js",
 		"start": "babel-node server.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"docs": "jsdoc -c ./docs/jsdoc.json"
 	},
 	"author": "Danna He <dhsepulvedas@udistrital.edu.co>(https://github.com/Chocolatamargo2607), Jafet Stiven <jslopezz@udistrital.edu.co> (https://github.com/J4F3ET)",
 	"license": "ISC",
@@ -29,6 +30,7 @@
 		"@babel/cli": "^7.23.4",
 		"@babel/core": "^7.23.7",
 		"@babel/node": "^7.22.19",
-		"@babel/preset-env": "^7.23.8"
+		"@babel/preset-env": "^7.23.8",
+		"clean-jsdoc-theme": "^4.2.18"
 	}
 }

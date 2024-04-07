@@ -87,12 +87,12 @@ The documentation of the project is generated with jsDoc and Swagger-jsdoc.
 
 ### Markdown extra documentation
 
-1. [Branching System](./docs/markdown/Branching%20System.md)
-2. [Object prototype](./docs/markdown/Objects%20Prototype.md)
-3. [Communication Design](./docs/markdown/Communication%20Design.md)
-4. [Oauth2](./docs/markdown/Oauth%20Desing.md)
-5. [Prototype Design](./docs/markdown/Prototype%20Designs.md)
-6. [Exercise](./docs/markdown/exercise.md)
+1. [Branching System](./tutorial-Branching%20System.html)
+2. [Object prototype](./tutorial-Objects%20Prototype.html)
+3. [Communication Design](./tutorial-Communication%20Design.html)
+4. [Oauth2](./tutorial-Oauth%20Desing.html)
+5. [Prototype Design](./tutorial-Prototype%20Designs.html)
+6. [Exercise](./tutorial-exercise.html)
 
 ### Url Swagger Documentation API REST
 

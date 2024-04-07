@@ -1,35 +1,84 @@
-import { currentHead } from '../../util.js';
+import { currentHead,getCommitStartPoint,createMessage } from './utils.js';
+/**
+ * @class
+ * @classdesc This class is responsible for switching branches or restoring working tree files
+ * @requires utils
+ */
 export class Checkout {
+    _comand = 'checkout';
     /**
-     * @name constructor
-     * @description Constructor to the class
-     * @param {string} dataRepository Reference to the repository
-     * @param {string} logRepository Reference to the log repository
-    */
+     * @typedef {Object} _configurationsOfCheckout
+     * @memberof! Checkout#
+     * @description Configurations of the command checkout. The configuration that supported by the command
+     * @property {Object<Boolean,Function>} q Quiet, only print error and warning messages; all other output will be suppressed. Default is false. It is configured by the option '-q' or '--quiet'
+     * @property {Boolean} q.useConfig Indicate that the quiet option was used. Default is false
+     * @property {Function} q.callback Callback to set the quiet option to true
+     * @property {Object<String,Function>} b Branch, create a new branch with the name <new-branch>
+     * @property {String} b.nameBranch Name of the new branch
+     * @property {Function} b.callback Callback to set the name of the branch
+     * @property {Object<Function>} h Help of the command. The property is the similitude with Git. [-h | --help]
+     * @property {Function} h.callback Callback do responsability of generate a message in the console. With items as the concept, syntax and configurations.
+     */
+    _configurations = {
+        q:{
+            useConfig: false,
+            callback: ()=> this._configurations.q.useConfig = true
+        },
+        b:{
+            nameBranch: null,
+            callback: (name=null)=>this._configurations.b.nameBranch = name
+        },
+        h:{
+            callback:()=>this.callbackHelp()
+        }
+    };
+    /**
+     * @type {string}
+     * @description Name of the repository
+     * @default 'repository'
+     * @memberof! Checkout#
+     * @readonly
+     */
+    _dataRepository = 'repository';
+    /**
+     * @type {string}
+     * @description Name of the log
+     * @default 'log'
+     * @memberof! Checkout#
+     * @readonly
+     */
+    _logRepository = 'log';
+    /**
+     * @constructor
+     * @param {string} dataRepository Name of the repository
+     * @param {string} logRepository Name of the log
+     * @description Create a new instance of Checkout
+     * @memberof! Checkout#
+     * @example new Checkout('repository','log')
+     * @example new Checkout()
+     * @example new Checkout('repository')
+     * @example new Checkout('repository','log')
+     */
     constructor(dataRepository = "repository",logRepository = "log") {
-        this.comand = "checkout";
         this._dataRepository = dataRepository;
         this._logRepository = logRepository;
-        this._configurations = {
-            q:{
-                useConfig: false,
-                callback: ()=> this._configurations.q.useConfig = true
-            },
-            b:{
-                nameBranch: null,
-                callback: (name=null)=>this._configurations.b.nameBranch = name
-            },
-            h:{
-                callback:this.callbackHelp
-            }
-        };
     }
+    /**
+     * @name comand
+     * @description Get the name of the command
+     * @returns {string} Name of the command
+     * @memberof! Checkout#
+    */
+    get comand (){return this._comand}
     /** 
      * @name execute
      * @description Execute the command
-     * @param {Array} dataComand Data of the command
+     * @param {string[]} dataComand Data of the command
      * @throws {Error} The repository does not exist
      * @throws {Error} The repository does not have commits
+     * @throws {Error} The start-point does not exist
+     * @method
+     * @memberof! Checkout#
     */
     execute(dataComand){
         //console.time('Execution time of checkout command');
@@ -39,7 +88,7 @@ export class Checkout {
         if(storage.commits.length == 0)
             throw new Error('The repository does not have commits');
         this.resetConfig;
-        this.resolveConfig(dataComand);
+        this.resolveConfigurations(dataComand);
         const {branch,commit} = this.resolveObjetiveToGo(storage.commits,dataComand);
         if(commit === undefined)
             throw new Error(`The star-point "${dataComand.pop()}" does not exist`);
@@ -58,17 +107,19 @@ export class Checkout {
             storage.commits = this.createBranch(storage.commits,this._configurations.b.nameBranch);
             storage.information.head = this._configurations.b.nameBranch;
         }
-        this.createMessageInfo(`Switched to '${this._configurations.b.nameBranch??branch??commit.id}'`);
+        createMessage('info',`Switched to '${this._configurations.b.nameBranch??branch??commit.id}'`);
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
         //console.timeEnd('Execution time of checkout command');
     }
     /**
-     * @name resolveConfig
+     * @name resolveConfigurations
+     * @method
+     * @memberof! Checkout#
      * @description Resolve the configurations of the command
      * @param {string[]} dataComand Data of the command
      * @returns {string} The commit id to go or the name of the branch
      */
-    resolveConfig(dataComand){
+    resolveConfigurations(dataComand){
         let clearConfig = new Map();
         dataComand.forEach((data,index) => {
             if(data.substring(0,1) == '-')
@@ -85,25 +136,26 @@ export class Checkout {
         });
     }
     /**
-     * @name createMessageInfo
-     * @description Create a new message in the log
-     * @param {string} message Message to add
+     * @name resolveObjetiveToGo
+     * @method
+     * @memberof! Checkout#
+     * @description Resolve the objective to go, the branch or the commit
+     * @param {JSON[]} commits Array of commits
+     * @param {string[]} dataComand Data of the command
+     * @returns {{branch:(string|null),commit:JSON}} The name of the branch  or null and the object of the commit
      */
-    createMessageInfo(message){
-        if(this._configurations.q.useConfig)
-            return
-        const log = JSON.parse(localStorage.getItem(this._logRepository));
-        log.push({tag: 'info',message: message});
-        localStorage.setItem(this._logRepository,JSON.stringify(log));
-    }
     resolveObjetiveToGo(commits,dataComand){
-        const startPoint = dataComand.filter(value => value.substring(0,1) !== '-').pop();
+        const commitStartPoint = getCommitStartPoint(dataComand,commits);
+        const startPoint = dataComand[dataComand.length-1];
+        if(commitStartPoint === undefined)
+            throw new Error(`The start-point ${startPoint} does not exist`);
         const commitByBranch = commits.find(commit => commit.tags.includes(startPoint));
-        const commitObjetive = commitByBranch??commits.find(commit => commit.id === startPoint);
-        return {branch:commitByBranch?startPoint:null,commit:commitObjetive};
+        return {branch:commitByBranch?startPoint:null,commit:commitStartPoint};
     }
     /**
      * @name removeHeadTag
+     * @method
+     * @memberof! Checkout#
      * @description Remove the tag HEAD from the commit and remove the class "checked-out"
      * @param {JSON[]} commits Array of commits
      * @param {JSON} head Commit to remove the tag
@@ -118,6 +170,8 @@ export class Checkout {
     }
     /**
      * @name goToCommit
+     * @method
+     * @memberof! Checkout#
      * @description Change the current head to the commit
      * @param {JSON[]} commits Array of commits
      * @param {string} id Id of the commit
@@ -136,6 +190,8 @@ export class Checkout {
     }
     /**
      * @name createBranch
+     * @method
+     * @memberof! Checkout#
      * @description Create a new branch in the repository
      * @param {JSON[]} commits Array of commits
      * @param {string} name Name of the new branch
@@ -154,6 +210,8 @@ export class Checkout {
     }
     /**
      * @name changeDetachedCommitToCommit
+     * @method
+     * @memberof! Checkout#
      * @description Change the class of the commit "detached-head" recursively to the parent commit
      * @param {JSON} commit Commit to change the class
      * @param {JSON[]} commits Array of commits
@@ -175,6 +233,9 @@ export class Checkout {
     /**
      * @name callbackHelp
      * @description Callback to show the help
+     * @memberof! Checkout#
+     * @throws {Error} Throw a error to stop the execution of the command
+     * @callback callbackHelp
      */
     callbackHelp=()=>{
         const message = `
@@ -191,12 +252,14 @@ export class Checkout {
             <li class="help">-q, --quiet&nbsp;&nbsp;&nbsp;Only print error and warning messages; all other output will be suppressed.</li>
             <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>`
-        this.createMessageInfo(message);
+        createMessage('info',message);
         throw new Error('');
     }
     /**
      * @name resetConfig
      * @description Reset the configurations
+     * @memberof! Checkout#
+     * @callback resetConfig
      */
     resetConfig=()=>{
         this._configurations.q.useConfig = false;

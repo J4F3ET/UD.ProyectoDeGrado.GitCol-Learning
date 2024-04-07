@@ -1,68 +1,107 @@
+/**
+ * @class
+ * @classdesc Class to manage the commands
+ */
 export class ComandManager {
-    constructor() {
-        this.comands = new Map();
-        this.shellCommands={
-            'clear':()=>localStorage.setItem('log',JSON.stringify([])),
-            'help': ()=>this.callBackHelp()
-        };
-    }
     /**
-     * Add a command to the command manager
+     * @memberof ComandManager#
+     * @name _comands
+     * @member
+     * @description Map of the commands
+     * @type {Map<String,Object>}
+    */
+    _comands = new Map();
+    /**
+     * @memberof ComandManager#
+     * @name _shellCommands
+     * @member
+     * @description Map of the shell commands
+     * @type {Object<String,Function>}
+     * @property {Function} clear Clear the log
+     * @property {Function} help Show the help message
+     */
+    _shellCommands = {
+        'clear':()=>localStorage.setItem('log',JSON.stringify([])),
+        'help': ()=>this.callBackHelp()
+    };
+    /**
+     * @constructor
+     * @description Create a new instance of the ComandManager
+     */
+    constructor(){}
+    /**
+     * @memberof ComandManager#
+     * @method
+     * @name addComand
+     * @description Add a command to the command manager
      * @param {String} comand
      * @param {Object} module
      */
     addComand(comand,module){
-        this.comands.set(comand,module);
+        this._comands.set(comand,module);
     }
     /**
+     * @memberof ComandManager#
      * @name callBackHelp
+     * @callback callBackHelp
      * @description Generate a help message with all the commands
      * @returns {void}
      */
     callBackHelp(){
         let message = `<h5 class="help">Commands shell</h5>`
-        Object.keys(this.shellCommands).forEach(key=>message+=`<p class="help">>${key}</p>`);
+        Object.keys(this._shellCommands).forEach(key=>message+=`<p class="help">>${key}</p>`);
         message += `<h5 class="help">Commands git</h5>`
-        this.comands.keys().forEach(key=>message+=`<p class="help">>git ${key}</p>`);
+        this._comands.keys().forEach(key=>message+=`<p class="help">>git ${key}</p>`);
         message += `<p class="help">More information using 'git &lt;comand&gt; [-h|--help]'</p>`
         this.createMessage("info",message); 
     }
     /**
-     * Remove a command from the command manager
-     * @param {String} comand
+     * @memberof ComandManager#
+     * @method
+     * @name removeComand
+     * @description Remove a command from the command manager
+     * @param {String} comand key of the command to be removed
      */
     removeComand(comand) {
-        this.comands.delete(comand);
+        this._comands.delete(comand);
     }
     /**
-     * Get all the commands
+     * @memberof ComandManager#
+     * @method
+     * @name getComands
+     * @description Get all the commands
      * @returns {Array<String>}
      */
     getComands() {
-        return Array.from(this.comands.keys());
+        return Array.from(this._comands.keys());
     }
     /**
-     * Execute a command
-     * @param {String} command 
-     * @param {String[]} config
-     * @returns {Promise<Boolean>}
+     * @description Execute a command
+     * @name executeCommand
+     * @memberof ComandManager#
+     * @method
+     * @param {String} sentence Key of the command, it is the command to be executed without the 'git' word
+     * @param {String} command Command to be executed with the 'git' word
+     * @param {String[]} config Configuration of the command to be executed
      * @throws {Error} Comand not found
      * @throws {Error} Error in the command execution
      */
     executeCommand(sentence,command, config){
-        if (this.comands.has(command)) {
+        if (this._comands.has(command)) {
             this.verifyComand(sentence);
-            const commandModule = this.comands.get(command);
+            const commandModule = this._comands.get(command);
             return commandModule.execute(config);
         }
-        if(this.shellCommands[sentence]){
-            this.shellCommands[sentence]();
+        if(this._shellCommands[sentence]){
+            this._shellCommands[sentence]();
             return
         }
         throw new Error('Command not found');
     }
     /** 
-     * Create a message and save it in the local storage
+     * @memberof ComandManager#
+     * @method
+     * @description Create a message and save it in the local storage
      * @name createMessage
      * @param {String} tag Tag of the message
      * @param {String} message Message to be saved
@@ -76,6 +115,8 @@ export class ComandManager {
     }
     /**
      * @name verifyComand
+     * @memberof ComandManager#
+     * @method
      * @description Verify if the comand is valid syntax
      * @param {String} comand 
      * @throws {Error} The command is empty
