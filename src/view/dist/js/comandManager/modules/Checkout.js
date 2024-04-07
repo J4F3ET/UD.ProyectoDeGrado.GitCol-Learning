@@ -142,7 +142,7 @@ export class Checkout {
      * @description Resolve the objective to go, the branch or the commit
      * @param {JSON[]} commits Array of commits
      * @param {string[]} dataComand Data of the command
-     * @returns {{branch:string|null,commit:JSON}} The name of the branch  or null and the object of the commit
+     * @returns {{branch:(string|null),commit:JSON}} The name of the branch  or null and the object of the commit
      */
     resolveObjetiveToGo(commits,dataComand){
         const commitStartPoint = getCommitStartPoint(dataComand,commits);
