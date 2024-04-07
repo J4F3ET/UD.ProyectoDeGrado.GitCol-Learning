@@ -2,7 +2,6 @@
 
 ![Static Badge](https://img.shields.io/badge/Excalidraw-black?style=for-the-badge&logo=excalidraw)
 
-
 This documentation contains the branching system for the project. The branching system is created using Excalidraw.
 
 ![Branching System](../assets/MokapRamificaciones.png)
