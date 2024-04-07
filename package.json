@@ -11,7 +11,7 @@
 		"dev": "nodemon --exec babel-node server.js",
 		"start": "babel-node server.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"doc": "jsdoc -c ./doc/jsdoc.json"
+		"docs": "jsdoc -c ./docs/jsdoc.json"
 	},
 	"author": "Danna He <dhsepulvedas@udistrital.edu.co>(https://github.com/Chocolatamargo2607), Jafet Stiven <jslopezz@udistrital.edu.co> (https://github.com/J4F3ET)",
 	"license": "ISC",
