@@ -98,7 +98,7 @@ function getCommitStartPoint(dataComand,commits){
  * @param {String} message Message to be added to the log
  * @example createMessage('info','<div class="files"><h5>Add files to the commit</h5><ul><li>>index.html</li><li>>style.css</li><li>>script.js</li></ul></div>')
  */
-function createMessage(tag,message){
+function createMessage(tag='info',message){
     if(localStorage.getItem('log')===null)
         return;
     const log = JSON.parse(localStorage.getItem('log'));
