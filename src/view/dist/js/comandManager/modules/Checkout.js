@@ -87,7 +87,7 @@ export class Checkout {
         const storage = JSON.parse(localStorage.getItem(this._dataRepository))
         if(storage.commits.length == 0)
             throw new Error('The repository does not have commits');
-        this.resetConfig;
+        this.resetConfig();
         this.resolveConfigurations(dataComand);
         const {branch,commit} = this.resolveObjetiveToGo(storage.commits,dataComand);
         if(commit === undefined)
