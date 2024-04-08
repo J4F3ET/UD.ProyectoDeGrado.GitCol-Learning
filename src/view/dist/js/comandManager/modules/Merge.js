@@ -1,4 +1,4 @@
-import { createMessage,findAllParents } from "./utils"
+import { createMessage,currentHead,findAllParents, getCommitStartPoint } from "./utils"
 /**
  * @class
  * @classesc Join two or more development histories together
@@ -60,6 +60,16 @@ export class Merge {
             throw new Error('The repository is not initialized');
         if(storage.commits.length === 0)
             throw new Error('There are no branch master');
+        this.resolveConfiguration(dataComand);
+        const commitFetch = getCommitStartPoint(dataComand, storage.commits);
+        if(commitFetch === null)
+            throw new Error('The commit does not exist');
+        const parentsCommitFetch = findAllParents(storage.commits, commitFetch);
+        const commitHead = currentHead(storage.commits);
+        const parentsCommitHead = findAllParents(storage.commits, commitHead);
+        
+
+
     }
     /**
      * @memberof Merge#
@@ -69,10 +79,8 @@ export class Merge {
      * @param {string[]} dataComand
      */
     resolveConfiguration(dataComand){
-        if(dataComand.includes('-h')){
+        if(dataComand.includes('-h'))
             this._configurations.h.callback();
-            return;
-        }
     }
     /**
      * @memberof Merge#
@@ -93,6 +101,8 @@ export class Merge {
         <ul>
             <li><p class="help">-h,--help &nbsp;&nbsp;&nbsp;Show the message</p></li>
         </ul>`;
+        createMessage(message);
+        throw new Error('');
     }
 }
 
