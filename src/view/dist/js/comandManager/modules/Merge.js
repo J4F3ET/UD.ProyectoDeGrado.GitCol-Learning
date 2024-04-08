@@ -1,7 +1,7 @@
-import { createMessage } from "./utils"
+import { createMessage,findAllParents } from "./utils"
 /**
  * @class
- * @classesc Class responsible for managing the merge command of git in the terminal
+ * @classesc Join two or more development histories together
  * @requires utils
  */
 export class Merge {
@@ -49,18 +49,51 @@ export class Merge {
      * @memberof Merge#
      * @name execute
      * @method
-     * @description
+     * @description Execute the merge command
      * @param {string[]} dataComand
+     * @throws {Error} The repository is not initialized
+     * @throws {Error} There are no branch master
      */
-    execute(dataComand){}
+    execute(dataComand){
+        let storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        if(!storage)
+            throw new Error('The repository is not initialized');
+        if(storage.commits.length === 0)
+            throw new Error('There are no branch master');
+    }
     /**
      * @memberof Merge#
      * @name resolveConfiguration
      * @method
-     * @description
+     * @description Resolve the configurations of the merge
      * @param {string[]} dataComand
      */
-    resolveConfiguration(dataComand){}
+    resolveConfiguration(dataComand){
+        if(dataComand.includes('-h')){
+            this._configurations.h.callback();
+            return;
+        }
+    }
+    /**
+     * @memberof Merge#
+     * @name callbackHelp
+     * @callback Merge~callbackHelp
+     * @description Show the message of help
+     * @param {string} message
+     */
+    callbackHelp = ()=>{
+        let message = `
+        <h5>Concept</h5>
+        <p class="help">Join two or more development histories together</p>
+        <p class="help"><b>Start-point:</b> Can be a commit id or branch name</p>
+        <h5>Syntax</h5>
+        <p class="help">git merge <start-point></p>
+        <p class="help">git merge -h</p>
+        <h5>Configurations</h5>
+        <ul>
+            <li><p class="help">-h,--help &nbsp;&nbsp;&nbsp;Show the message</p></li>
+        </ul>`;
+    }
 }
 
     
