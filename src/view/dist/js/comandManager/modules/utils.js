@@ -336,8 +336,49 @@ function deleteCommitsRecursivelyUntil(commits,commitObj,pointsObjetive){
  * @param {Object[]} commits Data of the local storage of the repository
  * @returns {JSON} Data of the current head
  */
-export function currentHead(commits) {
+function currentHead(commits) {
     return commits.find(element => element.tags.includes('HEAD')); 
+}
+/**
+ * @name changeDetachedCommitToCommit
+ * @function
+ * @memberof! utils
+ * @description Change the class of the commit "detached-head" recursively to the parent commit
+ * @param {JSON} commit Commit to change the class
+ * @param {JSON[]} commits Array of commits
+ * @returns {JSON[]} Array of commits with the new class
+ */
+function changeDetachedCommitToCommit(commit,commits){
+    if(!commit.class.includes("detached-head"))
+        return commits
+    let parent;
+    const newListCommits = commits.map(c=>{
+        if(c.id == commit.id)
+            c.class = c.class.filter(item=> item !="detached-head")
+        if(c.id == commit.parent)
+            parent = c
+        return c
+    })
+    return this.changeDetachedCommitToCommit(parent,newListCommits);
+}
+/**
+ * @name updateHead
+ * @function
+ * @memberof utils
+ * @description Update the head of the repository
+ * @param {JSON[]} commits Array of commits
+ * @param {JSON} oldHead Old head of the repository
+ * @param {JSON} newHead New head of the repository
+ * @returns {JSON[]} Array of commits updated
+ */
+function updateHead(commits,oldHead,newHead){
+    newHead.tags.push('HEAD');
+    oldHead.tags = oldHead.tags.filter(tag => tag != 'HEAD');
+    newHead.class.push('checked-out');
+    oldHead.class = oldHead.class.filter(classC => classC != 'checked-out');
+    commits = updateCommitToCommits(commits,newHead);
+    commits = updateCommitToCommits(commits,oldHead);
+    return commits;
 }
 export {
     removeTags,
@@ -352,5 +393,7 @@ export {
     getCommitStartPoint,
     deleteCommitsRecursivelyUntil,
     findAllExceptionCommitsToDelete,
-    createCod
+    createCod,
+    changeDetachedCommitToCommit,
+    currentHead
 }
