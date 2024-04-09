@@ -1,4 +1,4 @@
-import { currentHead,getCommitStartPoint,createMessage } from './utils.js';
+import { currentHead,getCommitStartPoint,createMessage,changeDetachedCommitToCommit} from './utils.js';
 /**
  * @class
  * @classdesc This class is responsible for switching branches or restoring working tree files
@@ -205,30 +205,8 @@ export class Checkout {
         head.tags.push(name);
         commits.push(head);
         if(head.class.includes("detached-head"))
-            commits = this.changeDetachedCommitToCommit(head,commits)
+            commits = changeDetachedCommitToCommit(head,commits)
         return commits;
-    }
-    /**
-     * @name changeDetachedCommitToCommit
-     * @method
-     * @memberof! Checkout#
-     * @description Change the class of the commit "detached-head" recursively to the parent commit
-     * @param {JSON} commit Commit to change the class
-     * @param {JSON[]} commits Array of commits
-     * @returns {JSON[]} Array of commits with the new class
-     */
-    changeDetachedCommitToCommit(commit,commits){
-        if(!commit.class.includes("detached-head"))
-            return commits
-        let parent;
-        const newListCommits = commits.map(c=>{
-            if(c.id == commit.id)
-                c.class = c.class.filter(item=> item !="detached-head")
-            if(c.id == commit.parent)
-                parent = c
-            return c
-        })
-        return this.changeDetachedCommitToCommit(parent,newListCommits);
     }
     /**
      * @name callbackHelp
