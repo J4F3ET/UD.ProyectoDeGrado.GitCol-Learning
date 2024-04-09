@@ -1,4 +1,4 @@
-import { createMessage,currentHead,findAllParents, getCommitStartPoint } from "./utils"
+import { createMessage,currentHead,findAllParents, getCommitStartPoint,createRegister, removeTags } from "./utils"
 /**
  * @class
  * @classesc Join two or more development histories together
@@ -64,13 +64,52 @@ export class Merge {
         const commitFetch = getCommitStartPoint(dataComand, storage.commits);
         if(commitFetch === null)
             throw new Error('The commit does not exist');
-        const parentsCommitFetch = findAllParents(storage.commits, commitFetch);
+        const parentsCommitFetch = findAllParents(storage.commits, commitFetch).map(commit=>commit.id);
         const commitHead = currentHead(storage.commits);
-        const parentsCommitHead = findAllParents(storage.commits, commitHead);
-        
-
-
+        const parentsCommitHead = findAllParents(storage.commits, commitHead).map(commit=>commit.id);
+        if(parentsCommitHead.includes(commitFetch.id))
+            throw new Error('Already up to date');
+        if(parentsCommitFetch.includes(commitHead.id)){
+            
+        }
     }
+    /**
+     * @memberof Merge#
+     * @name resolveMovilityTag
+     * @method
+     * @description Resolve the movility tag in case that the commit fetch is a parent of the commit head
+     * @param {Object} storage Data of the repository
+     * @param {JSON} commitFetch Commit fetch
+     * @param {JSON} commitHead Commit head
+     * @returns {Object} newStorage
+     */
+    resolveMovilityTag(storage, commitFetch, commitHead,startPoint){
+        if(!commitFetch.tags.includes(startPoint)){
+            //Start point isn't a tag(branch)
+            if(commitHead.class.includes('detached-head')){
+                // The head is detached and the start point isn't a tag(branch)
+            }
+            // The head isn't detached and the start point isn't a tag(branch)
+        }
+        // Start point is a tag(branch)
+        if(commitHead.class.includes('detached-head')){
+            // The head is detached and the start point is a tag(branch)
+        }
+        // The head isn't detached and the start point is a tag(branch)
+    }
+    /**
+     * @memberof Merge#
+     * @name resolveCreateRegister
+     * @method
+     * @description Resolve the creation of the register in case that the commit fetch isn't parent of the commit head
+     * @param {Object} storage Data of the repository
+     * @param {JSON} commitFetch Commit fetch
+     * @param {JSON} commitHead Commit head
+     * @returns {Object} newStorage
+     */
+    resolveCreateRegister(storage, commitFetch, commitHead,startPoint){
+    }
+
     /**
      * @memberof Merge#
      * @name resolveConfiguration
