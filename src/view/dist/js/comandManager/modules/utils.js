@@ -279,7 +279,6 @@ function createRegister(commits,parent,information,message){
         classList.push("detached-head");
     }
     const response = resolveLocationCommit(commits,parent.cx,parent.cy);
-    console.log(information);
     return {commits:(response.commits),commit:{
         id: createCod(),
         message,
