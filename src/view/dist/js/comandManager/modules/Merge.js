@@ -1,4 +1,13 @@
-import { createMessage,currentHead,findAllParents, getCommitStartPoint,createRegister, removeTags } from "./utils"
+import { 
+    createMessage,
+    currentHead,
+    findAllParents,
+    getCommitStartPoint,
+    createRegister,
+    removeTags,
+    changeDetachedCommitToCommit,
+    updateHead
+} from "./utils"
 /**
  * @class
  * @classesc Join two or more development histories together
@@ -69,9 +78,11 @@ export class Merge {
         const parentsCommitHead = findAllParents(storage.commits, commitHead).map(commit=>commit.id);
         if(parentsCommitHead.includes(commitFetch.id))
             throw new Error('Already up to date');
-        if(parentsCommitFetch.includes(commitHead.id)){
-            
-        }
+        if(parentsCommitFetch.includes(commitHead.id))
+            storage = this.resolveMovilityTag(storage, commitFetch, commitHead,dataComand.pop());
+        else
+            storage = this.resolveCreateRegister(storage, commitFetch, commitHead,dataComand.pop());
+        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
     /**
      * @memberof Merge#
@@ -84,18 +95,16 @@ export class Merge {
      * @returns {Object} newStorage
      */
     resolveMovilityTag(storage, commitFetch, commitHead,startPoint){
-        if(!commitFetch.tags.includes(startPoint)){
-            //Start point isn't a tag(branch)
-            if(commitHead.class.includes('detached-head')){
-                // The head is detached and the start point isn't a tag(branch)
-            }
-            // The head isn't detached and the start point isn't a tag(branch)
+        if(commitFetch.class.includes('detached-head')){
+            storage.commits = changeDetachedCommitToCommit(commitFetch, storage.commits);
         }
-        // Start point is a tag(branch)
-        if(commitHead.class.includes('detached-head')){
-            // The head is detached and the start point is a tag(branch)
+        if(commitHead.tags.includes(startPoint)){
+            commitFetch.tags.push(startPoint);
+            commitHead.tags = removeTags(startPoint,commitHead.tags);
         }
         // The head isn't detached and the start point is a tag(branch)
+        storage.commits = updateHead(storage.commits,commitHead, commitFetch.id);
+        return storage;
     }
     /**
      * @memberof Merge#
@@ -108,6 +117,7 @@ export class Merge {
      * @returns {Object} newStorage
      */
     resolveCreateRegister(storage, commitFetch, commitHead,startPoint){
+        console.log('create register');
     }
 
     /**
