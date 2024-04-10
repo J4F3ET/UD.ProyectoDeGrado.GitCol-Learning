@@ -6,8 +6,9 @@ import {
     createRegister,
     removeTags,
     changeDetachedCommitToCommit,
-    updateHead
-} from "./utils"
+    updateHeadCommit,
+    moveTagToCommit
+} from "./utils.js"
 /**
  * @class
  * @classesc Join two or more development histories together
@@ -95,15 +96,16 @@ export class Merge {
      * @returns {Object} newStorage
      */
     resolveMovilityTag(storage, commitFetch, commitHead,startPoint){
-        if(commitFetch.class.includes('detached-head')){
-            storage.commits = changeDetachedCommitToCommit(commitFetch, storage.commits);
-        }
-        if(commitHead.tags.includes(startPoint)){
-            commitFetch.tags.push(startPoint);
-            commitHead.tags = removeTags(startPoint,commitHead.tags);
-        }
-        // The head isn't detached and the start point is a tag(branch)
-        storage.commits = updateHead(storage.commits,commitHead, commitFetch.id);
+        let commits = storage.commits;
+        if(!storage.information.head.includes('detached')){
+            commits =  moveTagToCommit(commits,commitHead,commitFetch,storage.information.head);
+            if(commitFetch.class.includes('detached-head'))
+                commits = changeDetachedCommitToCommit(commitFetch,commits);
+            console.log('movility tag');
+        }else
+            storage.information.head = 'detached to '+commitFetch.id;
+        commits = updateHeadCommit(commits,commitHead, commitFetch);
+        storage.commits = commits;
         return storage;
     }
     /**
@@ -118,6 +120,7 @@ export class Merge {
      */
     resolveCreateRegister(storage, commitFetch, commitHead,startPoint){
         console.log('create register');
+        return storage;
     }
 
     /**
