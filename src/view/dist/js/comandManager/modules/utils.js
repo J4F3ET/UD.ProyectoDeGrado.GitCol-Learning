@@ -395,5 +395,6 @@ export {
     findAllExceptionCommitsToDelete,
     createCod,
     changeDetachedCommitToCommit,
-    currentHead
+    currentHead,
+    updateHead
 }
