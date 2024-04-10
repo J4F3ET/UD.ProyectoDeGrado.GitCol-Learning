@@ -49,7 +49,7 @@ function findAllChildrens(commits,id,childrens = []){
         return childrens;
     childrensFisrtGen.forEach(commit => {
         childrens.push(commit);
-        this.findAllChildrens(commits,commit.id,childrens);
+        findAllChildrens(commits,commit.id,childrens);
     });
     return childrens;
 }
@@ -359,10 +359,10 @@ function changeDetachedCommitToCommit(commit,commits){
             parent = c
         return c
     })
-    return this.changeDetachedCommitToCommit(parent,newListCommits);
+    return changeDetachedCommitToCommit(parent,newListCommits);
 }
 /**
- * @name updateHead
+ * @name updateHeadCommit
  * @function
  * @memberof utils
  * @description Update the head of the repository
@@ -371,13 +371,31 @@ function changeDetachedCommitToCommit(commit,commits){
  * @param {JSON} newHead New head of the repository
  * @returns {JSON[]} Array of commits updated
  */
-function updateHead(commits,oldHead,newHead){
+function updateHeadCommit(commits,oldHead,newHead){
     newHead.tags.push('HEAD');
     oldHead.tags = oldHead.tags.filter(tag => tag != 'HEAD');
     newHead.class.push('checked-out');
     oldHead.class = oldHead.class.filter(classC => classC != 'checked-out');
     commits = updateCommitToCommits(commits,newHead);
     commits = updateCommitToCommits(commits,oldHead);
+    return commits;
+}
+/**	
+ * @name moveTagToCommit
+ * @function
+ * @memberof utils
+ * @description Move a tag to a commit
+ * @param {JSON[]} commits Array of commits
+ * @param {JSON} startCommit Commit where the tag is located
+ * @param {JSON} destinationCommit Commit where the tag is going to be moved
+ * @param {String} tag Tag to be moved
+ * @returns {JSON[]} Array of commits updated
+ */
+function moveTagToCommit(commits,startCommit,destinationCommit,tag){
+    startCommit.tags = startCommit.tags.filter(t => t != tag);
+    destinationCommit.tags.push(tag);
+    commits = updateCommitToCommits(commits,startCommit);
+    commits = updateCommitToCommits(commits,destinationCommit);
     return commits;
 }
 export {
@@ -396,5 +414,6 @@ export {
     createCod,
     changeDetachedCommitToCommit,
     currentHead,
-    updateHead
+    updateHeadCommit,
+    moveTagToCommit
 }
