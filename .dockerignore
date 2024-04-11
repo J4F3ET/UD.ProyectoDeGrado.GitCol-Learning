@@ -1,7 +1,11 @@
 node_modules
 npm-debug.log
 Dockerfile
-docs
+docs/assets
+docs/jsdocs
+docs/markdown
+docs/README_jsDocs.md
+docs/jsdoc.json
 README.md
 .gitignore
 .git
