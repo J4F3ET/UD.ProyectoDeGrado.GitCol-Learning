@@ -11,6 +11,8 @@ let accountComands = listComands.length;
 document.addEventListener("DOMContentLoaded", () => {
     dataViewer.currentData =  null;
     dataViewer.logComands = null;
+    observer.notify(localStorage.getItem(REF_STORAGE_LOG))
+    observer.notify(localStorage.getItem(REF_STORAGE_REPOSITORY))
 });
 document.getElementById("comandInput").addEventListener("keyup",(e) => {
     if(e.key === "ArrowUp"){
@@ -42,6 +44,12 @@ const executeCommand = (comand) => {
     try {
         const [_,gitComand, ...comandConfig] = comand.split(' ');
         comandManager.executeCommand(comand,gitComand,comandConfig);
+        observer.notify(localStorage.getItem(REF_STORAGE_LOG))
+        observer.notify(localStorage.getItem(REF_STORAGE_REPOSITORY))
+        setTimeout(()=>{
+            observer.notify(localStorage.getItem(REF_STORAGE_REPOSITORY))
+            observer.notify(localStorage.getItem(REF_STORAGE_LOG))
+        },1500)
     } catch (error) {
         comandManager.createMessage('error',error.message);
     }finally{
@@ -49,12 +57,7 @@ const executeCommand = (comand) => {
     }
 };
 // OBSERVER
-observer.subscribe("log",dataViewer)
-observer.subscribe("SVG",dataViewer)
-setInterval(()=>{
-    observer.notify("SVG",localStorage.getItem(REF_STORAGE_REPOSITORY))
-    observer.notify("log",localStorage.getItem(REF_STORAGE_LOG))
-},500);
+observer.subscribe(dataViewer)
 // ZONE VIEW (EFECS AND OBSERVERS)
 const containerLogs = document.getElementById("logContainer");
 const containerSvg = document.getElementById("svgContainer");

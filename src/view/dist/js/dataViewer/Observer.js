@@ -1,16 +1,14 @@
 export class Observer{
-    constructor() {
-        this.observers = new Map();
+    _observers = [];
+    subscribe(observer){
+        this._observers.push(observer);
     }
-    subscribe(key,fn) {
-        this.observers.set(key,fn)
+    unsubscribe(observer){
+        this._observers = this._observers.filter(subscriber => subscriber !== observer);
     }
-    unsubscribe(key) {
-        this.observers = this.observers.filter(subscriber => subscriber.key !== key)
-    }
-    notify(key,data) {
-        if(this.observers.has(key)){
-            this.observers.get(key).notify(key,data);
-        }
+    notify(data){
+        this._observers.forEach(observer => {
+            observer.notify(data);
+        })
     }
 }
