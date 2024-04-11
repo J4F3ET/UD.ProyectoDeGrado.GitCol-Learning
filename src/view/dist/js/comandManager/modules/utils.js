@@ -64,7 +64,7 @@ function findAllChildrens(commits,id,childrens = []){
  * @return {JSON[]} Array of commits that beloging to param commit
  */
 function findAllParents(commits,commit,parents=[]){
-    const parentsCommits = commits.filter((comt)=>comt.id == commit.parent);
+    const parentsCommits = commits.filter((comt)=>comt.id == commit.parent || commit.unions?.includes(comt.id));
     if(parentsCommits.length === 0)
         return parents;
     parentsCommits.forEach((parent)=>{
@@ -283,6 +283,7 @@ function createRegister(commits,parent,information,message){
         id: createCod(),
         message,
         parent: parent.id,
+        unions: [],
         tags,
         class: classList,
         autor: information.config.user.autor??JSON.parse(localStorage.getItem('config')).user.autor??null,
