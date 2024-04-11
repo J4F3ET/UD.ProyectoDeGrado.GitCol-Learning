@@ -7,7 +7,8 @@ import {
     removeTags,
     changeDetachedCommitToCommit,
     updateHeadCommit,
-    moveTagToCommit
+    moveTagToCommit,
+    updateCommitToCommits
 } from "./utils.js"
 /**
  * @class
@@ -80,9 +81,9 @@ export class Merge {
         if(parentsCommitHead.includes(commitFetch.id))
             throw new Error('Already up to date');
         if(parentsCommitFetch.includes(commitHead.id))
-            storage = this.resolveMovilityTag(storage, commitFetch, commitHead,dataComand.pop());
+            storage = this.resolveMovilityTag(storage, commitFetch, commitHead);
         else
-            storage = this.resolveCreateRegister(storage, commitFetch, commitHead,dataComand.pop());
+            storage = this.resolveCreateRegister(storage, commitFetch, commitHead);
         localStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
     /**
@@ -95,7 +96,7 @@ export class Merge {
      * @param {JSON} commitHead Commit head
      * @returns {Object} newStorage
      */
-    resolveMovilityTag(storage, commitFetch, commitHead,startPoint){
+    resolveMovilityTag(storage, commitFetch, commitHead){
         let commits = storage.commits;
         if(!storage.information.head.includes('detached')){
             commits =  moveTagToCommit(commits,commitHead,commitFetch,storage.information.head);
@@ -118,8 +119,17 @@ export class Merge {
      * @param {JSON} commitHead Commit head
      * @returns {Object} newStorage
      */
-    resolveCreateRegister(storage, commitFetch, commitHead,startPoint){
-        console.log('create register');
+    resolveCreateRegister(storage, commitFetch, commitHead){
+        let {commits,commit} = createRegister(storage.commits,commitHead,storage.information,'merge');
+        commit.unions.push(commitFetch.id);
+        commits.push(commit);
+        commitHead=removeTags(['HEAD'],commitHead);
+        commitHead.class = commitHead.class.filter(clas=>clas!=='checked-out');
+        if(!storage.information.head.includes('detached')){
+            commitHead = removeTags([storage.information.head],commitHead);
+        }else
+            storage.information.head = 'detached to '+commit.id;
+        storage.commits = updateCommitToCommits(commits,commitHead);
         return storage;
     }
 
