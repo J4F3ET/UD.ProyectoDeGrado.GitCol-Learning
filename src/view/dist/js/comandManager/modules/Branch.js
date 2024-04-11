@@ -318,7 +318,6 @@ export class Branch{
         storage.commits.push(head);
         if(head.class.includes("detached-head"))
             storage.commits = this.changeDetachedCommitToCommit(head,storage.commits)
-        storage.information.head = branch;
         return storage;
     };
     /**
