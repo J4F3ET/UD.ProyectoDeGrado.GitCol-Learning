@@ -73,11 +73,11 @@ export class DataViewer{
      * @param {String} tag Tag to identify the notification
      * @param {String} data Data to send to the observers
      */
-    notify(tag,data){
-        if(tag == "log")
-            this.updateLog(data);
-        else
+    notify(data){
+        if(Object.hasOwn(JSON.parse(data),'commits'))
             this.updateSVG(data);
+        else
+            this.updateLog(data);
     }
     /**
      * @name createVSG
@@ -344,7 +344,6 @@ export class DataViewer{
     getAllUnionsToCommit(commits,commit){
         return commits.filter(c => commit.unions.includes(c.id));
     };
-
     /**
      * @name renderCommitsToSVG
      * @memberof DataViewer#
