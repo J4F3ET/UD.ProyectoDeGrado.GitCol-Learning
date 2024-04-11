@@ -44,15 +44,14 @@ const executeCommand = (comand) => {
     try {
         const [_,gitComand, ...comandConfig] = comand.split(' ');
         comandManager.executeCommand(comand,gitComand,comandConfig);
-        observer.notify(localStorage.getItem(REF_STORAGE_LOG))
-        observer.notify(localStorage.getItem(REF_STORAGE_REPOSITORY))
+        observer.notify(localStorage.getItem(REF_STORAGE_REPOSITORY));
         setTimeout(()=>{
             observer.notify(localStorage.getItem(REF_STORAGE_REPOSITORY))
-            observer.notify(localStorage.getItem(REF_STORAGE_LOG))
         },1500)
     } catch (error) {
         comandManager.createMessage('error',error.message);
     }finally{
+        observer.notify(localStorage.getItem(REF_STORAGE_LOG))
         accountComands = 1;
     }
 };
