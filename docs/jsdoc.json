@@ -1,0 +1,32 @@
+{
+    "plugins": ["plugins/markdown"],
+    "source": {
+        "include": [
+            "./src/view"
+        ],
+        "includePattern": ".js$",
+        "excludePattern": "(docs|.ejs)"
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false
+    },
+    "opts": {
+        "encoding": "utf8",
+        "readme": "./docs/README_jsDocs.md",
+        "tutorials": "./docs/markdown/",
+        "destination": "./docs/jsdocs/",
+        "recurse": true,
+        "verbose": true,
+        "template": "./node_modules/clean-jsdoc-theme",
+        "theme_opts": {
+            "includeFilesListInHomepage": true,
+            "favicon": "../../src/view/dist/assets/fav-icon.ico",
+            "default_theme": "dark"
+        }
+    },
+    "markdown": {
+        "hardwrap": false,
+        "idInHeadings": true
+    }
+}

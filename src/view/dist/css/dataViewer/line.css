@@ -7,10 +7,10 @@
 .line.branch {
     stroke:var(--main-color);
 }
-.merge-pointer {
+.union{
     stroke: rgba(100, 100, 100, 0.5);
-    stroke-width: 4;
-    stroke-dasharray: 15, 4;
+    stroke-width: 3;
+    stroke-dasharray: 10, 3;
 }
 @keyframes dash {
     0% {
