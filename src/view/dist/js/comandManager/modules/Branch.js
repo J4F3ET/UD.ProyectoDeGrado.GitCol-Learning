@@ -96,12 +96,14 @@ export class Branch{
         this._logRepository = logRepository;
         this._remoteRepository = remoteRepository;
     }
-    /**
+    /** 
      * @name comand
-     * @description Get the comand of the class
-     * @returns {string} Comand of the class
+     * @type {string}
+     * @description Name of the command
+     * @default branch
+     * @memberof! Branch##
      * @readonly
-     */
+    */
     get comand(){return this._comand}
     /**
      * @name execute
@@ -316,7 +318,6 @@ export class Branch{
         storage.commits.push(head);
         if(head.class.includes("detached-head"))
             storage.commits = this.changeDetachedCommitToCommit(head,storage.commits)
-        storage.information.head = branch;
         return storage;
     };
     /**

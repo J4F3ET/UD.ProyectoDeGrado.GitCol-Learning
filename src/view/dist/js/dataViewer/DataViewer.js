@@ -166,15 +166,16 @@ export class DataViewer{
      * @example {id: "parent",parent: "init",message: "First commit",tags: ["master", "HEAD"],cx: 140,cy: 360};
      * @returns {SVGLineElement} Element of type line SVG with the properties of a line
      */
-    createLine(dataCommit,parent){
+    createLine(dataCommit,parent,listClass = ['line']){
         const newLine = document.createElementNS("http://www.w3.org/2000/svg","line");
-        newLine.classList.add("line");
+        newLine.classList.add(...listClass);
         newLine.setAttribute("x1", dataCommit.cx);
         newLine.setAttribute("y1", dataCommit.cy);
         newLine.setAttribute("x2", parent.cx);
         newLine.setAttribute("y2", parent.cy);
-        newLine.id = dataCommit.parent+"-"+dataCommit.id;
+        newLine.id = parent.id+"-"+dataCommit.id;
         this._svg.getElementById(newLine.id)?.remove();
+
         return newLine;
     }
     /**
@@ -332,6 +333,19 @@ export class DataViewer{
         this.resizeSVG();
     }
     /**
+     * @name getAllUnionsToCommit
+     * @memberof DataViewer#
+     * @method
+     * @description Get all the unions of the commit
+     * @param {Object[]} commits Array with the commits data
+     * @param {Object} commit Object with the properties of the commit
+     * @returns {Object[]} Array with the unions of the commit
+     */
+    getAllUnionsToCommit(commits,commit){
+        return commits.filter(c => commit.unions.includes(c.id));
+    };
+
+    /**
      * @name renderCommitsToSVG
      * @memberof DataViewer#
      * @method
@@ -343,22 +357,25 @@ export class DataViewer{
         if(!currentCommits){
             commitsData.forEach(commit => {
                 const parent = commitsData.find(c => c.id === commit.parent)??this._commitParent
-                this.addCommitToSvg(commit,parent);
+                const unions = commit.unions?.length > 0 ? this.getAllUnionsToCommit(commitsData,commit):[]; 
+                this.addCommitToSvg(commit,parent,unions);
             });
             return
         }
-        commitsData.forEach((commit, index) => {
+        commitsData.forEach((commit) => {
             const parent = commitsData.find(c => c.id === commit.parent)??this._commitParent
             const currentCommit = currentCommits.find(c => c.id === commit.id);
+            const unions = commit.unions?.length > 0 ? this.getAllUnionsToCommit(commitsData,commit):[];
             if(currentCommit == undefined){
-                return this.addCommitToSvg(commit,parent);
+                return this.addCommitToSvg(commit,parent,unions);
             }
             if(
                 JSON.stringify(currentCommit.tags) != JSON.stringify(commit.tags)||
                 currentCommit.cy != commit.cy||
-                JSON.stringify(currentCommit.class) != JSON.stringify(commit.class)
+                JSON.stringify(currentCommit.class) != JSON.stringify(commit.class)||
+                JSON.stringify(currentCommit.unions) != JSON.stringify(commit.unions)
             ){
-                this.updateCommitToSvg(commit,parent);
+                this.updateCommitToSvg(commit,parent,unions);
             };
         });
         this.removeElementsFromSVG(commitsData);
@@ -387,7 +404,7 @@ export class DataViewer{
      * @returns {void}
      */
     removeLineFromSVG(idsCommits){
-        const linesInSVG = Array.from(this._svg.querySelectorAll('.line')).map(line => line.id);
+        const linesInSVG = Array.from(this._svg.querySelectorAll('.line,.union')).map(line => line.id);
         linesInSVG.forEach(line => {
             const ids = line.split("-");
             if(!idsCommits.includes(ids[1]) || !idsCommits.includes(ids[0])&&ids[0] != "init")
@@ -466,11 +483,12 @@ export class DataViewer{
      * @param {Object} parent Object with the properties of the parent commit
      * @return {void}
      */
-    updateCommitToSvg(commit,parent){
+    updateCommitToSvg(commit,parent,unions=[]){
         const commitSvg = this._svg.getElementById(commit.id);
         commitSvg.setAttribute("class",commit.class.join(" "));
         commitSvg.setAttribute("cy",commit.cy);
         this.updateMeesageAndIdToCommit(commit);
+        unions.forEach(union => this.updateLineOfCommit(commit,union));
         this.updateLineOfCommit(commit,parent);
         this.resolveTagsInSVG(commit);
     }
@@ -499,9 +517,11 @@ export class DataViewer{
      * @description Add the commit to the SVG
      * @param {Object} commit Object with the properties of the commit
      * @param {Object} parent Object with the properties of the parent commit
+     * @param {Object[]} unions Array with the unions of the commit
      * @return {void}
      */
-    addCommitToSvg(commit,parent){
+    addCommitToSvg(commit,parent,unions=[]){
+        unions.forEach(union => this.addLineToSvg(this.createLine(commit,union,['union'])));
         this.addCircleToSvg(this.createCommit(commit));
         this.addLineToSvg(this.createLine(commit,parent)); 
         this.addMessageAndIdToCommit(commit);

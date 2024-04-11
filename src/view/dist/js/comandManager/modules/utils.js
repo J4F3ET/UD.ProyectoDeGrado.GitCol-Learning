@@ -49,7 +49,7 @@ function findAllChildrens(commits,id,childrens = []){
         return childrens;
     childrensFisrtGen.forEach(commit => {
         childrens.push(commit);
-        this.findAllChildrens(commits,commit.id,childrens);
+        findAllChildrens(commits,commit.id,childrens);
     });
     return childrens;
 }
@@ -64,7 +64,7 @@ function findAllChildrens(commits,id,childrens = []){
  * @return {JSON[]} Array of commits that beloging to param commit
  */
 function findAllParents(commits,commit,parents=[]){
-    const parentsCommits = commits.filter((comt)=>comt.id == commit.parent);
+    const parentsCommits = commits.filter((comt)=>comt.id == commit.parent || commit.unions?.includes(comt.id));
     if(parentsCommits.length === 0)
         return parents;
     parentsCommits.forEach((parent)=>{
@@ -98,7 +98,7 @@ function getCommitStartPoint(dataComand,commits){
  * @param {String} message Message to be added to the log
  * @example createMessage('info','<div class="files"><h5>Add files to the commit</h5><ul><li>>index.html</li><li>>style.css</li><li>>script.js</li></ul></div>')
  */
-function createMessage(tag,message){
+function createMessage(tag='info',message){
     if(localStorage.getItem('log')===null)
         return;
     const log = JSON.parse(localStorage.getItem('log'));
@@ -279,11 +279,11 @@ function createRegister(commits,parent,information,message){
         classList.push("detached-head");
     }
     const response = resolveLocationCommit(commits,parent.cx,parent.cy);
-    console.log(information);
     return {commits:(response.commits),commit:{
         id: createCod(),
         message,
         parent: parent.id,
+        unions: [],
         tags,
         class: classList,
         autor: information.config.user.autor??JSON.parse(localStorage.getItem('config')).user.autor??null,
@@ -337,8 +337,67 @@ function deleteCommitsRecursivelyUntil(commits,commitObj,pointsObjetive){
  * @param {Object[]} commits Data of the local storage of the repository
  * @returns {JSON} Data of the current head
  */
-export function currentHead(commits) {
+function currentHead(commits) {
     return commits.find(element => element.tags.includes('HEAD')); 
+}
+/**
+ * @name changeDetachedCommitToCommit
+ * @function
+ * @memberof! utils
+ * @description Change the class of the commit "detached-head" recursively to the parent commit
+ * @param {JSON} commit Commit to change the class
+ * @param {JSON[]} commits Array of commits
+ * @returns {JSON[]} Array of commits with the new class
+ */
+function changeDetachedCommitToCommit(commit,commits){
+    if(!commit.class.includes("detached-head"))
+        return commits
+    let parent;
+    const newListCommits = commits.map(c=>{
+        if(c.id == commit.id)
+            c.class = c.class.filter(item=> item !="detached-head")
+        if(c.id == commit.parent)
+            parent = c
+        return c
+    })
+    return changeDetachedCommitToCommit(parent,newListCommits);
+}
+/**
+ * @name updateHeadCommit
+ * @function
+ * @memberof utils
+ * @description Update the head of the repository
+ * @param {JSON[]} commits Array of commits
+ * @param {JSON} oldHead Old head of the repository
+ * @param {JSON} newHead New head of the repository
+ * @returns {JSON[]} Array of commits updated
+ */
+function updateHeadCommit(commits,oldHead,newHead){
+    newHead.tags.push('HEAD');
+    oldHead.tags = oldHead.tags.filter(tag => tag != 'HEAD');
+    newHead.class.push('checked-out');
+    oldHead.class = oldHead.class.filter(classC => classC != 'checked-out');
+    commits = updateCommitToCommits(commits,newHead);
+    commits = updateCommitToCommits(commits,oldHead);
+    return commits;
+}
+/**	
+ * @name moveTagToCommit
+ * @function
+ * @memberof utils
+ * @description Move a tag to a commit
+ * @param {JSON[]} commits Array of commits
+ * @param {JSON} startCommit Commit where the tag is located
+ * @param {JSON} destinationCommit Commit where the tag is going to be moved
+ * @param {String} tag Tag to be moved
+ * @returns {JSON[]} Array of commits updated
+ */
+function moveTagToCommit(commits,startCommit,destinationCommit,tag){
+    startCommit.tags = startCommit.tags.filter(t => t != tag);
+    destinationCommit.tags.push(tag);
+    commits = updateCommitToCommits(commits,startCommit);
+    commits = updateCommitToCommits(commits,destinationCommit);
+    return commits;
 }
 export {
     removeTags,
@@ -353,5 +412,9 @@ export {
     getCommitStartPoint,
     deleteCommitsRecursivelyUntil,
     findAllExceptionCommitsToDelete,
-    createCod
+    createCod,
+    changeDetachedCommitToCommit,
+    currentHead,
+    updateHeadCommit,
+    moveTagToCommit
 }
