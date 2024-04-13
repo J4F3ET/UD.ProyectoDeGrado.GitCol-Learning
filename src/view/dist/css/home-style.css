@@ -43,18 +43,24 @@ section{
     margin: auto;
     max-width: 80%;
     max-height: 80%;
-    animation: show-dialog .7s .5s both;
+    animation: show-dialog .7s .5s both ease-in-out;
     box-sizing: border-box;
     color: var(--text-color);
     font-size: 1.3rem;
     overflow: hidden;
 }
+.dialog[open].second::backdrop{
+    animation:none;
+}
 .dialog::backdrop{
     backdrop-filter: blur(8px);
     background-color: rgba(0, 0, 0, 0.411);
 }
+.dialog[open]{
+    animation: show-dialog .5s  ease forwards;
+}
 .dialog[open]::backdrop{
-    animation: show-dialog .5s ease forwards;
+    animation: show-dialog .3s ease forwards;
 }
 .container_dialog{
     padding: 1rem 2rem;
@@ -105,7 +111,7 @@ section{
     max-width: 50%;
     height: 600px;
     background-image: url(../assets/img/teaser/background.jpg) ;
-    background-position-x: right;
+    background-position-x: center;
     background-position-y: center;
     background-size: cover;
 } 
@@ -121,6 +127,11 @@ section{
     padding: 1rem;
     border-radius: 1rem;
 }
+.section_dialog_item.img{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
 .section_dialog_item.star-end{
     padding: 1rem;
     display: flex;
@@ -129,7 +140,7 @@ section{
 }
 .section_dialog_item.group_buttons_dialog{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
 }
 .item_dialog{
@@ -141,12 +152,14 @@ section{
 }
 .img_cat{
     border-radius: 50%;
-    animation: show-dialog .3s ease-in forwards;
+    animation: show-img .6s linear;
+}
+@media screen and (max-width: 1400px){
+    .img_cat{
+        width: 95%;
+    }
 }
 .img_cat.single{
-    margin: 2rem 0;
-    margin-bottom: calc(15vw - 2rem);
-    width: calc(35vw - 2rem); 
     background: radial-gradient(
 		circle,
         rgba(152, 255, 146, 0) 5%,
@@ -157,16 +170,13 @@ section{
     );
 }
 .img_cat.multi{
-    width: calc(35vw - 2rem);
-    margin-bottom: calc(15vw - 2rem);
-    margin-left: 1rem;
     background: radial-gradient(
-        farthest-side at 18% 43%,
-        rgb(247 247 247 / 81%) 5%,
-        rgb(10 213 84 / 79%) 15%, 
-        rgb(10 213 84 / 50%) 30%,
-        rgba(10, 213, 84, 0.453) 60%,
-        rgb(107 112 107 / 7%) 90%
+        farthest-side at 16% 44%, 
+        rgb(192 247 92) 5%,
+        rgb(15 101 46 / 79%) 15%,
+        rgb(0 213 78 / 22%) 30%,
+        rgb(10 213 84 / 8%) 60%,
+        rgb(107 112 107 / 8%) 90%
     );
 }
 .bi.bi-arrow{
@@ -216,7 +226,7 @@ section{
     background-color: transparent;
 }
 .info_dialog{
-    animation: show-text-dialog .3s  linear forwards;
+    animation: show-text-dialog .5s  linear forwards;
 }
 @keyframes show-text-dialog {
     0% {
@@ -243,6 +253,20 @@ section{
     }
     100% {
         transform: translateX(0%);
+        opacity: 1;
+    }
+}
+@keyframes show-img{
+    0% {
+        transform: translateX(-30%);
+        opacity: 0;
+    }
+    50% {
+        transform: translateX(5%);
+        opacity: .8;
+    }
+    100% {
+        transform: translateX(0);
         opacity: 1;
     }
 }
