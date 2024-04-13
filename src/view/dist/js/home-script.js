@@ -6,15 +6,19 @@ let navbar = document.querySelector('.navbar');
 //Section dialog mode
 const openButtonDialog = document.querySelector('.btn-dialog');
 const dialogSelectMode = document.querySelector('#dialogSelectMode');
-const closeButtonDialog = dialogSelectMode.querySelectorAll('.close_dialog');
+const closeButtonDialog = document.querySelectorAll('.close_dialog');
 const courseButtons = dialogSelectMode.querySelectorAll('.btn_dialog_coursel');
 const modeElement = document.querySelector('[data-mode]');
-const getImgInforOfMode = (mode) => {
-    const imgSingle = `<img loading="lazy" class="img_cat single" src="dist/assets/img/home/cat_white.png" alt="Single user mode">`;
-    const imgMulti = `<img loading="lazy" class="img_cat multi" src="dist/assets/img/home/cats.png" alt="Multi user mode">`;
-    return mode === 'single' ? imgSingle : imgMulti;
+const getImgInforOfMode = async (mode) => {
+    const imgElement = document.createElement('img');
+    const path = `dist/assets/img/home/${mode == 'single' ? 'cat_white.png' : 'cats.png'}`
+    imgElement.classList.add('img_cat',mode == 'single' ? 'single' : 'multi');
+    imgElement.setAttribute('loading', 'lazy');
+    imgElement.setAttribute('src', path);
+    imgElement.setAttribute('alt', mode == 'single' ? 'Single user mode' : 'Multi user mode');
+    return imgElement;
 }	
-const getTextInforOfMode = (mode) => {
+const getTextInforOfMode = async (mode) => {
     const textSingle =`
     <h3 class="info_dialog">Single user mode</h3>
     <p class="info_dialog">
@@ -93,18 +97,18 @@ const getTextInforOfMode = (mode) => {
     `;
     return mode === 'single' ? textSingle : textMulti;
 }
-const getCourseInforOfMode = (mode) => {
+const getCourseInforOfMode = async (mode) => {
     return mode === 'single' ? 'Single user mode' : 'Multi user mode';
 }
-function toogleMode(mode){
-    const infoMode = getTextInforOfMode(mode);
-    const imgMode = getImgInforOfMode(mode);
-    const textCourse = getCourseInforOfMode(mode);
-    dialogSelectMode.querySelector('.dialog_block_info').innerHTML = infoMode;
-    dialogSelectMode.querySelector('.dialog_block_img').innerHTML = imgMode;
-    dialogSelectMode.querySelector('.dialog_block_course').innerHTML = textCourse;
+async function toogleMode(mode){
+    const newImageElement = getImgInforOfMode(mode);
+    const infoTetx = getTextInforOfMode(mode);
+    const courseText = getCourseInforOfMode(mode);
+    const imgElement = dialogSelectMode.querySelector('.img_cat');
+    dialogSelectMode.querySelector('.dialog_block_info').innerHTML = await infoTetx;
+    dialogSelectMode.querySelector('.dialog_block_img').replaceChild(await newImageElement, imgElement);
+    dialogSelectMode.querySelector('.dialog_block_course').innerHTML = await courseText;
 }
-
 openButtonDialog.addEventListener('click', () => {
     dialogSelectMode.showModal();
 });
@@ -115,13 +119,21 @@ courseButtons.forEach(btn => {
     });
 });
 closeButtonDialog.forEach(btn => {
-    btn.addEventListener('click', () => {
-        dialogSelectMode.close();
+    btn.addEventListener('click', (e) => {
+        document.getElementById(e.target.dataset.dialog).close();
     });
 });
-
-
+document.getElementById('btn_select_mode').addEventListener('click', () => {
+    dialogSelectMode.close();
+    document.getElementById(`dialog_${modeElement.dataset.mode==='single' ? 'multi' : 'single'}`).showModal();
+});
 // end section dialog mode
+
+// ---- Section dialog single mode ----
+
+// end section dialog single mode
+// Section dialog multi mode
+// end section dialog multi mode
 
 menuIcon.onclick = () => {
     menuIcon.classList.toggle('bx-x');
