@@ -63,7 +63,12 @@ document.getElementById("inputRoomCode").addEventListener("input", (e) => {
 	e.target.value = e.target.value.toUpperCase();
 	validateInputRoomCode(e.target);
 });
-document.getElementById("btnLogout").addEventListener("click", () => logout());
+document.getElementById("btnLogout").addEventListener("click", async () => {
+	const response = logout()
+	const data = (await response).json();
+	if ((await response).status === 200)
+		window.location.href = (await data).url||"/home";
+});
 document.getElementById("selectLevelChallenge").addEventListener("change", () => 
 	getChallenge().then((response) => document.getElementById("selectChallenge").disabled = response)
 );
