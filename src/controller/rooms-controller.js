@@ -6,7 +6,8 @@ import {
 	roomCreate,
 	roomGetByCode,
 	roomAddMember,
-	roomGetAll, 
+	roomGetAll,
+	roomGetAllPublic, 
 } from "../model/room-service.js";
 const router = Router();
 /**
@@ -169,7 +170,7 @@ router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
 		room: await roomCreate(
 			req.body.code,
 			req.body.description,
-			(await result).name,
+			(await result).name??(await result).email,
 			[(await result).uid],
 			req.body.challenge,
 			true,
@@ -178,6 +179,14 @@ router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
 			req.body.hidden,
 			req.body.level
 		)
+	});
+	res.end();
+});
+router.get("/rooms/all/public", releaseVerificationMiddleware, async(req, res) => {
+	const rooms = roomGetAllPublic();
+	res.json({
+		ok: true,
+		rooms: await rooms
 	});
 	res.end();
 });

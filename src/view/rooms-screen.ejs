@@ -14,7 +14,7 @@
 	</head>
 	<body>
 		<div class="back">
-			<a id="btnLogout" href="#">
+			<a id="btnLogout">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
 					<path fill="currentColor" d="M14 17V7l-6 5z"/><path fill="currentColor" d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10s10-4.486 10-10S17.514 2 12 2m0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8s8 3.589 8 8s-3.589 8-8 8"/>
 				</svg>
@@ -23,7 +23,7 @@
 		</div>
 		<div class="room">
 			<form autocomplete="off" class="room__form">
-				<h1 class="room__title">Rooms</h1>
+				<h1 class="room__title">Room</h1>
 				<div class="room__inputs">
 					<Label>
 						Code
@@ -62,10 +62,12 @@
 				<button disabled id="btnLoginToRoom" type="submit" class="room__button">Login</button>
 				<div class="room__register">Not logged in ? <a href="#">Help</a></div>
 			</form>
-			<button id="btnCreateRoom" class="room__button">Crear Sala</button>
+			<button id="btnFindRoom" class="room__button">Search room</button>
+			<button id="btnCreateRoom" class="room__button">Create room</button>
 		</div>
-		<dialog id="dialogCreateRoom">
-			<divc class="container_dialog">
+		<!-- INIT DIALOG CREATE ROOM -->
+		<dialog class="dialog" id="dialogCreateRoom">
+			<div class="container_dialog">
 				<form autocomplete="off" class="dialog_form" method="dialog">
 					<h1 class="room__title">Create Room</h1>
 					<div class="room__inputs">
@@ -157,7 +159,104 @@
 				</form>
 			</div>
 		</dialog>
+		<!-- END DIALOG CREATE ROOM -->
 
+		<!-- INIT DIALOG SEARCH ROOM -->
+		<dialog class="dialog" id="dialogSearchRoom">
+			<div class="container_dialog_start">
+				<div class="container_dialog_item">
+					<div class="dialog_item row">
+						<h1 class="dialog_title">Search Room</h1>
+						<div class="dialog_input">
+							<div class="room__inputs">
+								<div class="room__box">
+									<input 
+										id="inputFindRoomCode" 
+										class="room__input" 
+										type="text" 
+										placeholder="Enter code" 
+										pattern="[A-Z0-9]+" 
+										title="Only letters and numbers are allowed"
+										minlength="4" 
+										maxlength="8" 
+										required 
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="dialog_item">
+						<button class="btn_dialog_close red" id="btnCancelSearchRoom">X</button>
+					</div>
+				</div>
+				<div class="container_dialog_item">
+					<div id="container_rooms_public" class="container_card">
+						<div class="card">
+							<div class="card__header">
+								<h2 class="card__title">Room</h2>
+								<p class="card__description">Description</p>
+							</div>
+							<div class="card__body">
+								<div class="card__info">
+									<p class="card__code">Code: <span>Code</span></p>
+									<p class="card__level">Level: <span>Level</span></p>
+								</div>
+							</div>
+						</div>
+						<div class="card">
+							<div class="card__header">
+								<h2 class="card__title">Room</h2>
+								<p class="card__description">Description</p>
+							</div>
+							<div class="card__body">
+								<div class="card__info">
+									<p class="card__code">Code: <span>Code</span></p>
+									<p class="card__level">Level: <span>Level</span></p>
+								</div>
+							</div>
+						</div>
+						<div class="card">
+							<div class="card__header">
+								<h2 class="card__title">Room</h2>
+								<p class="card__description">Description</p>
+							</div>
+							<div class="card__body">
+								<div class="card__info">
+									<p class="card__code">Code: <span>sadasd</span></p>
+									<p class="card__users">Users: <span>3</span></p>
+								</div>
+							</div>
+						</div>
+						<div class="card">
+							<div class="card__header">
+								<h2 class="card__title">Room</h2>
+								<p class="card__description">Description</p>
+							</div>
+							<div class="card__body">
+								<div class="card__info">
+									<p class="card__code">Code: <span>Code</span></p>
+									<p class="card__level">Level: <span>Level</span></p>
+								</div>
+							</div>
+						</div>
+						<div class="card">
+							<div class="card__header">
+								<h2 class="card__title">Room</h2>
+								<p class="card__description">Description</p>
+							</div>
+							<div class="card__body">
+								<div class="card__info">
+									<p class="card__code">Code: <span>Code</span></p>
+									<p class="card__level">Level: <span>Level</span></p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</dialog>
+		<!-- END DIALOG SEARCH ROOM -->
 		<div id="particles-js"></div>
 	</body>
 
