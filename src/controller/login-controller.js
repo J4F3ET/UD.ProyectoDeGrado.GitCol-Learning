@@ -4,22 +4,6 @@ const router = Router();
 /**
  * @openapi
  * /login:
- *   get:
- *     summary: Endpoint para obtener la pantalla de login.
- *     description: Retorna la pantalla de login (login-screen).
- *     responses:
- *       200:
- *         description: Éxito. Retorna la pantalla de login.
- *         content:
- *           text/html:
- *             example: login-screen.ejs
- */
-router.get("/login", async (req, res) => {
-	res.render("login-screen");
-});
-/**
- * @openapi
- * /login:
  *   post:
  *     summary: Realiza el proceso de login del usuario utilizando OAuth.
  *     description: Verifica las credenciales del usuario, si el usuario es válido y no posee una cookie de sesión activa, se le asigna una cookie de sesión y se redirige a la pantalla de salas (rooms-screen). Si el usuario ya posee una cookie de sesión activa, se verifica dicho token y se redirige a la pantalla de salas (rooms-screen). Si en cualquiera de los dos casos anteriores es invalida la respuesta retorna un error 401

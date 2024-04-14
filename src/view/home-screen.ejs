@@ -5,16 +5,13 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> Col-Learning</title>
-        <link
-                rel="shortcut icon"
-                href="./dist/assets/fav-icon.ico"
-                type="image/x-icon"
-            />
+        <link rel="shortcut icon" href="./dist/assets/fav-icon.ico" type="image/x-icon"/>
         <!-- --------- BOX ICONS ---------- -->
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
         <!-- CSS -->
         <link rel="stylesheet" href="dist/css/home-style.css">
+        <link rel="stylesheet" href="dist/css/dialog-home-style.css">
     </head>
     <body class="scrollable">
         <header class="header">
@@ -26,8 +23,6 @@
                 <a href="#levels">Levels</a>
                 <a href="#mision">Mision & Vision</a>
                 <a href="#about">About us</a>
-                <!--boton-->
-                <a href="working" class="btn">START!</a>
                 <button class="btn btn-dialog">START!</button>
             </nav>
         </header>
@@ -53,7 +48,7 @@
         <section class="overview" id="overview">
             <div class="card1">
                 <div class="overview-img">
-                    <img src="dist/assets/img\teaser/principalCat.png" alt="">
+                    <img loading="lazy" src="dist/assets/img\teaser/principalCat.png" alt="">
                 </div>
                 <div class="overview-content">
                     <h2 class="heading">Application <span> Overview </span></h2>
@@ -90,7 +85,7 @@
         <!--MISION SECTION DESING-->
         <section class="mision" id="mision">
                 <div class="mision-img">
-                    <img src="https://i.redd.it/zym5pybotlja1.gif" alt="">
+                    <img loading="lazy" src="https://i.redd.it/zym5pybotlja1.gif" alt="">
                 </div>
                 <div class="mision-content">
                     <h2 class="heading1">Mision of<span> proyect</span></h2>
@@ -105,7 +100,7 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
             </div>
             <div class="vision-img">
-                <img src="https://38.media.tumblr.com/a401eaca1220428dc37379cbd7312e16/tumblr_nv44lndz1l1u6xnmoo1_1280.gif" alt="">
+                <img loading="lazy" src="https://38.media.tumblr.com/a401eaca1220428dc37379cbd7312e16/tumblr_nv44lndz1l1u6xnmoo1_1280.gif" alt="">
             </div>
         </section>
 
@@ -184,6 +179,7 @@
 
         </footer>
         <!-- --------- DIALOGS --------- -->
+
         <!-- DIALO SELECT TO MODE -->
         <dialog  id="dialogSelectMode" class="dialog" data-mode="multi" >
             <section class="container_dialog">
@@ -194,18 +190,16 @@
                     </div>
                     <div class="section_dialog_item info_mode scrollable dialog_block_info">
                         <h3>Single user mode</h3>
-                        <p>
+                        <p class="info_dialog">
                             The Single User Mode allows you to freely explore the console and Git
-                                commands at your own pace. GitCol Learning provides preset challenges
-                                with on-screen guides to help you grasp the basics of Git. All of this
-                                takes place in an individual environment, allowing you to focus on 
-                                learning independently.<br>
+                            commands at your own pace. GitCol Learning provides preset challenges
+                            with on-screen guides to help you grasp the basics of Git. All of this
+                            takes place in an individual environment, allowing you to focus on 
+                            learning independently.<br>
                         </p>
                         <div class="item_dialog">
                             <div class="icon_item_dialog">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-                                </svg>
+                                <i class='bx bxs-user'></i>
                             </div>
                             <small class="tex_item_dialog">
                                 Free use or individual practice of the environment
@@ -213,9 +207,7 @@
                         </div>
                         <div class="item_dialog">
                             <div class="icon_item_dialog">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stars" viewBox="0 0 16 16">
-                                    <path d="M7.657 6.247c.11-.33.576-.33.686 0l.645 1.937a2.89 2.89 0 0 0 1.829 1.828l1.936.645c.33.11.33.576 0 .686l-1.937.645a2.89 2.89 0 0 0-1.828 1.829l-.645 1.936a.361.361 0 0 1-.686 0l-.645-1.937a2.89 2.89 0 0 0-1.828-1.828l-1.937-.645a.361.361 0 0 1 0-.686l1.937-.645a2.89 2.89 0 0 0 1.828-1.828zM3.794 1.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387A1.73 1.73 0 0 0 4.593 5.69l-.387 1.162a.217.217 0 0 1-.412 0L3.407 5.69A1.73 1.73 0 0 0 2.31 4.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387A1.73 1.73 0 0 0 3.407 2.31zM10.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732L9.1 2.137a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
-                                </svg>
+                                <i class='bx bxs-graduation'></i>
                             </div>
                             <small class="tex_item_dialog">
                                 Pre-set challenges with guides for learning
@@ -224,9 +216,7 @@
                     </div>
                     <div class="section_dialog_item group_buttons_dialog">
                         <button class="btn_dialog_coursel">
-                            <svg data-orientation="left" xmlns="http://www.w3.org/2000/svg" width="50" height="50" class="bi bi-arrow" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5"/>
-                            </svg>
+                            <i data-orientation="left" class='bx bxs-left-arrow arrow'></i>
                         </button>
                         <div>
                             <h3 class="subtitle_mode dialog_block_course">
@@ -234,9 +224,7 @@
                             </h3>
                         </div>
                         <button class="btn_dialog_coursel">
-                            <svg data-orientation="right" xmlns="http://www.w3.org/2000/svg" width="50" height="50" class="bi bi-arrow" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8m-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5"/>
-                            </svg>
+                            <i data-orientation="right" class='bx bxs-right-arrow arrow' ></i>
                         </button>
                     </div>
                     <div class="section_dialog_item">
@@ -246,9 +234,7 @@
                 <div class="section_dialog img">
                     <div class="section_dialog_item star-end">
                         <button data-dialog="dialogSelectMode" class="close_dialog btn_dialog_close">
-                            <svg data-dialog="dialogSelectMode" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                            </svg>
+                            <i data-dialog="dialogSelectMode" class='bx bx-x'></i>
                         </button>
                     </div>
                     <div class="section_dialog_item img dialog_block_img">
@@ -265,21 +251,22 @@
                 <div class="section_dialog info">
                     <div class="section_dialog_item">
                         <h2 class="title_dialog">Single mode</h2>
-                        <p class="text_dialog">In construction</p>
+                        <p class="text_dialog">Select type to use</p>
+                    </div>
+                    <div class="section_dialog_item info_mode scrollable dialog_block_info">
+                        <p>
+                            <strong>GitCol Learning:</strong> <em>No Registration Required, Embrace Flexibility in Single User Mode</em><br>
+                            In <strong>Single User Mode</strong>, there's no need for <strong>registration</strong>. Enjoy the flexibility of <strong>practice sessions</strong> or pre-set <strong>challenges</strong> loaded into the workspace.
+                        </p>                        
                     </div>
                     <div class="section_dialog_item group_buttons_dialog">
-                        <svg height="356px" width="356px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-29.75 -29.75 357.00 357.00" xml:space="preserve" fill="#465166" stroke="#465166" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="1.19"></g><g id="SVGRepo_iconCarrier"> <g id="XMLID_19_"> <g> <polygon style="fill:#1E9FAB;" points="277.19,51.82 277.19,121.41 207.59,121.41 "></polygon> <polygon style="fill:#1E9FAB;" points="176.45,37.63 92.67,121.41 34.51,121.41 118.29,37.63 "></polygon> <polygon style="fill:#D45050;" points="89.91,37.63 20.32,107.22 20.32,37.63 "></polygon> <polygon style="fill:#D45050;" points="263,37.63 179.21,121.41 121.05,121.41 204.83,37.63 "></polygon> <path d="M297.25,27.59v103.85c0,5.54-4.49,10.04-10.03,10.04h-24.58v118.39h7.27c5.54,0,10.03,4.5,10.03,10.04 s-4.49,10.03-10.03,10.03h-34.62c-5.54,0-10.03-4.49-10.03-10.03s4.49-10.04,10.03-10.04h7.28V141.48H54.94v118.39h7.27 c5.54,0,10.04,4.5,10.04,10.04s-4.5,10.03-10.04,10.03H27.6c-5.55,0-10.04-4.49-10.04-10.03s4.49-10.04,10.04-10.04h7.27V141.48 H10.29c-5.54,0-10.04-4.5-10.04-10.04V27.59c0-5.54,4.5-10.03,10.04-10.03h276.93C292.76,17.56,297.25,22.05,297.25,27.59z M277.19,121.41V51.82l-69.6,69.59H277.19z M179.21,121.41L263,37.63h-58.17l-83.78,83.78H179.21z M92.67,121.41l83.78-83.78 h-58.16l-83.78,83.78H92.67z M20.32,107.22l69.59-69.59H20.32V107.22z"></path> </g> <g> </g> </g> </g></svg>
-                    </div>
-                    <div class="section_dialog_item">
                         <a href="/aloneWorking" class="btn_dialog btn_dialog_start">git init</a>
                     </div>
                 </div>
                 <div class="section_dialog img">
                     <div class="section_dialog_item star-end">
                         <button  data-dialog="dialog_single" class="close_dialog btn_dialog_close">
-                            <svg data-dialog="dialog_single" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                            </svg>
+                            <i data-dialog="dialog_single" class='bx bx-x'></i>
                         </button>
                     </div>
                     <div class="section_dialog_item img dialog_block_img">
@@ -289,8 +276,9 @@
             </section>
         </dialog>
         <!-- END DIALOG SINGLE MODE -->
+
         <!-- DIALOG MULTI MODE  -->
-        <dialog  id="dialog_multi" class="dialog">
+        <dialog  id="dialog_multi" class="dialog second">
             <section class="container_dialog">
                 <div class="section_dialog info">
                     <div class="section_dialog_item">
@@ -302,23 +290,18 @@
                             <strong>GitCol Learning:</strong> <em>No Registration Required, but Enhanced Features with Sign-in</em><br><br>
                             GitCol Learning provides a seamless experience without the need for <strong>registration</strong>. We prioritize your <strong>privacy</strong> and do not store any <strong>user data</strong> or personal information.<br>
                             However, to unlock enhanced features like <strong>creating</strong> and <strong>joining collaboration rooms</strong>, as well as experiencing a simulated "<strong>remote repository</strong>" environment, optional sign-in is available using your secure <strong>Google</strong> or <strong>GitHub</strong> account. This secure sign-in ensures the necessary <strong>authentication</strong> to safeguard the <strong>privacy</strong> and <strong>security</strong> of your collaborative sessions.
-                        </p>
-                        
+                        </p> 
                     </div>
                     <div class="section_dialog_item group_buttons_dialog">
                         <button id="googleLogin" class="item_dialog btn-dialog">
                             <div class="icon_item_dialog">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-google" viewBox="0 0 16 16">
-                                    <path d="M15.545 6.558a9.4 9.4 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.7 7.7 0 0 1 5.352 2.082l-2.284 2.284A4.35 4.35 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.8 4.8 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.7 3.7 0 0 0 1.599-2.431H8v-3.08z"/>
-                                </svg>
+                                <i class='bx bxl-google' ></i>
                             </div>
                             <p>Google</p>
                         </button>
                         <button id="githubLogin" class="item_dialog btn-dialog">
                             <div class="icon_item_dialog">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
-                                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
-                                </svg>
+                                <i class='bx bxl-github'></i>
                             </div>
                             <p>GitHub</p>
                         </button>
@@ -327,9 +310,7 @@
                 <div class="section_dialog img">
                     <div class="section_dialog_item star-end">
                         <button data-dialog="dialog_multi" class="close_dialog btn_dialog_close">
-                            <svg data-dialog="dialog_multi" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                            </svg>
+                            <i data-dialog="dialog_multi" class='bx bx-x'></i>
                         </button>
                     </div>
                     <div class="section_dialog_item img dialog_block_img">
