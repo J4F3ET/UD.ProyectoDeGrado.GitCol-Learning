@@ -27,7 +27,6 @@ app.use(require("./src/controller/teaser-controller").default);
 app.use(require("./src/controller/login-controller").default);
 app.use(require("./src/controller/home-controller").default);
 app.use(require("./src/controller/rooms-controller").default);
-app.use(require("./src/controller/working-controller").default);
 app.use(require("./src/controller/challenges-controller").default);
 app.use(require("./src/controller/teamWorking-controller").default);
 app.use(require("./src/controller/aloneWorking-controller").default);
