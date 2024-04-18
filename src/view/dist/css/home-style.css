@@ -213,7 +213,14 @@ span{
     font-size: 1.6rem;
     margin: 1rem 0 3rem;
 }
-
+.alert {
+    background: var(--red-color);
+    color: var(--text-color);
+    padding: .5rem 1rem;
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    margin-top: 1rem;
+}
 /* MISION SECTION DESING */
 
 .mision {
