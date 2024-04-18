@@ -19,6 +19,7 @@
     --text-color: #fff;
     --text1-color: #1E9FAB;
     --main-color: #FA8E5F;
+    --red-color: #D45050;
 }
 
 /* HOME SECTION DESING */
@@ -34,6 +35,7 @@ section{
     min-height: 100vh;
     padding: 10rem 9% 2rem;
 }
+
 .header{
     position: fixed;
     top: 0;
@@ -46,7 +48,6 @@ section{
     align-items: center;
     z-index: 100;
     box-shadow: 0 0 1rem var(--text-color);
-
 }
 .navbar .btn {
     display: inline-block;
@@ -71,7 +72,7 @@ section{
     font-weight: 600;
     cursor: default;
 }
-.navbar a {
+.navbar a, .navbar button{
     font-size: 1.7rem;
     color: var(--text-color);
     margin-left: 4rem;
@@ -212,7 +213,14 @@ span{
     font-size: 1.6rem;
     margin: 1rem 0 3rem;
 }
-
+.alert {
+    background: var(--red-color);
+    color: var(--text-color);
+    padding: .5rem 1rem;
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    margin-top: 1rem;
+}
 /* MISION SECTION DESING */
 
 .mision {
@@ -484,6 +492,24 @@ button:hover {
 }
 #particles-js{
     width: 100%;
+}
+.scrollable::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+.scrollable::-webkit-scrollbar-thumb {
+    background: var(--main-color);
+    border-radius: 10px;
+}
+.scrollable::-webkit-scrollbar-thumb:hover {
+    background: #ff783e;
+}
+.scrollable::-webkit-scrollbar-track {
+    background: var(--second-bg-color);
+    border-radius: 10px;
+}
+.scrollable::-webkit-scrollbar-thumb:active {
+    background-color: var(--main-color);
 }
 canvas{
     position:fixed;

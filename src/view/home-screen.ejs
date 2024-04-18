@@ -1,201 +1,364 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Col-Learning</title>
-    <link
-			rel="shortcut icon"
-			href="./dist/assets/fav-icon.ico"
-			type="image/x-icon"
-		/>
-    <!-- --------- BOX ICONS ---------- -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title> Col-Learning</title>
+        <link rel="shortcut icon" href="./dist/assets/fav-icon.ico" type="image/x-icon"/>
+        <!-- --------- BOX ICONS ---------- -->
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="dist/css/home-style.css">
-</head>
-<body>
-    <header class="header">
-        <a href="#" class="logo">Gif Col-Learning</a>
-        <i class='bx bx-menu' id="menu-icon"></i>
-        <nav class="navbar">
-            <a href="#home" class="active-link">Home</a>
-            <a href="#overview">Overview</a>
-            <a href="#levels">Levels</a>
-            <a href="#mision">Mision & Vision</a>
-            <a href="#about">About us</a>
-            <!--boton-->
-            <a href="working" class="btn">START!</a>
-        </nav>
-    </header>
-    <!--HOME SECTION DESING-->
-    <section class="home" id="home">
-        <div class="home-img">
-            <img src="dist/assets/img/home/logo.png" alt="">
-        </div>
-        <div class="home-content">
-            <h3>Welcome to... </h3>
-            <h1>The Adventure</h1>
-            <h3>¡You can <span class="multiple-text"></span></h3>
-            <p>¡Descubre el poder de Git de una manera emocionante!
-                Bienvenido a nuestra plataforma web diseñada para que aprendas y practiques las bases esenciales de Git.</p>
-            <div class="social-media">
-                <a href="https://github.com/J4F3ET/UD.ProyectoDeGrado.GitCol-Learning"><i class='bx bxl-github' ></i></a>
+        <!-- CSS -->
+        <link rel="stylesheet" href="dist/css/home-style.css">
+        <link rel="stylesheet" href="dist/css/dialog-home-style.css">
+    </head>
+    <body class="scrollable">
+        <header class="header">
+            <a href="#" class="logo">Gif Col-Learning</a>
+            <i class='bx bx-menu' id="menu-icon"></i>
+            <nav class="navbar">
+                <a href="#home" class="active-link">Home</a>
+                <a href="#overview">Overview</a>
+                <a href="#levels">Levels</a>
+                <a href="#mision">Mision & Vision</a>
+                <a href="#about">About us</a>
+                <button class="btn btn-dialog">START!</button>
+            </nav>
+        </header>
+        <!--HOME SECTION DESING-->
+        <section class="home" id="home">
+            <div class="home-img">
+                <img src="dist/assets/img/home/logo.png" alt="">
             </div>
-        </div>
-
-    </section>
-
-    <!--OVERVIEW SECTION DESING-->
-    <section class="overview" id="overview">
-        <div class="card1">
-            <div class="overview-img">
-                <img src="dist/assets/img\teaser/principalCat.png" alt="">
+            <div class="home-content">
+                <h3>Welcome to... </h3>
+                <h1>The Adventure</h1>
+                <h3>¡You can <span class="multiple-text"></span></h3>
+                <p>¡Descubre el poder de Git de una manera emocionante!
+                    Bienvenido a nuestra plataforma web diseñada para que aprendas y practiques las bases esenciales de Git.</p>
+                <div class="social-media">
+                    <a href="https://github.com/J4F3ET/UD.ProyectoDeGrado.GitCol-Learning"><i class='bx bxl-github' ></i></a>
+                </div>
             </div>
-            <div class="overview-content">
-                <h2 class="heading">Application <span> Overview </span></h2>
-                <p>Sumérgete en un mundo de aprendizaje interactivo y desbloquea tus habilidades de control de versiones. 
-                ¿Lo mejor? Nuestro modo colaborativo te permite trabajar en equipo, llevando tus habilidades al siguiente nivel. 
-                ¡Únete a nosotros y haz que tu viaje con Git sea épico!"</p>
-            </div>
-        </div>
-    </section>
 
-    <!--LEVELS SECTION DESING-->
-    <section class="levels" id="levels">
-        <h2 class="heading">Levels</h2>
-        <div class="levels-container">
-            <div class="levels-box">
-                <i class='bx bx-expand-horizontal' ></i>
-                <h3>Beginner</h3>
+        </section>
+
+        <!--OVERVIEW SECTION DESING-->
+        <section class="overview" id="overview">
+            <div class="card1">
+                <div class="overview-img">
+                    <img loading="lazy" src="dist/assets/img\teaser/principalCat.png" alt="">
+                </div>
+                <div class="overview-content">
+                    <h2 class="heading">Application <span> Overview </span></h2>
+                    <p>Sumérgete en un mundo de aprendizaje interactivo y desbloquea tus habilidades de control de versiones. 
+                    ¿Lo mejor? Nuestro modo colaborativo te permite trabajar en equipo, llevando tus habilidades al siguiente nivel. 
+                    ¡Únete a nosotros y haz que tu viaje con Git sea épico!"</p>
+                </div>
+            </div>
+        </section>
+
+        <!--LEVELS SECTION DESING-->
+        <section class="levels" id="levels">
+            <h2 class="heading">Levels</h2>
+            <div class="levels-container">
+                <div class="levels-box">
+                    <i class='bx bx-expand-horizontal' ></i>
+                    <h3>Beginner</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                </div>
+
+                <div class="levels-box">
+                    <i class='bx bx-expand-vertical' ></i>
+                    <h3>Intermedium</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                </div>
+                <div class="levels-box">
+                    <i class='bx bx-collapse-horizontal' ></i>
+                    <h3>Advanced</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                </div>
+            </div>
+        </section>
+
+        <!--MISION SECTION DESING-->
+        <section class="mision" id="mision">
+                <div class="mision-img">
+                    <img loading="lazy" src="https://i.redd.it/zym5pybotlja1.gif" alt="">
+                </div>
+                <div class="mision-content">
+                    <h2 class="heading1">Mision of<span> proyect</span></h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                </div>
+        </section>
+        
+        <!--VISION SECTION DESING-->
+        <section class="vision" id="vision">
+            <div class="vision-content">
+                <h2 class="heading1">Vision of<span> proyect</span></h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
             </div>
+            <div class="vision-img">
+                <img loading="lazy" src="https://38.media.tumblr.com/a401eaca1220428dc37379cbd7312e16/tumblr_nv44lndz1l1u6xnmoo1_1280.gif" alt="">
+            </div>
+        </section>
 
-            <div class="levels-box">
-                <i class='bx bx-expand-vertical' ></i>
-                <h3>Intermedium</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-            </div>
-            <div class="levels-box">
-                <i class='bx bx-collapse-horizontal' ></i>
-                <h3>Advanced</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-            </div>
-        </div>
-    </section>
-
-    <!--MISION SECTION DESING-->
-    <section class="mision" id="mision">
-            <div class="mision-img">
-                <img src="https://i.redd.it/zym5pybotlja1.gif" alt="">
-            </div>
-            <div class="mision-content">
-                <h2 class="heading1">Mision of<span> proyect</span></h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-            </div>
-    </section>
-    
-    <!--VISION SECTION DESING-->
-    <section class="vision" id="vision">
-        <div class="vision-content">
-            <h2 class="heading1">Vision of<span> proyect</span></h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-        </div>
-        <div class="vision-img">
-            <img src="https://38.media.tumblr.com/a401eaca1220428dc37379cbd7312e16/tumblr_nv44lndz1l1u6xnmoo1_1280.gif" alt="">
-        </div>
-</section>
-
-    <!--ABOUT US SECTION DESING-->
-    <section class="about" id="about">
-        <h2 class="heading">About us</h2>
-        <div class="about-container">
-            <div id="card2">
-                <h1>Danna Sepulveda</h1>
-                <div class="image-crop">
-                    <img id="avatar" src="https://i.pinimg.com/736x/35/2f/61/352f616d659e702365d3524580d2b9a8.jpg"></img>
-                </div>
-                <div id="bio">
-                    <p>Hello, my name is Danna! Chipi chipi chapa chapa Dubi dubi daba daba Mágico mi dubi dubi Bum, bum, bum, bum. </p>
-                </div>
-                <div id="stats">
-                    <div class="col">
-                        <p class="stat">108</p>
-                        <p class="label">Proyect</p>
+        <!--ABOUT US SECTION DESING-->
+        <section class="about" id="about">
+            <h2 class="heading">About us</h2>
+            <div class="about-container">
+                <div id="card2">
+                    <h1>Danna Sepulveda</h1>
+                    <div class="image-crop">
+                        <img id="avatar" src="https://i.pinimg.com/736x/35/2f/61/352f616d659e702365d3524580d2b9a8.jpg"></img>
                     </div>
-                            <div class="col">
-                        <p class="stat">457</p>
-                        <p class="label">.....</p>
+                    <div id="bio">
+                        <p>Hello, my name is Danna! Chipi chipi chapa chapa Dubi dubi daba daba Mágico mi dubi dubi Bum, bum, bum, bum. </p>
+                    </div>
+                    <div id="stats">
+                        <div class="col">
+                            <p class="stat">108</p>
+                            <p class="label">Proyect</p>
+                        </div>
+                                <div class="col">
+                            <p class="stat">457</p>
+                            <p class="label">.....</p>
+                        </div>
+                    </div>
+                    <div id="buttons">
+                        <form>
+                            <button type="submit" formaction="https://github.com/Chocolatamargo2607">Git-hub</button>
+                        </form>
+                        <form>
+                            <button id="msg" type="submit" formaction="">Message</button>
+                        </form>
                     </div>
                 </div>
-                <div id="buttons">
-                    <form>
-                        <button type="submit" formaction="https://github.com/Chocolatamargo2607">Git-hub</button>
-                    </form>
-                    <form>
-                        <button id="msg" type="submit" formaction="">Message</button>
-                    </form>
+                <div id="card3">
+                    <h1>Jafet Lopez </h1>
+                    <div class="image-crop">
+                        <img id="avatar" src="https://i.pinimg.com/564x/f8/41/b0/f841b07404202d58bab4aec4a9680192.jpg"></img>
+                    </div>
+                    <div id="bio">
+                        <p>Hello, my name is Jafet! Chipi chipi chapa chapa Dubi dubi daba daba Mágico mi dubi dubi Bum, bum, bum, bum. </p>
+                    </div>
+                    <div id="stats">
+                        <div class="col">
+                            <p class="stat">108</p>
+                            <p class="label">Proyect</p>
+                        </div>
+                                <div class="col">
+                            <p class="stat">457</p>
+                            <p class="label">.....</p>
+                        </div>
+                    </div>
+                    <div id="buttons">
+                        <form>
+                            <button type="submit" formaction="https://github.com/J4F3ET">Git-hub</button>
+                        </form>
+                        <form>
+                            <button id="msg" type="submit" formaction="https://www.linkedin.com/in/jafet-lopez-zu%C3%B1iga/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app">Linkedin</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div id="card3">
-                <h1>Jafet Lopez </h1>
-                <div class="image-crop">
-                    <img id="avatar" src="https://i.pinimg.com/564x/f8/41/b0/f841b07404202d58bab4aec4a9680192.jpg"></img>
-                </div>
-                <div id="bio">
-                    <p>Hello, my name is Jafet! Chipi chipi chapa chapa Dubi dubi daba daba Mágico mi dubi dubi Bum, bum, bum, bum. </p>
-                </div>
-                <div id="stats">
-                    <div class="col">
-                        <p class="stat">108</p>
-                        <p class="label">Proyect</p>
-                    </div>
-                            <div class="col">
-                        <p class="stat">457</p>
-                        <p class="label">.....</p>
-                    </div>
-                </div>
-                <div id="buttons">
-                    <form>
-                        <button type="submit" formaction="https://github.com/J4F3ET">Git-hub</button>
-                    </form>
-                    <form>
-                        <button id="msg" type="submit" formaction="https://www.linkedin.com/in/jafet-lopez-zu%C3%B1iga/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app">Linkedin</button>
-                    </form>
-                </div>
+        </section>
+        <div id="particles-js"></div>
+
+        <!--FOOTER SECTION DESING-->
+
+        <footer class="footer">
+            <div class="footer-text">
+                <p>Copyright &copy; 2024 by Jafet Lopez | All Rights Reserved.</p>
+                <p>Contact: gitcollearning@gmail.com</p>
             </div>
-        </div>
-    </section>
-    <div id="particles-js"></div>
+            <div class="footer-icontop">
+                <a href="#home"><i class='bx bx-chevron-up'></i></a>
+            </div>
 
-    <!--FOOTER SECTION DESING-->
+        </footer>
+        <!-- --------- DIALOGS --------- -->
 
-    <footer class="footer">
-        <div class="footer-text">
-            <p>Copyright &copy; 2024 by Jafet Lopez | All Rights Reserved.</p>
-            <p>Contact: gitcollearning@gmail.com</p>
-        </div>
-        <div class="footer-icontop">
-            <a href="#home"><i class='bx bx-chevron-up'></i></a>
-        </div>
+        <!-- DIALO SELECT TO MODE -->
+        <dialog  id="dialogSelectMode" class="dialog" data-mode="multi" >
+            <section class="container_dialog">
+                <div class="section_dialog info">
+                    <div class="section_dialog_item">
+                        <h2 class="title_dialog">Select mode</h2>
+                        <p class="text_dialog">Choose the mode you want to use</p>
+                    </div>
+                    <div class="section_dialog_item info_mode scrollable dialog_block_info">
+                        <h3>Single user mode</h3>
+                        <p class="info_dialog">
+                            The Single User Mode allows you to freely explore the console and Git
+                            commands at your own pace. GitCol Learning provides preset challenges
+                            with on-screen guides to help you grasp the basics of Git. All of this
+                            takes place in an individual environment, allowing you to focus on 
+                            learning independently.<br>
+                        </p>
+                        <div class="item_dialog">
+                            <div class="icon_item_dialog">
+                                <i class='bx bxs-user'></i>
+                            </div>
+                            <small class="tex_item_dialog">
+                                Free use or individual practice of the environment
+                            </small>
+                        </div>
+                        <div class="item_dialog">
+                            <div class="icon_item_dialog">
+                                <i class='bx bxs-graduation'></i>
+                            </div>
+                            <small class="tex_item_dialog">
+                                Pre-set challenges with guides for learning
+                            </small>
+                        </div>
+                    </div>
+                    <div class="section_dialog_item group_buttons_dialog">
+                        <button class="btn_dialog_coursel">
+                            <i data-orientation="left" class='bx bxs-left-arrow arrow'></i>
+                        </button>
+                        <div>
+                            <h3 class="subtitle_mode dialog_block_course">
+                                Single user mode
+                            </h3>
+                        </div>
+                        <button class="btn_dialog_coursel">
+                            <i data-orientation="right" class='bx bxs-right-arrow arrow' ></i>
+                        </button>
+                    </div>
+                    <div class="section_dialog_item">
+                        <button id="btn_select_mode" class="btn_dialog btn_dialog_start">git init</button>
+                    </div>
+                </div>
+                <div class="section_dialog img">
+                    <div class="section_dialog_item star-end">
+                        <button data-dialog="dialogSelectMode" class="close_dialog btn_dialog_close">
+                            <i data-dialog="dialogSelectMode" class='bx bx-x'></i>
+                        </button>
+                    </div>
+                    <div class="section_dialog_item img dialog_block_img">
+                        <img loading="lazy" class="img_cat single" src="dist/assets/img/home/cat_white.png" alt="">
+                    </div>  
+                </div>
+            </section>
+        </dialog>
+        <!-- END DIALOG SELECT TO MODE -->
 
-    </footer>
+        <!-- DIALOG SINGLE MODE  -->
+        <dialog  id="dialog_single" class="dialog second">
+            <section class="container_dialog">
+                <div class="section_dialog info">
+                    <div class="section_dialog_item">
+                        <h2 class="title_dialog">Single mode</h2>
+                        <p class="text_dialog">Select type to use</p>
+                    </div>
+                    <div class="section_dialog_item info_mode scrollable dialog_block_info">
+                        <p class="alert">
+                            <strong>Console Usage Information:</strong><em>This application is still
+                                under development, and we're continually improving it. You can use 
+                                the console commands "help" and "clear" to get assistance and clear
+                                the console, respectively. We appreciate your patience and feedback
+                                as we work to enhance your experience!</em>
+                        </p>
+                        <p>
+                            <br><strong>GitCol Learning:</strong> <em>No Registration Required, Embrace Flexibility in Single User Mode</em><br>
+                            In <strong>Single User Mode</strong>, there's no need for <strong>registration</strong>. Enjoy the flexibility of <strong>practice sessions</strong> or pre-set <strong>challenges</strong> loaded into the workspace.
+                        </p>                        
+                    </div>
+                    <div class="section_dialog_item group_buttons_dialog">
+                        <a href="/aloneWorking" class="btn_dialog btn_dialog_start">git init</a>
+                    </div>
+                </div>
+                <div class="section_dialog img">
+                    <div class="section_dialog_item star-end">
+                        <button  data-dialog="dialog_single" class="close_dialog btn_dialog_close">
+                            <i data-dialog="dialog_single" class='bx bx-x'></i>
+                        </button>
+                    </div>
+                    <div class="section_dialog_item img dialog_block_img">
+                        <img loading="lazy" class="img_cat single" src="dist/assets/img/home/cat_white.png" alt="">
+                    </div>  
+                </div>
+            </section>
+        </dialog>
+        <!-- END DIALOG SINGLE MODE -->
 
-    <!--SCROLL REVEAL-->
-    <script src="https://unpkg.com/scrollreveal"></script>
+        <!-- DIALOG MULTI MODE  -->
+        <dialog  id="dialog_multi" class="dialog second">
+            <section class="container_dialog">
+                <div class="section_dialog info">
+                    <div class="section_dialog_item">
+                        <h2 class="title_dialog">Multi mode</h2>
+                        <p class="text_dialog">Select a supplier to log in</p>
+                    </div>
+                    <div class="section_dialog_item info_mode scrollable dialog_block_info">
+                        <p class="alert">
+                            <strong>Attention!</strong><em>This project is still under construction,
+                                and some sections may not be available yet. The collaborative section 
+                                is still not fully functional, but you can explore other features of 
+                                the project. Thank you for your understanding!</em>
+                        </p>
+                        <p><br>
+                            <strong>GitCol Learning:</strong> <em>No Registration Required, but
+                            Enhanced Features with Sign-in</em><br><br>GitCol Learning provides
+                            a seamless experience without the need for <strong>registration
+                            </strong>. We prioritize your <strong>privacy</strong> and do not
+                            store any <strong>user data</strong> or personal information.<br>
+                            However, to unlock enhanced features like <strong>creating
+                            </strong> and <strong>joining collaboration rooms</strong>, 
+                            as well as experiencing a simulated "<strong>remote 
+                            repository</strong>" environment, optional sign-in is available 
+                            using your secure <strong>Google</strong> or <strong>GitHub</strong>
+                            account. This secure sign-in ensures the necessary
+                            <strong>authentication</strong> to safeguard the <strong>privacy</strong>
+                            and <strong>security</strong> of your collaborative sessions.
+                        </p> 
+                    </div>
+                    <div class="section_dialog_item group_buttons_dialog">
+                        <button id="googleLogin" class="item_dialog btn-dialog">
+                            <div class="icon_item_dialog">
+                                <i class='bx bxl-google' ></i>
+                            </div>
+                            <p>Google</p>
+                        </button>
+                        <button id="githubLogin" class="item_dialog btn-dialog">
+                            <div class="icon_item_dialog">
+                                <i class='bx bxl-github'></i>
+                            </div>
+                            <p>GitHub</p>
+                        </button>
+                    </div>
+                </div>
+                <div class="section_dialog img">
+                    <div class="section_dialog_item star-end">
+                        <button data-dialog="dialog_multi" class="close_dialog btn_dialog_close">
+                            <i data-dialog="dialog_multi" class='bx bx-x'></i>
+                        </button>
+                    </div>
+                    <div class="section_dialog_item img dialog_block_img">
+                        <img loading="lazy" class="img_cat multi" src="dist/assets/img/home/cats.png" alt="Multi user mode">
+                    </div>  
+                </div>
+            </section>
+        </dialog>
+        <!-- END DIALOG MULTI MODE -->
+        <!-- --------- END DIALOGS ---------- -->
+        <!-- --------- SCROLL REVEAL ---------- -->
+        <!--SCROLL REVEAL-->
+        <script src="https://unpkg.com/scrollreveal"></script>
 
-    <!--TYPED JS-->
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+        <!--TYPED JS-->
+        <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 
-    <!--CUSTOM JS-->
-    <script src="dist/js/home-script.js"></script>
-
-    <!--PARTICLE JS-->
-    <script src="dist/assets/lib/particles.min.js"></script>
-    <script src="dist/assets/lib/particlesjs-config.json"></script>
-    <!--OBSERVER Auth Observer-->
-    <script type="module" src="dist/js/userNotAuth-observer.js"></script>
-</body>
+        <!--CUSTOM JS-->
+        <script src="dist/js/home-script.js"></script>
+        <script type="module" src="dist/js/login-script.js"></script>
+        <!--PARTICLE JS-->
+        <script src="dist/assets/lib/particles.min.js"></script>
+        <script src="dist/assets/lib/particlesjs-config.json"></script>
+        <!--OBSERVER Auth Observer-->
+        <script type="module" src="dist/js/userNotAuth-observer.js"></script>
+        
+    </body>
 </html>

@@ -90,6 +90,29 @@ async function roomGetAll() {
     return database.ref("rooms/").get();
 }
 /**
+ * roomGetAllPublic - Get all public rooms
+ * @throws error
+ * @returns {Promise<{id: string, code: string, description: string, members: int}|[]>} : rooms public or empty array
+ */
+async function roomGetAllPublic(){
+    try {
+        const response = database.ref("rooms/").get();
+        const rooms = (await response).val();
+        if (!rooms) return [];
+        return Object.keys(rooms).filter(roomId => rooms[roomId].hidden == false).map(roomId => {
+            return {
+                code: rooms[roomId].code,
+                description: rooms[roomId].description,
+                members: rooms[roomId].members?.length || 0
+            };
+        });
+    } catch (error) {
+        console.log("Error al buscar las salas públicas");
+        console.error(error);
+        return [];
+    }
+}
+/**
  * 
  * @param {string} idUser 
  * @returns data of the rooms
@@ -157,6 +180,7 @@ export {
     roomDelete, 
     roomGet,
     roomGetAll,
+    roomGetAllPublic,
     findByUserToRoom,
     roomRemoveMember,
     roomAddMember,

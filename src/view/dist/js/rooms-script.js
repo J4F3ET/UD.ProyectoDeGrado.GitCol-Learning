@@ -1,5 +1,6 @@
 import {logout} from "./userAuth-observer.js";
 const dialogCreateRoom = document.getElementById("dialogCreateRoom");
+const dialogSearchRoom = document.getElementById("dialogSearchRoom");
 function inflateSelectChallenge(challenges) {
 	const selectChallenge = document.getElementById("selectChallenge");
 	selectChallenge.options.length = 0;
@@ -12,10 +13,74 @@ function inflateSelectChallenge(challenges) {
 	}
 	return selectChallenge.options.length === 0;
 }
+function loginToRoom(code){
+	fetch(`/rooms/fit?code=${code}`).then((response) => {
+		if(!response.ok)
+			window.location.href = "/home";
+		response.json().then((data) => {
+			if(data.ok && data.response !== false){
+				window.location.href = `/teamWorking?room=${data.response}`;
+			}else{
+				Swal.fire({
+					position: "center",
+					icon: "error",
+					title: "Room not found",
+					showConfirmButton: false,
+					timer: 1500
+				});
+			}
+		})
+	});
+}
+function getCardRoom(room) {
+	const card = document.createElement("div");
+	const cardHeader = document.createElement("div");
+	const cardTitle = document.createElement("h2");
+	const cardDescription = document.createElement("p");
+	const cardBody = document.createElement("div");
+	const cardInfo = document.createElement("div");
+	const cardCode = document.createElement("p");
+	const codeSpan = document.createElement("span");
+	const cardLevel = document.createElement("p");
+	const levelSpan = document.createElement("span");
+	card.classList.add("card");
+	cardHeader.classList.add("card__header");
+	cardTitle.classList.add("card__title");
+	cardTitle.textContent = "Room";
+	cardDescription.classList.add("card__description");
+	cardDescription.textContent = room.description;
+	cardBody.classList.add("card__body");
+	cardInfo.classList.add("card__info");
+	cardCode.classList.add("card__code");
+	cardCode.textContent = "Code: ";
+	codeSpan.textContent = room.code;
+	cardCode.appendChild(codeSpan);
+	cardLevel.classList.add("card__members");
+	cardLevel.textContent = "Members: ";
+	levelSpan.textContent = room.members;
+	cardLevel.appendChild(levelSpan);
+	cardInfo.appendChild(cardCode);
+	cardInfo.appendChild(cardLevel);
+	cardBody.appendChild(cardInfo);
+	cardHeader.appendChild(cardTitle);
+	cardHeader.appendChild(cardDescription);
+	card.appendChild(cardHeader);
+	card.appendChild(cardBody);
+	card.addEventListener("click", () => loginToRoom(room.code));
+	return card;
+}
 async function getChallenge() {
 	const level = document.getElementById("selectLevelChallenge").value || 0;
 	const response = fetch(`/challenges?level=${level}`)
+	if(!(await response).ok)
+		window.location.href = "/home";
 	return inflateSelectChallenge(await (await response).json());
+}
+async function getRoomsPublic(){
+	const response = fetch("/rooms/all/public");
+	if(!(await response).ok)
+		window.location.href = "/home"; 
+	return (await response).json();
 }
 function updateValidateRequirement(element,validation) {
 	if(validation){
@@ -26,15 +91,6 @@ function updateValidateRequirement(element,validation) {
 		element.classList.add("invalidRequirements");
 	}
 }
-document.getElementById("inputSearchRoomCode").addEventListener("input", (e) => {
-	e.target.value = e.target.value.toUpperCase();
-	const validLetterAndNumber = /^[A-Z0-9]+$/;
-	const value = document.getElementById("inputSearchRoomCode").value;
-	updateValidateRequirement(document.getElementById("validLetterAndNumberSearch"),validLetterAndNumber.test(value));
-	updateValidateRequirement(document.getElementById("validMinCharactersSearch"),value.length >= 4);
-	updateValidateRequirement(document.getElementById("validMaxCharactersSearch"),value.length <= 8 && value.length >= 4);
-	document.getElementById("btnLoginToRoom").disabled = e.target.value.length < 4 || e.target.value.length > 8 || !validLetterAndNumber.test(e.target.value);
-});
 function checkInputRoomCode(element,code){
 	return element.value.length < 4 || element.value.length > 8 || !/^[A-Z0-9]+$/.test(element.value) || !code;
 }
@@ -43,7 +99,8 @@ function validateInputRoomCode(element){
 	const required = document.getElementById("validRoomCode");
 	if(element.value.length > 3){
 		fetch(`/rooms/code?code=${element.value}`).then((response) => {
-			if(!response.ok)return;
+			if(!response.ok)
+				window.location.href = "/home";
 			response.json().then((data) => {
 				updateValidateRequirement(required,data.code);
 				required.textContent = data.code ? "Room code available" : "The code is already in use";
@@ -59,11 +116,26 @@ function validateInputRoomCode(element){
 	updateValidateRequirement(document.getElementById("validMinCharacters"),element.value.length >= 4);
 	updateValidateRequirement(document.getElementById("validMaxCharacters"),element.value.length <= 8 && element.value.length >= 4);
 }
+
+document.getElementById("inputSearchRoomCode").addEventListener("input", (e) => {
+	e.target.value = e.target.value.toUpperCase();
+	const validLetterAndNumber = /^[A-Z0-9]+$/;
+	const value = document.getElementById("inputSearchRoomCode").value;
+	updateValidateRequirement(document.getElementById("validLetterAndNumberSearch"),validLetterAndNumber.test(value));
+	updateValidateRequirement(document.getElementById("validMinCharactersSearch"),value.length >= 4);
+	updateValidateRequirement(document.getElementById("validMaxCharactersSearch"),value.length <= 8 && value.length >= 4);
+	document.getElementById("btnLoginToRoom").disabled = e.target.value.length < 4 || e.target.value.length > 8 || !validLetterAndNumber.test(e.target.value);
+});
 document.getElementById("inputRoomCode").addEventListener("input", (e) => {
 	e.target.value = e.target.value.toUpperCase();
 	validateInputRoomCode(e.target);
 });
-document.getElementById("btnLogout").addEventListener("click", () => logout());
+document.getElementById("btnLogout").addEventListener("click", async () => {
+	const response = logout()
+	const data = (await response).json();
+	if ((await response).status === 200)
+		window.location.href = (await data).url||"/home";
+});
 document.getElementById("selectLevelChallenge").addEventListener("change", () => 
 	getChallenge().then((response) => document.getElementById("selectChallenge").disabled = response)
 );
@@ -88,7 +160,8 @@ document.getElementById("btnSubmitCreateRoom").addEventListener("click", (e) => 
 		},
 		body: JSON.stringify(room)
 	}).then((response) => {
-		if(!response.ok)return;
+		if(!response.ok)
+			window.location.href = "/home";
 		response.json().then((data) => {
 			dialogCreateRoom.close();
 			window.location.href = `/teamWorking?room=${data.room}`;
@@ -103,23 +176,15 @@ document.getElementById("btnCreateRoom").addEventListener("click", () => {
 document.getElementById("btnLoginToRoom").addEventListener("click", (e) => {
 	e.preventDefault();
 	const code = document.getElementById("inputSearchRoomCode").value;
-	fetch(`/rooms/fit?code=${code}`).then((response) => {
-		if(!response.ok)return;
-		response.json().then((data) => {
-			if(data.ok && data.response !== false){
-				window.location.href = `/teamWorking?room=${data.response}`;
-			}else{
-				Swal.fire({
-					position: "center",
-					icon: "error",
-					title: "Room not found",
-					showConfirmButton: false,
-					timer: 1500
-				});
-			}
-		})
-	});
+	loginToRoom(code);
 });
+
 document.getElementById("btnCancelCreateRoom").addEventListener("click", () => dialogCreateRoom.close());
-
-
+document.getElementById("btnFindRoom").addEventListener("click", async() => {
+	const roomsJson = getRoomsPublic();
+	const container = document.getElementById("container_rooms_public");
+	container.innerHTML = "";
+	(await roomsJson).rooms.forEach(room => container.appendChild(getCardRoom(room)));
+	dialogSearchRoom.showModal();
+});
+document.getElementById("btnCancelSearchRoom").addEventListener("click", () => dialogSearchRoom.close());

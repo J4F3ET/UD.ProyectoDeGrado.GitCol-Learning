@@ -5,7 +5,7 @@ export const releaseVerificationMiddleware = (req, res, next) => {
 	} else if (undefined !== req.headers["authorization"]) {
 		verifyIdTokenMiddleware(req, res, next);
 	} else {
-		res.status(401).render("login-screen");
+		res.status(401);
 		res.end();
 	}
 };
@@ -16,7 +16,7 @@ const verifyAccessCookieMiddleware = (req, res, next) => {
 			next();
 		});
 	} catch (error) {
-		res.status(401).render("login-screen");
+		res.status(401);
 		res.end();
 		return;
 	}
@@ -27,7 +27,7 @@ const verifyIdTokenMiddleware = (req, res, next) => {
 		auth.verifyIdToken(req.headers["authorization"].split(" ")[1])
 			.then((result) => setAccessTokenCookieMiddleware(req, res, next));
 	} catch (error) {
-		res.status(401).render("login-screen");
+		res.status(401);
 		res.end();
 		return;
 	}
