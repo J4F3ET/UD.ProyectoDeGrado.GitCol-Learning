@@ -84,7 +84,6 @@ openButtonDialog.addEventListener('click', () => {
     dialogSelectMode.showModal();
 });
 const toogleModeCallback = async () => {
-    console.log(modeElement.dataset.mode);
     toogleMode(modeElement.dataset.mode);
     modeElement.dataset.mode = modeElement.dataset.mode === 'single' ? 'multi' : 'single';
 }
@@ -95,15 +94,20 @@ const selectModeCallback = async (mode) => {
 }
 const closeDialogCallback = async (dialogId) => document.getElementById(dialogId)?.close()
 courseButtons.forEach(btn => {
-    btn.addEventListener('click', async () => toogleModeCallback);
-    btn.addEventListener('touchleave', async () => toogleModeCallback);
+    btn.addEventListener('click', async () => toogleModeCallback());
+    btn.addEventListener('touchstart', async () => toogleModeCallback());
 });
+document.querySelectorAll('.touchmove_select').forEach(
+    element => element.addEventListener('touchmove', async () => toogleModeCallback())
+);
 closeButtonDialog.forEach(btn => {
     btn.addEventListener('click',(e) => closeDialogCallback(e.target.dataset.dialog));    
     btn.addEventListener('touchstart',(e) => closeDialogCallback(e.target.dataset.dialog));
 });
-document.getElementById('btn_select_mode').addEventListener('click', async () => selectModeCallback(modeElement.dataset.mode));
-document.getElementById('btn_select_mode').addEventListener('touchstart', async () => selectModeCallback(modeElement.dataset.mode));
+document.getElementById('btn_select_mode')
+    .addEventListener('click', async () => selectModeCallback(modeElement.dataset.mode));
+document.getElementById('btn_select_mode')
+    .addEventListener('touchstart', async () => selectModeCallback(modeElement.dataset.mode));
 // end section dialog mode
 
 // ---- Section dialog single mode ----
