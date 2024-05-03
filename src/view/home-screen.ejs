@@ -7,48 +7,56 @@
         <title> Col-Learning</title>
         <link rel="shortcut icon" href="./dist/assets/fav-icon.ico" type="image/x-icon"/>
         <!-- --------- BOX ICONS ---------- -->
+        <link href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css" rel="stylesheet" />
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-
         <!-- CSS -->
+        <link rel="stylesheet" href="dist/css/reset.css">
         <link rel="stylesheet" href="dist/css/home-style.css">
         <link rel="stylesheet" href="dist/css/dialog-home-style.css">
     </head>
-    <body class="scrollable">
-        <header class="header">
-            <a href="#" class="logo">Gif Col-Learning</a>
-            <i class='bx bx-menu' id="menu-icon"></i>
-            <nav class="navbar">
-                <a href="#home" class="active-link">Home</a>
-                <a href="#overview">Overview</a>
-                <a href="#levels">Levels</a>
-                <a href="#mision">Mision & Vision</a>
-                <a href="#about">About us</a>
-                <button class="btn btn-dialog">START!</button>
+    <body class="body scrollable">
+        <header class="home-header">
+            <a href="/" class="logo">Gif Col-Learning</a>
+            <i class='nes-icon bars' id="menu-icon"></i>
+            <nav class="home-navbar">
+                <a href="#home" class="item-navbar active-link">Home</a>
+                <a href="#overview" class="item-navbar">Overview</a>
+                <a href="#levels" class="item-navbar">Levels</a>
+                <a href="#mision-vision" class="item-navbar">Mision & Vision</a>
+                <a href="#about" class="item-navbar">About us</a>
+                <button class="btn orange btn-dialog">START!</button>
             </nav>
         </header>
         <!--HOME SECTION DESING-->
-        <section class="home" id="home">
-            <div class="home-img">
-                <img src="dist/assets/img/home/logo.png" alt="">
+        <section class="view-section-especial home-section" id="home">
+            <div class="container-home-img">
+                <img class="banner-home-img" src="dist/assets/img/home/logo.png" alt="">
             </div>
-            <div class="home-content">
+            <div class="content-home-section">
                 <h3>Welcome to... </h3>
                 <h1>The Adventure</h1>
                 <h3>¡You can <span class="multiple-text"></span></h3>
                 <p>¡Descubre el poder de Git de una manera emocionante!
                     Bienvenido a nuestra plataforma web diseñada para que aprendas y practiques las bases esenciales de Git.</p>
                 <div class="social-media">
-                    <a href="https://github.com/J4F3ET/UD.ProyectoDeGrado.GitCol-Learning"><i class='bx bxl-github' ></i></a>
+                    <a class="btn red github-link" href="https://github.com/J4F3ET/UD.ProyectoDeGrado.GitCol-Learning">
+                        <i class='nes-icon github' ></i>
+                    </a>
+                    <button class="btn orange btn-dialog">
+                        START!
+                    </button>
                 </div>
             </div>
-
         </section>
-
         <!--OVERVIEW SECTION DESING-->
-        <section class="overview" id="overview">
-            <div class="card1">
+        <section class="view-section overview-section" id="overview">
+            <div class="card">
                 <div class="overview-img">
-                    <img loading="lazy" src="dist/assets/img\teaser/principalCat.png" alt="">
+                    <img 
+                        loading="lazy" 
+                        src="dist/assets/img/home/cats.png" 
+                        alt="The magic cat of GitCol Learning">
+                    >
                 </div>
                 <div class="overview-content">
                     <h2 class="heading">Application <span> Overview </span></h2>
@@ -58,131 +66,148 @@
                 </div>
             </div>
         </section>
-
         <!--LEVELS SECTION DESING-->
-        <section class="levels" id="levels">
+        <section class="view-section levels" id="levels">
             <h2 class="heading">Levels</h2>
             <div class="levels-container">
-                <div class="levels-box">
-                    <i class='bx bx-expand-horizontal' ></i>
-                    <h3>Beginner</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                <div class="level_card">
+                    <div class="icons-level-container">
+                        Beginner
+                    </div>
+                    <div class="level_card_content">
+                        <p class="level_card_title">Level Beginner</p>
+                        <p class="level_card_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                    </div>
                 </div>
-
-                <div class="levels-box">
-                    <i class='bx bx-expand-vertical' ></i>
-                    <h3>Intermedium</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                <div class="level_card">
+                    <div class="icons-level-container">
+                        Intermedium
+                    </div>
+                    <div class="level_card_content">
+                        <p class="level_card_title">Level Intermedium</p>
+                        <p class="level_card_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                    </div>
                 </div>
-                <div class="levels-box">
-                    <i class='bx bx-collapse-horizontal' ></i>
-                    <h3>Advanced</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                <div class="level_card">
+                    <div class="icons-level-container">
+                        Advanced
+                    </div>
+                    <div class="level_card_content">
+                        <p class="level_card_title">Level Advanced</p>
+                        <p class="level_card_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                    </div>
                 </div>
             </div>
         </section>
-
-        <!--MISION SECTION DESING-->
-        <section class="mision" id="mision">
-                <div class="mision-img">
-                    <img loading="lazy" src="https://i.redd.it/zym5pybotlja1.gif" alt="">
+        <!--MISION AND VISION SECTION DESING-->
+        <section id="mision-vision" class="view-section mision-vision-section" >
+            <!--MISION SECTION DESING-->
+            <div class="item-mision-vision-section">
+                <div class="container-mision-vision-img">
+                    <img 
+                        class="img-mision-vision deg-right"
+                        loading="lazy"
+                        src="https://i.redd.it/zym5pybotlja1.gif"
+                        alt="The computer show line code"
+                    >
                 </div>
-                <div class="mision-content">
-                    <h2 class="heading1">Mision of<span> proyect</span></h2>
+                <div class="content-mision-vision">
+                    <h2 class="heading">
+                        Mision of<span class="multiple-text"> proyect</span>
+                    </h2>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
                 </div>
-        </section>
-        
-        <!--VISION SECTION DESING-->
-        <section class="vision" id="vision">
-            <div class="vision-content">
-                <h2 class="heading1">Vision of<span> proyect</span></h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
             </div>
-            <div class="vision-img">
-                <img loading="lazy" src="https://38.media.tumblr.com/a401eaca1220428dc37379cbd7312e16/tumblr_nv44lndz1l1u6xnmoo1_1280.gif" alt="">
+            <!--VISION SECTION DESING-->
+            <div class="item-mision-vision-section">
+                <div class="content-mision-vision">
+                    <h2 class="heading">
+                        Vision of<span class="multiple-text"> proyect</span>
+                    </h2>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                </div>
+                <div class="container-mision-vision-img">
+                    <img 
+                        class="img-mision-vision deg-left"
+                        loading="lazy"
+                        src="https://38.media.tumblr.com/a401eaca1220428dc37379cbd7312e16/tumblr_nv44lndz1l1u6xnmoo1_1280.gif"
+                        alt="Person see the computer"
+                    >
+                </div>
             </div>
         </section>
-
         <!--ABOUT US SECTION DESING-->
-        <section class="about" id="about">
+        <section class="view-section about" id="about">
             <h2 class="heading">About us</h2>
-            <div class="about-container">
-                <div class="cardProfile"id="card2">
-                    <h1>Danna Sepulveda</h1>
-                    <div class="image-crop">
-                        <img id="avatar" src="https://i.pinimg.com/736x/35/2f/61/352f616d659e702365d3524580d2b9a8.jpg"></img>
+            <div class="container_perfile_card">
+                <div class="perfile_card">
+                    <div class="perfile_card-photo">
+                        <img
+                            loading="lazy" 
+                            alt="Danna Sepulveda"
+                            src="https://i.pinimg.com/736x/35/2f/61/352f616d659e702365d3524580d2b9a8.jpg"
+                        >
                     </div>
-                    <div id="bio">
-                        <p>Hello, my name is Danna! Chipi chipi chapa chapa Dubi dubi daba daba Mágico mi dubi dubi Bum, bum, bum, bum. </p>
+                    <div class="perfile_card-title">Danna Sepulveda <br>
+                        <span>Fullstack dev</span>
                     </div>
-                    <div id="stats">
-                        <div class="col">
-                            <p class="stat">108</p>
-                            <p class="label">Proyect</p>
-                        </div>
-                                <div class="col">
-                            <p class="stat">457</p>
-                            <p class="label">.....</p>
-                        </div>
-                    </div>
-                    <div id="buttons">
-                        <form>
-                            <button type="submit" formaction="https://github.com/Chocolatamargo2607">Git-hub</button>
-                        </form>
-                        <form>
-                            <button id="msg" type="submit" formaction="">Message</button>
-                        </form>
+                    <div class="perfile_card-socials">
+                        <button class="perfile_card-socials-btn github">
+                            <a href="https://github.com/Chocolatamargo2607">
+                                <i class="nes-icon github"></i>
+                            </a>
+                        </button>
+                        <button class="perfile_card-socials-btn linkedin">
+                            <a href="#">
+                                <i class="nes-icon linkedin"></i>
+                            </a>
+                            
+                        </button>
                     </div>
                 </div>
-                <div class="cardProfile"id="card3">
-                    <h1>Jafet Lopez </h1>
-                    <div class="image-crop">
-                        <img id="avatar" src="https://i.pinimg.com/564x/f8/41/b0/f841b07404202d58bab4aec4a9680192.jpg"></img>
+                <div class="perfile_card">
+                    <div class="perfile_card-photo">
+                        <img 
+                            src="https://i.pinimg.com/564x/f8/41/b0/f841b07404202d58bab4aec4a9680192.jpg" 
+                            alt="Jafet Lopez"
+                        >
                     </div>
-                    <div id="bio">
-                        <p>Hello, my name is Jafet! Chipi chipi chapa chapa Dubi dubi daba daba Mágico mi dubi dubi Bum, bum, bum, bum. </p>
+                    <div class="perfile_card-title">Jafet Lopez <br>
+                        <span>Fullstack dev(Backend)</span>
                     </div>
-                    <div id="stats">
-                        <div class="col">
-                            <p class="stat">108</p>
-                            <p class="label">Proyect</p>
-                        </div>
-                                <div class="col">
-                            <p class="stat">457</p>
-                            <p class="label">.....</p>
-                        </div>
-                    </div>
-                    <div id="buttons">
-                        <form>
-                            <button type="submit" formaction="https://github.com/J4F3ET">Git-hub</button>
-                        </form>
-                        <form>
-                            <button id="msg" type="submit" formaction="https://www.linkedin.com/in/jafet-lopez-zu%C3%B1iga/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app">Linkedin</button>
-                        </form>
+                    <div class="perfile_card-socials">
+                        <button class="perfile_card-socials-btn github">
+                            <a href="https://github.com/J4F3ET">
+                                <i class="nes-icon github"></i>
+                            </a>
+                        </button>
+                        <button class="perfile_card-socials-btn linkedin">
+                            <a href="https://www.linkedin.com/in/jafet-lopez-zuñiga">
+                                <i class="nes-icon linkedin"></i>
+                            </a>
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
         <div id="particles-js"></div>
-
         <!--FOOTER SECTION DESING-->
-
         <footer class="footer">
             <div class="footer-text">
                 <p>Copyright &copy; 2024 by Jafet Lopez | All Rights Reserved.</p>
                 <p>Contact: gitcollearning@gmail.com</p>
             </div>
-            <div class="footer-icontop">
-                <a href="#home"><i class='bx bx-chevron-up'></i></a>
-            </div>
-
+            <a class="btn orange" href="#home">
+                <strong>
+                    Up!<i class='nes-icon caret-up'></i>
+                </strong>
+            </a>
         </footer>
         <!-- --------- DIALOGS --------- -->
 
         <!-- DIALO SELECT TO MODE -->
         <dialog  id="dialogSelectMode" class="dialog" data-mode="multi" > 
-            <section class="container_dialog">
+            <section class="view-section container_dialog">
                 <div class="section_dialog info">
                     <div class="section_dialog_item">
                         <h2 class="title_dialog">Select mode</h2>
@@ -223,7 +248,7 @@
 
         <!-- DIALOG SINGLE MODE  -->
         <dialog  id="dialog_single" class="dialog second">
-            <section class="container_dialog">
+            <section class="view-section container_dialog">
                 <div class="section_dialog info">
                     <div class="section_dialog_item">
                         <h2 class="title_dialog">Single mode</h2>
@@ -262,7 +287,7 @@
 
         <!-- DIALOG MULTI MODE  -->
         <dialog  id="dialog_multi" class="dialog second">
-            <section class="container_dialog">
+            <section class="view-section container_dialog">
                 <div class="section_dialog info">
                     <div class="section_dialog_item">
                         <h2 class="title_dialog">Multi mode</h2>

@@ -1,6 +1,6 @@
 /*= toggle icon navbar =*/
-let menuIcon = document.querySelector('#menu-icon');
-let navbar = document.querySelector('.navbar');
+const menuIcon = document.querySelector('#menu-icon');
+const navbar = document.querySelector('.home-navbar');
 
 menuIcon.onclick = () => {
     menuIcon.classList.toggle('bx-x');
@@ -8,18 +8,18 @@ menuIcon.onclick = () => {
 }
 
 /*= scroll active link =*/
-let sections = document.querySelectorAll('section');
-let navLinks = document.querySelectorAll('header nav a');
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.item-navbar');
 window.onscroll = () => {
     sections.forEach(sec => {
-        let top = window.scrollY;
-        let offset = sec.offsetTop - 150;
-        let heigth = sec.offsetHeight;
-        let id = sec.getAttribute('id');
+        const top = window.scrollY;
+        const offset = sec.offsetTop - 150;
+        const heigth = sec.offsetHeight;
+        const id = sec.getAttribute('id');
         if(top >= offset && top < offset + heigth) {
             navLinks.forEach(links => {
                 links.classList.remove('active-link');
-                document.querySelector('header nav a[href*=' + id + ']')?.classList.add('active-link');
+                navbar.querySelector('.item-navbar[href*=' + id + ']')?.classList.add('active-link');
             });
         };
     });
