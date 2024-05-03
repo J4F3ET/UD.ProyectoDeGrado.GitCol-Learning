@@ -54,41 +54,6 @@
     border: 1px var(--main-color);
     border-style: none none solid none;
 }
-.btn{
-    border: none;
-    outline: none;
-    min-width: 10rem;
-    max-width: 13rem;
-    height: max-content;
-    margin: .5rem;
-    background-color: var(--second-bg-color);
-    padding: 10px 20px;
-    font-size: 100%;
-    font-weight: 700;
-    color: #fff;
-    border-radius: 5px;
-    transition: all ease 0.1s;
-    box-shadow: 0px 5px 0px 0px #2e3542;
-    cursor: pointer;
-    &.orange{
-        background-color: var(--main-color);
-        box-shadow: 0px 5px 0px 0px #ffa67f;
-    }
-    &.red{
-        background-color: var(--red-color);
-        box-shadow: 0px 5px 0px 0px #fe9b9b;
-    }
-}
-.btn:active{
-    transform: translateY(5px);
-    box-shadow: 0px 0px 0px 0px #2e3542;
-    &.orange{
-        box-shadow: 0px 0px 0px 0px #ffa67f;
-    }
-    &.red{
-        box-shadow: 0px 0px 0px 0px #fe9b9b;
-    }
-}
 /* HOME SECTION DESING */
 .home-section {
     display: flex;

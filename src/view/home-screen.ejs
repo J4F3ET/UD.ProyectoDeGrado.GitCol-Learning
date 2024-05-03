@@ -11,6 +11,7 @@
         <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
         <!-- CSS -->
         <link rel="stylesheet" href="dist/css/reset.css">
+        <link rel="stylesheet" href="dist/css/global.css">
         <link rel="stylesheet" href="dist/css/home-style.css">
         <link rel="stylesheet" href="dist/css/dialog-home-style.css">
     </head>
@@ -213,29 +214,34 @@
                         <h2 class="title_dialog">Select mode</h2>
                         <p class="text_dialog">Choose the mode you want to use</p>
                     </div>
-                    <div class="touchmove_select section_dialog_item info_mode scrollable dialog_block_info">
+                    <div class="section_dialog_item info_mode scrollable dialog_block_info">
                     </div>
                     <div class="section_dialog_item group_buttons_dialog">
                         <button class="btn_dialog_coursel">
-                            <i data-orientation="left" class='bx bxs-left-arrow arrow'></i>
+                            <i data-orientation="left" class='nes-icon caret-left  btn arrow'></i>
                         </button>
-                        <div>
+                        <div class="btn_dialog_coursel">
                             <h3 class="subtitle_mode dialog_block_course">
                                 Single user mode
                             </h3>
                         </div>
                         <button class="btn_dialog_coursel">
-                            <i data-orientation="right" class='bx bxs-right-arrow arrow' ></i>
+                            <i data-orientation="right" class='nes-icon caret-right btn arrow' ></i>
                         </button>
                     </div>
                     <div class="section_dialog_item">
-                        <button id="btn_select_mode" class="btn_dialog btn_dialog_start">git init</button>
+                        <button 
+                            id="btn_select_mode"
+                            class="btn_dialog btn_init btn red"
+                        >
+                            Start!
+                        </button>
                     </div>
                 </div>
                 <div class="section_dialog img">
-                    <div class="section_dialog_item star-end">
-                        <button data-dialog="dialogSelectMode" class="close_dialog btn_dialog_close">
-                            <i data-dialog="dialogSelectMode" class='bx bx-x'></i>
+                    <div class="section_dialog_item start-end fixed-end">
+                        <button data-dialog="dialogSelectMode" class="close_dialog btn-times btn red">
+                            <i data-dialog="dialogSelectMode" class='nes-icon times'></i>
                         </button>
                     </div>
                     <div class="section_dialog_item img dialog_block_img">
@@ -256,7 +262,7 @@
                     </div>
                     <div class="section_dialog_item info_mode scrollable dialog_block_info">
                         <p class="alert">
-                            <strong>Console Usage Information:</strong><em>This application is still
+                            <strong><i class="nes-icon exclamation" ></i>Console Usage Information:</strong><em>This application is still
                                 under development, and we're continually improving it. You can use 
                                 the console commands "help" and "clear" to get assistance and clear
                                 the console, respectively. We appreciate your patience and feedback
@@ -267,14 +273,14 @@
                             In <strong>Single User Mode</strong>, there's no need for <strong>registration</strong>. Enjoy the flexibility of <strong>practice sessions</strong> or pre-set <strong>challenges</strong> loaded into the workspace.
                         </p>                        
                     </div>
-                    <div class="section_dialog_item group_buttons_dialog">
-                        <a href="/aloneWorking" class="btn_dialog btn_dialog_start">git init</a>
+                    <div class="section_dialog_item ">
+                        <a href="/aloneWorking" class="btn_init btn red">git init</a>
                     </div>
                 </div>
                 <div class="section_dialog img">
-                    <div class="section_dialog_item star-end">
-                        <button  data-dialog="dialog_single" class="close_dialog btn_dialog_close">
-                            <i data-dialog="dialog_single" class='bx bx-x'></i>
+                    <div class="section_dialog_item start-end fixed-end">
+                        <button  data-dialog="dialog_single" class="close_dialog btn-times btn red">
+                            <i data-dialog="dialog_single" class='nes-icon times'></i>
                         </button>
                     </div>
                     <div class="section_dialog_item img dialog_block_img">
@@ -295,7 +301,7 @@
                     </div>
                     <div class="section_dialog_item info_mode scrollable dialog_block_info">
                         <p class="alert">
-                            <strong>Attention!</strong><em>This project is still under construction,
+                            <strong><i class="nes-icon exclamation" ></i>Attention!</strong><em>This project is still under construction,
                                 and some sections may not be available yet. The collaborative section 
                                 is still not fully functional, but you can explore other features of 
                                 the project. Thank you for your understanding!</em>
@@ -317,24 +323,32 @@
                         </p> 
                     </div>
                     <div class="section_dialog_item group_buttons_dialog">
-                        <button id="googleLogin" class="item_dialog btn-dialog">
-                            <div class="icon_item_dialog">
-                                <i class='bx bxl-google' ></i>
+                        <button
+                            id="googleLogin"
+                            data-dialog="dialog_multi"
+                            class="item_dialog close_dialog btn orange"
+                        >
+                            <div class="icon-provider-container-dialog">
+                                <i class="nes-icon envelope"></i>
+                                <p>Gmail</p>
                             </div>
-                            <p>Google</p>
                         </button>
-                        <button id="githubLogin" class="item_dialog btn-dialog">
-                            <div class="icon_item_dialog">
-                                <i class='bx bxl-github'></i>
+                        <button
+                            id="githubLogin"
+                            data-dialog="dialog_multi"
+                            class="item_dialog close_dialog btn orange"
+                        >
+                            <div class="icon-provider-container-dialog">
+                                <i class="nes-icon github"></i>
+                                <p>GitHub</p>
                             </div>
-                            <p>GitHub</p>
                         </button>
                     </div>
                 </div>
                 <div class="section_dialog img">
-                    <div class="section_dialog_item star-end">
-                        <button data-dialog="dialog_multi" class="close_dialog btn_dialog_close">
-                            <i data-dialog="dialog_multi" class='bx bx-x'></i>
+                    <div class="section_dialog_item start-end fixed-end">
+                        <button data-dialog="dialog_multi" class="close_dialog btn-times  btn red">
+                            <i data-dialog="dialog_multi" class='nes-icon times'></i>
                         </button>
                     </div>
                     <div class="section_dialog_item img dialog_block_img">
@@ -348,10 +362,8 @@
         <!-- --------- SCROLL REVEAL ---------- -->
         <!--SCROLL REVEAL-->
         <script src="https://unpkg.com/scrollreveal"></script>
-
         <!--TYPED JS-->
         <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-
         <!--CUSTOM JS-->
         <script src="dist/js/dialogs-home-script.js"></script>
         <script src="dist/js/home-script.js"></script>
