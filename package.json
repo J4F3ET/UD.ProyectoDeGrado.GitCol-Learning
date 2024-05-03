@@ -1,7 +1,7 @@
 {
 	"name": "ud.proyectodegrado.gitcol-learning",
 	"version": "1.0.0",
-	"description": "Una plataforma web para aprender y practicar las bases de Git. Incluye un modo colaborativo que permite a los usuarios participar en desafíos y trabajar en equipo para mejorar sus habilidades de control de versiones.",
+	"description": "A web platform for learning and practicing the basics of Git. It includes a collaborative mode that allows users to participate in challenges and work together to improve their version control skills.",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/J4F3ET/UD.ProyectoDeGrado.GitCol-Learning"
@@ -14,7 +14,7 @@
 		"docs": "jsdoc -c ./docs/jsdoc.json"
 	},
 	"author": "Danna He <dhsepulvedas@udistrital.edu.co>(https://github.com/Chocolatamargo2607), Jafet Stiven <jslopezz@udistrital.edu.co> (https://github.com/J4F3ET)",
-	"license": "ISC",
+	"license": "MIT",
 	"dependencies": {
 		"dotenv": "^16.3.1",
 		"ejs": "^3.1.9",
