@@ -1,6 +1,6 @@
-//Section dialog mode
-const openButtonDialog = document.querySelector('.btn-dialog');
 const dialogSelectMode = document.querySelector('#dialogSelectMode');
+const buttonSelectMode = document.getElementById('btn_select_mode');
+const openButtonDialog = document.querySelectorAll('.btn-dialog');
 const closeButtonDialog = document.querySelectorAll('.close_dialog');
 const courseButtons = document.querySelectorAll('.btn_dialog_coursel');
 const modeElement = document.querySelector('[data-mode]');
@@ -26,14 +26,32 @@ const generatorInfoDialogFromMode = async (mode) => {
     environment, where users can create private or public rooms
     for real-time collaboration`
     const iconsAndTextSingle = [
-        {icon: 'bx bxs-user', text: 'Free use or individual practice of the environment'},
-        {icon: 'bx bxs-graduation', text: 'Pre-set challenges with guides for learning'}
+        {
+            icon: 'bx bxs-user',
+            text: 'Free use or individual practice of the environment'
+        },
+        {
+            icon: 'bx bxs-graduation',
+            text: 'Pre-set challenges with guides for learning'
+        }
     ];
     const iconsAndTextMulti = [
-        {icon: 'bx bxs-user', text: 'Free use or individual practice of the environment'},
-        {icon: 'bx bxs-cloud', text: 'Simulated environment of a remote repositor'},
-        {icon: 'bx bxs-user-plus', text: 'Real-time collaboration with others'},
-        {icon: 'bx bxs-home-alt-2', text: 'Creation of public and private rooms'}
+        {
+            icon: 'bx bxs-user',
+            text: 'Free use or individual practice of the environment'
+        },
+        {
+            icon: 'bx bxs-cloud',
+            text: 'Simulated environment of a remote repositor'
+        },
+        {
+            icon: 'bx bxs-user-plus',
+            text: 'Real-time collaboration with others'
+        },
+        {
+            icon: 'bx bxs-home-alt-2',
+            text: 'Creation of public and private rooms'
+        }
     ];
     const items = Array.from(
         {length: mode==='single'? iconsAndTextSingle.length: iconsAndTextMulti.length,}, 
@@ -75,14 +93,12 @@ async function toogleMode(mode){
     const newCourseText = getCourseInforOfMode(mode);
     const imgElement = dialogSelectMode.querySelector('.img_cat');
     const infoTetx = dialogSelectMode.querySelector('.dialog_block_info').firstChild;
-    dialogSelectMode.querySelector('.dialog_block_info').replaceChild(await newInfoTetx,infoTetx);
-    dialogSelectMode.querySelector('.dialog_block_img').replaceChild(await newImageElement, imgElement);
+    dialogSelectMode.querySelector('.dialog_block_info')
+        .replaceChild(await newInfoTetx,infoTetx);
+    dialogSelectMode.querySelector('.dialog_block_img')
+        .replaceChild(await newImageElement, imgElement);
     dialogSelectMode.querySelector('.dialog_block_course').innerHTML = await newCourseText;
 }
-openButtonDialog.addEventListener('click', () => {
-    toogleMode('single');
-    dialogSelectMode.showModal();
-});
 const toogleModeCallback = async () => {
     toogleMode(modeElement.dataset.mode);
     modeElement.dataset.mode = modeElement.dataset.mode === 'single' ? 'multi' : 'single';
@@ -93,25 +109,40 @@ const selectModeCallback = async (mode) => {
     document.getElementById(idDialog).showModal();
 }
 const closeDialogCallback = async (dialogId) => document.getElementById(dialogId)?.close()
-courseButtons.forEach(btn => {
-    btn.addEventListener('click', async () => toogleModeCallback());
-    btn.addEventListener('touchstart', async () => toogleModeCallback());
-});
-document.querySelectorAll('.touchmove_select').forEach(
-    element => element.addEventListener('touchmove', async () => toogleModeCallback())
+openButtonDialog.forEach(element => 
+    {element.addEventListener(
+        'click',
+        async () => {
+            toogleMode(modeElement.dataset.mode === 'single' ? 'multi' : 'single');
+            dialogSelectMode.showModal();
+        }
+    );}
 );
-closeButtonDialog.forEach(btn => {
-    btn.addEventListener('click',(e) => closeDialogCallback(e.target.dataset.dialog));    
-    btn.addEventListener('touchstart',(e) => closeDialogCallback(e.target.dataset.dialog));
+courseButtons.forEach(btn => {
+    btn.addEventListener(
+        'click',
+        async () => toogleModeCallback()
+    );
+    // btn.addEventListener(
+    //     'touchstart',
+    //     async () => toogleModeCallback()
+    // );
 });
-document.getElementById('btn_select_mode')
-    .addEventListener('click', async () => selectModeCallback(modeElement.dataset.mode));
-document.getElementById('btn_select_mode')
-    .addEventListener('touchstart', async () => selectModeCallback(modeElement.dataset.mode));
-// end section dialog mode
-
-// ---- Section dialog single mode ----
-
-// end section dialog single mode
-// Section dialog multi mode
-// end section dialog multi mode
+closeButtonDialog.forEach(btn => {
+    btn.addEventListener(
+        'click',
+        async (e) => closeDialogCallback(e.target.dataset.dialog)
+    );    
+    // btn.addEventListener(
+    //     'touchstart',
+    //     async (e) => closeDialogCallback(e.target.dataset.dialog)
+    // );
+});
+buttonSelectMode.addEventListener(
+    'click',
+    async () => selectModeCallback(modeElement.dataset.mode)
+);
+// buttonSelectMode.addEventListener(
+//     'touchstart',
+//     async () => selectModeCallback(modeElement.dataset.mode)
+// );
