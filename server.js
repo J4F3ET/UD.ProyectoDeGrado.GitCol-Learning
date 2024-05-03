@@ -23,7 +23,6 @@ app.use(express.urlencoded({ extended: true }));
 socketRoomController(io);
 
 // Routes: Rutas de la aplicacion
-app.use(require("./src/controller/teaser-controller").default);
 app.use(require("./src/controller/login-controller").default);
 app.use(require("./src/controller/home-controller").default);
 app.use(require("./src/controller/rooms-controller").default);
@@ -35,6 +34,6 @@ app.use(require("./src/controller/aloneWorking-controller").default);
 app.use(express.static(path.join(__dirname, "src", "view")));
 
 server.listen(app.get("port"), () => {
-	console.log(`Escuchando en el puerto ${app.get("port")}`);
+	console.log(` ${app.get("port")}`);
 	swaggerDoc(app, app.get("port"));
 });
