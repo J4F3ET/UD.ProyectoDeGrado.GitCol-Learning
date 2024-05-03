@@ -1,11 +1,12 @@
 .dialog {
-    border: var(--text-color) .2rem solid;
+    border: var(--main-color) .2rem solid;
+    box-shadow: 5px 5px #ffa179;
     border-radius: 1rem;
     position: fixed;
     inset: 0;
     margin: auto;
     max-width: 80%;
-    max-height: 80%;
+    max-height: min-content;
     animation: show-dialog .7s .5s both ease-in-out;
     box-sizing: border-box;
     color: var(--text-color);
@@ -25,6 +26,14 @@
 .dialog[open]::backdrop{
     animation: show-dialog .3s ease forwards;
 }
+.alert {
+    background: var(--red-color);
+    color: var(--text-color);
+    padding: .5rem 1rem;
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    margin-top: 1rem;
+}
 .container_dialog{
     padding: 1rem 2rem;
     display: flex;
@@ -38,19 +47,15 @@
     border: none;
     padding: 0;
     background-color: var(--bg-color);
+    background-image: url(../assets/img/home/background.jpg) ;
+    background-position-x: center;
+    background-position-y: center;
+    background-size: cover;
 }
 .title_dialog{
     font-size: 3.5rem;
+    margin: 1rem 0;
     color: var(--text-color);
-}
-.btn_dialog{
-    background-color: var(--main-color);
-    color: var(--text-color);
-    padding: 1rem;
-    margin: 1rem;
-    border-radius: 0 0 1rem 1rem;
-    font-size: 1.5rem;
-    cursor: pointer;
 }
 .section_dialog{
     padding: 0;
@@ -66,27 +71,25 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(10px); /* Aplica el efecto de desenfoque */
+    box-shadow: 0 5px 10px black;
 }
 .section_dialog.img{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     max-width: 50%;
-    height: 600px;
-    background-image: url(../assets/img/teaser/background.jpg) ;
-    background-position-x: center;
-    background-position-y: center;
-    background-size: cover;
+    height: 500px;
 } 
 .section_dialog_item{
     width: 100%;
+    margin: 1rem;
 }
 .section_dialog_item.info_mode{
     border: var(--second-bg-color) .2rem;
     height: 250px;
     overflow-y: auto;
     border-style: dashed;
-    margin: 1rem;
     padding: 1rem;
     border-radius: 1rem;
 }
@@ -95,23 +98,28 @@
     justify-content: center;
     width: 100%;
 }
-.section_dialog_item.star-end{
+.section_dialog_item.start-end{
     padding: 1rem;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
 }
+.fixed-end{
+    position: fixed;
+    top: -1rem;
+    left: -1rem;
+}
 .section_dialog_item.group_buttons_dialog{
     display: flex;
     justify-content: space-around;
     align-items: center;
+    max-height: 1rem;
+    margin: 2rem 1rem;
 }
 .item_dialog{
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    padding-left: 1rem;
-    margin: 1rem 0;
+    padding: 1rem;
 }
 .img_cat{
     border-radius: 50%;
@@ -142,18 +150,19 @@
         rgb(107 112 107 / 8%) 90%
     );
 }
-.bx.arrow{
-    fill: var(--second-bg-color);
-    height: 100%;
-    border-radius: 5px;
-    &:hover{
-        transform: scale(1.1);
-        background-color: rgba(0, 0, 0, 0.411);
-        color: var(--main-color);
-    }
+.btn_init{
+    display: flex;
+    justify-content: center;
+    min-width: 100%;
 }
-.icon_item_dialog{
-    padding-right: .5rem;
+.btn-times{
+    min-width: min-content;
+}
+.arrow{
+    fill: var(--second-bg-color);
+    font-size: 100%;
+    min-width: max-content;
+    border-radius: 5px;
 }
 .btn_dialog_start{
     width: 100%;
@@ -164,28 +173,23 @@
     font-size: 1.5rem;
     cursor: pointer;
 }
-.btn_dialog_close{
-    margin: 0;
-    padding: 0;
-    width: 3rem;
-    height: 3rem;
-    color: var(--text-color);
-    background-color: var(--red-color);
-    border-radius: 8px;
-}
-.btn_dialog_close:hover{
-    transform: scale(1.1);
-}
 .btn_dialog_coursel{
-    margin: 0;
+    margin: 1rem;
     padding: 0;
-    width: 10%;
-    height: 100%;
-    color: var(--second-bg-color);
+    height: 50%;
     background-color: transparent;
 }
 .info_dialog{
     animation: show-text-dialog .5s  linear forwards;
+}
+.icon-provider-container-dialog{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 10%;
+    width: 100%;
 }
 @keyframes show-text-dialog {
     0% {
@@ -231,10 +235,6 @@
 }
 @media (max-width: 768px){
     .section_dialog.img{
-        background: none;
-        width: min-content;
-    }
-    .section_dialog_item.img{
         display: none;
     }
 }
