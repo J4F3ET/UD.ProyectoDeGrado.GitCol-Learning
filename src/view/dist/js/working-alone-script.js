@@ -42,8 +42,7 @@ document.getElementById("comandInput").addEventListener("keyup",(e) => {
 const executeCommand = (comand) => {
     comand !== "" ? comandManager.createMessage('comand',comand) : null;
     try {
-        const [_,gitComand, ...comandConfig] = comand.split(' ');
-        comandManager.executeCommand(comand,gitComand,comandConfig);
+        comandManager.executeCommand(comand.trim());
         observer.notify(localStorage.getItem(REF_STORAGE_REPOSITORY));
         setTimeout(()=>{
             observer.notify(localStorage.getItem(REF_STORAGE_REPOSITORY))

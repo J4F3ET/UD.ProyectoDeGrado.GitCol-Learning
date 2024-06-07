@@ -81,20 +81,19 @@ export class ComandManager {
      * @memberof ComandManager#
      * @method
      * @param {String} sentence Key of the command, it is the command to be executed without the 'git' word
-     * @param {String} command Command to be executed with the 'git' word
-     * @param {String[]} config Configuration of the command to be executed
      * @throws {Error} Comand not found
      * @throws {Error} Error in the command execution
      */
-    executeCommand(sentence,command, config){
-        if (this._comands.has(command)) {
-            this.verifyComand(sentence);
-            const commandModule = this._comands.get(command);
-            return commandModule.execute(config);
-        }
+    executeCommand(sentence){
         if(this._shellCommands[sentence]){
             this._shellCommands[sentence]();
             return
+        }
+        this.verifyComand(sentence);
+        const [command,...config] = this.splitComand(sentence);
+        if (this._comands.has(command)) {
+            const commandModule = this._comands.get(command);
+            return commandModule.execute(config);
         }
         throw new Error('Command not found');
     }
@@ -125,8 +124,36 @@ export class ComandManager {
     verifyComand(comand="") {
         if(comand === "")
             throw new Error('The command is empty');
-        const refex = /^(git) [a-z]* *(?: .*)?$/
+        const refex = /^\s*git\s+(\S+)\s+(.*)$/;
         if(!refex.test(comand))
             throw new Error('The command is not valid');
     }
+    /**
+     * @name splitComand
+     * @memberof ComandManager#
+     * @method
+     * @description Split the comand in the command and the config
+     * @param {String} comand 
+     * @returns {Array<String>} Array with the command and the config
+     */
+    splitComand(comand){
+        const regexSplit = /^\s*git\s+(\S+)\s*(.*)$/;
+        console.log(comand.match(regexSplit));
+        const [_,gitComand,comandConfig] = comand.match(regexSplit);
+        return [gitComand,...this.normalizeConfigComand(comandConfig)];
+    }
+    /**
+     * @name normalizeConfigComand
+     * @memberof ComandManager#
+     * @method
+     * @description Normalize the config of the command
+     * @param {String} comandConfig 
+     * @returns {Array<String>} Array with the config of the command
+     */
+    normalizeConfigComand(comandConfig){
+        const regex = /(".*?"|'.*?'|\S+)/g;
+        const matches = comandConfig.match(regex);
+        return matches?matches.map(match => match.trim()):[];
+    }
+
 }
