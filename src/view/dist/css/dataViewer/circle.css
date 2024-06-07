@@ -1,6 +1,6 @@
 circle.commit {
     fill: rgba(255, 165, 81, 0.5);
-    stroke: var(--main-color);
+    stroke: var(--orange-color);
     filter: drop-shadow(0px 0px 3px rgba(68, 68, 68, 0.514));
     stroke-width: 2px;
     transition: cy 0.5s;

@@ -18,10 +18,25 @@
     --bg-color: #1B263B;
     --second-bg-color: #465166;
     --second-bg-color-trasparent: #465166a6;
-    --text-color: #fff;
-    --text1-color: #1E9FAB;
-    --main-color: #FA8E5F;
+    --text-color: #FFFDF9;
+    --text-shell-color: #3cff00;
+    --orange-color: #FA8E5F;
     --red-color: #D45050;
+    --orange-color: #FA8E5F;
+    --yellow-color: #FACA89;
+    --green-color: #83BD86;
+    --cyan-color: #54C6B8;
+    --indigo-color: #465166;
+    --blue-color: #1E9FAB;
+    --blue-grey-color: #6A95D6;
+    --blue-dark-color: #1B263B;
+    --blue-dark-color-trasparent: #1B263Bb3;
+    --indigo-color-trasparent: #465166a6;
+    --purple-color: #C398C8;
+    --pink-color: #E891BD;
+    --gray-color: #C4BDB7;
+    --white-color: #FFFDF9;
+    --black-color: #0A0F17;
 }
 #particles-js{
     width: 100%;
@@ -31,7 +46,7 @@
     height: 10px;
 }
 .scrollable::-webkit-scrollbar-thumb {
-    background: var(--main-color);
+    background: var(--orange-color);
     border-radius: 10px;
 }
 .scrollable::-webkit-scrollbar-thumb:hover {
@@ -42,7 +57,7 @@
     border-radius: 10px;
 }
 .scrollable::-webkit-scrollbar-thumb:active {
-    background-color: var(--main-color);
+    background-color: var(--orange-color);
 }
 .btn{
     border: none;
@@ -61,7 +76,7 @@
     box-shadow: 0px 5px 0px 0px #2e3542;
     cursor: pointer;
     &.orange{
-        background-color: var(--main-color);
+        background-color: var(--orange-color);
         box-shadow: 0px 5px 0px 0px #ffa67f;
     }
     &.red{

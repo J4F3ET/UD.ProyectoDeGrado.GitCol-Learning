@@ -1,8 +1,10 @@
 text.id-label,text.message-label{
     text-anchor: middle;
-    font-family: Courier New;
     fill: #ffffff;
     font-size: .7rem;
+}
+text{
+    font-family: monospace;
 }
 h6.help{
     font-size: .8rem;
@@ -12,7 +14,7 @@ p.help{
     font-size: .75rem;
 }
 p.help.underline{
-    color: var(--main-color);
+    color: var(--orange-color);
 }
 b{
     color: #5bdd5b;

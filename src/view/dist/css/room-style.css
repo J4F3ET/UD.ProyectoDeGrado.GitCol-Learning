@@ -19,7 +19,7 @@
     --small-font-size: 1.3rem;
     --bg-color: #1B263B;
     --text-color: #fff;
-    --main-color: #d45050;
+    --orange-color: #d45050;
   }
 html{
     font-size: 62.5%;
@@ -101,7 +101,7 @@ dialog {
   cursor: pointer;
   &:hover{
     transform: scale(1.1);
-    box-shadow: 0 0 1rem var(--main-color); ;
+    box-shadow: 0 0 1rem var(--orange-color); ;
   }
 }
 .card{
@@ -196,7 +196,7 @@ button:disabled{
     justify-content: center;
     align-items: center;
     padding: .8rem;
-    background: var(--main-color);
+    background: var(--orange-color);
     border-radius: .8rem;
     transition: .5s ease;
 }
@@ -205,7 +205,7 @@ small{
     margin-left: 1rem;
 }	
 .back a:hover{
-    box-shadow: 0 0 1rem var(--main-color);
+    box-shadow: 0 0 1rem var(--orange-color);
 }
 .back a i{
     font-size: 2.4rem;

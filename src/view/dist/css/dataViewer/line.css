@@ -5,7 +5,7 @@
     animation: dash 0.5s linear;
 }
 .line.branch {
-    stroke:var(--main-color);
+    stroke:var(--orange-color);
 }
 .union{
     stroke: rgba(100, 100, 100, 0.5);
