@@ -37,6 +37,9 @@
     --gray-color: #C4BDB7;
     --white-color: #FFFDF9;
     --black-color: #0A0F17;
+    --long-font-size: 2.5rem;
+    --normal-font-size: 1.3rem;
+    --small-font-size: .8rem;
 }
 #particles-js{
     width: 100%;
@@ -75,6 +78,10 @@
     transition: all ease 0.1s;
     box-shadow: 0px 5px 0px 0px #2e3542;
     cursor: pointer;
+    &.green{
+        background-color: var(--green-color);
+        box-shadow: 0px 5px 0px 0px #acffb0;
+    }
     &.orange{
         background-color: var(--orange-color);
         box-shadow: 0px 5px 0px 0px #ffa67f;
@@ -87,6 +94,9 @@
 .btn:active{
     transform: translateY(5px);
     box-shadow: 0px 0px 0px 0px #2e3542;
+    &.green{
+        box-shadow: 0px 0px 0px 0px #acffb0;
+    }
     &.orange{
         box-shadow: 0px 0px 0px 0px #ffa67f;
     }
