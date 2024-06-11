@@ -124,7 +124,7 @@ export class ComandManager {
     verifyComand(comand="") {
         if(comand === "")
             throw new Error('The command is empty');
-        const refex = /^\s*git\s+(\S+)\s+(.*)$/;
+        const refex = /^\s*git\s+(\S+)+(\s(.*))?$/;
         if(!refex.test(comand))
             throw new Error('The command is not valid');
     }
