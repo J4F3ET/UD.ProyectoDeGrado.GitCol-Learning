@@ -138,7 +138,6 @@ export class ComandManager {
      */
     splitComand(comand){
         const regexSplit = /^\s*git\s+(\S+)\s*(.*)$/;
-        console.log(comand.match(regexSplit));
         const [_,gitComand,comandConfig] = comand.match(regexSplit);
         return [gitComand,...this.normalizeConfigComand(comandConfig)];
     }
