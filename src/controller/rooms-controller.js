@@ -175,7 +175,7 @@ router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
 			req.body.description,
 			owner,
 			members,
-			req.body.hidden,
+			req.body.hidden
 		)
 	});
 	res.end();
