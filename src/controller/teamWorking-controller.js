@@ -29,7 +29,12 @@ const router = Router();
  *       - cookieAuth: []
  */
 router.get("/teamWorking*",releaseVerificationMiddleware,verifyUserInRoomMiddleware,(req, res) => {
-    res.render("multi-mode-screen", { room: req.query.room });
+    res.render("multi-mode-screen", { 
+		room: req.query.roomm,
+		REF_STORAGE_REPOSITORY: "local"+req.query.room,
+		REF_STORAGE_REPOSITORY_CLOUD: "cloud"+req.query.room,
+		REF_STORAGE_LOG: "log"+req.query.room
+	});
 });
 /**
  * @openapi
