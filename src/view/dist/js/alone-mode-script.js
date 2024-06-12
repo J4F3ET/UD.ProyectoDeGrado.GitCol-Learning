@@ -1,8 +1,12 @@
 import { DataViewer } from "./dataViewer/DataViewer.js";
-import { workingAloneComandManager as comandManager} from "./comandManager/working-alone-comandManager.js";
+import { factoryCommandManager } from "./comandManager/working-alone-comandManager.js";
 import { Observer } from "./dataViewer/Observer.js";
 const REF_STORAGE_REPOSITORY = "local";
 const REF_STORAGE_LOG = "log";
+const comandManager = factoryCommandManager(
+    ["init","commit","checkout","branch","log","merge"],
+    [REF_STORAGE_REPOSITORY,REF_STORAGE_LOG]
+);
 let listComands = JSON.parse(localStorage.getItem(REF_STORAGE_LOG))?.filter(log => log.tag === "comand")?.map(log => log.message)|| [];
 const dataViewer = new DataViewer(document.getElementById("svgContainer"));
 const observer = new Observer()
