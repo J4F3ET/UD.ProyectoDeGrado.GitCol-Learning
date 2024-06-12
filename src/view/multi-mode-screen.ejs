@@ -9,26 +9,62 @@
 			href="./dist/assets/fav-icon.ico"
 			type="image/x-icon"
 		/>
+		<!-- --------- BOX ICONS ---------- -->
+        <link href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css" rel="stylesheet" />
+		<!-- CSS -->
 		<link rel="stylesheet" href="dist/css/reset.css" />
 		<link rel="stylesheet" href="dist/css/global.css">
 		<link rel="stylesheet" href="dist/css/room-style.css" />
+		<link rel="stylesheet" href="dist/css/reset.css">
+        <link rel="stylesheet" href="dist/css/global.css">
+        <link rel="stylesheet" href="dist/css/work-style.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/elementSVG.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/circle.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/line.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/tag.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/text.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/log.css">
+		<script>
+			const REF_STORAGE_REPOSITORY = "<%= (REF_STORAGE_REPOSITORY) %>";
+			const REF_STORAGE_REPOSITORY_CLOUD = "<%= (REF_STORAGE_REPOSITORY_CLOUD) %>";
+			const REF_STORAGE_LOG = "<%= (REF_STORAGE_LOG) %>";
+		</script>
 	</head>
-	<body>
-		<h1>WELCOME TO ROOM <%= room %></h1>
-		<div class="back">
-			<a id="btnLeaveToRoom">
-				<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-					<path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-				</svg>
-			</a>
-		</div>
-		<button id="btnSendMessage">
-			Mnesaje
-		</button>
-
+	<body class="scrollable body">
+		<section class="container-box-control" id="controlBoxContainer">
+            <div id="logContainer" class="container-log shell scrollable" >
+				WELCOME TO ROOM <%= (room) %>
+            </div>
+            <div class="container-input-shell shell" id="inputContainer">
+                $
+                <input id="comandInput" type="text" placeholder="comand" class="input"> 
+            </div>                                                   
+        </section>
+		<section class="container-help-and-svg" id="contentContainer">
+            <div class="container-panel-help" id="panelHelpContainer">
+                <button id="btnSendMessage" class="btn orange" title="solution">
+                    <i class="nes-icon star">Mensaje</i>
+                </button>
+                <button id="btnLeaveToRoom" class="btn red" title="back">
+                    <i class="nes-icon times"></i>
+                </button>
+            </div>
+            <div id="svgContainer" class="container-svg scrollable">
+            </div>
+			<div id="svgContainerCloud" class="container-svg scrollable">
+            </div>
+        </section>
+		<div id="particles-js"></div>
 	</body>
-	<script type="module" src="./dist/js/userAuth-observer.js"></script>
-	<script type="module" src="./dist/js/teamWorking-script.js"></script>
+	<!--SOCKET IO-->
 	<script src="socket.io/socket.io.min.js"></script>
-	<script src="./dist/js/teamWorking-socket-client.js"></script>
+	<!-- CUSTOM JS -->
+	<script type="module" src="./dist/js/multi-mode-script.js"></script>
+	<script type="module" src="./dist/js/mode-script.js"></script>
+	<script src="./dist/js/multi-mode-socket-client.js"></script>
+	<!--PARTICLE JS-->
+	<script src="dist/assets/lib/particles.min.js"></script>
+	<script src="dist/assets/lib/particlesjs-config.json"></script>
+	<!--OBSERVER Auth Observer-->
+	<script type="module" src="./dist/js/userAuth-observer.js"></script>
 </html>
