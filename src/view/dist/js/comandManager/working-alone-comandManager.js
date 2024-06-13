@@ -21,7 +21,7 @@ const COMMANDMAPPINGS  = {
  * @returns {ComandManager}
  */
 export const factoryCommandManager = (commands,args) => {
-    const commandManager = new ComandManager();
+    const commandManager = new ComandManager(args[1]);
     if(localStorage.getItem('config')===null)
         localStorage.setItem('config',JSON.stringify({user:{ name:null, email:null }}));
     commands.forEach((command) => {

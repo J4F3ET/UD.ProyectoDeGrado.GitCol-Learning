@@ -1,22 +1,34 @@
 import { DataViewer } from "./dataViewer/DataViewer.js";
 import { factoryCommandManager } from "./comandManager/working-alone-comandManager.js";
 import { Observer } from "./dataViewer/Observer.js";
-console.log(REF_STORAGE_LOG);
-console.log(REF_STORAGE_REPOSITORY);
+const DEFAULT_MESSAGE = {
+    tag:"info",
+    message:`
+        <h5 class="help">Commands shell</h5>
+        <p class="help">>clear</p>
+        <p class="help">>help</p>
+        <h5 class="help">Commands git</h5>
+        <p class="help">>git init</p>
+        <p class="help">>git commit</p>
+        <p class="help">>git checkout</p>
+        <p class="help">>git branch</p>
+        <p class="help">>git log</p>
+        <p class="help">>git merge</p>
+        <p class="help">More information using 'git &lt;comand&gt; [-h|--help]'</p>
+    `
+};
 const aloneModeCommandManager = factoryCommandManager(
     ["init","commit","checkout","branch","log","merge"],
     [REF_STORAGE_REPOSITORY,REF_STORAGE_LOG]
 );
+
 let listComands = JSON.parse(localStorage.getItem(REF_STORAGE_LOG))?.filter(log => log.tag === "comand")?.map(log => log.message)|| [];
 const dataViewer = new DataViewer(document.getElementById("svgContainer"));
 const observer = new Observer()
 let accountComands = listComands.length;
 // EVENT LISTENERS
 document.addEventListener("DOMContentLoaded", () => {
-    dataViewer.currentData =  null;
-    dataViewer.logComands = null;
-    observer.notify(localStorage.getItem(REF_STORAGE_LOG))
-    observer.notify(localStorage.getItem(REF_STORAGE_REPOSITORY))
+    init();
 });
 document.getElementById("comandInput").addEventListener("keyup",(e) => {
     if(e.key === "ArrowUp"){
@@ -38,6 +50,14 @@ document.getElementById("comandInput").addEventListener("keyup",(e) => {
     }
 });
 // FUNCTIONS
+const init = () => {
+    dataViewer.currentData =  null;
+    dataViewer.logComands = null;
+    if(localStorage.getItem(REF_STORAGE_LOG) === null)
+        localStorage.setItem(REF_STORAGE_LOG,JSON.stringify([DEFAULT_MESSAGE]));
+    observer.notify(localStorage.getItem(REF_STORAGE_LOG))
+    observer.notify(localStorage.getItem(REF_STORAGE_REPOSITORY))
+}
 /**
  * @name executeCommand
  * @description Execute the comand and show the result
