@@ -104,3 +104,6 @@
         box-shadow: 0px 0px 0px 0px #fe9b9b;
     }
 }
+.btn-only-icon{
+    min-width: max-content;
+}
