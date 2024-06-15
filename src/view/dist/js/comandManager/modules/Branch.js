@@ -91,7 +91,7 @@ export class Branch{
      * @param {string} logRepository Name variable of the local storage of the log, by default is 'log'
      * @param {string} remoteRepository Name variable of the local storage of the remote repository, by default is null
      */
-    constructor(dataRepository = "repository",logRepository = "log",remoteRepository = null) {
+    constructor(dataRepository,logRepository,remoteRepository = null) {
         this._dataRepository = dataRepository;
         this._logRepository = logRepository;
         this._remoteRepository = remoteRepository;

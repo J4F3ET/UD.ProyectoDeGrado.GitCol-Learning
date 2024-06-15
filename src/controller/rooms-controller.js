@@ -6,7 +6,6 @@ import {
 	roomCreate,
 	roomGetByCode,
 	roomAddMember,
-	roomGetAll,
 	roomGetAllPublic, 
 } from "../model/room-service.js";
 const router = Router();
@@ -175,7 +174,7 @@ router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
 			req.body.description,
 			owner,
 			members,
-			req.body.hidden,
+			req.body.hidden
 		)
 	});
 	res.end();

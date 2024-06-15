@@ -59,7 +59,7 @@ export class Log{
     * @memberof! Log#
     * @method
     */
-    constructor(repositoryName = 'repository',logRepository = 'log'){
+    constructor(repositoryName,logRepository){
         this._repositoryName = repositoryName;
         this._logRepository = logRepository;
     }

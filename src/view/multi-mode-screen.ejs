@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Col-Learning</title>
+		<link
+			rel="shortcut icon"
+			href="./dist/assets/fav-icon.ico"
+			type="image/x-icon"
+		/>
+		<!-- --------- BOX ICONS ---------- -->
+        <link href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css" rel="stylesheet" />
+		<!-- CSS -->
+		<link rel="stylesheet" href="dist/css/reset.css" />
+		<link rel="stylesheet" href="dist/css/global.css">
+		<link rel="stylesheet" href="dist/css/room-style.css" />
+		<link rel="stylesheet" href="dist/css/reset.css">
+        <link rel="stylesheet" href="dist/css/global.css">
+        <link rel="stylesheet" href="dist/css/work-style.css">
+		<link rel="stylesheet" href="dist/css/multi-mode-style.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/elementSVG.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/circle.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/line.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/tag.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/text.css">
+        <link rel="stylesheet" href="dist/css/dataViewer/log.css">
+		<script>
+			const REF_STORAGE_REPOSITORY = "<%= (REF_STORAGE_REPOSITORY) %>";
+			const REF_STORAGE_REPOSITORY_CLOUD = "<%= (REF_STORAGE_REPOSITORY_CLOUD) %>";
+			const REF_STORAGE_LOG = "<%= (REF_STORAGE_LOG) %>";
+		</script>
+	</head>
+	<body class="scrollable body">
+		<section class="container-box-control" id="controlBoxContainer">
+            <div id="logContainer" class="container-log shell scrollable">
+            </div>
+            <div class="container-input-shell shell" id="inputContainer">
+                $
+                <input 
+					id="comandInput"
+					autocomplete="off"
+					type="text" 
+					placeholder="comand"
+					class="input"
+				> 
+            </div>                                                   
+        </section>
+		<section class="container-help-and-svg" id="contentContainer">
+            <div id="btnSendMessage" class="container-panel-help" id="panelHelpContainer">
+				<button class="btn toggle-repository-btn">
+					<i class="nes-icon cloud"></i>
+				</button>
+                <button id="btnLeaveToRoom" class="btn red btn-only-icon" title="back">
+                    <i class="nes-icon times"></i>
+                </button>
+            </div>
+			<divc class="repositories-container">
+				<div id="svgContainer" class="container-svg scrollable repository-local">
+				</div>
+				<div id="svgContainerCloud" class="container-svg scrollable repository-remote">
+				</div>
+			</div>
+        </section>
+		<div id="particles-js"></div>
+	</body>
+	<!--SOCKET IO-->
+	<script src="socket.io/socket.io.min.js"></script>
+	<!-- CUSTOM JS -->
+	<script type="module" src="./dist/js/multi-mode-script.js"></script>
+	<script type="module" src="./dist/js/mode-script.js"></script>
+	<script src="./dist/js/multi-mode-socket-client.js"></script>
+	<!--PARTICLE JS-->
+	<script src="dist/assets/lib/particles.min.js"></script>
+	<script src="dist/assets/lib/particlesjs-config.json"></script>
+	<!--OBSERVER Auth Observer-->
+	<script type="module" src="./dist/js/userAuth-observer.js"></script>
+</html>

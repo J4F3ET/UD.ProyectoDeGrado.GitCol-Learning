@@ -61,7 +61,7 @@ export class Commit{
      * @param {string} dataRepository Name the space of the local storage who contain the data referent to history of the commits(register but not commands), by default is 'repository'
      * @param {string} logRepository Name the space of the local storage who contain the history messages of application, by default is 'log'
      */
-    constructor(dataRepository = "repository",logRepository = "log"){
+    constructor(dataRepository,logRepository){
         this._dataRepository = dataRepository;
         this._logRepository = logRepository;
     }

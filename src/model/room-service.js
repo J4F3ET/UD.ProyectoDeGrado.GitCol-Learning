@@ -6,11 +6,10 @@ import {database} from "./firebase-service";
  * @param {string} owner : owner of the room
  * @param {List<int>} members : members of the room
  * @param {boolean} status : status of the room
- * @param {List<object>} chat : record of the chat
  * @param {boolean} hidden : hidden status of the room
  * @returns {Promise<int>} : id of the room
  */
-async function roomCreate(code, description,owner, members, hidden,status = true ,chat={}) {
+async function roomCreate(code, description,owner, members, hidden,status = true) {
     try{
         return database.ref("rooms/").push({
             code,
@@ -18,8 +17,7 @@ async function roomCreate(code, description,owner, members, hidden,status = true
             owner,
             members,
             status,
-            chat,
-            hidden,
+            hidden
         }).key;
     }catch(error){
         console.error(error);
@@ -35,18 +33,16 @@ async function roomCreate(code, description,owner, members, hidden,status = true
  * @param {string} owner : owner of the room
  * @param {List<int>} members : members of the room
  * @param {boolean} status : status of the room
- * @param {List<object>} chat : record of the chat
  * @param {boolean} hidden : hidden status of the room
  * @returns {Promise<int>} : id of the room
  */
-async function roomUpdate(id,code, description,owner, members, status, chat, hidden) {
+async function roomUpdate(id,code, description,owner, members, status, hidden) {
     return database.ref("rooms/"+id).set({
         code,
         description,
         owner,
         members,
         status,
-        chat,
         hidden,
     }).key;
 }

@@ -1,5 +1,4 @@
 import { Router } from "express";
-import swaggerJSDoc from "swagger-jsdoc";
 const router = Router();
 /**
  * @openapi

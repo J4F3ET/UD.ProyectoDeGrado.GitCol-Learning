@@ -9,7 +9,7 @@ const router = Router();
  * /teamWorking:
  *   get:
  *     summary: Endpoint para obtener la pantalla de trabajo en equipo.
- *     description: Retorna la pantalla de trabajo en equipo (teamWorking-screen).
+ *     description: Retorna la pantalla de trabajo en equipo (multi-mode-screen).
  *     parameters:
  *       - in: query
  *         name: room
@@ -23,13 +23,18 @@ const router = Router();
  *         description: Éxito. Retorna la pantalla de trabajo en equipo.
  *         content:
  *           text/html:
- *             example: teamWorking-screen.ejs
+ *             example: multi-mode-screen.ejs
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
  */
 router.get("/teamWorking*",releaseVerificationMiddleware,verifyUserInRoomMiddleware,(req, res) => {
-    res.render("teamWorking-screen", { room: req.query.room });
+    res.render("multi-mode-screen", { 
+		room: req.query.roomm,
+		REF_STORAGE_REPOSITORY: "local"+req.query.room,
+		REF_STORAGE_REPOSITORY_CLOUD: "cloud"+req.query.room,
+		REF_STORAGE_LOG: "log"+req.query.room
+	});
 });
 /**
  * @openapi

@@ -1,12 +1,14 @@
 import {auth} from "../../model/firebase-service.js";
+import { errorMiddleware } from "./error-middleware.js";
+import { CustomError } from "../../model/CustomError.js";
 export const releaseVerificationMiddleware = (req, res, next) => {
 	if (undefined !== req.headers.cookie) {
 		verifyAccessCookieMiddleware(req, res, next);
 	} else if (undefined !== req.headers["authorization"]) {
 		verifyIdTokenMiddleware(req, res, next);
 	} else {
-		res.status(401);
-		res.end();
+		const err = new CustomError("Unauthorized",401);
+		errorMiddleware(err, req, res, next);
 	}
 };
 // Verifica que el usuario tenga una cookie de acceso
@@ -16,9 +18,8 @@ const verifyAccessCookieMiddleware = (req, res, next) => {
 			next();
 		});
 	} catch (error) {
-		res.status(401);
-		res.end();
-		return;
+		const err = new CustomError("Unauthorized",401);
+		errorMiddleware(err, req, res, next);
 	}
 };
 // Verifica que el usuario esté autenticado
@@ -27,9 +28,8 @@ const verifyIdTokenMiddleware = (req, res, next) => {
 		auth.verifyIdToken(req.headers["authorization"].split(" ")[1])
 			.then((result) => setAccessTokenCookieMiddleware(req, res, next));
 	} catch (error) {
-		res.status(401);
-		res.end();
-		return;
+		const err = new CustomError("Unauthorized",401);
+		errorMiddleware(err,req, res, next);
 	}
 };
 // Agrega el token de acceso a la cookie
