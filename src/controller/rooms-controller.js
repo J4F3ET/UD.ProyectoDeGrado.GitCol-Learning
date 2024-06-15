@@ -6,7 +6,6 @@ import {
 	roomCreate,
 	roomGetByCode,
 	roomAddMember,
-	roomGetAll,
 	roomGetAllPublic, 
 } from "../model/room-service.js";
 const router = Router();
