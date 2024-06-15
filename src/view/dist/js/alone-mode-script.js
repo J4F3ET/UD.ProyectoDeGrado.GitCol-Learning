@@ -37,6 +37,9 @@ document.getElementById("comandInput").addEventListener("keyup",(e) => {
         return;
     }
 });
+document.getElementById("btnExit").addEventListener("click",() => {
+    window.location.href = "/";
+});
 // FUNCTIONS
 /**
  * @name executeCommand
