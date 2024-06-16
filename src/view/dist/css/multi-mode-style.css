@@ -2,15 +2,56 @@
     width: 100%;
     height: 100%;
 }
+.hidden-repository{
+    animation: hidden-repository ease-in-out 0.5s forwards;
+}
+.show-repository{
+    animation: show-repository ease-in-out 0.5s forwards;
+}
 .toggle-repository-btn{
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: max-content;
-
+    font-size: 26px;
+    &:hover{
+        cursor: pointer;
+    }
 }
-
+@keyframes hidden-repository {
+    0%{
+        opacity: 1;
+        transform:translateX(0);
+        position: relative;
+    }
+    100%{
+        opacity: 0;
+        display: none;
+        transform:translateX(-100%);
+        position: fixed;
+    }
+}
+@keyframes show-repository {
+    0%{
+        opacity: 0;
+        transform:translateX(50%);
+        position: fixed;
+    }
+    100%{
+        opacity: 1;
+        position: relative;
+        transform:translateX(0);
+        display: block;
+    }
+}
 @media screen and (max-width: 1106px) {
+    .hidden-repository{
+        animation: none;
+        display: none;
+    }
+    .show-repository{
+        animation: none;
+        display: block;
+    }
     .repositories-container {
         height: 85%;
     }
