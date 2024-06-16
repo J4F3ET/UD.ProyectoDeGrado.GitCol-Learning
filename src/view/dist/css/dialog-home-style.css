@@ -1,5 +1,5 @@
 .dialog {
-    border: var(--main-color) .2rem solid;
+    border: var(--orange-color) .2rem solid;
     box-shadow: 5px 5px #ffa179;
     border-radius: 1rem;
     position: fixed;
@@ -236,5 +236,9 @@
 @media (max-width: 768px){
     .section_dialog.img{
         display: none;
+    }
+    .fixed-end{
+        top: 0;
+        left: 0;
     }
 }

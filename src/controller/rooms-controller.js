@@ -6,7 +6,6 @@ import {
 	roomCreate,
 	roomGetByCode,
 	roomAddMember,
-	roomGetAll,
 	roomGetAllPublic, 
 } from "../model/room-service.js";
 const router = Router();
@@ -164,20 +163,18 @@ router.get("/rooms/code", releaseVerificationMiddleware, async(req, res) => {
  *         - cookieAuth: []
  */
 router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
-	const result = auth.verifyIdToken(req.headers.cookie.split("=")[1])
+	const result = await auth.verifyIdToken(req.headers.cookie.split("=")[1])
+	console.log("CONTROLADOR DE SALAS",result);
+	const owner = result.name??result.email;
+	const members = [result.uid];
 	res.json({
 		ok: true ,
 		room: await roomCreate(
 			req.body.code,
 			req.body.description,
-			(await result).name??(await result).email,
-			[(await result).uid],
-			req.body.challenge,
-			true,
-			{},
-			{},
-			req.body.hidden,
-			req.body.level
+			owner,
+			members,
+			req.body.hidden
 		)
 	});
 	res.end();

@@ -59,7 +59,7 @@ export class Checkout {
      * @example new Checkout('repository')
      * @example new Checkout('repository','log')
      */
-    constructor(dataRepository = "repository",logRepository = "log") {
+    constructor(dataRepository,logRepository) {
         this._dataRepository = dataRepository;
         this._logRepository = logRepository;
     }

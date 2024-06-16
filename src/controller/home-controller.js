@@ -1,7 +1,5 @@
 import {Router} from "express";
 const router = Router();
-
-
 /**
  * @openapi
  * /:
@@ -36,5 +34,4 @@ router.get('/', (req, res) => {
 router.get('/home', (req, res) => {
 	res.redirect("/");
 });
-
 export default router;

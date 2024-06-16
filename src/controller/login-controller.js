@@ -60,4 +60,3 @@ router.get("/logout", releaseVerificationMiddleware, (req, res) => {
 	res.end();
 });
 export default router;
-	

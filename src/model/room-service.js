@@ -5,27 +5,19 @@ import {database} from "./firebase-service";
  * @param {string} description : description of the room
  * @param {string} owner : owner of the room
  * @param {List<int>} members : members of the room
- * @param {string} challenge : id of the challenge
  * @param {boolean} status : status of the room
- * @param {List<object>} chat : record of the chat
- * @param {List<object>} record : record of the code
  * @param {boolean} hidden : hidden status of the room
- * @param {int} level : challenge level
  * @returns {Promise<int>} : id of the room
  */
-async function roomCreate(code, description,owner, members, challenge, status, chat, record,hidden,level) {
+async function roomCreate(code, description,owner, members, hidden,status = true) {
     try{
         return database.ref("rooms/").push({
             code,
             description,
             owner,
             members,
-            challenge,
             status,
-            chat,
-            record,
-            hidden,
-            level
+            hidden
         }).key;
     }catch(error){
         console.error(error);
@@ -40,26 +32,18 @@ async function roomCreate(code, description,owner, members, challenge, status, c
  * @param {string} description : description of the room
  * @param {string} owner : owner of the room
  * @param {List<int>} members : members of the room
- * @param {int} challenge : id of the challenge
  * @param {boolean} status : status of the room
- * @param {List<object>} chat : record of the chat
- * @param {List<object>} record : record of the code
  * @param {boolean} hidden : hidden status of the room
- * @param {int} level : level challenge
  * @returns {Promise<int>} : id of the room
  */
-async function roomUpdate(id,code, description,owner, members, challenge, status, chat, record,hidden,level) {
+async function roomUpdate(id,code, description,owner, members, status, hidden) {
     return database.ref("rooms/"+id).set({
         code,
         description,
         owner,
         members,
-        challenge,
         status,
-        chat,
-        record,
         hidden,
-        level
     }).key;
 }
 /**

@@ -9,15 +9,19 @@
 			href="./dist/assets/fav-icon.ico"
 			type="image/x-icon"
 		/>
-		<link rel="stylesheet" href="dist/css/room-style.css" />
+		<!-- --------- BOX ICONS ---------- -->
+        <link href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css" rel="stylesheet" />
+        <!-- CSS -->
+		<link rel="stylesheet" href="dist/css/reset.css" />
+		<link rel="stylesheet" href="dist/css/global.css">
+		<link rel="stylesheet" href="dist/css/room-style.css"/>
+		
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
 	<body>
 		<div class="back">
-			<a id="btnLogout">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-					<path fill="currentColor" d="M14 17V7l-6 5z"/><path fill="currentColor" d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10s10-4.486 10-10S17.514 2 12 2m0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8s8 3.589 8 8s-3.589 8-8 8"/>
-				</svg>
+			<a class="btn red" id="btnLogout">
+				<i class="nes-icon caret-left"></i>
 				Logout
 			</a>
 		</div>
@@ -30,13 +34,7 @@
 					</Label>
 					<div class="room__box">
 						<span>
-							<svg 
-								xmlns="http://www.w3.org/2000/svg" 
-								width="24" 
-								height="24" 
-								viewBox="0 0 24 24">
-								<path fill="currentColor" d="M18 8h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2V7a6 6 0 1 1 12 0zm-7 7.732V18h2v-2.268A2 2 0 0 0 12 12a2 2 0 0 0-1 3.732M16 8V7a4 4 0 0 0-8 0v1z"/>
-							</svg>
+							<i class="nes-icon search"></i>
 						</span>
 						<input 
 							id="inputSearchRoomCode" 
@@ -50,8 +48,8 @@
 							class="room__input" 
 						/>
 					</div>
-					<small>Write the code for the room</small>
-					<small>
+					<small class="small">Write the code for the room</small>
+					<small class="small">
 						<ul>
 							<li class="invalidRequirements" id="validLetterAndNumberSearch">Only letters and numbers are allowed</li>
 							<li class="invalidRequirements" id="validMinCharactersSearch">Minimum 4 characters</li>
@@ -59,11 +57,11 @@
 						</ul>
 					</small>
 				</div>
-				<button disabled id="btnLoginToRoom" type="submit" class="room__button">Login</button>
+				<button disabled id="btnLoginToRoom" type="submit" class="btn green width">Login</button>
 				<div class="room__register">Not logged in ? <a href="#">Help</a></div>
 			</form>
-			<button id="btnFindRoom" class="room__button">Search room</button>
-			<button id="btnCreateRoom" class="room__button">Create room</button>
+			<button id="btnFindRoom" class="btn width">Search room</button>
+			<button id="btnCreateRoom" class="btn width">Create room</button>
 		</div>
 		<!-- INIT DIALOG CREATE ROOM -->
 		<dialog class="dialog" id="dialogCreateRoom">
@@ -73,9 +71,7 @@
 					<div class="room__inputs">
 						<label for="inputRoomCode">Code</label>
 						<div class="room__box">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-								<path fill="currentColor" d="M18 8h2a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1h2V7a6 6 0 1 1 12 0zm-7 7.732V18h2v-2.268A2 2 0 0 0 12 12a2 2 0 0 0-1 3.732M16 8V7a4 4 0 0 0-8 0v1z"/>
-							</svg>
+							<i class="nes-icon exclamation-circle"></i>
 							<input 
 								id="inputRoomCode" 
 								class="room__input" 
@@ -88,10 +84,10 @@
 								required 
 							/>
 						</div>
-						<small>
+						<small class="small">
 							Write the code for the room
 						</small>
-						<small>
+						<small class="small">
 							<ul>
 								<li class="invalidRequirements" id="validLetterAndNumber">Only letters and numbers are allowed</li>
 								<li class="invalidRequirements" id="validMinCharacters">Minimum 4 characters</li>
@@ -101,60 +97,32 @@
 						</small>
 					</div>
 					<div class="room__inputs">
-						<label for="inputRoomDescription">Description <small>optional</small></label>
+						<label for="inputRoomDescription">Description <small class="small red">*</small></label>
 						<div class="room__box">
-							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list-columns-reverse" viewBox="0 0 16 16">
-								<path fill-rule="evenodd" d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"/>
-							</svg>
+							<i class="nes-icon bars"></i>
 							<input id="inputRoomDescription"  
 								class="room__input" 
 								type="text" 
 								placeholder="Description" 
-								pattern="[A-Z0-9]+" 
+								pattern="^(.|\s)*[a-zA-Z]+(.|\s)*$" 
 								title="Only letters and numbers are allowed"
 								maxlength="100"   
 							/>
 						</div>
-						<small>Write the subject of the room</small>
-					</div>
-					<div class="room__inputs">
-						<label for="selectLevelChallenge">Level</label>
-						<div class="room__box">
-							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
-								<path d="M10.478 1.647a.5.5 0 1 0-.956-.294l-4 13a.5.5 0 0 0 .956.294zM4.854 4.146a.5.5 0 0 1 0 .708L1.707 8l3.147 3.146a.5.5 0 0 1-.708.708l-3.5-3.5a.5.5 0 0 1 0-.708l3.5-3.5a.5.5 0 0 1 .708 0m6.292 0a.5.5 0 0 0 0 .708L14.293 8l-3.147 3.146a.5.5 0 0 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0"/>
-							</svg>
-							<select class="room_select" name="selectLevelChallenge" id="selectLevelChallenge">
-								<option class="room_option" value="0">Beginner</option>
-								<option class="room_option" value="1">Intermediate</option>
-								<option class="room_option" value="2">Advanced</option>
-							</select>
-						</div>
-						<small>
-							Select the level of the challenge
-						</small>
-					</div>
-					<div class="room__inputs">
-						<label for="selectChallenge">Challenge:</label>
-						<div class="room__box">
-							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-terminal" viewBox="0 0 16 16">
-								<path d="M6 9a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 6 9M3.854 4.146a.5.5 0 1 0-.708.708L4.793 6.5 3.146 8.146a.5.5 0 1 0 .708.708l2-2a.5.5 0 0 0 0-.708z"/>
-								<path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/>
-							</svg>
-							<select class="room_select" name="selectChallenge" id="selectChallenge" disabled></select>
-						</div>
+						<small class="small">Write the subject of the room</small>
 					</div>
 					<div class="room__inputs container_checkBox">
 						<label for="inputRoomHidden">Room public</label>
 						<div class="room__checkbox">
 							<input id="inputRoomHidden"  class="room__input" type="checkbox" />
 						</div>
-						<small>
+						<small class="small blue">
 							Check this box if you want the room to be public and visible to other users
 						</small>
 					</div>
 					<div class="room__buttons">
-						<button class="room__button red" id="btnCancelCreateRoom" type="reset">Close</button>
-						<button class="room__button green" id="btnSubmitCreateRoom" disabled type="submit">Create</button>
+						<button class="btn red" id="btnCancelCreateRoom" type="reset">Close</button>
+						<button class="btn green" id="btnSubmitCreateRoom" disabled type="submit">Create</button>
 					</div>
 				</form>
 			</div>
@@ -186,7 +154,7 @@
 						</div>
 					</div>
 					<div class="dialog_item">
-						<button class="btn_dialog_close red" id="btnCancelSearchRoom">X</button>
+						<button class="btn_dialog_close btn red" id="btnCancelSearchRoom">X</button>
 					</div>
 				</div>
 				<div class="container_dialog_item">

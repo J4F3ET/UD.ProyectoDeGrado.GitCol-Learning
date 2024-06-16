@@ -38,7 +38,7 @@ export class Init{
      * @param {string} repositoryName Name of the space where the repository will be saved
      * @description Create a new instance of Init
      */
-    constructor(repositoryName = 'repository'){
+    constructor(repositoryName){
         this._repositoryName = repositoryName;
     }
     execute(dataComand = ""){

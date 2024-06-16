@@ -52,7 +52,7 @@ export class Merge {
      * @param {string} logRepository
      * @constructor
      */
-    constructor(dataRepository = 'repository', logRepository = 'log'){
+    constructor(dataRepository, logRepository){
         this._dataRepository = dataRepository
         this._logRepository = logRepository
     }

@@ -1,18 +1,6 @@
 import {logout} from "./userAuth-observer.js";
 const dialogCreateRoom = document.getElementById("dialogCreateRoom");
 const dialogSearchRoom = document.getElementById("dialogSearchRoom");
-function inflateSelectChallenge(challenges) {
-	const selectChallenge = document.getElementById("selectChallenge");
-	selectChallenge.options.length = 0;
-	for(const challenge in challenges){
-		const option = document.createElement("option");
-		option.value = challenge;
-		option.textContent = challenges[challenge].name;
-		option.classList.add("room_option");
-		selectChallenge.appendChild(option);
-	}
-	return selectChallenge.options.length === 0;
-}
 function loginToRoom(code){
 	fetch(`/rooms/fit?code=${code}`).then((response) => {
 		if(!response.ok)
@@ -44,6 +32,7 @@ function getCardRoom(room) {
 	const cardLevel = document.createElement("p");
 	const levelSpan = document.createElement("span");
 	card.classList.add("card");
+	card.classList.add("btn");
 	cardHeader.classList.add("card__header");
 	cardTitle.classList.add("card__title");
 	cardTitle.textContent = "Room";
@@ -68,13 +57,6 @@ function getCardRoom(room) {
 	card.appendChild(cardBody);
 	card.addEventListener("click", () => loginToRoom(room.code));
 	return card;
-}
-async function getChallenge() {
-	const level = document.getElementById("selectLevelChallenge").value || 0;
-	const response = fetch(`/challenges?level=${level}`)
-	if(!(await response).ok)
-		window.location.href = "/home";
-	return inflateSelectChallenge(await (await response).json());
 }
 async function getRoomsPublic(){
 	const response = fetch("/rooms/all/public");
@@ -136,22 +118,15 @@ document.getElementById("btnLogout").addEventListener("click", async () => {
 	if ((await response).status === 200)
 		window.location.href = (await data).url||"/home";
 });
-document.getElementById("selectLevelChallenge").addEventListener("change", () => 
-	getChallenge().then((response) => document.getElementById("selectChallenge").disabled = response)
-);
 document.getElementById("btnSubmitCreateRoom").addEventListener("click", (e) => {
 	const code = document.getElementById("inputRoomCode").value;
 	if(code.length < 4 || code.length > 8)return;
 	const description = document.getElementById("inputRoomDescription").value;
-	const challenge = document.getElementById("selectChallenge").value;
-	const level = document.getElementById("selectLevelChallenge").value;
 	const hidden = !document.getElementById("inputRoomHidden").checked;
 	const room = {
 		code,
 		description,
-		challenge,
-		hidden,
-		level
+		hidden,	
 	}
 	fetch("/rooms", {
 		method: "POST",
@@ -160,8 +135,10 @@ document.getElementById("btnSubmitCreateRoom").addEventListener("click", (e) => 
 		},
 		body: JSON.stringify(room)
 	}).then((response) => {
+		console.log(response.status);
 		if(!response.ok)
 			window.location.href = "/home";
+
 		response.json().then((data) => {
 			dialogCreateRoom.close();
 			window.location.href = `/teamWorking?room=${data.room}`;
@@ -169,7 +146,6 @@ document.getElementById("btnSubmitCreateRoom").addEventListener("click", (e) => 
 	});
 });
 document.getElementById("btnCreateRoom").addEventListener("click", () => {
-	getChallenge().then((response) => document.getElementById("selectChallenge").disabled = response)
 	validateInputRoomCode(document.getElementById("inputRoomCode"));
 	dialogCreateRoom.showModal();
 });

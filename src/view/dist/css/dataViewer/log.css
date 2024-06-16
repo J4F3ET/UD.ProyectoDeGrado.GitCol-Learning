@@ -1,12 +1,5 @@
-.shell{
-    border-radius: 5px;
-    width: 100%;
-    font-family: monospace;
-    color: #51c22f;
-    background-color:var(--second-bg-color);
-}
 .comand{
-    color: #51c22f;
+    color: var(--text-shell-color);
     font-weight: 100;
 }
 .error{
