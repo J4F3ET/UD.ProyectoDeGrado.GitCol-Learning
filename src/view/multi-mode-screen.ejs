@@ -48,7 +48,7 @@
         </section>
 		<section class="container-help-and-svg" id="contentContainer">
             <div id="btnSendMessage" class="container-panel-help" id="panelHelpContainer">
-				<button class="btn toggle-repository-btn">
+				<button id="btnToggleRepository" data-repository="Local" class="btn green toggle-repository-btn btn-only-icon">
 					<i class="nes-icon cloud"></i>
 				</button>
                 <button id="btnLeaveToRoom" class="btn red btn-only-icon" title="back">
@@ -56,9 +56,9 @@
                 </button>
             </div>
 			<divc class="repositories-container">
-				<div id="svgContainer" class="container-svg scrollable repository-local">
+				<div id="svgContainer" class="container-svg scrollable repository-local show-repository">
 				</div>
-				<div id="svgContainerCloud" class="container-svg scrollable repository-remote">
+				<div id="svgContainerCloud" class="container-svg scrollable repository-remote hidden-repository">
 				</div>
 			</div>
         </section>

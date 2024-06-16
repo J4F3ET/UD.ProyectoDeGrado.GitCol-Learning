@@ -12,11 +12,28 @@
         <link rel="stylesheet" href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css"/>
         <link rel="stylesheet" href="dist/css/reset.css">
         <link rel="stylesheet" href="dist/css/global.css">
-        <link rel="stylesheet" href="dist/css/home-style.css">
-        <script>
-        </script>
+		<link rel="stylesheet" href="dist/css/error-style.css">
 </head>
-<body>
-    Error <%= (error) %>
+<body class=" body body-error scrollable">
+	<div class="error-container">
+		<h1 class="title-error text red">
+			Error <%= error.status %>
+		</h1>
+		<p class="message-error text">
+			<%= error.message %>
+		</p>
+	</div>
+	<figure class="figure">
+		<img class="cat_error" src="dist/assets/img/error.jpeg" alt="cat">
+	</figure>
+	<a class="btn green btn-only-icon"href="/">
+		<i class="nes-icon caret-left"></i> Home
+	</a>
+	<div id="particles-js"></div>
+	<!--PARTICLE JS-->
+	<script src="dist/assets/lib/particles.min.js"></script>
+	<script src="dist/assets/lib/particlesjs-config.json"></script>
+	<!--OBSERVER Auth Observer-->
+	<script type="module" src="dist/js/userNotAuth-observer.js"></script>
 </body>
 </html>
