@@ -5,23 +5,21 @@ export class SocketHandler {
      * @param {String} remoteRepository The reference name of the local storage 
      * @returns {SocketHandler}
      */
+
     constructor(remoteRepository) {
-        this.remoteRepository = remoteRepository;
-        this.socket = io();
-        this.socket.on('connect', () => {
+        this._remoteRepository = remoteRepository;
+        this.client = io();
+        this.client.on('connect', () => {
             console.log('Connected to server');
         });
-        this.socket.on('disconnect', () => {
+        this.client.on('disconnectToChannel', () => {
             console.log('Disconnected from server');
         });
-    }
-    /**
-     * @name send
-     * @description Send a message to the server
-     * @param {String} message 
-     */
-    send(message) {
-        this.socket.emit('message', message);
+        this.client.on('updateRepository', (data) => {
+            console.log(data);
+            //localStorage.setItem(remoteRepository, data);
+        });
+        
     }
     /**
      * @name updateRepositoryDatabase
@@ -29,19 +27,22 @@ export class SocketHandler {
      * @param {String} data 
      * @private
      */
-    async updateRepositoryDatabase(data) {
-        this.socket.emit('updateRepository', data);
+    async sendUpdateRepositoryDatabase(data) {
+        this.client.emit('updateRepository', data);
     }
-    async updateRepositoryLocalStorage(data) {
-        localStorage.setItem(this.remoteRepository, data);
+    async sendUpdateRepositoryLocalStorage(data) {
+        localStorage.setItem(this._remoteRepository, data);
     }
     /**
      * @name updateRepository
      * @description Update the repository with the data from the server
-     * @param {String} data
+     * @param {String} data 
      */
-    updateRepository(data){
-        this.updateRepositoryDatabase(data);
-        this.updateRepositoryLocalStorage(data);
+    async sendUpdateRepository(data){
+        //this.sendUpdateRepositoryLocalStorage(data);
+        this.sendUpdateRepositoryDatabase(data);
+    }
+    async disconnect(){
+        this.client.emit('disconnectToChannel');
     }
 }

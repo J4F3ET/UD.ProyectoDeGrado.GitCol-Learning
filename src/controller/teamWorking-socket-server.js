@@ -2,20 +2,21 @@ import {auth} from "../model/firebase-service.js";
 import {
     roomGet,
 	roomGetByCode,
-    roomUpdate
+    roomUpdateRepository,
+    observeRoom,
 } from "../model/room-service.js";
 export class SocketHandler {
     constructor(io){
-        this._io = io;
-        io.on('connect', (socket) => {
+        this.server = io;
+        io.on('connect', (client) => {
             // Middleware
             io.use(this.verifyUrl);
-            const room = socket.request.headers.referer.split("=")[1];
+            const room = client.request.headers.referer.split("=")[1];
             if (undefined === room)
                 return Error("Room not found");
             //Events
-            this.addSocketToRoom(room,socket);
-            this.setupSocketEvents(room,socket);
+            this.addSocketToChannel(room,client);
+            this.setupSocketEvents(room,client);
             console.log('Connected to server');
         });
     }
@@ -40,30 +41,36 @@ export class SocketHandler {
             next(new Error(error,"User not found in room"));
         });
     }
-    async updateRepository(data){
-        const room = await roomGetByCode(this.roomCode);
-        if (room === null)
-            return Error("Room not found");
-        console.log("Room found: ", room);
-        
-    }
-    async setupSocketEvents(room,socket){
-        socket.on('disconnect', () => {
-            this.removeSocketFromRoom(room, socket);
+    async setupSocketEvents(channel,socket){
+        socket.on('disconnectToChannel', () => {
+            this.removeSocketFromChannel(channel, socket);
         });
         socket.on('updateRepository', (args) => {
-            this.updateSocketRepository(socket,args)
+            this.updateSocketRepository(channel,args)
         });
     };
-    async addSocketToRoom(room,socket){
-        socket.join(room);
-        this._io.to(room).emit('message', 'Teagregamos a '+ room);
+    async addSocketToChannel(channel,socket){
+        socket.join(channel);
+        this.server.to(channel).emit('message', 'Teagregamos a '+ channel);
     };
-    async removeSocketFromRoom(room,socket){
-        socket.leave(room);
+    async removeSocketFromChannel(channel,socket){
+        console.log('Socket desconectado de '+ channel);
+        socket.leave(channel);
+        socket.emit('disconnectToChannel', 'Te sacamos de '+ channel);
     }
-    async updateSocketRepository(socket,data){
-        console.log("Updating repository");
-        socket.emit('message', data);
+    async updateRepository(room,data){
+        const roomDTO = await roomGetByCode(room);
+        if (roomDTO === null)
+            return Error("Room not found");
+        roomUpdateRepository(roomDTO.key, {repository: data});
+    }
+    async updateSocketRepository(room,data){
+        this.updateRepository(room,data);
+        this.sendUpdateToChannel(room);
+    }
+    async sendUpdateToChannel(room){
+        observeRoom(room, (data) => {
+            this.server.to(room).emit('updateRepository', data);
+        });
     }
 }
