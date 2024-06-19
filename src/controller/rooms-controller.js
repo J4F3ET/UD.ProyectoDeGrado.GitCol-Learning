@@ -164,7 +164,6 @@ router.get("/rooms/code", releaseVerificationMiddleware, async(req, res) => {
  */
 router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
 	const result = await auth.verifyIdToken(req.headers.cookie.split("=")[1])
-	console.log("CONTROLADOR DE SALAS",result);
 	const owner = result.name??result.email;
 	const members = [result.uid];
 	res.json({
