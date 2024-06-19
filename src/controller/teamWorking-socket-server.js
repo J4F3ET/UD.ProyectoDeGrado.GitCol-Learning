@@ -17,7 +17,6 @@ export class SocketHandler {
             //Events
             this.addSocketToChannel(room,client);
             this.setupSocketEvents(room,client);
-            console.log('Connected to server');
         });
     }
     verifyUrl = (socket, next) => {
@@ -46,7 +45,7 @@ export class SocketHandler {
             this.removeSocketFromChannel(channel, socket);
         });
         socket.on('updateRepository', (args) => {
-            this.updateSocketRepository(channel,args)
+            this.updateSocketRepository(channel,JSON.parse(args));
         });
     };
     async addSocketToChannel(channel,socket){
@@ -54,23 +53,16 @@ export class SocketHandler {
         this.server.to(channel).emit('message', 'Teagregamos a '+ channel);
     };
     async removeSocketFromChannel(channel,socket){
-        console.log('Socket desconectado de '+ channel);
         socket.leave(channel);
         socket.emit('disconnectToChannel', 'Te sacamos de '+ channel);
-    }
-    async updateRepository(room,data){
-        const roomDTO = await roomGetByCode(room);
-        if (roomDTO === null)
-            return Error("Room not found");
-        roomUpdateRepository(roomDTO.key, {repository: data});
-    }
-    async updateSocketRepository(room,data){
-        this.updateRepository(room,data);
-        this.sendUpdateToChannel(room);
-    }
+    };
+    async updateSocketRepository(channel,data){
+        roomUpdateRepository(channel, data);
+        this.sendUpdateToChannel(channel);
+    };
     async sendUpdateToChannel(room){
         observeRoom(room, (data) => {
             this.server.to(room).emit('updateRepository', data);
         });
-    }
+    };
 }

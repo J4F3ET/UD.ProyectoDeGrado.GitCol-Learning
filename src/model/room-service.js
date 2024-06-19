@@ -1,4 +1,5 @@
 import {database} from "./firebase-service";
+import {defaultRepository} from "./utils.js";
 /**
  * roomCreate - Create a new room
  * @param {string} code : code of the room
@@ -11,7 +12,7 @@ import {database} from "./firebase-service";
  */
 async function roomCreate(code, description,owner, members, hidden,status = true) {
     try{
-        return database.ref("rooms/").push({
+        const key = database.ref("rooms/").push({
             code,
             description,
             owner,
@@ -19,6 +20,7 @@ async function roomCreate(code, description,owner, members, hidden,status = true
             status,
             hidden
         }).key;
+        return roomUpdateRepository(key, defaultRepository(key));
     }catch(error){
         console.error(error);
         return null;
@@ -36,7 +38,7 @@ async function roomCreate(code, description,owner, members, hidden,status = true
  * @param {boolean} hidden : hidden status of the room
  * @returns {Promise<int>} : id of the room
  */
-async function roomUpdate(id,code, description,owner, members, status, hidden) {
+async function roomUpdate(id,code, description,owner, members, status, hidden,repository) {
     return database.ref("rooms/"+id).set({
         code,
         description,
@@ -44,7 +46,17 @@ async function roomUpdate(id,code, description,owner, members, status, hidden) {
         members,
         status,
         hidden,
+        repository
     }).key;
+}
+async function roomUpdateRepository(id, data) {
+    console.log(data)
+    const ref = database.ref("rooms/"+id+"/repository");
+    try{
+        return ref.update(data).key;
+    }catch (error){
+        console.log(error)
+    }
 }
 /**
  * roomDelete - Delete a room
@@ -158,9 +170,20 @@ async function roomAddMember(roomKey, userId) {
         return false;
     }
 }
+async function observeRoom(roomKey, callback) {
+    try {
+        database.ref("rooms/"+roomKey).on('value', (snapshot) => {
+            const room = snapshot.val();
+            callback(room);
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
 export {
     roomCreate, 
-    roomUpdate, 
+    roomUpdate,
+    roomUpdateRepository,
     roomDelete, 
     roomGet,
     roomGetAll,
@@ -168,5 +191,6 @@ export {
     findByUserToRoom,
     roomRemoveMember,
     roomAddMember,
-    roomGetByCode
+    roomGetByCode,
+    observeRoom
 }
