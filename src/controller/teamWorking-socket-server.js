@@ -43,10 +43,12 @@ export class SocketHandler {
             this.removeSocketFromChannel(channel, socket);
         });
         socket.on('updateRepository', (args) => {
-            const data = JSON.parse(args);
-            if(!data.hasOwnProperty('commits'))
-                return Error("Commits not found");
-            this.updateSocketRepository(channel,data);
+                const data = JSON.parse(args);
+                if(data == undefined || !'commits' in data){
+                    socket.emit('error', 'Invalid data');
+                    return;
+                }
+                this.updateSocketRepository(channel,data);
         });
     };
     async addSocketToChannel(channel,socket){
