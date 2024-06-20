@@ -49,11 +49,10 @@ async function roomUpdate(id,code, description,owner, members, status, hidden,re
         repository
     }).key;
 }
-async function roomUpdateRepository(id, data) {
-    console.log(data)
-    const ref = database.ref("rooms/"+id+"/repository");
+async function roomUpdateCommitsToRepository(id, data) {
+    const ref = database.ref("rooms/"+id+"/repository/commits");
     try{
-        return ref.update(data).key;
+        return ref.update(data.commits).key;
     }catch (error){
         console.log(error)
     }
@@ -183,7 +182,7 @@ async function observeRoom(roomKey, callback) {
 export {
     roomCreate, 
     roomUpdate,
-    roomUpdateRepository,
+    roomUpdateCommitsToRepository,
     roomDelete, 
     roomGet,
     roomGetAll,
