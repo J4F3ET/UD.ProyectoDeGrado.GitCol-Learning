@@ -3,6 +3,7 @@ import {releaseVerificationMiddleware} from "./util/login-middleware .js";
 import {verifyUserInAnyRoomMiddleware} from "./util/teamWorking-middleware.js";
 import {auth} from "../model/firebase-service.js";
 import {
+	roomGet,
 	roomCreate,
 	roomGetByCode,
 	roomAddMember,
@@ -184,6 +185,43 @@ router.get("/rooms/all/public", releaseVerificationMiddleware, async(req, res) =
 		ok: true,
 		rooms: await rooms
 	});
+	res.end();
+});
+/**
+ * @openapi
+ * /rooms/key:
+ *   get:
+ *     summary: Endpoint para obtener la sala dado un código.
+ *     description: Dado un código de sala, retorna la sala correspondiente y si no existe retorna null.
+ *     parameters:
+ *       - in: query
+ *         name: key
+ *         required: true
+ *         description: Codigó que se quiere buscar y verificar si existe.
+ *         schema:
+ *           type: string
+ *           example: -O-qpCSiyUA7zcyCsT6r
+ *     responses:
+ *       200:
+ *         description: Éxito. Retorna la sala o un null.
+ *         content:
+ *           application/json:
+ *             examples:
+ *               example1:
+ *                 value:
+ *                   ok: true
+ *                   code: "-No7-v6_p1qqbKY2gfzp" # Código de la sala (string)
+ *               example2:
+ *                 value:
+ *                   ok: true
+ *                   code: null # Indicando que el código esta disponible
+ *     security:
+ *       - bearerAuth: []
+ *       - cookieAuth: []
+ */
+router.get("/rooms/key", releaseVerificationMiddleware, async(req, res) => {
+	const room = roomGet(req.query.key);
+	res.json(await room);
 	res.end();
 });
 export default router;
