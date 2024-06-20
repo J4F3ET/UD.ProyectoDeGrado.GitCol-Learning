@@ -16,19 +16,11 @@ export class SocketHandler {
             console.log('Disconnected from server');
         });
         this.client.on('updateRepository', (data) => {
-            console.log(data);
             //localStorage.setItem(remoteRepository, data);
         });
-        
-    }
-    /**
-     * @name updateRepositoryDatabase
-     * @description Update the repository with the data from the server
-     * @param {String} data 
-     * @private
-     */
-    async sendUpdateRepositoryDatabase(data) {
-        this.client.emit('updateRepository', data);
+        this.client.on('error', (error) => {         
+            //LOGIC TO HANDLE ERROR
+        });
     }
     async sendUpdateRepositoryLocalStorage(data) {
         localStorage.setItem(this._remoteRepository, data);
@@ -39,8 +31,8 @@ export class SocketHandler {
      * @param {String} data 
      */
     async sendUpdateRepository(data){
-        //this.sendUpdateRepositoryLocalStorage(data);
-        this.sendUpdateRepositoryDatabase(data);
+        if('commits' in data)
+            this.client.emit('updateRepository', data);
     }
     async disconnect(){
         this.client.emit('disconnectToChannel');
