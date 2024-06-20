@@ -2,18 +2,16 @@ import {auth} from "../model/firebase-service.js";
 import {
     roomGet,
 	roomGetByCode,
-    roomUpdateRepository,
+    roomUpdateCommitsToRepository,
     observeRoom,
 } from "../model/room-service.js";
 export class SocketHandler {
     constructor(io){
         this.server = io;
+        // Middleware
+        io.use(this.verifyUrl);
         io.on('connect', (client) => {
-            // Middleware
-            io.use(this.verifyUrl);
             const room = client.request.headers.referer.split("=")[1];
-            if (undefined === room)
-                return Error("Room not found");
             //Events
             this.addSocketToChannel(room,client);
             this.setupSocketEvents(room,client);
@@ -45,24 +43,25 @@ export class SocketHandler {
             this.removeSocketFromChannel(channel, socket);
         });
         socket.on('updateRepository', (args) => {
-            this.updateSocketRepository(channel,JSON.parse(args));
+            const data = JSON.parse(args);
+            if(!data.hasOwnProperty('commits'))
+                return Error("Commits not found");
+            this.updateSocketRepository(channel,data);
         });
     };
     async addSocketToChannel(channel,socket){
         socket.join(channel);
-        this.server.to(channel).emit('message', 'Teagregamos a '+ channel);
     };
     async removeSocketFromChannel(channel,socket){
         socket.leave(channel);
-        socket.emit('disconnectToChannel', 'Te sacamos de '+ channel);
     };
     async updateSocketRepository(channel,data){
-        roomUpdateRepository(channel, data);
-        this.sendUpdateToChannel(channel);
+        roomUpdateCommitsToRepository(channel, data);
+        this.sendUpdateRepositoryToChannel(channel);
     };
-    async sendUpdateToChannel(room){
-        observeRoom(room, (data) => {
-            this.server.to(room).emit('updateRepository', data);
+    async sendUpdateRepositoryToChannel(channel){
+        observeRoom(channel, (data) => {
+            this.server.to(channel).emit('updateRepository', data);
         });
     };
 }
