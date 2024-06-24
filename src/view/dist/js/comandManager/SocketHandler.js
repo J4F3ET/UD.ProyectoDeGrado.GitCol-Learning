@@ -9,30 +9,26 @@ export class SocketHandler {
     constructor(remoteRepository) {
         this._remoteRepository = remoteRepository;
         this.client = io();
-        this.client.on('connect', () => {
-            console.log('Connected to server');
-        });
-        this.client.on('disconnectToChannel', () => {
-            console.log('Disconnected from server');
-        });
         this.client.on('updateRepository', (data) => {
-            //localStorage.setItem(remoteRepository, data);
+            this.updateCommitsToRepository(data);
         });
         this.client.on('error', (error) => {         
             //LOGIC TO HANDLE ERROR
         });
     }
-    async sendUpdateRepositoryLocalStorage(data) {
-        localStorage.setItem(this._remoteRepository, data);
+    async updateCommitsToRepository(data){
+        const localStorageCurrent =  JSON.parse(localStorage.getItem(this._remoteRepository));
+        localStorageCurrent.commits = data;
+        localStorage.setItem(this._remoteRepository,JSON.stringify(localStorageCurrent));
     }
     /**
      * @name updateRepository
      * @description Update the repository with the data from the server
-     * @param {String} data 
+     * @param {JSON} data The data to update the repository
      */
     async sendUpdateRepository(data){
         if('commits' in data)
-            this.client.emit('updateRepository', data);
+            this.client.emit('updateRepository', data.commits);
     }
     async disconnect(){
         this.client.emit('disconnectToChannel');
