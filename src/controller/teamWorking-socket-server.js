@@ -1,7 +1,6 @@
 import {auth} from "../model/firebase-service.js";
 import {
     roomGet,
-	roomGetByCode,
     roomUpdateCommitsToRepository,
     observeRoom,
 } from "../model/room-service.js";
@@ -17,38 +16,35 @@ export class SocketHandler {
             this.setupSocketEvents(room,client);
         });
     }
-    verifyUrl = (socket, next) => {
-        const room = socket.request.headers.referer.split("=")[1];
-        const cookie = socket.request.headers.cookie.split("=")[1];
-        if(room == undefined || cookie == undefined){
-            next(new Error("Room not found in url or user not logged in"));
-            return;
+    verifyUrl = async (socket, next) => {
+        try {
+            const room = socket.request.headers.referer.split("=")[1];
+            const cookie = socket.request.headers.cookie.split("=")[1];
+            if(room == undefined || cookie == undefined)
+                throw new Error("Room not found in url or user not logged in");
+            const responseToken = await auth.verifyIdToken(cookie);
+            const responseRoom = await roomGet(room);
+            if(responseToken == undefined)
+                throw new Error("User not logged in");
+            if(responseRoom == null)
+                throw new Error("Room not found");
+            if(!responseRoom.val().members.includes(responseToken.uid))
+                throw new Error("Member not found in room");
+            next();
+        } catch (error) {
+            next(error);
         }
-        auth.verifyIdToken(cookie).then((data) => {
-            roomGet(room).then((_room) => {
-                if(_room.val().members.includes(data.uid)){
-                    next();
-                }else{
-                    next(new Error("Member not found in room"));
-                }
-            }).catch((error) => {
-                next(new Error(error,"User not found in room"));
-            });
-        }).catch((error) => {
-            next(new Error(error,"User not found in room"));
-        });
     }
     async setupSocketEvents(channel,socket){
         socket.on('disconnectToChannel', () => {
             this.removeSocketFromChannel(channel, socket);
         });
         socket.on('updateRepository', (args) => {
-                const data = JSON.parse(args);
-                if(data == undefined || !'commits' in data){
+                if(args == undefined){
                     socket.emit('error', 'Invalid data');
                     return;
                 }
-                this.updateSocketRepository(channel,data);
+                this.updateSocketRepository(channel,args);
         });
     };
     async addSocketToChannel(channel,socket){
@@ -63,7 +59,8 @@ export class SocketHandler {
     };
     async sendUpdateRepositoryToChannel(channel){
         observeRoom(channel, (data) => {
-            this.server.to(channel).emit('updateRepository', data);
+            const commitsJSON = JSON.parse(data.repository.commits);
+            this.server.to(channel).emit('updateRepository', commitsJSON);
         });
     };
 }
