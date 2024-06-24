@@ -13,8 +13,6 @@ const toggleRepository = async () => {
         changeClassList(icono,"folder","cloud");
         btnToggle.dataset.repository = "Local";
     }
-    console.log("Cambiando de repositorio a "+currentShowRepository);
-    
 }
 async function showElement(elementHide,elementShow){
     changeClassList(elementShow,"hidden-repository","show-repository");

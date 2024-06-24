@@ -1,8 +1,8 @@
-export const defaultRepository = (key) => {
+export const defaultRepository = async (key) => {
     return {
         commits:[],
         information:{
-            head: "",
+            head: "master",
             repository:`cloud-${key}`,
         }
     }
