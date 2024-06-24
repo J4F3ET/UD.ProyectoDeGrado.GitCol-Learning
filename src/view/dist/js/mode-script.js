@@ -85,8 +85,13 @@ const observerScrollSvgHorizontal = new MutationObserver(()=>containerSvg.scroll
 observerScroll.observe(containerLogs,{childList:true})
 observerScrollSvgHorizontal.observe(containerSvg, { childList: true, subtree: true });
 
+// MODULE MULTI-MODE
 const containerSvgCloud = document.getElementById("svgContainerCloud");
 if(containerSvgCloud){
+    const dataViewerCloud = new DataViewer(document.getElementById("svgContainerCloud"));
+    const observerCloud = new Observer();
+    observerCloud.subscribe(dataViewerCloud);
+    observerCloud.notify(localStorage.getItem(REF_STORAGE_REPOSITORY_CLOUD));
     const observerScrollSvgHorizontalCloud = new MutationObserver(()=>containerSvgCloud.scrollLeft = containerSvgCloud.scrollWidth)
     observerScrollSvgHorizontalCloud.observe(containerSvgCloud, { childList: true, subtree: true });
 }
