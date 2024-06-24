@@ -220,8 +220,7 @@ router.get("/rooms/all/public", releaseVerificationMiddleware, async(req, res) =
  *       - cookieAuth: []
  */
 router.get("/rooms/key", releaseVerificationMiddleware, async(req, res) => {
-	const room = roomGet(req.query.key);
-	res.json(await room);
-	res.end();
+	const room = await roomGet(req.query.key);
+	res.json(room).end();
 });
 export default router;
