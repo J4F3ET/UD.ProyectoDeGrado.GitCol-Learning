@@ -135,7 +135,6 @@ document.getElementById("btnSubmitCreateRoom").addEventListener("click", (e) => 
 		},
 		body: JSON.stringify(room)
 	}).then((response) => {
-		console.log(response.status);
 		if(!response.ok)
 			window.location.href = "/home";
 

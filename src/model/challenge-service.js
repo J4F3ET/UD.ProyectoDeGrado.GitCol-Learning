@@ -30,7 +30,7 @@ async function challengeFindByLevel(level) {
 	try {
 		return database.ref("challenges/").orderByChild("level").equalTo(level).once('value');
 	} catch (error) {
-		console.log("error en la bda");
+		console.error(error);
 		return null;
 	}
 }

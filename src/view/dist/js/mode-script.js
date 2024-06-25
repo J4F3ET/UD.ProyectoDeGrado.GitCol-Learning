@@ -17,19 +17,24 @@ const DEFAULT_MESSAGE = {
         <p class="help">More information using 'git &lt;comand&gt; [-h|--help]'</p>
     `
 };
+const listCommands = ["init","commit","checkout","branch","log","merge"];
+if(REF_STORAGE_REPOSITORY_CLOUD){
+    //listCommands.push("push","pull");
+}
 const aloneModeCommandManager = factoryCommandManager(
-    ["init","commit","checkout","branch","log","merge"],
-    [REF_STORAGE_REPOSITORY,REF_STORAGE_LOG]
+    listCommands,
+    [
+        REF_STORAGE_REPOSITORY,
+        REF_STORAGE_LOG,
+        REF_STORAGE_REPOSITORY_CLOUD
+    ]
 );
-
 let listComands = JSON.parse(localStorage.getItem(REF_STORAGE_LOG))?.filter(log => log.tag === "comand")?.map(log => log.message)|| [];
-const dataViewer = new DataViewer(document.getElementById("svgContainer"));
+const dataViewerLocal = new DataViewer(document.getElementById("svgContainer"));
 const observer = new Observer()
 let accountComands = listComands.length;
 // EVENT LISTENERS
-document.addEventListener("DOMContentLoaded", () => {
-    init();
-});
+document.addEventListener("DOMContentLoaded", () => init());
 document.getElementById("comandInput").addEventListener("keyup",(e) => {
     if(e.key === "ArrowUp"){
         accountComands= accountComands === 0 ? listComands.length-1 : accountComands-1;
@@ -51,8 +56,8 @@ document.getElementById("comandInput").addEventListener("keyup",(e) => {
 });
 // FUNCTIONS
 const init = () => {
-    dataViewer.currentData =  null;
-    dataViewer.logComands = null;
+    dataViewerLocal.currentData =  null;
+    dataViewerLocal.logComands = null;
     if(localStorage.getItem(REF_STORAGE_LOG) === null)
         localStorage.setItem(REF_STORAGE_LOG,JSON.stringify([DEFAULT_MESSAGE]));
     observer.notify(localStorage.getItem(REF_STORAGE_LOG))
@@ -79,7 +84,7 @@ const executeCommand = (comand) => {
     }
 };
 // OBSERVER
-observer.subscribe(dataViewer)
+observer.subscribe(dataViewerLocal)
 // ZONE VIEW (EFECS AND OBSERVERS)
 const containerLogs = document.getElementById("logContainer");
 const containerSvg = document.getElementById("svgContainer");
@@ -87,3 +92,15 @@ const observerScroll = new MutationObserver(()=>containerLogs.scrollTop = contai
 const observerScrollSvgHorizontal = new MutationObserver(()=>containerSvg.scrollLeft = containerSvg.scrollWidth)
 observerScroll.observe(containerLogs,{childList:true})
 observerScrollSvgHorizontal.observe(containerSvg, { childList: true, subtree: true });
+
+// MODULE MULTI-MODE
+const containerSvgCloud = document.getElementById("svgContainerCloud");
+const observerCloud = new Observer();
+if(containerSvgCloud){
+    const dataViewerCloud = new DataViewer(document.getElementById("svgContainerCloud"));
+    observerCloud.subscribe(dataViewerCloud);
+    observerCloud.notify(localStorage.getItem(REF_STORAGE_REPOSITORY_CLOUD));
+    const observerScrollSvgHorizontalCloud = new MutationObserver(()=>containerSvgCloud.scrollLeft = containerSvgCloud.scrollWidth)
+    observerScrollSvgHorizontalCloud.observe(containerSvgCloud, { childList: true, subtree: true });
+}
+export { observerCloud }

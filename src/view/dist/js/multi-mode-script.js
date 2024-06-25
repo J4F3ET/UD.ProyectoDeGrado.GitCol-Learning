@@ -13,22 +13,14 @@ const toggleRepository = async () => {
         changeClassList(icono,"folder","cloud");
         btnToggle.dataset.repository = "Local";
     }
-    console.log("Cambiando de repositorio a "+currentShowRepository);
-    
 }
 async function showElement(elementHide,elementShow){
     changeClassList(elementShow,"hidden-repository","show-repository");
     changeClassList(elementHide,"show-repository","hidden-repository");
 }
 async function changeClassList(element,remove,add){
-    try {
-        element.classList.remove(remove);
-        element.classList.add(add);
-    } catch (error) {
-        console.log("Error al cambiar la clase del elemento "+remove+" por "+add+" en el elemento");
-        console.log(element);
-    }
-    
+    element.classList.remove(remove);
+    element.classList.add(add);
 }
 document.getElementById("btnLeaveToRoom").addEventListener("click",() => leaveToRoom());
 async function leaveToRoom(){

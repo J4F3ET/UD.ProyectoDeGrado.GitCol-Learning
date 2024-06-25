@@ -29,6 +29,7 @@
 			const REF_STORAGE_REPOSITORY = "<%= (REF_STORAGE_REPOSITORY) %>";
 			const REF_STORAGE_REPOSITORY_CLOUD = "<%= (REF_STORAGE_REPOSITORY_CLOUD) %>";
 			const REF_STORAGE_LOG = "<%= (REF_STORAGE_LOG) %>";
+			localStorage.setItem(REF_STORAGE_REPOSITORY_CLOUD, '<%- (repository) %>');
 		</script>
 	</head>
 	<body class="scrollable body">
@@ -48,6 +49,9 @@
         </section>
 		<section class="container-help-and-svg" id="contentContainer">
             <div id="btnSendMessage" class="container-panel-help" id="panelHelpContainer">
+				<button id="btnPush" class="btn orange">
+					<i class="nes-icon bomb"></i>
+				</button>
 				<button id="btnToggleRepository" data-repository="Local" class="btn green toggle-repository-btn btn-only-icon">
 					<i class="nes-icon cloud"></i>
 				</button>
@@ -67,9 +71,9 @@
 	<!--SOCKET IO-->
 	<script src="socket.io/socket.io.min.js"></script>
 	<!-- CUSTOM JS -->
-	<script type="module" src="./dist/js/multi-mode-script.js"></script>
 	<script type="module" src="./dist/js/mode-script.js"></script>
-	<script src="./dist/js/multi-mode-socket-client.js"></script>
+	<script type="module" src="./dist/js/multi-mode-socket-client.js"></script>
+	<script type="module" src="./dist/js/multi-mode-script.js"></script>
 	<!--PARTICLE JS-->
 	<script src="dist/assets/lib/particles.min.js"></script>
 	<script src="dist/assets/lib/particlesjs-config.json"></script>

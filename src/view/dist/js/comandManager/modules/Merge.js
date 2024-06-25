@@ -102,7 +102,6 @@ export class Merge {
             commits =  moveTagToCommit(commits,commitHead,commitFetch,storage.information.head);
             if(commitFetch.class.includes('detached-head'))
                 commits = changeDetachedCommitToCommit(commitFetch,commits);
-            console.log('movility tag');
         }else
             storage.information.head = 'detached to '+commitFetch.id;
         commits = updateHeadCommit(commits,commitHead, commitFetch);

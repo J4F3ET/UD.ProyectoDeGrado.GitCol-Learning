@@ -19,6 +19,11 @@
         <link rel="stylesheet" href="dist/css/dataViewer/tag.css">
         <link rel="stylesheet" href="dist/css/dataViewer/text.css">
         <link rel="stylesheet" href="dist/css/dataViewer/log.css">
+        <script>
+            const REF_STORAGE_REPOSITORY = "local";
+            const REF_STORAGE_REPOSITORY_CLOUD = null;
+            const REF_STORAGE_LOG = "log";
+        </script>
 	</head>
 	<body class="scrollable body">
         <section class="container-box-control" id="controlBoxContainer">
@@ -46,6 +51,7 @@
     <!--PARTICLE JS-->
     <script src="dist/assets/lib/particles.min.js"></script>
     <script src="dist/assets/lib/particlesjs-config.json"></script>
-    <script type="module" src="./dist/js/alone-mode-script.js"></script>
+    <script src="/dist/js/alone-mode-script.js"></script>
+    <script type="module" src="./dist/js/mode-script.js"></script>
 	<script type="module" src="./dist/js/userNotAuth-observer.js"></script>
 </html>

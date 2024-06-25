@@ -4,11 +4,11 @@ const router = Router();
  * @openapi
  * /aloneMode:
  *   get:
- *     summary: Endpoint para obtener la pantalla de trabajo en equipo.
- *     description: Retorna la pantalla de trabajo en equipo (alone-mode-screen).
+ *     summary: Endpoint render view alone-mode
+ *     description: Render view alone-mode
  *     responses:
  *       200:
- *         description: Éxito. Retorna la pantalla de trabajo en equipo.
+ *         description: Succes. Render view alone-mode
  *         content:
  *           text/html:
  *             example: alone-mode-screen.ejs
