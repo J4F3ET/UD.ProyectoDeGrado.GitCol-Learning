@@ -17,9 +17,17 @@ const DEFAULT_MESSAGE = {
         <p class="help">More information using 'git &lt;comand&gt; [-h|--help]'</p>
     `
 };
+const listCommands = ["init","commit","checkout","branch","log","merge"];
+if(REF_STORAGE_REPOSITORY_CLOUD){
+    //listCommands.push("push","pull");
+}
 const aloneModeCommandManager = factoryCommandManager(
-    ["init","commit","checkout","branch","log","merge"],
-    [REF_STORAGE_REPOSITORY,REF_STORAGE_LOG,REF_STORAGE_REPOSITORY_CLOUD]
+    listCommands,
+    [
+        REF_STORAGE_REPOSITORY,
+        REF_STORAGE_LOG,
+        REF_STORAGE_REPOSITORY_CLOUD
+    ]
 );
 let listComands = JSON.parse(localStorage.getItem(REF_STORAGE_LOG))?.filter(log => log.tag === "comand")?.map(log => log.message)|| [];
 const dataViewerLocal = new DataViewer(document.getElementById("svgContainer"));
