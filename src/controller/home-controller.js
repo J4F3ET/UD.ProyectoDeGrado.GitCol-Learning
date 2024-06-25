@@ -4,34 +4,30 @@ const router = Router();
  * @openapi
  * /:
  *  get:
- *    summary: Endpoint para obtener la pantalla de inicio.
- *    description: Retorna la pantalla de inicio (home-screen).
+ *    summary: Endpoint for render index view
+ *    description: Render index view (home-screen).
  *    responses:
  *     200:
- *      description: Éxito. Retorna la pantalla de inicio.
+ *      description: Success. Render index view.
  *      content:
  *          text/html:
  *             example: home-screen.ejs
  * 
 */
-router.get('/', (req, res) => {
-	res.render("home-screen");
-});
+router.get('/', (req, res) => res.render("home-screen"));
 /**
  * @openapi
  * /home:
  *  get:
- *    summary: Endpoint para obtener la pantalla de inicio.
- *    description: Retorna la pantalla de inicio (home-screen).
+ *    summary: Endpoint for render index view
+ *    description: Render index view (home-screen).
  *    responses:
  *     200:
- *      description: Éxito. Retorna la pantalla de inicio.
+ *      description: Success. Render index view.
  *      content:
  *          text/html:
  *             example: home-screen.ejs
  * 
 */
-router.get('/home', (req, res) => {
-	res.redirect("/");
-});
+router.get('/home', (req, res) => res.redirect("/"));
 export default router;

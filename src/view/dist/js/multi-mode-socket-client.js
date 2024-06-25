@@ -1,11 +1,10 @@
-const socket = io();
-document.getElementById("btnSendMessage").addEventListener("click", () => {
-    console.log("hola");
-    const message = 'Hello Word';
-    socket.emit("chat", message);
-    
+import { SocketHandler } from "./comandManager/SocketHandler.js";
+import { observerCloud} from "./mode-script.js";
+const socketManager = new SocketHandler(REF_STORAGE_REPOSITORY_CLOUD,observerCloud);
+
+document.getElementById('btnLeaveToRoom').addEventListener('click', () => {
+    socketManager.disconnect();
 });
-console.log(window.location.href.split("=")[1]);
-socket.on("message", (message) => {
-    console.log(message);
+document.getElementById('btnPush').addEventListener('click', () => {
+    socketManager.sendUpdateRepository(JSON.parse(localStorage.getItem(REF_STORAGE_REPOSITORY)));
 });

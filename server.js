@@ -3,7 +3,7 @@ import morgan from "morgan";
 import { Server } from 'socket.io';
 import path from "path";
 import { createServer } from 'node:http';
-import { socketRoomController } from "./src/controller/teamWorking-socket-server.js";
+import { SocketHandler } from "./src/controller/teamWorking-socket-server.js";
 import { swaggerDoc } from "./docs/swagger.js";
 
 const app = express();
@@ -20,8 +20,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Socket.io: Configuraciones de socket.io
-socketRoomController(io);
-
+new SocketHandler(io);
 // Routes: Rutas de la aplicacion
 app.use(require("./src/controller/login-controller").default);
 app.use(require("./src/controller/home-controller").default);
