@@ -39,7 +39,7 @@ async function roomUpdateRepository(id, data) {
     try{
         return ref.set(await data).key;
     }catch (error){
-        console.log(error);
+        console.error(error);
     }
 }
 /**
@@ -55,7 +55,7 @@ async function roomUpdate(id,mapParams) {
             database.ref(refString+key).set(value);
         });
     }catch(error){
-        console.log(error)
+        console.error(error)
     }
 }
 async function roomUpdateCommitsToRepository(id, data) {
@@ -64,7 +64,7 @@ async function roomUpdateCommitsToRepository(id, data) {
     try{
         return ref.set(stringData).key;
     }catch (error){
-        console.log(error)
+        console.error(error)
     }
 }
 /**
@@ -112,7 +112,6 @@ async function roomGetAllPublic(){
             };
         });
     } catch (error) {
-        console.log("Error al buscar las salas públicas");
         console.error(error);
         return [];
     }
@@ -134,7 +133,6 @@ async function findByUserToRoom(idUser) {
         });
         return roomsWithUser;
     } catch (error) {
-        console.log("Error al buscar las salas del usuario");
         console.error(error);
         return [];
     }
