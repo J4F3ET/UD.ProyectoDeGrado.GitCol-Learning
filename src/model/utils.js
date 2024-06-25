@@ -1,9 +1,9 @@
 export const defaultRepository = async (key) => {
     return {
-        commits:[],
+        commits:'[]',
         information:{
             head: "master",
-            repository:`cloud-${key}`,
+            repository:`cloud${key}`,
         }
     }
 };
