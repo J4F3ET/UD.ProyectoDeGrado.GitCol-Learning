@@ -1,5 +1,6 @@
 import { SocketHandler } from "./comandManager/SocketHandler.js";
-const socketManager = new SocketHandler(REF_STORAGE_REPOSITORY_CLOUD);
+import { observerCloud} from "./mode-script.js";
+const socketManager = new SocketHandler(REF_STORAGE_REPOSITORY_CLOUD,observerCloud);
 
 document.getElementById('btnLeaveToRoom').addEventListener('click', () => {
     socketManager.disconnect();
