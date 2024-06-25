@@ -1,4 +1,5 @@
 import { findByUserToRoom,roomGet } from "../../model/room-service.js";
+import { CustomError } from "../../model/CustomError.js";
 import {auth} from "../../model/firebase-service.js";
 import { errorMiddleware } from "./error-middleware.js";
 // Middleware Express: Funciones que se ejecutan antes de que lleguen a las rutas 
