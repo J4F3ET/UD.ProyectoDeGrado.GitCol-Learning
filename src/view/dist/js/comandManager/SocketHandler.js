@@ -6,9 +6,10 @@ export class SocketHandler {
      * @returns {SocketHandler}
      */
 
-    constructor(remoteRepository) {
+    constructor(remoteRepository,observer) {
         this._remoteRepository = remoteRepository;
         this.client = io();
+        this.observer = observer;
         this.client.on('updateRepository', (data) => {
             this.updateCommitsToRepository(data);
         });
@@ -20,6 +21,7 @@ export class SocketHandler {
         const localStorageCurrent =  JSON.parse(localStorage.getItem(this._remoteRepository));
         localStorageCurrent.commits = data;
         localStorage.setItem(this._remoteRepository,JSON.stringify(localStorageCurrent));
+        this.observer.notify(localStorage.getItem(this._remoteRepository));
     }
     /**
      * @name updateRepository
