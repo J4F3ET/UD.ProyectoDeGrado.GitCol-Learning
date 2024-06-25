@@ -41,7 +41,7 @@ router.get("/teamWorking*",releaseVerificationMiddleware,verifyUserInRoomMiddlew
 	}
 	const repository = {
 		information:roomData.repository.information,
-		commits:JSON.parse(roomData.repository.commits)
+		commits:JSON.parse(roomData.repository.commits)||[]
 	};
 	res.render("multi-mode-screen", {
 		REF_STORAGE_REPOSITORY: "local" + req.query.room,

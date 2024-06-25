@@ -167,15 +167,16 @@ router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
 	const result = await auth.verifyIdToken(req.headers.cookie.split("=")[1])
 	const owner = result.name??result.email;
 	const members = [result.uid];
+	const room = await roomCreate(
+		req.body.code,
+		req.body.description,
+		owner,
+		members,
+		req.body.hidden
+	);
 	res.json({
-		ok: true ,
-		room: await roomCreate(
-			req.body.code,
-			req.body.description,
-			owner,
-			members,
-			req.body.hidden
-		)
+		ok: true,
+		room
 	});
 	res.end();
 });
