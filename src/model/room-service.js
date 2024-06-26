@@ -1,4 +1,5 @@
 import {database} from "./firebase-service";
+import {defaultRepository} from "./utils.js";
 /**
  * roomCreate - Create a new room
  * @param {string} code : code of the room
@@ -6,49 +7,65 @@ import {database} from "./firebase-service";
  * @param {string} owner : owner of the room
  * @param {List<int>} members : members of the room
  * @param {boolean} status : status of the room
- * @param {List<object>} chat : record of the chat
  * @param {boolean} hidden : hidden status of the room
  * @returns {Promise<int>} : id of the room
  */
-async function roomCreate(code, description,owner, members, hidden,status = true ,chat={}) {
+async function roomCreate(code, description,owner, members, hidden,status = true) {
+    let key = null;
     try{
-        return database.ref("rooms/").push({
+        key = database.ref("rooms/").push({
             code,
             description,
             owner,
             members,
             status,
-            chat,
-            hidden,
+            hidden
         }).key;
     }catch(error){
         console.error(error);
         return null;
     }
-	
+    return roomUpdateRepository(key,defaultRepository(key));
+    
+}
+/**
+ * roomUpdateRepository - Update the repository of a room
+ * @param {string} id : id of the room
+ * @param {Promise} data : object with the params to update
+ * @returns {Promise<int>} : id of the room
+ */
+async function roomUpdateRepository(id, data) {
+    const ref = database.ref("rooms/"+id+"/repository");
+    try{
+        return ref.set(await data).key;
+    }catch (error){
+        console.error(error);
+    }
 }
 /**
  * roomUpdate - Update a room
  * @param {string} id : id of the room
- * @param {string} code : code of the room
- * @param {string} description : description of the room
- * @param {string} owner : owner of the room
- * @param {List<int>} members : members of the room
- * @param {boolean} status : status of the room
- * @param {List<object>} chat : record of the chat
- * @param {boolean} hidden : hidden status of the room
+ * @param {Map<String,Object} mapParams : object with the params to update
  * @returns {Promise<int>} : id of the room
  */
-async function roomUpdate(id,code, description,owner, members, status, chat, hidden) {
-    return database.ref("rooms/"+id).set({
-        code,
-        description,
-        owner,
-        members,
-        status,
-        chat,
-        hidden,
-    }).key;
+async function roomUpdate(id,mapParams) {
+    const refString = 'rooms/'+id+'/';
+    try{
+        mapParams.forEach((value,key) => {
+            database.ref(refString+key).set(value);
+        });
+    }catch(error){
+        console.error(error)
+    }
+}
+async function roomUpdateCommitsToRepository(id, data) {
+    const stringData = JSON.stringify(data);
+    const ref = database.ref(`/rooms/${id}/repository/commits`);
+    try{
+        return ref.set(stringData).key;
+    }catch (error){
+        console.error(error)
+    }
 }
 /**
  * roomDelete - Delete a room
@@ -95,7 +112,6 @@ async function roomGetAllPublic(){
             };
         });
     } catch (error) {
-        console.log("Error al buscar las salas públicas");
         console.error(error);
         return [];
     }
@@ -117,7 +133,6 @@ async function findByUserToRoom(idUser) {
         });
         return roomsWithUser;
     } catch (error) {
-        console.log("Error al buscar las salas del usuario");
         console.error(error);
         return [];
     }
@@ -162,9 +177,20 @@ async function roomAddMember(roomKey, userId) {
         return false;
     }
 }
+async function observeRoom(roomKey, callback) {
+    try {
+        database.ref("rooms/"+roomKey).on('value', (snapshot) => {
+            const room = snapshot.val();
+            callback(room);
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
 export {
     roomCreate, 
-    roomUpdate, 
+    roomUpdate,
+    roomUpdateCommitsToRepository,
     roomDelete, 
     roomGet,
     roomGetAll,
@@ -172,5 +198,6 @@ export {
     findByUserToRoom,
     roomRemoveMember,
     roomAddMember,
-    roomGetByCode
+    roomGetByCode,
+    observeRoom
 }

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {releaseVerificationMiddleware} from "./util/login-middleware .js";
 import { verifyUserInRoomMiddleware } from "./util/teamWorking-middleware.js";
-import { roomRemoveMember } from "../model/room-service.js";
+import { roomRemoveMember,roomGet } from "../model/room-service.js";
 import {auth} from "../model/firebase-service.js";
 const router = Router();
 /**
@@ -9,7 +9,7 @@ const router = Router();
  * /teamWorking:
  *   get:
  *     summary: Endpoint para obtener la pantalla de trabajo en equipo.
- *     description: Retorna la pantalla de trabajo en equipo (teamWorking-screen).
+ *     description: Retorna la pantalla de trabajo en equipo (multi-mode-screen).
  *     parameters:
  *       - in: query
  *         name: room
@@ -23,13 +23,32 @@ const router = Router();
  *         description: Éxito. Retorna la pantalla de trabajo en equipo.
  *         content:
  *           text/html:
- *             example: teamWorking-screen.ejs
+ *             example: multi-mode-screen.ejs
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
  */
-router.get("/teamWorking*",releaseVerificationMiddleware,verifyUserInRoomMiddleware,(req, res) => {
-    res.render("teamWorking-screen", { room: req.query.room });
+router.get("/teamWorking*",releaseVerificationMiddleware,verifyUserInRoomMiddleware,async (req, res) => {
+	const roomSnapshot = await roomGet(req.query.room);
+	const roomData = roomSnapshot.val();
+	if (!roomData){
+		res.render("error", {
+			error: err,
+			message: "Room not found",
+			status: 404
+		}).end();
+		return;
+	}
+	const repository = {
+		information:roomData.repository.information,
+		commits:JSON.parse(roomData.repository.commits)||[]
+	};
+	res.render("multi-mode-screen", {
+		REF_STORAGE_REPOSITORY: "local" + req.query.room,
+		REF_STORAGE_REPOSITORY_CLOUD: "cloud" + req.query.room,
+		REF_STORAGE_LOG: "log" + req.query.room,
+		repository: JSON.stringify(repository),
+	});
 });
 /**
  * @openapi
@@ -62,7 +81,16 @@ router.get("/teamWorking*",releaseVerificationMiddleware,verifyUserInRoomMiddlew
  *       - cookieAuth: []
  */
 router.patch("/teamWorking",releaseVerificationMiddleware,verifyUserInRoomMiddleware, async(req, res) => {
-	const user = auth.verifyIdToken(req.headers.cookie.split("=")[1]);
-	res.json({success: await roomRemoveMember(req.query.room, (await user).uid)});
+	try {
+		const user = auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+		res.json({success: await roomRemoveMember(req.query.room, (await user).uid)});
+	} catch (error) {
+		render("error", {
+			error: error,
+			message: error.message,
+			status: 500
+		}).end();
+	}
+	
 });
 export default router;

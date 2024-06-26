@@ -74,6 +74,8 @@ export class DataViewer{
      * @param {String} data Data to send to the observers
      */
     notify(data){
+        if(data == null)
+            return
         if(Object.hasOwn(JSON.parse(data),'commits'))
             this.updateSVG(data);
         else

@@ -5,17 +5,17 @@ const router = Router();
  * @openapi
  * /login:
  *   post:
- *     summary: Realiza el proceso de login del usuario utilizando OAuth.
- *     description: Verifica las credenciales del usuario, si el usuario es válido y no posee una cookie de sesión activa, se le asigna una cookie de sesión y se redirige a la pantalla de salas (rooms-screen). Si el usuario ya posee una cookie de sesión activa, se verifica dicho token y se redirige a la pantalla de salas (rooms-screen). Si en cualquiera de los dos casos anteriores es invalida la respuesta retorna un error 401
+ *     summary: Endpoint for login
+ *     description: Validate access token and assing a cookie 
  *     requestBody:
  *       content:
  *         application/json:
  *           schema:
  *             type: object
- *             properties: {}  # Cuerpo vacío, ya que el token se envía en el encabezado o la cookie
+ *             properties: {}
  *     responses:
  *       200:
- *         description: Login exitoso.
+ *         description: Success login.
  *         content:
  *           application/json:
  *             schema:
@@ -25,10 +25,10 @@ const router = Router();
  *                   type: string
  *                   example: /rooms
  *       401:
- *         description: Token de acceso no válido o ausente.
+ *         description: Unauthorized and redirect to error view
  *         content:
  *           text/html:
- *             example: login-screen.ejs
+ *             example: error-screen.ejs
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
@@ -41,8 +41,8 @@ router.post("/login", releaseVerificationMiddleware, (req, res) => {
  * @openapi
  * /logout:
  *   get:
- *     summary: Endpoint para cerrar sesión.
- *     description: Elimina la cookie de sesión del usuario y redirige a la pantalla de login (login-screen).
+ *     summary: Endpoint for logout
+ *     description: De
  *     responses:
  *       200:
  *         description: Éxito. Redirige a la pantalla de login.
@@ -60,4 +60,3 @@ router.get("/logout", releaseVerificationMiddleware, (req, res) => {
 	res.end();
 });
 export default router;
-	

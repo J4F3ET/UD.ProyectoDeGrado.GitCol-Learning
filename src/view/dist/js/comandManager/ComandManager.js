@@ -5,6 +5,17 @@
 export class ComandManager {
     /**
      * @memberof ComandManager#
+     * @name _ref_storage_log
+     * @member
+     * @description Reference to the storage log
+     * @type {String}
+     * @default "log"
+     * @private
+    */
+    _ref_storage_log = "log";
+
+    /**
+     * @memberof ComandManager#
      * @name _comands
      * @member
      * @description Map of the commands
@@ -21,14 +32,16 @@ export class ComandManager {
      * @property {Function} help Show the help message
      */
     _shellCommands = {
-        'clear':()=>localStorage.setItem('log',JSON.stringify([])),
+        'clear':()=>localStorage.setItem(this._ref_storage_log,JSON.stringify([])),
         'help': ()=>this.callBackHelp()
     };
     /**
      * @constructor
      * @description Create a new instance of the ComandManager
      */
-    constructor(){}
+    constructor(ref_sotrage_log){
+        this._ref_storage_log = ref_sotrage_log;
+    }
     /**
      * @memberof ComandManager#
      * @method
@@ -106,11 +119,11 @@ export class ComandManager {
      * @param {String} message Message to be saved
      */
     createMessage(tag,message){
-        if(localStorage.getItem('log')===null)
-            localStorage.setItem('log',JSON.stringify([]));
-        const log = JSON.parse(localStorage.getItem('log'));
+        if(localStorage.getItem(this._ref_storage_log)==null)
+            localStorage.setItem(this._ref_storage_log,JSON.stringify([]));
+        const log = JSON.parse(localStorage.getItem(this._ref_storage_log));
         log.push({tag,message});
-        localStorage.setItem('log',JSON.stringify(log));
+        localStorage.setItem(this._ref_storage_log,JSON.stringify(log));
     }
     /**
      * @name verifyComand
