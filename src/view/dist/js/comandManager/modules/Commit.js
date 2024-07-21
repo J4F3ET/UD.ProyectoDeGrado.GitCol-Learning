@@ -190,7 +190,7 @@ export class Commit{
         if(!dataComand.includes('m'))
             throw new Error('The configuration "-m" is obligatory for use the configuration "-a"');
         const files = this._configurations.a.files.map(file => `<li>>${file}</li>`).join('');
-        createMessage('info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
+        createMessage(this._logRepository,'info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
         return true;
     }
     /**
@@ -219,7 +219,7 @@ export class Commit{
             <li class="help">-a&nbsp;&nbsp;&nbsp;Add all files to the commit(files system no implemented)</li>
             <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>`
-        createMessage('info',message);
+        createMessage(_logRepository,'info',message);
         return dataComand.includes('-m');
     }
 

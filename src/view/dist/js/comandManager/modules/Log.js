@@ -85,11 +85,11 @@ export class Log{
     execute(dataComand){
         let storage = JSON.parse(localStorage.getItem(this._repositoryName));
         if(storage === null){
-            createMessage("error","Repository not found");
+            createMessage(this._logRepository,"error","Repository not found");
             return;
         }
         if(storage.commits.length === 0){
-            createMessage("error","Repository is empty");
+            createMessage(this._logRepository,"error","Repository is empty");
             return;
         }
         this.resetConfig();
@@ -157,7 +157,7 @@ export class Log{
         childs.sort((a,b)=>new Date(a.date)-new Date(b.date));
         if(this._configurations.n.use){
             if(this._configurations.n.value > childs.length)
-                createMessage("error","The number of commits is greater than the number of commits the log has");
+                createMessage(this._logRepository,"error","The number of commits is greater than the number of commits the log has");
             else
                 return childs.slice(this._configurations.n.value);
         }
@@ -220,7 +220,7 @@ export class Log{
             message += `<p class="help">Date:&nbsp;&nbsp;&nbsp;${commit.date}</p>`;
             message += `<p class="help">${commit.message}</p>`;
         });
-        createMessage("info",message);
+        createMessage(this._logRepository,"info",message);
     }
     /**
      * @name generatorOnelineMessage
@@ -243,7 +243,7 @@ export class Log{
             });
             message += `<p class="help underline">Commit:&nbsp;${commit.id}&nbsp;(${tags})&nbsp;${commit.message}</p>`;
         });
-        createMessage("info",message);
+        createMessage(this._logRepository,"info",message);
     }
     /**
      * @name callbackHelp
@@ -266,7 +266,7 @@ export class Log{
             <li class="help">[-h | --help]&nbsp;&nbsp;&nbsp;Show the help</li>
             <li class="help">[--oneline]&nbsp;&nbsp;&nbsp;This is a shorthand for "--pretty=oneline --abbrev-commit" used together.</li>
         </ul>`;
-        createMessage("info",message);
+        createMessage(this._logRepository,"info",message);
         throw new Error('');
     }
 }

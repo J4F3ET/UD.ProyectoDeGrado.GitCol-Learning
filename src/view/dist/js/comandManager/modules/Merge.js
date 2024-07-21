@@ -162,7 +162,7 @@ export class Merge {
         <ul>
             <li><p class="help">-h,--help &nbsp;&nbsp;&nbsp;Show the message</p></li>
         </ul>`;
-        createMessage(message);
+        createMessage(this._logRepository,'info',message);
         throw new Error('');
     }
 }

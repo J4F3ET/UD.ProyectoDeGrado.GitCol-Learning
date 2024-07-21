@@ -237,7 +237,7 @@ export class Branch{
             const message = branch !== headBranch 
                 ? `<p>${branch}</p>`
                 :`<p style="color:#49be25">*${headBranch}</p>`;
-            createMessage('info',message);
+            createMessage(this._logRepository,'info',message);
         });
     };
     /**
@@ -253,7 +253,7 @@ export class Branch{
             throw new Error('The remote repository is not defined');
         const storage = JSON.parse(localStorage.getItem(this._remoteRepository));
         const branches = storage.commits.flatMap(commit => commit.tags.filter(tag => tag !== 'HEAD'));
-        branches.forEach(branch => createMessage('info',branch));
+        branches.forEach(branch => createMessage(this._logRepository,'info',branch));
     };
     /**
      * @name callBackConfigDelete
@@ -368,6 +368,6 @@ export class Branch{
             <li><p class="help">-d, --delete&nbsp;&nbsp;&nbsp;Delete a branch</p> </li>
             <li><p class="help">-m, --move&nbsp;&nbsp;&nbsp;Rename a branch</p> </li>
         </ul>`;
-        createMessage('info',message);
+        createMessage(this._logRepository,'info',message);
     }
 }

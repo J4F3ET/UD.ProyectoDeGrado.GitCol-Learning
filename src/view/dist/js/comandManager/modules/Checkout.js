@@ -107,7 +107,7 @@ export class Checkout {
             storage.commits = this.createBranch(storage.commits,this._configurations.b.nameBranch);
             storage.information.head = this._configurations.b.nameBranch;
         }
-        createMessage('info',`Switched to '${this._configurations.b.nameBranch??branch??commit.id}'`);
+        createMessage(this._logRepository,'info',`Switched to '${this._configurations.b.nameBranch??branch??commit.id}'`);
         localStorage.setItem(this._dataRepository,JSON.stringify(storage));
         //console.timeEnd('Execution time of checkout command');
     }
@@ -230,7 +230,7 @@ export class Checkout {
             <li class="help">-q, --quiet&nbsp;&nbsp;&nbsp;Only print error and warning messages; all other output will be suppressed.</li>
             <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>`
-        createMessage('info',message);
+        createMessage(this._logRepository,'info',message);
         throw new Error('');
     }
     /**
