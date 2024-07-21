@@ -17,7 +17,7 @@ const DEFAULT_MESSAGE = {
         <p class="help">More information using 'git &lt;comand&gt; [-h|--help]'</p>
     `
 };
-const listCommands = ["init","commit","checkout","branch","log","merge"];
+const listCommands = ["init","commit","checkout","branch","log","merge","fetch"];
 if(REF_STORAGE_REPOSITORY_CLOUD){
     //listCommands.push("push","pull");
 }
