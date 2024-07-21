@@ -74,6 +74,40 @@ function findAllParents(commits,commit,parents=[]){
     return parents;
 }
 /**
+ * @name findLatestCommitsOfBranchs
+ * @function
+ * @memberof utils
+ * @description Find the latest commits the all branches
+ * @param {JSON[]} commits Array of commits
+ * @returns {JSON[]} Array of commits that are the latest of the branches
+ */
+function findLatestCommitsOfBranchs(commits){
+    const lastCommits = [];
+    commits.forEach(commit => {
+        if(commit.tags.length > 0 && !commit.class.includes('detached-head'))
+            lastCommits.push(commit);
+    });
+    return lastCommits;
+}   
+/**
+ * @name findCommitsDiffBetweenRepositories
+ * @function
+ * @memberof utils
+ * @description Find the commits that are different between two repositories
+ * @param {JSON[]} commitsLocal Array of commits of the local repository
+ * @param {JSON[]} commitsRemote Array of commits of the remote repository
+ * @returns {JSON[]} Array of commits that are different between the two repositories
+ */
+function findCommitsDiffBetweenRepositories(commitsLocal,commitsRemote){
+    const commitsDiff = [];
+    const localCommitsId = new Set(commitsLocal.map(commit => commit.id));
+    commitsRemote.forEach(commitRemote => {
+        if(!localCommitsId.has(commitRemote.id))
+            commitsDiff.push(commitRemote);
+    });
+    return commitsDiff;
+}
+/**
  * @name getCommitStartPoint
  * @function
  * @memberof utils
@@ -98,12 +132,12 @@ function getCommitStartPoint(dataComand,commits){
  * @param {String} message Message to be added to the log
  * @example createMessage('info','<div class="files"><h5>Add files to the commit</h5><ul><li>>index.html</li><li>>style.css</li><li>>script.js</li></ul></div>')
  */
-function createMessage(tag='info',message){
-    if(localStorage.getItem('log')===null)
+function createMessage(nameRefLog='log',tag='info',message){
+    if(localStorage.getItem(nameRefLog)===null)
         return;
-    const log = JSON.parse(localStorage.getItem('log'));
+    const log = JSON.parse(localStorage.getItem(nameRefLog));
     log.push({tag,message});
-    localStorage.setItem('log',JSON.stringify(log));
+    localStorage.setItem(nameRefLog,JSON.stringify(log));
 }
 /**
  * @name updateCommitToCommits
@@ -409,6 +443,8 @@ export {
     createRegister,
     findAllChildrens,
     findAllParents,
+    findLatestCommitsOfBranchs,
+    findCommitsDiffBetweenRepositories,
     getCommitStartPoint,
     deleteCommitsRecursivelyUntil,
     findAllExceptionCommitsToDelete,
