@@ -6,6 +6,7 @@ import {Checkout} from "./modules/Checkout.js";
 import {Log} from "./modules/Log.js";
 import {Merge} from "./modules/Merge.js";
 import {Fetch} from "./modules/Fetch.js";
+import {Push} from "./modules/Push.js";
 const COMMANDMAPPINGS  = {
     "init": Init,
     "commit": Commit,
@@ -13,7 +14,8 @@ const COMMANDMAPPINGS  = {
     "branch": Branch,
     "log": Log,
     "merge": Merge,
-    "fetch": Fetch
+    "fetch": Fetch,
+    "push": Push,
 }
 /**
  * @name factoryCommandManager
