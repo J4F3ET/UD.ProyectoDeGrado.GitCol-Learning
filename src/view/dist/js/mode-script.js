@@ -1,5 +1,5 @@
 import { DataViewer } from "./dataViewer/DataViewer.js";
-import { factoryCommandManager } from "./comandManager/working-alone-comandManager.js";
+import { factoryCommandManager } from "./comandManager/comandManager-factory.js";
 import { Observer } from "./dataViewer/Observer.js";
 const DEFAULT_MESSAGE = {
     tag:"info",
