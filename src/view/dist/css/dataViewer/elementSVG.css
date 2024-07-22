@@ -27,7 +27,10 @@ g.container-text-data-repository {
     font-size: 1.5rem;
     fill: var(--text-color);
 }
+strong{
+    font-weight:800;
 
+}
 @media screen and (max-width: 1106px){
     .empyText{
         font-weight: 100;
