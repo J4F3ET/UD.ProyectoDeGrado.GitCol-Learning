@@ -14,7 +14,7 @@ export class Pull {
      * @property {Function} h.callback Callback do responsability of generate a message in the console. With items as the concept, syntax and configurations.
      * @alias _configurations
      * @readonly
-     * @memberof! Init#
+     * @memberof! Pull#
     */
     _configurations = {
         h:{
