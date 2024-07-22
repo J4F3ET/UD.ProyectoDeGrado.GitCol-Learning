@@ -35,6 +35,17 @@ function removeTagById(commits,name,id){
     });
 }
 /**
+ * @name findAllTags
+ * @function
+ * @memberof utils
+ * @description Find all tags in array to commits
+ * @param {JSON[]} commits Array with the commits of the repository
+ * @returns {String[]} Array with tags name
+ */
+function findAllTags(commits){
+    return commits.flatMap(commit => commit.tags || [])
+}
+/**
  * @name findChildrens
  * @function
  * @memberof utils
@@ -436,6 +447,7 @@ function moveTagToCommit(commits,startCommit,destinationCommit,tag){
 export {
     removeTags,
     removeTagById,
+    findAllTags,
     createMessage,
     updateCommitToCommits,
     removeClassFromCommit,
