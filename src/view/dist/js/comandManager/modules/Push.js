@@ -1,4 +1,4 @@
-import { createMessage } from "./utils.js";
+import { createMessage,findAllTags } from "./utils.js";
 /**
  * @class
  * @classdesc Fetch from and integrate with another repository or a local branch
@@ -54,10 +54,86 @@ export class Push {
     }
 
     execute(dataComand){
-        console.log('Push', dataComand)
-    }
+        const repository = JSON.parse(localStorage.getItem(this._dataRepository));
+        const remote = JSON.parse(localStorage.getItem(this._remoteRepository));
 
+        if(!repository||!remote)
+            throw new Error('The repository does not exist')
+        
+        const values = dataComand.filter(data => data.charAt(0) !== '-')
+        const refRemote = values[0]||'origin'
+        const refBranch = values[1]|| repository.information.head||'master'
+        const branchsLocal = findAllTags(repository.commits)
+        const branchsRemote = findAllTags(remote.commits)
+
+        let continueExecution = true;
+
+        for(const config of this.resolveConfiguration(dataComand)){
+            continueExecution = this._configurations[config].callback();
+            if(!continueExecution)
+                return;
+        }
+
+        if(values.length !== 0 && values.length !== 2)
+            throw new Error('Repository and resfspec were not correctly specified.')
+        
+        if(refRemote != this._remoteRepository.split('-')[0])
+            throw new Error(`Remote '<strong>${refRemote}</strong>' does not exist <br> By default the only existing connection at the moment is '<b>origin</b>'`)
+        
+        if(!branchsLocal.includes(refBranch))
+            throw new Error(`Branch '<strong>${refBranch}</strong>' does not exist in local`)
+
+        
+
+    }
+    /**
+     * @name resolveConfiguration
+     * @method
+     * @memberof! Push#
+     * @description Resolve the configuration of the command, extract the configuration of the command and validate it
+     * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
+     * @example resolveConfiguration(['-m','"message"','-a']) // ['m','a']
+     * @returns {String[]} Array with the letters of the configuration
+     */
+    resolveConfiguration(dataComand) {
+        let configs = [] 
+        dataComand.forEach(c => {
+            if(c.startsWith("-")||c.startsWith("--"))
+                configs.push(c.replace(/^(-{1,2})([a-zA-Z])/, "$2").charAt(0))//Remove the "-" or "--" of the configuration and select second group 
+        });
+        this.validateConfig(configs);
+        configs = configs.filter((c,i,self) => self.indexOf(c) === i);
+        return configs;
+    }
+    /**
+     * @name validateConfig
+     * @method
+     * @memberof! Push#
+     * @description Validate the configuration of the command
+     * @param {String[]} configs Array with the letters of the configuration
+     * @example validateConfig(['h','all']) // true
+     * @throws {Error} The configuration is empty
+     * @throws {Error} The configuration "${config}" is not valid
+     */
+    validateConfig(configs){
+        const currentConfig = Object.keys(this._configurations);
+        configs.forEach(config => {
+            if(!currentConfig.includes(config))
+                throw new Error(`The configuration "${config}" is not valid`);
+        });
+    }
     callbackHelp(){
-        createMessage(this._remoteRepository,'info', 'The pull command is used to fetch from and integrate with another repository or a local branch', 'pull [options] [<repository> [<refspec>…​]]')
+        let message = `
+        <h5>Concept</h5>
+        <p class="help"> Update remote refs along with associated objects</p>
+        <h5>Syntax</h5>
+        <p class="help">git push [-h | --help] [&ltrepository&gt] [&ltrefspec&gt]</p>
+        <h5>Configurations</h5>
+        <h6 class="help">Optional</h6>
+        <ul>
+            <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
+        </ul>`
+        createMessage(this._logRepository,'info', message)
+        return false;
     }
 }
