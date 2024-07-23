@@ -43,7 +43,9 @@ function removeTagById(commits,name,id){
  * @returns {String[]} Array with tags name
  */
 function findAllTags(commits){
-    return commits.flatMap(commit => commit.tags || [])
+    return commits
+        .flatMap(commit => commit.tags || [])
+        .filter(nameBranch => nameBranch != 'HEAD')
 }
 /**
  * @name findChildrens
@@ -55,7 +57,8 @@ function findAllTags(commits){
  * @param {JSON[]} childrens Array with the childrens of the commit
  */
 function findAllChildrens(commits,id,childrens = []){
-    const childrensFisrtGen = commits.filter(commitStorage => commitStorage.parent == id);
+    const childrensFisrtGen = commits
+        .filter(commitStorage => commitStorage.parent == id);
     if(childrensFisrtGen.length==0)
         return childrens;
     childrensFisrtGen.forEach(commit => {
@@ -75,7 +78,9 @@ function findAllChildrens(commits,id,childrens = []){
  * @return {JSON[]} Array of commits that beloging to param commit
  */
 function findAllParents(commits,commit,parents=[]){
-    const parentsCommits = commits.filter((comt)=>comt.id == commit.parent || commit.unions?.includes(comt.id));
+    const parentsCommits = commits.filter((comt)=>
+            comt.id == commit.parent || commit.unions?.includes(comt.id)
+        );
     if(parentsCommits.length === 0)
         return parents;
     parentsCommits.forEach((parent)=>{
@@ -177,7 +182,7 @@ function updateCommitToCommits(commits,newCommit){
  * @returns {JSON} Commit with the class removed
  */
 function removeClassFromCommit(commit,classToRemove){
-    return commit.class = commit.class.filter(classC => classC !== classToRemove); ;
+    return commit.class = commit.class.filter(classC => classC !== classToRemove);
 }
 
 // *** SYSTEM OF RAMIFICATION BY COMMITS(REGISTERS)***
@@ -212,16 +217,37 @@ const SPACE_BETWEEN_COMMITS_Y = 80;
 function resolveLocationCommit(commits,parentCx,parentCy){
     //Case 1
     const possibleX = parentCx + SPACE_BETWEEN_COMMITS_X;
-    if(commits.find(commit => commit.cx == possibleX && commit.cy == parentCy) == undefined)
+    if(
+        commits.find(
+            commit => commit.cx == possibleX && commit.cy == parentCy
+        ) == undefined
+    )
         return {commits,location:[possibleX,parentCy]};	
     //Case 2
-    const commitsInPossiteY = commits.filter(commit => commit.cx == possibleX && commit.cy < parentCy);
-    const commitsInNegativeY = commits.filter(commit => commit.cx == possibleX && commit.cy > parentCy);
-    const commitThisUbicationOnParentY = commits.filter(commit => commit.cx == parentCx && commit.cy != parentCy);
-    if(commitThisUbicationOnParentY.length == 0)
-        return {commits,location:[possibleX,generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativeY)]};
+    const commitsInPossiteY = commits
+        .filter(commit => commit.cx == possibleX && commit.cy < parentCy);
+
+    const commitsInNegativeY = commits
+        .filter(commit => commit.cx == possibleX && commit.cy > parentCy);
+
+    const commitThisUbicationOnParentY = commits
+        .filter(commit => commit.cx == parentCx && commit.cy != parentCy);
+        
+    if(commitThisUbicationOnParentY.length == 0){
+        const possibleY = generateLocationCommitCase2(
+            parentCy,
+            commitsInPossiteY,
+            commitsInNegativeY
+        )
+        return {commits,location:[possibleX,possibleY]};
+    }
     //Case 3
-    const response = generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsInNegativeY);
+    const response = generateLocationCommitCase3(
+        commits,
+        parentCy,
+        commitsInPossiteY,
+        commitsInNegativeY
+    );
     return {commits:(response.commits),location:[possibleX,response.cy]};
 }
 /**
@@ -237,8 +263,10 @@ function resolveLocationCommit(commits,parentCx,parentCy){
 function generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativeY){
     if(commitsInPossiteY.length == 0)
         return parentCy - SPACE_BETWEEN_COMMITS_Y;
+
     if(commitsInNegativeY.length == 0)
         return parentCy + SPACE_BETWEEN_COMMITS_Y;
+    
     if(commitsInPossiteY.length <= commitsInNegativeY.length)
         return commitsInPossiteY[commitsInPossiteY.length -1].cy - SPACE_BETWEEN_COMMITS_Y;
     else
@@ -259,12 +287,19 @@ function generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsI
     if(commitsInPossiteY.length <= commitsInNegativeY.length){
         const SPACE_BETWEEN_COMMITS_Y_NEGATIVE = SPACE_BETWEEN_COMMITS_Y * (-1)
         commitsInPossiteY.forEach(commit => {
-            commits = updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y_NEGATIVE,commit.id);
+            commits = updateLocationChildsOfCommit(
+                commits,
+                SPACE_BETWEEN_COMMITS_Y_NEGATIVE,
+                commit.id
+            );
         });
         return {commits,cy:(parentCy - SPACE_BETWEEN_COMMITS_Y)}; 
     }else{  
         commitsInNegativeY.forEach(commit => {
-            commits = updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y,commit.id);
+            commits = updateLocationChildsOfCommit(
+                commits,
+                SPACE_BETWEEN_COMMITS_Y,
+                commit.id);
         });
         return {commits,cy: (parentCy + SPACE_BETWEEN_COMMITS_Y)};
     }
@@ -285,7 +320,10 @@ function updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y,idCommitPa
     commitParent.cy = commitParent.cy + SPACE_BETWEEN_COMMITS_Y;
     if(childs.length != 0){
         childs.forEach(child => {
-            commits = updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y,child.id);
+            commits = updateLocationChildsOfCommit(
+                commits,
+                SPACE_BETWEEN_COMMITS_Y,
+                child.id);
         });
     }
     return updateCommitToCommits(commits,commitParent);
@@ -346,11 +384,16 @@ function createRegister(commits,parent,information,message){
  * @returns {Array} Array with the ID parents of the commits
  */
 function findAllExceptionCommitsToDelete(commits){
-    const parents = commits.map(commit => commit.parent&&!commit.class.includes('detached-head')?commit.parent:[]).flat();
+    const parents = commits.map(commit => 
+        commit.parent&&!commit.class.includes('detached-head')?commit.parent:[]
+    ).flat();
     if(parents.length === 0)
         return commits.filter(commit => commit.id == 'parent'|| commit.id == 'init');
-    const repeatedParents = parents.filter((parent, index) => parents.indexOf(parent) != index);
-    const parentsWithTags = commits.filter(commit => commit.tags.length > 0 && parents.includes(commit.id)).map(commit => commit.id);
+    const repeatedParents = parents
+        .filter((parent, index) => parents.indexOf(parent) != index);
+    const parentsWithTags = commits
+        .filter(commit => commit.tags.length > 0 && parents.includes(commit.id))
+        .map(commit => commit.id);
     return [...new Set([...repeatedParents,...parentsWithTags])];
 }
 /**
