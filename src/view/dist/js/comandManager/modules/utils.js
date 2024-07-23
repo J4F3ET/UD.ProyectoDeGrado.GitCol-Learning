@@ -110,16 +110,16 @@ function findLatestCommitsOfBranchs(commits){
  * @function
  * @memberof utils
  * @description Find the commits that are different between two repositories
- * @param {JSON[]} commitsLocal Array of commits of the local repository
- * @param {JSON[]} commitsRemote Array of commits of the remote repository
+ * @param {JSON[]} commitsDestination Array of commits of the destination(to) 
+ * @param {JSON[]} commitsOrigin Array of commits of the origin(from)
  * @returns {JSON[]} Array of commits that are different between the two repositories
  */
-function findCommitsDiffBetweenRepositories(commitsLocal,commitsRemote){
+function findCommitsDiffBetweenRepositories(commitsDestination,commitsOrigin){
     const commitsDiff = [];
-    const localCommitsId = new Set(commitsLocal.map(commit => commit.id));
-    commitsRemote.forEach(commitRemote => {
-        if(!localCommitsId.has(commitRemote.id))
-            commitsDiff.push(commitRemote);
+    const destinationCommitId = new Set(commitsDestination.map(commit => commit.id));
+    commitsOrigin.forEach(commitOrigin => {
+        if(!destinationCommitId.has(commitOrigin.id))
+            commitsDiff.push(commitOrigin);
     });
     return commitsDiff;
 }
@@ -487,6 +487,20 @@ function moveTagToCommit(commits,startCommit,destinationCommit,tag){
     commits = updateCommitToCommits(commits,destinationCommit);
     return commits;
 }
+
+//*** SYSTEM MERGE CHANGES***
+
+function mergeBranchChanges(repositoryDestination,repositoryOrigin,nameBranch){
+
+}
+
+function mergeRepositoriesChanges(){
+    throw new Error('NOT IMPLEMENT')
+}
+
+
+
+
 export {
     removeTags,
     removeTagById,
