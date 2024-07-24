@@ -2,7 +2,8 @@ import {
     createMessage,
     findAllTags,
     findAllParents,
-    findCommitsDiffBetweenRepositories
+    findCommitsDiffBetweenRepositories,
+    mergeBranchChanges
 } from "./utils.js";
 /**
  * @class
@@ -89,34 +90,40 @@ export class Push {
         if(!branchsLocal.includes(refBranch))
             throw new Error(`Branch '<strong>${refBranch}</strong>' does not exist in local`)
         
-        const commitRemote = remote.commits.find(findCommit)
-        const commitLocal = repository.commits.find(findCommit)
-        if(!repository.commits.find(commit => commit.id == commitRemote.id))
-            throw new Error(`
-                Failed to push some refs to ${this._remoteRepository} <br>
-                Updates were rejected because the remote contains work that you do 
-                not have locally. This is usually caused by another repository pushing 
-                to the same ref. You may want to first integrate the remote changes 
-                (e.g., 'git pull ...') before pushing again.
-            `)
-        
-        const historyBranchRemote  =  findAllParents(
-            remote.commits,
-            commitRemote
-        )
-        const historyBranchLocal =  findAllParents(
-            repository.commits,
-            commitLocal
-        )
-
-        const commitDiff = findCommitsDiffBetweenRepositories(historyBranchRemote,historyBranchLocal)
-
-        if(commitDiff.length == 0)
-            createMessage(
-                this._logRepository,
-                'info',
+        //Solo si la rama existe se efectura esta seccion de codigo
+        if(branchsRemote.includes(refBranch)){
+            const commitRemote = remote.commits.find(findCommit)
+            const commitLocal = repository.commits.find(findCommit)
+            if(!repository.commits.find(commit => commit.id == commitRemote.id))
+                throw new Error(`
+                    Failed to push some refs to ${this._remoteRepository} <br>
+                    Updates were rejected because the remote contains work that you do 
+                    not have locally. This is usually caused by another repository pushing 
+                    to the same ref. You may want to first integrate the remote changes 
+                    (e.g., 'git pull ...') before pushing again.
+                `)
+            const historyBranchRemote  =  findAllParents(
+                remote.commits,
+                commitRemote
+            )
+            const historyBranchLocal =  findAllParents(
+                repository.commits,
+                commitLocal
             )
 
+            const commitDiff = findCommitsDiffBetweenRepositories(historyBranchRemote,historyBranchLocal)
+
+            if(commitDiff.length == 0){
+                createMessage(
+                    this._logRepository,
+                    'info',
+                    'Already up to date.'
+                )
+                return
+            }
+        }
+        console.log(refBranch)
+        mergeBranchChanges(remote.commits,repository.commits,refBranch)
     }
     /**
      * @name resolveConfiguration
