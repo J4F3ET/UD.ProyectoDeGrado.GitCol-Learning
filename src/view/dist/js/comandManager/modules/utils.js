@@ -490,16 +490,56 @@ function moveTagToCommit(commits,startCommit,destinationCommit,tag){
 
 //*** SYSTEM MERGE CHANGES***
 
-function mergeBranchChanges(repositoryDestination,repositoryOrigin,nameBranch){
-
+function mergeBranchChanges(commitsDestination,commitsOrigin,nameBranch){
+    const findCommit = (commit) => commit.tags.includes(nameBranch)
+    const commitHeadDestination = commitsDestination.find(findCommit)
+    const commitHeadOrigin = commitsOrigin.find(findCommit)
+    const commitsDiff = findCommitsDiffBetweenRepositories(commitsDestination,commitsOrigin)
+    // const historyBranchDestination  =  findAllParents(
+    //     commitsDestination,
+    //     commitHeadDestination
+    // )
+    const historyBranchOrigin =  findAllParents(
+        commitsOrigin,
+        commitHeadOrigin
+    )
+    const commitsEquals = findCommitsEqualBetweenRepositories(commitsDestination,historyBranchOrigin)
+    console.log("EQUALS")
+    console.log(commitsEquals)
+    const idCommitLinkDestination = findCommitLink(
+        commitsEquals.map(commit => commit.id),
+        commitsDiff.map(commit => commit.parent)
+    )
+    console.log(idCommitLinkDestination)
 }
 
 function mergeRepositoriesChanges(){
     throw new Error('NOT IMPLEMENT')
 }
+/**
+ * @name findCommitsEqualBetweenRepositories
+ * @function
+ * @memberof utils
+ * @description Find the commits that are different between two repositories
+ * @param {JSON[]} commitsDestination Array of commits of the destination(to) 
+ * @param {JSON[]} commitsOrigin Array of commits of the origin(from)
+ * @returns {JSON[]} Array of commits that are equals between the two repositories
+ */
+function findCommitsEqualBetweenRepositories(commitsDestination,commitsOrigin){
+    const commitsEqual = [];
+    const destinationCommitId = new Set(commitsDestination.map(commit => commit.id));
+    commitsOrigin.forEach(commitOrigin => {
+        if(destinationCommitId.has(commitOrigin.id))
+            commitsEqual.push(commitOrigin);
+    });
+    return commitsEqual;
+}
 
-
-
+function findCommitLink(idPotentialParents,idParentsOfChildrens){
+    return idParentsOfChildrens.find(
+        idParentChild => idPotentialParents.includes(idParentChild)
+    )|| null
+}
 
 export {
     removeTags,
@@ -521,5 +561,6 @@ export {
     changeDetachedCommitToCommit,
     currentHead,
     updateHeadCommit,
-    moveTagToCommit
+    moveTagToCommit,
+    mergeBranchChanges
 }
