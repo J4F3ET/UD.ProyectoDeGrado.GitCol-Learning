@@ -84,14 +84,10 @@ export class Log{
      */
     execute(dataComand){
         let storage = JSON.parse(localStorage.getItem(this._repositoryName));
-        if(storage === null){
-            createMessage(this._logRepository,"error","Repository not found");
-            return;
-        }
-        if(storage.commits.length === 0){
-            createMessage(this._logRepository,"error","Repository is empty");
-            return;
-        }
+        if(storage === null)
+            throw Error("Repository not found")
+        if(storage.commits.length === 0)
+            throw Error("Repository is empty")
         this.resetConfig();
         setTimeout(()=>this.removeClassLog(),1000);
         this.resolveConfiguration(dataComand);
@@ -108,7 +104,6 @@ export class Log{
         else
             this.generatorMessage(storage.information.head,listCommits);
         localStorage.setItem(this._repositoryName,JSON.stringify(storage));
-
     }
     /**
      * @name getCommitStartPoint
@@ -120,11 +115,9 @@ export class Log{
      * @memberof! Log#
      */
     getCommitStartPoint(dataComand,commits){
-        let startPoint = getCommitStartPoint(dataComand,commits);
+        const startPoint = getCommitStartPoint(dataComand,commits);
         if(startPoint === undefined)
-            startPoint = commits.find((commit)=>commit.tags.includes('HEAD'));
-        if(startPoint === undefined)
-            startPoint = commits.find((commit)=>commit.tags.includes('master'));
+            throw Error(`ambiguous argument '${dataComand.pop()}': unknown revision or path not in the working tree.`)
         return startPoint
     }
     /**
@@ -180,7 +173,7 @@ export class Log{
             }else if(/^\d+$/.test(clearComand)){
                 this._configurations.n.value = parseInt(clearComand);
                 this._configurations.n.use = true;
-            }else
+            }else if(index != dataComand.length - 1)
                 throw new Error('Invalid option');
         });
     }
