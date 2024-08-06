@@ -149,11 +149,11 @@ function getCommitStartPoint(dataComand,commits){
  * @example createMessage('info','<div class="files"><h5>Add files to the commit</h5><ul><li>>index.html</li><li>>style.css</li><li>>script.js</li></ul></div>')
  */
 function createMessage(nameRefLog='log',tag='info',message){
-    if(localStorage.getItem(nameRefLog)===null)
+    if(sessionStorage.getItem(nameRefLog)===null)
         return;
-    const log = JSON.parse(localStorage.getItem(nameRefLog));
+    const log = JSON.parse(sessionStorage.getItem(nameRefLog));
     log.push({tag,message});
-    localStorage.setItem(nameRefLog,JSON.stringify(log));
+    sessionStorage.setItem(nameRefLog,JSON.stringify(log));
 }
 /**
  * @name updateCommitToCommits
@@ -369,7 +369,7 @@ function createRegister(commits,parent,information,message){
         unions: [],
         tags,
         class: classList,
-        autor: information.config.user.autor??JSON.parse(localStorage.getItem('config')).user.autor??null,
+        autor: information.config.user.autor??JSON.parse(sessionStorage.getItem('config')).user.autor??null,
         date: new Date().toLocaleString(),
         cx:response.location[0],
         cy:response.location[1]
@@ -491,26 +491,87 @@ function moveTagToCommit(commits,startCommit,destinationCommit,tag){
 //*** SYSTEM MERGE CHANGES***
 
 function mergeBranchChanges(commitsDestination,commitsOrigin,nameBranch){
+
     const findCommit = (commit) => commit.tags.includes(nameBranch)
-    const commitHeadDestination = commitsDestination.find(findCommit)
+
     const commitHeadOrigin = commitsOrigin.find(findCommit)
-    const commitsDiff = findCommitsDiffBetweenRepositories(commitsDestination,commitsOrigin)
-    // const historyBranchDestination  =  findAllParents(
-    //     commitsDestination,
-    //     commitHeadDestination
-    // )
-    const historyBranchOrigin =  findAllParents(
+
+    const historyBranchOrigin =  [...findAllParents(
         commitsOrigin,
         commitHeadOrigin
+    ),commitHeadOrigin]
+    
+    const commitsDiffGlobal = findCommitsDiffBetweenRepositories(
+        commitsDestination,
+        commitsOrigin
     )
-    const commitsEquals = findCommitsEqualBetweenRepositories(commitsDestination,historyBranchOrigin)
-    console.log("EQUALS")
-    console.log(commitsEquals)
+    
+    const commitsEquals = findCommitsEqualBetweenRepositories(
+        commitsDestination,
+        historyBranchOrigin
+    )
+    
     const idCommitLinkDestination = findCommitLink(
         commitsEquals.map(commit => commit.id),
-        commitsDiff.map(commit => commit.parent)
+        commitsDiffGlobal.map(commit => commit.parent)
     )
-    console.log(idCommitLinkDestination)
+    
+    const commitHeadDestination = 
+        commitsDestination.find(findCommit) || 
+        commitsDestination.find(commit => commit.id == idCommitLinkDestination)
+        
+    const historyBranchDestination  = commitHeadDestination?  [
+        ...findAllParents(commitsDestination,commitHeadDestination),
+        commitHeadDestination
+    ]:findAllParents(commitsDestination,commitHeadDestination)
+
+    const commitsChanges = findCommitsDiffBetweenRepositories(
+        historyBranchDestination,
+        historyBranchOrigin
+    )
+
+    return addChangesRecursivelyToRepository(commitsDestination,commitsChanges)
+}
+function addChangesRecursivelyToRepository(commits,changes){
+    if(changes.length == 0)
+        return commits
+    const commitIdSet = new Set(
+        commits.length != 0?
+            commits.map(commit => commit.id):
+            []
+    );
+    const parentsChange = new Set(changes.map(c => c.parent))
+
+    let idParent = null
+
+    for(const parentIdofChange of parentsChange){
+        if(commitIdSet.has(parentIdofChange)){
+            idParent = parentIdofChange
+            break
+        }
+    }
+    if (!idParent){
+        if(commits.length == 0)
+            idParent = "init"
+        else
+            return commits
+    }
+    const change = changes.find(c =>c.parent = idParent)
+    const parent = commits.find(c => c.id == idParent)
+    const responseCommits = addCommitChangeToBranch(commits,parent,change)
+    const newChanges = changes.filter(c => c.id != change.id)
+    return addChangesRecursivelyToRepository(responseCommits,newChanges)
+}
+function addCommitChangeToBranch(commitsDestination,parent = {cx:-30,cy:334},commit){
+    console.log(commitsDestination,parent,commit)
+    const response = resolveLocationCommit(
+        commitsDestination,
+        parent.cx,
+        parent.cy
+    )
+    commit.cx = response.location[0]
+    commit.cy = response.location[1]
+    return [...response.commits,commit]
 }
 
 function mergeRepositoriesChanges(){
