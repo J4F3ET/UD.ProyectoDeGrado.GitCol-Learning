@@ -1,3 +1,4 @@
+import { SocketHandler } from "../SocketHandler.js";
 import { 
     createMessage,
     findAllTags,
@@ -48,6 +49,13 @@ export class Push {
      */
     _remoteRepository = 'origin';
     /**
+     * @type {SocketHandler}
+     * @description Name of the remote repository
+     * @default null
+     * @memberof! Push#
+     */
+    _socketHandler = null
+    /**
      * @constructor
      * @param {string} dataRepository Name of the space where the repository will be saved
      * @param {string} logRepository Name of the space where the log will be saved
@@ -57,12 +65,12 @@ export class Push {
         this._dataRepository = dataRepository
         this._logRepository = logRepository
         this._remoteRepository = remoteRepository
+        this._socketHandler = new SocketHandler(remoteRepository)
     }
 
     execute(dataComand){
-        const repository = JSON.parse(localStorage.getItem(this._dataRepository));
-        const remote = JSON.parse(localStorage.getItem(this._remoteRepository));
-
+        const remote = JSON.parse(sessionStorage.getItem(this._remoteRepository));
+        const repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
         if(!repository||!remote)
             throw new Error('The repository does not exist')
         
@@ -71,6 +79,7 @@ export class Push {
         const refBranch = values[1]|| repository.information.head
         const branchsLocal = findAllTags(repository.commits)
         const branchsRemote = findAllTags(remote.commits)
+        
         const findCommit = (commit) => commit.tags.includes(refBranch)
 
         let continueExecution = true;
@@ -80,7 +89,6 @@ export class Push {
             if(!continueExecution)
                 return;
         }
-
         if(values.length !== 0 && values.length !== 2)
             throw new Error('Repository and resfspec were not correctly specified.')
         
@@ -110,9 +118,7 @@ export class Push {
                 repository.commits,
                 commitLocal
             )
-
             const commitDiff = findCommitsDiffBetweenRepositories(historyBranchRemote,historyBranchLocal)
-
             if(commitDiff.length == 0){
                 createMessage(
                     this._logRepository,
@@ -122,8 +128,8 @@ export class Push {
                 return
             }
         }
-        console.log(refBranch)
-        mergeBranchChanges(remote.commits,repository.commits,refBranch)
+        remote.commits = mergeBranchChanges(remote.commits,repository.commits,refBranch)
+        this._socketHandler.sendUpdateRepository(remote)
     }
     /**
      * @name resolveConfiguration
