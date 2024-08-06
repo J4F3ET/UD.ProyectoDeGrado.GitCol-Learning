@@ -87,14 +87,14 @@ export class Commit{
      */
     execute(dataComand){
         //console.time('Execution time of commit');
-        if(localStorage.getItem(this._dataRepository)===null)
+        if(sessionStorage.getItem(this._dataRepository)===null)
             throw new Error('The repository does not exist');
         let continueExecution = true;
         this.resolveConfiguration(dataComand).forEach(config => {
             continueExecution = this._configurations[config].callback(dataComand);
         });
         if(!continueExecution) return;
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
+        const storage = JSON.parse(sessionStorage.getItem(this._dataRepository));// Array of commits
         if(storage.commits.length == 0){
             storage.information.head = "master";
             storage.commits.push({
@@ -103,12 +103,12 @@ export class Commit{
                 message: this._configurations.m.message,
                 tags: ["master", "HEAD"],
                 class: ["commit","checked-out"],
-                autor: storage.information.config.user.autor??JSON.parse(localStorage.getItem('config')).autor??null,
+                autor: storage.information.config.user.autor??JSON.parse(sessionStorage.getItem('config')).autor??null,
                 date: new Date().toLocaleString(),
                 cx: 50,
                 cy: 334,
             });
-            localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+            sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
             //console.timeEnd('Execution time of commit');
             return
         }
@@ -118,7 +118,7 @@ export class Commit{
         head = removeClassFromCommit(head,"checked-out");
         storage.commits = updateCommitToCommits(response.commits,head);
         storage.commits.push(response.commit);
-        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+        sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
         //console.timeEnd('Execution time of commit');
     }
     /**

@@ -53,7 +53,7 @@ export class Init{
     execute(dataComand = ""){
         this.resetConfiguration;
         this.resolveConfiguration(dataComand);
-        localStorage.setItem(this._repositoryName, JSON.stringify(
+        sessionStorage.setItem(this._repositoryName, JSON.stringify(
             {
                 information:{
                     head:"",

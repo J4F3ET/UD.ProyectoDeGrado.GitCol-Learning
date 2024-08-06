@@ -66,7 +66,7 @@ export class Merge {
      * @throws {Error} There are no branch master
      */
     execute(dataComand){
-        let storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        let storage = JSON.parse(sessionStorage.getItem(this._dataRepository));
         if(!storage)
             throw new Error('The repository is not initialized');
         if(storage.commits.length === 0)
@@ -84,7 +84,7 @@ export class Merge {
             storage = this.resolveMovilityTag(storage, commitFetch, commitHead);
         else
             storage = this.resolveCreateRegister(storage, commitFetch, commitHead);
-        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+        sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
     /**
      * @memberof Merge#

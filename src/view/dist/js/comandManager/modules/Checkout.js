@@ -82,9 +82,9 @@ export class Checkout {
     */
     execute(dataComand){
         //console.time('Execution time of checkout command');
-        if(localStorage.getItem(this._dataRepository)===null)
+        if(sessionStorage.getItem(this._dataRepository)===null)
             throw new Error('The repository does not exist');
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository))
+        const storage = JSON.parse(sessionStorage.getItem(this._dataRepository))
         if(storage.commits.length == 0)
             throw new Error('The repository does not have commits');
         this.resetConfig();
@@ -108,7 +108,7 @@ export class Checkout {
             storage.information.head = this._configurations.b.nameBranch;
         }
         createMessage(this._logRepository,'info',`Switched to '${this._configurations.b.nameBranch??branch??commit.id}'`);
-        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+        sessionStorage.setItem(this._dataRepository,JSON.stringify(storage));
         //console.timeEnd('Execution time of checkout command');
     }
     /**

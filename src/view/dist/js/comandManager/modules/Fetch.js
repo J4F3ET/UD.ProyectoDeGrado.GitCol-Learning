@@ -61,8 +61,8 @@ export class Fetch {
 
     execute(data){
         //console.time('Execution time of commit');
-        let repository = JSON.parse(localStorage.getItem(this._dataRepository));
-        let remote = JSON.parse(localStorage.getItem(this._remoteRepository));
+        let repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
+        let remote = JSON.parse(sessionStorage.getItem(this._remoteRepository));
         if(!repository || !remote)
             throw new Error('The repository is not initialized<br>Please initialize the repository first');
         const diff = findCommitsDiffBetweenRepositories(repository.commits, remote.commits);

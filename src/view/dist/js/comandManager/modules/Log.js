@@ -83,7 +83,7 @@ export class Log{
      * @method
      */
     execute(dataComand){
-        let storage = JSON.parse(localStorage.getItem(this._repositoryName));
+        let storage = JSON.parse(sessionStorage.getItem(this._repositoryName));
         if(storage === null)
             throw Error("Repository not found")
         if(storage.commits.length === 0)
@@ -103,7 +103,7 @@ export class Log{
             this.generatorOnelineMessage(storage.information.head,listCommits);
         else
             this.generatorMessage(storage.information.head,listCommits);
-        localStorage.setItem(this._repositoryName,JSON.stringify(storage));
+        sessionStorage.setItem(this._repositoryName,JSON.stringify(storage));
     }
     /**
      * @name getCommitStartPoint
@@ -127,12 +127,12 @@ export class Log{
      * @callback removeClassLog
      */
     removeClassLog = ()=>{
-        let storage = JSON.parse(localStorage.getItem(this._repositoryName));
+        let storage = JSON.parse(sessionStorage.getItem(this._repositoryName));
         storage.commits = storage.commits.map((commit)=>{
             commit.class = commit.class.filter((cl)=>cl !== 'logging');
             return commit;
         });
-        localStorage.setItem(this._repositoryName,JSON.stringify(storage));
+        sessionStorage.setItem(this._repositoryName,JSON.stringify(storage));
         
     }
     /**
