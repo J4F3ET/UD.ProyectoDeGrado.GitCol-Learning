@@ -18,6 +18,20 @@ function removeTags(tags,commit){
     return commit;
 }
 /**
+ * @name removeTagsInRepository
+ * @function
+ * @memberof utils
+ * @description Remove tags in all repository
+ * @param {String[]} tags Tags to be removed
+ * @param {JSON[]} commits Array of commits
+ * @returns {JSON[]} Commits with the tag removed
+ */
+function removeTagsInRepository(tags,commits){
+    return commits.map((commit) => {
+        return removeTags(tags,commit)
+    })
+}
+/**
  * @name removeTagOfCommit
  * @function
  * @memberof utils
@@ -179,10 +193,26 @@ function updateCommitToCommits(commits,newCommit){
  * @description Remove a class from a commit
  * @param {JSON} commit Commit to be removed the class
  * @param {String} classToRemove Class to be removed
- * @returns {JSON} Commit with the class removed
+ * @returns {String[]} Array to the class with classToRemove removed
  */
 function removeClassFromCommit(commit,classToRemove){
     return commit.class = commit.class.filter(classC => classC !== classToRemove);
+}
+/**
+ * @name removeClassInRepository
+ * @function
+ * @memberof utils
+ * @description Remove a class in all repository
+ * @param {JSON[]} commits Commits is array to the repository
+ * @param {String} classToRemove Class to be removed
+ * @returns {JSON[]} Commits with the class removed
+ */
+function removeClassInRepository(commits,classToRemove){
+    return commits.map((commit) =>{
+        if(commit.class.includes(classToRemove))
+            commit.class = removeClassFromCommit(commit,classToRemove)
+        return commit
+    })
 }
 
 // *** SYSTEM OF RAMIFICATION BY COMMITS(REGISTERS)***
@@ -489,11 +519,7 @@ function moveTagToCommit(commits,startCommit,destinationCommit,tag){
 }
 
 //*** SYSTEM MERGE CHANGES***
-
-function mergeBranchChanges(commitsDestination,commitsOrigin,nameBranch){
-
-    const findCommit = (commit) => commit.tags.includes(nameBranch)
-
+function findChangesBetweenRepositories(commitsDestination,commitsOrigin,findCommit){
     const commitHeadOrigin = commitsOrigin.find(findCommit)
 
     const historyBranchOrigin =  [...findAllParents(
@@ -525,11 +551,19 @@ function mergeBranchChanges(commitsDestination,commitsOrigin,nameBranch){
         commitHeadDestination
     ]:findAllParents(commitsDestination,commitHeadDestination)
 
-    const commitsChanges = findCommitsDiffBetweenRepositories(
+    return findCommitsDiffBetweenRepositories(
         historyBranchDestination,
         historyBranchOrigin
     )
 
+}
+function mergeBranchChanges(commitsDestination,commitsOrigin,nameBranch){
+
+    const commitsChanges = findChangesBetweenRepositories(
+        commitsDestination,
+        commitsOrigin,
+        (commit) => commit.tags.includes(nameBranch)
+    ) 
     return addChangesRecursivelyToRepository(commitsDestination,commitsChanges)
 }
 function addChangesRecursivelyToRepository(commits,changes){
@@ -563,7 +597,6 @@ function addChangesRecursivelyToRepository(commits,changes){
     return addChangesRecursivelyToRepository(responseCommits,newChanges)
 }
 function addCommitChangeToBranch(commitsDestination,parent = {cx:-30,cy:334},commit){
-    console.log(commitsDestination,parent,commit)
     const response = resolveLocationCommit(
         commitsDestination,
         parent.cx,
@@ -605,10 +638,12 @@ function findCommitLink(idPotentialParents,idParentsOfChildrens){
 export {
     removeTags,
     removeTagById,
+    removeTagsInRepository,
     findAllTags,
     createMessage,
     updateCommitToCommits,
     removeClassFromCommit,
+    removeClassInRepository,
     resolveLocationCommit,
     createRegister,
     findAllChildrens,
