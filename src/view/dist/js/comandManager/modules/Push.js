@@ -4,7 +4,9 @@ import {
     findAllTags,
     findAllParents,
     findCommitsDiffBetweenRepositories,
-    mergeBranchChanges
+    mergeBranchChanges,
+    removeClassInRepository,
+    removeTagsInRepository
 } from "./utils.js";
 /**
  * @class
@@ -118,7 +120,10 @@ export class Push {
                 repository.commits,
                 commitLocal
             )
-            const commitDiff = findCommitsDiffBetweenRepositories(historyBranchRemote,historyBranchLocal)
+            const commitDiff = findCommitsDiffBetweenRepositories(
+                historyBranchRemote,
+                historyBranchLocal
+            )
             if(commitDiff.length == 0){
                 createMessage(
                     this._logRepository,
@@ -128,7 +133,15 @@ export class Push {
                 return
             }
         }
-        remote.commits = mergeBranchChanges(remote.commits,repository.commits,refBranch)
+        remote.commits = removeTagsInRepository(
+            ['HEAD'],
+            mergeBranchChanges(
+                remote.commits,
+                repository.commits,
+                refBranch
+            )
+        )
+        remote.commits = removeClassInRepository(remote.commits,"checked-out")
         this._socketHandler.sendUpdateRepository(remote)
     }
     /**
