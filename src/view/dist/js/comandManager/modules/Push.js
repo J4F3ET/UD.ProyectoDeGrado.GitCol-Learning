@@ -75,13 +75,12 @@ export class Push {
         const repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
         if(!repository||!remote)
             throw new Error('The repository does not exist')
-        
         const values = dataComand.filter(data => data.charAt(0) !== '-')
         const refRemote = values[0]||'origin'
         const refBranch = values[1]|| repository.information.head
         const branchsLocal = findAllTags(repository.commits)
         const branchsRemote = findAllTags(remote.commits)
-        
+
         const findCommit = (commit) => commit.tags.includes(refBranch)
 
         let continueExecution = true;
@@ -99,12 +98,14 @@ export class Push {
         
         if(!branchsLocal.includes(refBranch))
             throw new Error(`Branch '<strong>${refBranch}</strong>' does not exist in local`)
-        
+
+        const commitsRemoteId = new Set(remote.commits.map((c)=> c.id))
+        const commitsRepositoryId = new Set(repository.commits.map((c)=> c.id))
+        const commiIdtLocal = repository.commits.find(findCommit)?.id
         //Solo si la rama existe se efectura esta seccion de codigo
         if(branchsRemote.includes(refBranch)){
-            const commitRemote = remote.commits.find(findCommit)
-            const commitLocal = repository.commits.find(findCommit)
-            if(!repository.commits.find(commit => commit.id == commitRemote.id))
+            const commitIdRemote = remote.commits.find(findCommit)?.id
+            if(!commitsRepositoryId.has(commitIdRemote))
                 throw new Error(`
                     Failed to push some refs to ${this._remoteRepository} <br>
                     Updates were rejected because the remote contains work that you do 
@@ -112,19 +113,7 @@ export class Push {
                     to the same ref. You may want to first integrate the remote changes 
                     (e.g., 'git pull ...') before pushing again.
                 `)
-            const historyBranchRemote  =  findAllParents(
-                remote.commits,
-                commitRemote
-            )
-            const historyBranchLocal =  findAllParents(
-                repository.commits,
-                commitLocal
-            )
-            const commitDiff = findCommitsDiffBetweenRepositories(
-                historyBranchRemote,
-                historyBranchLocal
-            )
-            if(commitDiff.length == 0){
+            if(commitsRemoteId.has(commiIdtLocal)){
                 createMessage(
                     this._logRepository,
                     'info',
@@ -132,6 +121,14 @@ export class Push {
                 )
                 return
             }
+        }else if(commitsRemoteId.has(commiIdtLocal)){
+            remote.commits.forEach(commit => {
+                if(commit.id == commiIdtLocal){
+                    commit.tags.push(refBranch)
+                }
+            })
+            this._socketHandler.sendUpdateRepository(remote)
+            return
         }
         remote.commits = removeTagsInRepository(
             ['HEAD'],
