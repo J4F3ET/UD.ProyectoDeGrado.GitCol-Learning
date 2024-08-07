@@ -87,14 +87,14 @@ export class Commit{
      */
     execute(dataComand){
         //console.time('Execution time of commit');
-        if(localStorage.getItem(this._dataRepository)===null)
+        if(sessionStorage.getItem(this._dataRepository)===null)
             throw new Error('The repository does not exist');
         let continueExecution = true;
         this.resolveConfiguration(dataComand).forEach(config => {
             continueExecution = this._configurations[config].callback(dataComand);
         });
         if(!continueExecution) return;
-        const storage = JSON.parse(localStorage.getItem(this._dataRepository));// Array of commits
+        const storage = JSON.parse(sessionStorage.getItem(this._dataRepository));// Array of commits
         if(storage.commits.length == 0){
             storage.information.head = "master";
             storage.commits.push({
@@ -103,12 +103,12 @@ export class Commit{
                 message: this._configurations.m.message,
                 tags: ["master", "HEAD"],
                 class: ["commit","checked-out"],
-                autor: storage.information.config.user.autor??JSON.parse(localStorage.getItem('config')).autor??null,
+                autor: storage.information.config.user.autor??JSON.parse(sessionStorage.getItem('config')).autor??null,
                 date: new Date().toLocaleString(),
                 cx: 50,
                 cy: 334,
             });
-            localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+            sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
             //console.timeEnd('Execution time of commit');
             return
         }
@@ -118,7 +118,7 @@ export class Commit{
         head = removeClassFromCommit(head,"checked-out");
         storage.commits = updateCommitToCommits(response.commits,head);
         storage.commits.push(response.commit);
-        localStorage.setItem(this._dataRepository, JSON.stringify(storage));
+        sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
         //console.timeEnd('Execution time of commit');
     }
     /**
@@ -190,7 +190,7 @@ export class Commit{
         if(!dataComand.includes('m'))
             throw new Error('The configuration "-m" is obligatory for use the configuration "-a"');
         const files = this._configurations.a.files.map(file => `<li>>${file}</li>`).join('');
-        createMessage('info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
+        createMessage(this._logRepository,'info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
         return true;
     }
     /**
@@ -219,7 +219,7 @@ export class Commit{
             <li class="help">-a&nbsp;&nbsp;&nbsp;Add all files to the commit(files system no implemented)</li>
             <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>`
-        createMessage('info',message);
+        createMessage(_logRepository,'info',message);
         return dataComand.includes('-m');
     }
 

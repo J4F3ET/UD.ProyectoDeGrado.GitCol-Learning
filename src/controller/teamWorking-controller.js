@@ -45,7 +45,7 @@ router.get("/teamWorking*",releaseVerificationMiddleware,verifyUserInRoomMiddlew
 	};
 	res.render("multi-mode-screen", {
 		REF_STORAGE_REPOSITORY: "local" + req.query.room,
-		REF_STORAGE_REPOSITORY_CLOUD: "cloud" + req.query.room,
+		REF_STORAGE_REPOSITORY_CLOUD: "origin" + req.query.room,
 		REF_STORAGE_LOG: "log" + req.query.room,
 		repository: JSON.stringify(repository),
 	});

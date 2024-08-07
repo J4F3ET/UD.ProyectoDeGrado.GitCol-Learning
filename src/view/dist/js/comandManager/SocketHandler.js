@@ -5,8 +5,7 @@ export class SocketHandler {
      * @param {String} remoteRepository The reference name of the local storage 
      * @returns {SocketHandler}
      */
-
-    constructor(remoteRepository,observer) {
+    constructor(remoteRepository,observer=null) {
         this._remoteRepository = remoteRepository;
         this.client = io();
         this.observer = observer;
@@ -18,10 +17,12 @@ export class SocketHandler {
         });
     }
     async updateCommitsToRepository(data){
-        const localStorageCurrent =  JSON.parse(localStorage.getItem(this._remoteRepository));
-        localStorageCurrent.commits = data;
-        localStorage.setItem(this._remoteRepository,JSON.stringify(localStorageCurrent));
-        this.observer.notify(localStorage.getItem(this._remoteRepository));
+        if (this.observer == null)
+            return
+        const sessionStorageCurrent =  JSON.parse(sessionStorage.getItem(this._remoteRepository));
+        sessionStorageCurrent.commits = data;
+        sessionStorage.setItem(this._remoteRepository,JSON.stringify(sessionStorageCurrent));
+        this.observer.notify(sessionStorage.getItem(this._remoteRepository));
     }
     /**
      * @name updateRepository

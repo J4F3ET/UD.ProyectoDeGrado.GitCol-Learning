@@ -18,6 +18,20 @@ function removeTags(tags,commit){
     return commit;
 }
 /**
+ * @name removeTagsInRepository
+ * @function
+ * @memberof utils
+ * @description Remove tags in all repository
+ * @param {String[]} tags Tags to be removed
+ * @param {JSON[]} commits Array of commits
+ * @returns {JSON[]} Commits with the tag removed
+ */
+function removeTagsInRepository(tags,commits){
+    return commits.map((commit) => {
+        return removeTags(tags,commit)
+    })
+}
+/**
  * @name removeTagOfCommit
  * @function
  * @memberof utils
@@ -35,6 +49,19 @@ function removeTagById(commits,name,id){
     });
 }
 /**
+ * @name findAllTags
+ * @function
+ * @memberof utils
+ * @description Find all tags in array to commits
+ * @param {JSON[]} commits Array with the commits of the repository
+ * @returns {String[]} Array with tags name
+ */
+function findAllTags(commits){
+    return commits
+        .flatMap(commit => commit.tags || [])
+        .filter(nameBranch => nameBranch != 'HEAD')
+}
+/**
  * @name findChildrens
  * @function
  * @memberof utils
@@ -44,7 +71,8 @@ function removeTagById(commits,name,id){
  * @param {JSON[]} childrens Array with the childrens of the commit
  */
 function findAllChildrens(commits,id,childrens = []){
-    const childrensFisrtGen = commits.filter(commitStorage => commitStorage.parent == id);
+    const childrensFisrtGen = commits
+        .filter(commitStorage => commitStorage.parent == id);
     if(childrensFisrtGen.length==0)
         return childrens;
     childrensFisrtGen.forEach(commit => {
@@ -64,7 +92,9 @@ function findAllChildrens(commits,id,childrens = []){
  * @return {JSON[]} Array of commits that beloging to param commit
  */
 function findAllParents(commits,commit,parents=[]){
-    const parentsCommits = commits.filter((comt)=>comt.id == commit.parent || commit.unions?.includes(comt.id));
+    const parentsCommits = commits.filter((comt)=>
+            comt.id == commit.parent || commit.unions?.includes(comt.id)
+        );
     if(parentsCommits.length === 0)
         return parents;
     parentsCommits.forEach((parent)=>{
@@ -72,6 +102,40 @@ function findAllParents(commits,commit,parents=[]){
         parents.concat(...findAllParents(commits,parent,parents));
     });
     return parents;
+}
+/**
+ * @name findLatestCommitsOfBranchs
+ * @function
+ * @memberof utils
+ * @description Find the latest commits the all branches
+ * @param {JSON[]} commits Array of commits
+ * @returns {JSON[]} Array of commits that are the latest of the branches
+ */
+function findLatestCommitsOfBranchs(commits){
+    const lastCommits = [];
+    commits.forEach(commit => {
+        if(commit.tags.length > 0 && !commit.class.includes('detached-head'))
+            lastCommits.push(commit);
+    });
+    return lastCommits;
+}   
+/**
+ * @name findCommitsDiffBetweenRepositories
+ * @function
+ * @memberof utils
+ * @description Find the commits that are different between two repositories
+ * @param {JSON[]} commitsDestination Array of commits of the destination(to) 
+ * @param {JSON[]} commitsOrigin Array of commits of the origin(from)
+ * @returns {JSON[]} Array of commits that are different between the two repositories
+ */
+function findCommitsDiffBetweenRepositories(commitsDestination,commitsOrigin){
+    const commitsDiff = [];
+    const destinationCommitId = new Set(commitsDestination.map(commit => commit.id));
+    commitsOrigin.forEach(commitOrigin => {
+        if(!destinationCommitId.has(commitOrigin.id))
+            commitsDiff.push(commitOrigin);
+    });
+    return commitsDiff;
 }
 /**
  * @name getCommitStartPoint
@@ -98,12 +162,12 @@ function getCommitStartPoint(dataComand,commits){
  * @param {String} message Message to be added to the log
  * @example createMessage('info','<div class="files"><h5>Add files to the commit</h5><ul><li>>index.html</li><li>>style.css</li><li>>script.js</li></ul></div>')
  */
-function createMessage(tag='info',message){
-    if(localStorage.getItem('log')===null)
+function createMessage(nameRefLog='log',tag='info',message){
+    if(sessionStorage.getItem(nameRefLog)===null)
         return;
-    const log = JSON.parse(localStorage.getItem('log'));
+    const log = JSON.parse(sessionStorage.getItem(nameRefLog));
     log.push({tag,message});
-    localStorage.setItem('log',JSON.stringify(log));
+    sessionStorage.setItem(nameRefLog,JSON.stringify(log));
 }
 /**
  * @name updateCommitToCommits
@@ -129,10 +193,26 @@ function updateCommitToCommits(commits,newCommit){
  * @description Remove a class from a commit
  * @param {JSON} commit Commit to be removed the class
  * @param {String} classToRemove Class to be removed
- * @returns {JSON} Commit with the class removed
+ * @returns {String[]} Array to the class with classToRemove removed
  */
 function removeClassFromCommit(commit,classToRemove){
-    return commit.class = commit.class.filter(classC => classC !== classToRemove); ;
+    return commit.class = commit.class.filter(classC => classC !== classToRemove);
+}
+/**
+ * @name removeClassInRepository
+ * @function
+ * @memberof utils
+ * @description Remove a class in all repository
+ * @param {JSON[]} commits Commits is array to the repository
+ * @param {String} classToRemove Class to be removed
+ * @returns {JSON[]} Commits with the class removed
+ */
+function removeClassInRepository(commits,classToRemove){
+    return commits.map((commit) =>{
+        if(commit.class.includes(classToRemove))
+            commit.class = removeClassFromCommit(commit,classToRemove)
+        return commit
+    })
 }
 
 // *** SYSTEM OF RAMIFICATION BY COMMITS(REGISTERS)***
@@ -167,16 +247,37 @@ const SPACE_BETWEEN_COMMITS_Y = 80;
 function resolveLocationCommit(commits,parentCx,parentCy){
     //Case 1
     const possibleX = parentCx + SPACE_BETWEEN_COMMITS_X;
-    if(commits.find(commit => commit.cx == possibleX && commit.cy == parentCy) == undefined)
+    if(
+        commits.find(
+            commit => commit.cx == possibleX && commit.cy == parentCy
+        ) == undefined
+    )
         return {commits,location:[possibleX,parentCy]};	
     //Case 2
-    const commitsInPossiteY = commits.filter(commit => commit.cx == possibleX && commit.cy < parentCy);
-    const commitsInNegativeY = commits.filter(commit => commit.cx == possibleX && commit.cy > parentCy);
-    const commitThisUbicationOnParentY = commits.filter(commit => commit.cx == parentCx && commit.cy != parentCy);
-    if(commitThisUbicationOnParentY.length == 0)
-        return {commits,location:[possibleX,generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativeY)]};
+    const commitsInPossiteY = commits
+        .filter(commit => commit.cx == possibleX && commit.cy < parentCy);
+
+    const commitsInNegativeY = commits
+        .filter(commit => commit.cx == possibleX && commit.cy > parentCy);
+
+    const commitThisUbicationOnParentY = commits
+        .filter(commit => commit.cx == parentCx && commit.cy != parentCy);
+        
+    if(commitThisUbicationOnParentY.length == 0){
+        const possibleY = generateLocationCommitCase2(
+            parentCy,
+            commitsInPossiteY,
+            commitsInNegativeY
+        )
+        return {commits,location:[possibleX,possibleY]};
+    }
     //Case 3
-    const response = generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsInNegativeY);
+    const response = generateLocationCommitCase3(
+        commits,
+        parentCy,
+        commitsInPossiteY,
+        commitsInNegativeY
+    );
     return {commits:(response.commits),location:[possibleX,response.cy]};
 }
 /**
@@ -192,8 +293,10 @@ function resolveLocationCommit(commits,parentCx,parentCy){
 function generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativeY){
     if(commitsInPossiteY.length == 0)
         return parentCy - SPACE_BETWEEN_COMMITS_Y;
+
     if(commitsInNegativeY.length == 0)
         return parentCy + SPACE_BETWEEN_COMMITS_Y;
+    
     if(commitsInPossiteY.length <= commitsInNegativeY.length)
         return commitsInPossiteY[commitsInPossiteY.length -1].cy - SPACE_BETWEEN_COMMITS_Y;
     else
@@ -214,12 +317,19 @@ function generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsI
     if(commitsInPossiteY.length <= commitsInNegativeY.length){
         const SPACE_BETWEEN_COMMITS_Y_NEGATIVE = SPACE_BETWEEN_COMMITS_Y * (-1)
         commitsInPossiteY.forEach(commit => {
-            commits = updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y_NEGATIVE,commit.id);
+            commits = updateLocationChildsOfCommit(
+                commits,
+                SPACE_BETWEEN_COMMITS_Y_NEGATIVE,
+                commit.id
+            );
         });
         return {commits,cy:(parentCy - SPACE_BETWEEN_COMMITS_Y)}; 
     }else{  
         commitsInNegativeY.forEach(commit => {
-            commits = updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y,commit.id);
+            commits = updateLocationChildsOfCommit(
+                commits,
+                SPACE_BETWEEN_COMMITS_Y,
+                commit.id);
         });
         return {commits,cy: (parentCy + SPACE_BETWEEN_COMMITS_Y)};
     }
@@ -240,7 +350,10 @@ function updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y,idCommitPa
     commitParent.cy = commitParent.cy + SPACE_BETWEEN_COMMITS_Y;
     if(childs.length != 0){
         childs.forEach(child => {
-            commits = updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y,child.id);
+            commits = updateLocationChildsOfCommit(
+                commits,
+                SPACE_BETWEEN_COMMITS_Y,
+                child.id);
         });
     }
     return updateCommitToCommits(commits,commitParent);
@@ -286,7 +399,7 @@ function createRegister(commits,parent,information,message){
         unions: [],
         tags,
         class: classList,
-        autor: information.config.user.autor??JSON.parse(localStorage.getItem('config')).user.autor??null,
+        autor: information.config.user.autor??JSON.parse(sessionStorage.getItem('config')).user.autor??null,
         date: new Date().toLocaleString(),
         cx:response.location[0],
         cy:response.location[1]
@@ -301,11 +414,16 @@ function createRegister(commits,parent,information,message){
  * @returns {Array} Array with the ID parents of the commits
  */
 function findAllExceptionCommitsToDelete(commits){
-    const parents = commits.map(commit => commit.parent&&!commit.class.includes('detached-head')?commit.parent:[]).flat();
+    const parents = commits.map(commit => 
+        commit.parent&&!commit.class.includes('detached-head')?commit.parent:[]
+    ).flat();
     if(parents.length === 0)
         return commits.filter(commit => commit.id == 'parent'|| commit.id == 'init');
-    const repeatedParents = parents.filter((parent, index) => parents.indexOf(parent) != index);
-    const parentsWithTags = commits.filter(commit => commit.tags.length > 0 && parents.includes(commit.id)).map(commit => commit.id);
+    const repeatedParents = parents
+        .filter((parent, index) => parents.indexOf(parent) != index);
+    const parentsWithTags = commits
+        .filter(commit => commit.tags.length > 0 && parents.includes(commit.id))
+        .map(commit => commit.id);
     return [...new Set([...repeatedParents,...parentsWithTags])];
 }
 /**
@@ -399,16 +517,190 @@ function moveTagToCommit(commits,startCommit,destinationCommit,tag){
     commits = updateCommitToCommits(commits,destinationCommit);
     return commits;
 }
+
+//*** SYSTEM MERGE CHANGES***
+/**	
+ * @name findChangesBetweenBranchs
+ * @function
+ * @memberof utils
+ * @description Find changes between repositories using branch especificated
+ * @param {JSON[]} commitsDestination Array of commits destination of the changes
+ * @param {JSON[]} commitsOrigin Array of commits origin
+ * @param {Callback} findCommit Callback function using by find changes
+ * @returns {JSON[]} Array of commits changes between branch
+ */
+function findChangesBetweenBranchs(commitsDestination,commitsOrigin,findCommit){
+    const commitHeadOrigin = commitsOrigin.find(findCommit)
+
+    const historyBranchOrigin =  [...findAllParents(
+        commitsOrigin,
+        commitHeadOrigin
+    ),commitHeadOrigin]
+    
+    const commitsDiffGlobal = findCommitsDiffBetweenRepositories(
+        commitsDestination,
+        commitsOrigin
+    )
+    
+    const commitsEquals = findCommitsEqualBetweenRepositories(
+        commitsDestination,
+        historyBranchOrigin
+    )
+    
+    const idCommitLinkDestination = findCommitLink(
+        commitsEquals.map(commit => commit.id),
+        commitsDiffGlobal.map(commit => commit.parent)
+    )
+    
+    const commitHeadDestination = 
+        commitsDestination.find(findCommit) || 
+        commitsDestination.find(commit => commit.id == idCommitLinkDestination)
+        
+    const historyBranchDestination  = commitHeadDestination?  [
+        ...findAllParents(commitsDestination,commitHeadDestination),
+        commitHeadDestination
+    ]:findAllParents(commitsDestination,commitHeadDestination)
+
+    return findCommitsDiffBetweenRepositories(
+        commitsDestination,
+        findCommitsDiffBetweenRepositories(
+            historyBranchDestination,
+            historyBranchOrigin
+        )
+    )
+
+}
+/**	
+ * @name findChangesBetweenBranchs
+ * @function
+ * @memberof utils
+ * @description Find changes between repositories using branch especificated
+ * @param {JSON[]} commitsDestination Array of commits destination
+ * @param {JSON[]} commitsOrigin Array of commits origin white the changes
+ * @param {String} nameBranch Name of branch to merge
+ * @returns {JSON[]} Array of commits(repository)
+ */
+function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch){
+    const commitsChanges = findChangesBetweenBranchs(
+        commitsDestination,
+        commitsOrigin,
+        (commit) => commit.tags.includes(nameBranch)
+    ) 
+    commitsChanges.forEach(change =>{
+        if(change.tags != 0)
+            change.tags = change.tags.filter(t => t==nameBranch)
+    })
+    return addChangesRecursivelyToRepository(
+        removeTagsInRepository(
+            commitsChanges.flatMap(change => change.tags),
+            commitsDestination
+        ),
+        commitsChanges
+    )
+}
+/**	
+ * @name addChangesRecursivelyToRepository
+ * @function
+ * @memberof utils
+ * @description Add changes in commits(repository) array
+ * @param {JSON[]} commits Array of commits destination of the changes
+ * @param {JSON[]} changes Array of changes
+ * @returns {JSON[]} Array of commits(repository) with changes implemented
+ */
+function addChangesRecursivelyToRepository(commits,changes){
+    if(changes.length == 0)
+        return commits
+    const commitIdSet = new Set(
+        commits.length != 0?
+            commits.map(commit => commit.id):
+            []
+    );
+    const parentsChange = new Set(changes.map(c => c.parent))
+
+    let idParent = null
+
+    for(const parentIdofChange of parentsChange){
+        if(commitIdSet.has(parentIdofChange)){
+            idParent = parentIdofChange
+            break
+        }
+    }
+    if (!idParent){
+        if(commits.length == 0)
+            idParent = "init"
+        else
+            return commits
+    }
+    const change = changes.find(c =>c.parent == idParent)
+    const parent = commits.find(c => c.id == idParent)
+    const responseCommits = addCommitChangeToBranch(commits,parent,change)
+    const newChanges = changes.filter(c => c.id != change.id)
+    return addChangesRecursivelyToRepository(responseCommits,newChanges)
+}
+/**	
+ * @name addCommitChangeToBranch
+ * @function
+ * @memberof utils
+ * @description Add changes in commits(branch) array
+ * @param {JSON[]} commitsDestination Array of commits destination of the changes
+ * @param {JSON} parent Commit parent of change(commit)
+ * @param {JSON} commit Commit change(commit)
+ * @returns {JSON[]} Array of commits(repository) with change implemented
+ */
+function addCommitChangeToBranch(commitsDestination,parent = {cx:-30,cy:334},commit){
+    const response = resolveLocationCommit(
+        commitsDestination,
+        parent.cx,
+        parent.cy
+    )
+    commit.cx = response.location[0]
+    commit.cy = response.location[1]
+    return [...response.commits,commit]
+}
+
+function mergeRepositoriesChanges(){
+    throw new Error('NOT IMPLEMENT')
+}
+/**
+ * @name findCommitsEqualBetweenRepositories
+ * @function
+ * @memberof utils
+ * @description Find the commits that are different between two repositories
+ * @param {JSON[]} commitsDestination Array of commits of the destination(to) 
+ * @param {JSON[]} commitsOrigin Array of commits of the origin(from)
+ * @returns {JSON[]} Array of commits that are equals between the two repositories
+ */
+function findCommitsEqualBetweenRepositories(commitsDestination,commitsOrigin){
+    const commitsEqual = [];
+    const destinationCommitId = new Set(commitsDestination.map(commit => commit.id));
+    commitsOrigin.forEach(commitOrigin => {
+        if(destinationCommitId.has(commitOrigin.id))
+            commitsEqual.push(commitOrigin);
+    });
+    return commitsEqual;
+}
+
+function findCommitLink(idPotentialParents,idParentsOfChildrens){
+    return idParentsOfChildrens.find(
+        idParentChild => idPotentialParents.includes(idParentChild)
+    )|| null
+}
+
 export {
     removeTags,
     removeTagById,
+    removeTagsInRepository,
+    findAllTags,
     createMessage,
     updateCommitToCommits,
     removeClassFromCommit,
+    removeClassInRepository,
     resolveLocationCommit,
     createRegister,
     findAllChildrens,
     findAllParents,
+    findLatestCommitsOfBranchs,
+    findCommitsDiffBetweenRepositories,
     getCommitStartPoint,
     deleteCommitsRecursivelyUntil,
     findAllExceptionCommitsToDelete,
@@ -416,5 +708,6 @@ export {
     changeDetachedCommitToCommit,
     currentHead,
     updateHeadCommit,
-    moveTagToCommit
+    moveTagToCommit,
+    mergeChangesInBranchs
 }

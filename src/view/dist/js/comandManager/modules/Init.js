@@ -34,17 +34,26 @@ export class Init{
      */
     _repositoryName ='repository';
     /**
+     * @type {string}
+     * @description Name of the log repository
+     * @default 'log'
+     * @memberof! Init#
+     * @readonly
+     */
+    _logRepository = 'log';
+    /**
      * @constructor
      * @param {string} repositoryName Name of the space where the repository will be saved
      * @description Create a new instance of Init
      */
-    constructor(repositoryName){
+    constructor(repositoryName,logRepository){
         this._repositoryName = repositoryName;
+        this._logRepository = logRepository
     }
     execute(dataComand = ""){
         this.resetConfiguration;
         this.resolveConfiguration(dataComand);
-        localStorage.setItem(this._repositoryName, JSON.stringify(
+        sessionStorage.setItem(this._repositoryName, JSON.stringify(
             {
                 information:{
                     head:"",
@@ -108,7 +117,7 @@ export class Init{
             <li class="help">[-q | --quiet]&nbsp;&nbsp;&nbsp;Only print error and warning messages; all other output will be suppressed.</li>
             <li class="help">[-h | --help]&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>`;
-        createMessage("info",message);
+        createMessage(this._logRepository,"info",message);
     }
     /**
      * @name resetConfiguration
