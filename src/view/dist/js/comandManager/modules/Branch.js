@@ -116,7 +116,7 @@ export class Branch{
      * @param {Array} dataComand Array with the comand and the configurations
      */
     execute(dataComand){
-        let storage = JSON.parse(localStorage.getItem(this._dataRepository));
+        let storage = JSON.parse(sessionStorage.getItem(this._dataRepository));
         if(!storage)
             throw new Error('The repository is not initialized');
         if(storage.commits.length === 0)
@@ -125,7 +125,7 @@ export class Branch{
         if(!comand)
             throw new Error('The comand is not valid');
         storage = comand.callback(storage,value)??storage;
-        localStorage.setItem(this._dataRepository,JSON.stringify(storage));
+        sessionStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
     /**
      * @name resolveConfiguration
@@ -237,7 +237,7 @@ export class Branch{
             const message = branch !== headBranch 
                 ? `<p>${branch}</p>`
                 :`<p style="color:#49be25">*${headBranch}</p>`;
-            createMessage('info',message);
+            createMessage(this._logRepository,'info',message);
         });
     };
     /**
@@ -251,9 +251,9 @@ export class Branch{
     callBackConfigRemoteBranch = () => {
         if(!this._remoteRepository)
             throw new Error('The remote repository is not defined');
-        const storage = JSON.parse(localStorage.getItem(this._remoteRepository));
+        const storage = JSON.parse(sessionStorage.getItem(this._remoteRepository));
         const branches = storage.commits.flatMap(commit => commit.tags.filter(tag => tag !== 'HEAD'));
-        branches.forEach(branch => createMessage('info',branch));
+        branches.forEach(branch => createMessage(this._logRepository,'info',branch));
     };
     /**
      * @name callBackConfigDelete
@@ -368,6 +368,6 @@ export class Branch{
             <li><p class="help">-d, --delete&nbsp;&nbsp;&nbsp;Delete a branch</p> </li>
             <li><p class="help">-m, --move&nbsp;&nbsp;&nbsp;Rename a branch</p> </li>
         </ul>`;
-        createMessage('info',message);
+        createMessage(this._logRepository,'info',message);
     }
 }

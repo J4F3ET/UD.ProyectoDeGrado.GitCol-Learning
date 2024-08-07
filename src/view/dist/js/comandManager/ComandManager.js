@@ -32,7 +32,7 @@ export class ComandManager {
      * @property {Function} help Show the help message
      */
     _shellCommands = {
-        'clear':()=>localStorage.setItem(this._ref_storage_log,JSON.stringify([])),
+        'clear':()=>sessionStorage.setItem(this._ref_storage_log,JSON.stringify([])),
         'help': ()=>this.callBackHelp()
     };
     /**
@@ -119,11 +119,11 @@ export class ComandManager {
      * @param {String} message Message to be saved
      */
     createMessage(tag,message){
-        if(localStorage.getItem(this._ref_storage_log)==null)
-            localStorage.setItem(this._ref_storage_log,JSON.stringify([]));
-        const log = JSON.parse(localStorage.getItem(this._ref_storage_log));
+        if(sessionStorage.getItem(this._ref_storage_log)==null)
+            sessionStorage.setItem(this._ref_storage_log,JSON.stringify([]));
+        const log = JSON.parse(sessionStorage.getItem(this._ref_storage_log));
         log.push({tag,message});
-        localStorage.setItem(this._ref_storage_log,JSON.stringify(log));
+        sessionStorage.setItem(this._ref_storage_log,JSON.stringify(log));
     }
     /**
      * @name verifyComand
