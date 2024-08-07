@@ -590,7 +590,7 @@ function addChangesRecursivelyToRepository(commits,changes){
         else
             return commits
     }
-    const change = changes.find(c =>c.parent = idParent)
+    const change = changes.find(c =>c.parent == idParent)
     const parent = commits.find(c => c.id == idParent)
     const responseCommits = addCommitChangeToBranch(commits,parent,change)
     const newChanges = changes.filter(c => c.id != change.id)
