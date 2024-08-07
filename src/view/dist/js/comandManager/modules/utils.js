@@ -519,6 +519,16 @@ function moveTagToCommit(commits,startCommit,destinationCommit,tag){
 }
 
 //*** SYSTEM MERGE CHANGES***
+/**	
+ * @name findChangesBetweenBranchs
+ * @function
+ * @memberof utils
+ * @description Find changes between repositories using branch especificated
+ * @param {JSON[]} commitsDestination Array of commits destination of the changes
+ * @param {JSON[]} commitsOrigin Array of commits origin
+ * @param {Callback} findCommit Callback function using by find changes
+ * @returns {JSON[]} Array of commits changes between branch
+ */
 function findChangesBetweenBranchs(commitsDestination,commitsOrigin,findCommit){
     const commitHeadOrigin = commitsOrigin.find(findCommit)
 
@@ -560,6 +570,16 @@ function findChangesBetweenBranchs(commitsDestination,commitsOrigin,findCommit){
     )
 
 }
+/**	
+ * @name findChangesBetweenBranchs
+ * @function
+ * @memberof utils
+ * @description Find changes between repositories using branch especificated
+ * @param {JSON[]} commitsDestination Array of commits destination
+ * @param {JSON[]} commitsOrigin Array of commits origin white the changes
+ * @param {String} nameBranch Name of branch to merge
+ * @returns {JSON[]} Array of commits(repository)
+ */
 function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch){
     const commitsChanges = findChangesBetweenBranchs(
         commitsDestination,
@@ -578,6 +598,15 @@ function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch){
         commitsChanges
     )
 }
+/**	
+ * @name addChangesRecursivelyToRepository
+ * @function
+ * @memberof utils
+ * @description Add changes in commits(repository) array
+ * @param {JSON[]} commits Array of commits destination of the changes
+ * @param {JSON[]} changes Array of changes
+ * @returns {JSON[]} Array of commits(repository) with changes implemented
+ */
 function addChangesRecursivelyToRepository(commits,changes){
     if(changes.length == 0)
         return commits
@@ -608,6 +637,16 @@ function addChangesRecursivelyToRepository(commits,changes){
     const newChanges = changes.filter(c => c.id != change.id)
     return addChangesRecursivelyToRepository(responseCommits,newChanges)
 }
+/**	
+ * @name addCommitChangeToBranch
+ * @function
+ * @memberof utils
+ * @description Add changes in commits(branch) array
+ * @param {JSON[]} commitsDestination Array of commits destination of the changes
+ * @param {JSON} parent Commit parent of change(commit)
+ * @param {JSON} commit Commit change(commit)
+ * @returns {JSON[]} Array of commits(repository) with change implemented
+ */
 function addCommitChangeToBranch(commitsDestination,parent = {cx:-30,cy:334},commit){
     const response = resolveLocationCommit(
         commitsDestination,
