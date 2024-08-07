@@ -2,11 +2,8 @@ import { SocketHandler } from "../SocketHandler.js";
 import { 
     createMessage,
     findAllTags,
-    findAllParents,
-    findCommitsDiffBetweenRepositories,
-    mergeBranchChanges,
+    mergeChangesInBranchs,
     removeClassInRepository,
-    removeTagsInRepository
 } from "./utils.js";
 /**
  * @class
@@ -102,9 +99,9 @@ export class Push {
         const commitsRemoteId = new Set(remote.commits.map((c)=> c.id))
         const commitsRepositoryId = new Set(repository.commits.map((c)=> c.id))
         const commiIdtLocal = repository.commits.find(findCommit)?.id
+        const commitIdRemote = remote.commits.find(findCommit)?.id
         //Solo si la rama existe se efectura esta seccion de codigo
         if(branchsRemote.includes(refBranch)){
-            const commitIdRemote = remote.commits.find(findCommit)?.id
             if(!commitsRepositoryId.has(commitIdRemote))
                 throw new Error(`
                     Failed to push some refs to ${this._remoteRepository} <br>
@@ -130,15 +127,14 @@ export class Push {
             this._socketHandler.sendUpdateRepository(remote)
             return
         }
-        remote.commits = removeTagsInRepository(
-            ['HEAD'],
-            mergeBranchChanges(
+        remote.commits = removeClassInRepository(
+            mergeChangesInBranchs(
                 remote.commits,
                 repository.commits,
                 refBranch
-            )
+            ),
+            "checked-out"
         )
-        remote.commits = removeClassInRepository(remote.commits,"checked-out")
         this._socketHandler.sendUpdateRepository(remote)
     }
     /**

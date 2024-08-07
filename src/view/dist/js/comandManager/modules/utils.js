@@ -519,7 +519,7 @@ function moveTagToCommit(commits,startCommit,destinationCommit,tag){
 }
 
 //*** SYSTEM MERGE CHANGES***
-function findChangesBetweenRepositories(commitsDestination,commitsOrigin,findCommit){
+function findChangesBetweenBranchs(commitsDestination,commitsOrigin,findCommit){
     const commitHeadOrigin = commitsOrigin.find(findCommit)
 
     const historyBranchOrigin =  [...findAllParents(
@@ -552,19 +552,31 @@ function findChangesBetweenRepositories(commitsDestination,commitsOrigin,findCom
     ]:findAllParents(commitsDestination,commitHeadDestination)
 
     return findCommitsDiffBetweenRepositories(
-        historyBranchDestination,
-        historyBranchOrigin
+        commitsDestination,
+        findCommitsDiffBetweenRepositories(
+            historyBranchDestination,
+            historyBranchOrigin
+        )
     )
 
 }
-function mergeBranchChanges(commitsDestination,commitsOrigin,nameBranch){
-
-    const commitsChanges = findChangesBetweenRepositories(
+function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch){
+    const commitsChanges = findChangesBetweenBranchs(
         commitsDestination,
         commitsOrigin,
         (commit) => commit.tags.includes(nameBranch)
     ) 
-    return addChangesRecursivelyToRepository(commitsDestination,commitsChanges)
+    commitsChanges.forEach(change =>{
+        if(change.tags != 0)
+            change.tags = change.tags.filter(t => t==nameBranch)
+    })
+    return addChangesRecursivelyToRepository(
+        removeTagsInRepository(
+            commitsChanges.flatMap(change => change.tags),
+            commitsDestination
+        ),
+        commitsChanges
+    )
 }
 function addChangesRecursivelyToRepository(commits,changes){
     if(changes.length == 0)
@@ -658,5 +670,5 @@ export {
     currentHead,
     updateHeadCommit,
     moveTagToCommit,
-    mergeBranchChanges
+    mergeChangesInBranchs
 }
