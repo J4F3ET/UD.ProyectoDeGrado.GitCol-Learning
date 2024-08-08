@@ -7,6 +7,7 @@ import {Log} from "./modules/Log.js";
 import {Merge} from "./modules/Merge.js";
 import {Fetch} from "./modules/Fetch.js";
 import {Push} from "./modules/Push.js";
+import {Clone} from "./modules/Clone.js";
 const COMMANDMAPPINGS  = {
     "init": Init,
     "commit": Commit,
@@ -16,6 +17,7 @@ const COMMANDMAPPINGS  = {
     "merge": Merge,
     "fetch": Fetch,
     "push": Push,
+    "clone": Clone
 }
 /**
  * @name factoryCommandManager
@@ -26,8 +28,10 @@ const COMMANDMAPPINGS  = {
  */
 export const factoryCommandManager = (commands,args) => {
     const commandManager = new ComandManager(args[1]);
+
     if(sessionStorage.getItem('config')===null)
         sessionStorage.setItem('config',JSON.stringify({user:{ name:null, email:null }}));
+    
     commands.forEach((command) => {
         commandManager.addComand(command,new COMMANDMAPPINGS[command](...args));
     });
