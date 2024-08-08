@@ -458,11 +458,15 @@ export class DataViewer{
     renderInfoToSVG(data){
         const gContainerData = this._svg.getElementById("gContainerData");
         const keys = Object.keys(data).filter(key => key != "config");
-        keys.forEach((key,index) => {
+        keys.reverse().forEach((key) => {
+            if(data[key] == null)
+                return
+            const numElements = gContainerData.getElementsByTagNameNS("http://www.w3.org/2000/svg","g").length
             const gContainerText = document.createElementNS("http://www.w3.org/2000/svg","g");
-            const xTitle = this.widthText(key);
-            const xText =  this.widthText(data[key]) + (xTitle*2);
-            const y = 30*(index+1);
+            const xTitle = this.widthText(key) + 30;
+            const widthText = this.widthText(data[key])
+            const xText = widthText + (widthText>100?(widthText*0.6):(xTitle*1.5))
+            const y = 35*(numElements+1);
             const titleProperty = this.createText(xTitle,y,`${key}:`);
             const textProperty = this.createText(xText,y,data[key]);
             gContainerData.querySelector(`#${key}`)?.remove();
