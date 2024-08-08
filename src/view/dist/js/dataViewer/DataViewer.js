@@ -153,7 +153,6 @@ export class DataViewer{
         gContainerCommit.id = "gContainerCommit";
         const commit = this.createCommit(this._commitParent);
         gContainerCommit.appendChild(commit);
-        gContainerData.appendChild(this.createText(20,20,this._svg.getAttribute("id")));
         svgDocumentElement.appendChild(gContainerData);
         svgDocumentElement.appendChild(gContainerPointer);
         svgDocumentElement.appendChild(gContainerTag);
@@ -458,18 +457,18 @@ export class DataViewer{
     renderInfoToSVG(data){
         const gContainerData = this._svg.getElementById("gContainerData");
         const keys = Object.keys(data).filter(key => key != "config");
-        keys.reverse().forEach((key) => {
+        keys.sort().reverse()
+        keys.forEach((key,index) => {
+            gContainerData.querySelector(`#${key}`)?.remove();
             if(data[key] == null)
                 return
-            const numElements = gContainerData.getElementsByTagNameNS("http://www.w3.org/2000/svg","g").length
             const gContainerText = document.createElementNS("http://www.w3.org/2000/svg","g");
             const xTitle = this.widthText(key) + 30;
             const widthText = this.widthText(data[key])
             const xText = widthText + (widthText>100?(widthText*0.6):(xTitle*1.5))
-            const y = 35*(numElements+1);
+            const y = 35*(index+1);
             const titleProperty = this.createText(xTitle,y,`${key}:`);
             const textProperty = this.createText(xText,y,data[key]);
-            gContainerData.querySelector(`#${key}`)?.remove();
             gContainerText.id = key;
             gContainerText.classList.add("container-text-data-repository");
             titleProperty.classList.add("title-property");
