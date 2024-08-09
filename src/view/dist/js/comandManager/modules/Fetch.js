@@ -63,18 +63,18 @@ export class Fetch {
         //console.time('Execution time of commit');
         let repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
         let remote = JSON.parse(sessionStorage.getItem(this._remoteRepository));
+
         if(!repository || !remote)
             throw new Error('The repository is not initialized<br>Please initialize the repository first');
-        const diff = findCommitsDiffBetweenRepositories(repository.commits, remote.commits);
-        console.log(diff);
-        if(diff.length == 0){
-            console.log('Already up to date.');
-            createMessage(this._logRepository,'info','Already up to date.');
-            return;
-        }
-        //console.timeEnd('Execution time of commit');
+
+        if(!findCommitsDiffBetweenRepositories(repository.commits, remote.commits).length)
+            return createMessage(this._logRepository,'info','Already up to date.');
+        
         const lastcommits = findLatestCommitsOfBranchs(repository.commits);
+        
         console.log(lastcommits);
+
+        //console.timeEnd('Execution time of commit');
     }
 
     callbackHelp(){

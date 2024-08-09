@@ -199,18 +199,31 @@ function removeClassFromCommit(commit,classToRemove){
     return commit.class = commit.class.filter(classC => classC !== classToRemove);
 }
 /**
+ * @name removeManyClassFromCommit
+ * @function
+ * @memberof utils
+ * @description Remove a class from a commit
+ * @param {JSON} commit Commit to be removed the class
+ * @param {String[]} classToRemove Class to be removed
+ * @returns {String[]} Array to the class with classToRemove removed
+ */
+function removeManyClassFromCommit(commit,classToRemove){
+    return commit.class = commit.class.filter(classC => 
+        !classToRemove.includes(classC)
+    );
+}
+/**
  * @name removeClassInRepository
  * @function
  * @memberof utils
  * @description Remove a class in all repository
  * @param {JSON[]} commits Commits is array to the repository
- * @param {String} classToRemove Class to be removed
+ * @param {String[]} classToRemove Class to be removed
  * @returns {JSON[]} Commits with the class removed
  */
 function removeClassInRepository(commits,classToRemove){
     return commits.map((commit) =>{
-        if(commit.class.includes(classToRemove))
-            commit.class = removeClassFromCommit(commit,classToRemove)
+        commit.class = removeManyClassFromCommit(commit,classToRemove)
         return commit
     })
 }
@@ -526,11 +539,13 @@ function moveTagToCommit(commits,startCommit,destinationCommit,tag){
  * @description Find changes between repositories using branch especificated
  * @param {JSON[]} commitsDestination Array of commits destination of the changes
  * @param {JSON[]} commitsOrigin Array of commits origin
- * @param {Callback} findCommit Callback function using by find changes
+ * @param {String} nameBranch Name branch
  * @returns {JSON[]} Array of commits changes between branch
  */
-function findChangesBetweenBranchs(commitsDestination,commitsOrigin,findCommit){
-    const commitHeadOrigin = commitsOrigin.find(findCommit)
+function findChangesBetweenBranchs(commitsDestination,commitsOrigin,nameBranch){
+    const commitHeadOrigin = commitsOrigin.find(
+        (commit) => commit.tags.includes(nameBranch)
+    )
 
     const historyBranchOrigin =  [...findAllParents(
         commitsOrigin,
@@ -553,7 +568,7 @@ function findChangesBetweenBranchs(commitsDestination,commitsOrigin,findCommit){
     )
     
     const commitHeadDestination = 
-        commitsDestination.find(findCommit) || 
+        commitsDestination.find((commit) => commit.tags.includes(nameBranch)) || 
         commitsDestination.find(commit => commit.id == idCommitLinkDestination)
         
     const historyBranchDestination  = commitHeadDestination?  [
@@ -578,25 +593,26 @@ function findChangesBetweenBranchs(commitsDestination,commitsOrigin,findCommit){
  * @param {JSON[]} commitsDestination Array of commits destination
  * @param {JSON[]} commitsOrigin Array of commits origin white the changes
  * @param {String} nameBranch Name of branch to merge
- * @returns {JSON[]} Array of commits(repository)
+ * @returns {{changesId: Set<String>, repository: JSON[]}} Array of commits(repository)
  */
 function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch){
     const commitsChanges = findChangesBetweenBranchs(
         commitsDestination,
         commitsOrigin,
-        (commit) => commit.tags.includes(nameBranch)
+        nameBranch
     ) 
     commitsChanges.forEach(change =>{
         if(change.tags != 0)
             change.tags = change.tags.filter(t => t==nameBranch)
     })
-    return addChangesRecursivelyToRepository(
-        removeTagsInRepository(
-            commitsChanges.flatMap(change => change.tags),
-            commitsDestination
-        ),
-        commitsChanges
-    )
+    
+    return {
+        changesId : new Set(commitsChanges.map(c=>c.id)),
+        repository :  addChangesRecursivelyToRepository(
+            commitsDestination,
+            commitsChanges
+        )
+    }
 }
 /**	
  * @name addChangesRecursivelyToRepository
@@ -655,6 +671,7 @@ function addCommitChangeToBranch(commitsDestination,parent = {cx:-30,cy:334},com
     )
     commit.cx = response.location[0]
     commit.cy = response.location[1]
+    commit.class.push("detached-head")
     return [...response.commits,commit]
 }
 

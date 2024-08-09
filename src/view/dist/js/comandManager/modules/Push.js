@@ -110,32 +110,52 @@ export class Push {
                     to the same ref. You may want to first integrate the remote changes 
                     (e.g., 'git pull ...') before pushing again.
                 `)
-            if(commitsRemoteId.has(commiIdtLocal)){
-                createMessage(
+            if(commitsRemoteId.has(commiIdtLocal))
+                return createMessage(
                     this._logRepository,
                     'info',
                     'Already up to date.'
                 )
-                return
-            }
         }else if(commitsRemoteId.has(commiIdtLocal)){
             remote.commits.forEach(commit => {
                 if(commit.id == commiIdtLocal){
                     commit.tags.push(refBranch)
                 }
             })
-            this._socketHandler.sendUpdateRepository(remote)
-            return
+            return this._socketHandler.sendUpdateRepository(remote)
+            
         }
+        const response = mergeChangesInBranchs(
+            remote.commits,
+            repository.commits,
+            refBranch
+        )
+        
         remote.commits = removeClassInRepository(
-            mergeChangesInBranchs(
-                remote.commits,
-                repository.commits,
-                refBranch
+            this.removeTagsTheChanges(
+                response.repository,
+                response.changesId,
+                refBranch,
+                commiIdtLocal
             ),
-            "checked-out"
+            ["checked-out","detached-head"]
         )
         this._socketHandler.sendUpdateRepository(remote)
+    }
+    removeTagsTheChanges(commits,changesId,refBranch,idHeadCommitLocal){
+        const tagsRemove = new Set(commits.flatMap(c =>{
+            if(changesId.has(c.id))
+                return c.tags||[]
+        }))
+        tagsRemove.delete(refBranch)
+        changesId.delete(idHeadCommitLocal)
+        return commits.map(commit=>{
+            if(changesId.has(commit.id))
+                commit.tags = commit.tags.filter(t =>{!tagsRemove.has(t)})
+            if(commit.id == idHeadCommitLocal)
+                commit.tags = commit.tags.filter(t => t == refBranch)
+            return commit
+        })
     }
     /**
      * @name resolveConfiguration
