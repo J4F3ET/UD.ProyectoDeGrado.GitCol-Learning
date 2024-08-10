@@ -675,8 +675,17 @@ function addCommitChangeToBranch(commitsDestination,parent = {cx:-30,cy:334},com
     return [...response.commits,commit]
 }
 
-function mergeRepositoriesChanges(){
-    throw new Error('NOT IMPLEMENT')
+function mergeChangesInRepositories(commitsDestination,commitsOrigin){
+    const tags = findAllTags(commitsOrigin)
+    return tags.reduce(
+        (acc, t) => {
+            const { repository, changesId } = mergeChangesInBranchs(acc.repository, commitsOrigin, t);
+            acc.changesId.push(...changesId.values());
+            acc.repository = repository;
+            return acc;
+        },
+        { changesId: [], repository: commitsDestination }
+    );
 }
 /**
  * @name findCommitsEqualBetweenRepositories
@@ -704,27 +713,28 @@ function findCommitLink(idPotentialParents,idParentsOfChildrens){
 }
 
 export {
-    removeTags,
-    removeTagById,
-    removeTagsInRepository,
-    findAllTags,
+    changeDetachedCommitToCommit,
+    createCod,
     createMessage,
-    updateCommitToCommits,
+    createRegister,
+    currentHead,
+    deleteCommitsRecursivelyUntil,
+    findAllChildrens,
+    findAllExceptionCommitsToDelete,
+    findAllParents,
+    findAllTags,
+    findCommitsDiffBetweenRepositories,
+    findLatestCommitsOfBranchs,
+    getCommitStartPoint,
+    mergeChangesInBranchs,
+    mergeChangesInRepositories,
+    moveTagToCommit,
     removeClassFromCommit,
     removeClassInRepository,
+    removeTagById,
+    removeTags,
+    removeTagsInRepository,
     resolveLocationCommit,
-    createRegister,
-    findAllChildrens,
-    findAllParents,
-    findLatestCommitsOfBranchs,
-    findCommitsDiffBetweenRepositories,
-    getCommitStartPoint,
-    deleteCommitsRecursivelyUntil,
-    findAllExceptionCommitsToDelete,
-    createCod,
-    changeDetachedCommitToCommit,
-    currentHead,
-    updateHeadCommit,
-    moveTagToCommit,
-    mergeChangesInBranchs
+    updateCommitToCommits,
+    updateHeadCommit
 }

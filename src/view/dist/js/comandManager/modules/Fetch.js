@@ -1,7 +1,7 @@
 import { 
     createMessage,
-    findLatestCommitsOfBranchs,
-    findCommitsDiffBetweenRepositories
+    findCommitsDiffBetweenRepositories,
+    mergeChangesInRepositories
 } from "./utils.js";
 /**
  * @class
@@ -58,23 +58,29 @@ export class Fetch {
         this._logRepository = logRepository
         this._remoteRepository = remoteRepository
     }
-
+    resolveTags(changesId,commits){
+        console.log(changesId,commits)
+        return commits
+    }
+    headNull(){
+        
+    }
     execute(data){
-        //console.time('Execution time of commit');
-        let repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
-        let remote = JSON.parse(sessionStorage.getItem(this._remoteRepository));
+        const repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
+        const remote = JSON.parse(sessionStorage.getItem(this._remoteRepository));
 
         if(!repository || !remote)
             throw new Error('The repository is not initialized<br>Please initialize the repository first');
 
         if(!findCommitsDiffBetweenRepositories(repository.commits, remote.commits).length)
             return createMessage(this._logRepository,'info','Already up to date.');
-        
-        const lastcommits = findLatestCommitsOfBranchs(repository.commits);
-        
-        console.log(lastcommits);
-
-        //console.timeEnd('Execution time of commit');
+        repository.commits = this.resolveTags(...Object.values(
+            mergeChangesInRepositories(repository.commits,remote.commits)
+        ))
+        sessionStorage.setItem(
+            this._dataRepository,
+            JSON.stringify(repository)
+        )
     }
 
     callbackHelp(){
