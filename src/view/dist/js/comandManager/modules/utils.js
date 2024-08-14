@@ -169,6 +169,28 @@ function createMessage(nameRefLog='log',tag='info',message){
     log.push({tag,message});
     sessionStorage.setItem(nameRefLog,JSON.stringify(log));
 }
+function resolveIsHeadNull(repository,tagDefault = "master"){
+    const tags = findAllTags(repository.commits)
+    const master = tags.find(t => t.includes(tagDefault))
+
+    if(!master)
+        return resolveIsHeadNull(repository,tags.shift())
+
+    //Si existe HEAD buscara el commit head si no buscara master
+    const findConditionalParameter = (repository.commits.some(c => c.tags.includes("HEAD"))?"HEAD":master)
+    const commit = repository.commits.find((c) => c.tags.includes(findConditionalParameter))
+    repository.information.head = commit.class.includes("detached-head")?
+        "detached at "+ commit.id: master 
+
+    for( const commitFor of repository.commits){
+        if(commitFor.id == commit.id){
+            commitFor.class.push("checked-out")
+            commitFor.tags.push("HEAD")
+            break
+        }
+    }
+    return repository
+}
 /**
  * @name updateCommitToCommits
  * @function
@@ -735,6 +757,7 @@ export {
     removeTags,
     removeTagsInRepository,
     resolveLocationCommit,
+    resolveIsHeadNull,
     updateCommitToCommits,
     updateHeadCommit
 }
