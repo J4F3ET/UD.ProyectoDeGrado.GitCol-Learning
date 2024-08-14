@@ -1,7 +1,9 @@
 import { 
     createMessage,
+    findAllTags,
     findCommitsDiffBetweenRepositories,
-    mergeChangesInRepositories
+    mergeChangesInRepositories,
+    resolveIsHeadNull
 } from "./utils.js";
 /**
  * @class
@@ -59,11 +61,16 @@ export class Fetch {
         this._remoteRepository = remoteRepository
     }
     resolveTags(changesId,commits){
-        console.log(changesId,commits)
+        commits.forEach(commit =>{
+            if(!commit.tags.length || !changesId.some(id => id == commit.id))
+                return 
+            commit.tags = commit.tags.map(t => {
+                if(t == "HEAD")
+                    return t
+                return this._remoteRepository.split("-")[0]+ "/" + t
+            });
+        })
         return commits
-    }
-    headNull(){
-        
     }
     execute(data){
         const repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
@@ -74,12 +81,15 @@ export class Fetch {
 
         if(!findCommitsDiffBetweenRepositories(repository.commits, remote.commits).length)
             return createMessage(this._logRepository,'info','Already up to date.');
+        console.time('Execution time of commit');
         repository.commits = this.resolveTags(...Object.values(
             mergeChangesInRepositories(repository.commits,remote.commits)
         ))
+        console.timeEnd('Execution time of commit');
+        console.log(findAllTags(repository.commits))
         sessionStorage.setItem(
             this._dataRepository,
-            JSON.stringify(repository)
+            JSON.stringify(resolveIsHeadNull(repository))
         )
     }
 
