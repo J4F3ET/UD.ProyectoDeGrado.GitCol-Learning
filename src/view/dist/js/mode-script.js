@@ -1,26 +1,29 @@
 import { DataViewer } from "./dataViewer/DataViewer.js";
 import { factoryCommandManager } from "./comandManager/comandManager-factory.js";
 import { Observer } from "./dataViewer/Observer.js";
-const DEFAULT_MESSAGE = {
-    tag:"info",
-    message:`
+const listCommands = ["init","commit","checkout","branch","log","merge"];
+if(REF_STORAGE_REPOSITORY_CLOUD){
+    listCommands.push("push","pull","clone","fetch");
+}
+const messageCallback = (listCommand)=>{
+    let messageString = `
         <h5 class="help">Commands shell</h5>
         <p class="help">>clear</p>
         <p class="help">>help</p>
-        <h5 class="help">Commands git</h5>
-        <p class="help">>git init</p>
-        <p class="help">>git commit</p>
-        <p class="help">>git checkout</p>
-        <p class="help">>git branch</p>
-        <p class="help">>git log</p>
-        <p class="help">>git merge</p>
-        <p class="help">More information using 'git &lt;comand&gt; [-h|--help]'</p>
-    `
-};
-const listCommands = ["init","commit","checkout","branch","log","merge","fetch","push","clone"];
-if(REF_STORAGE_REPOSITORY_CLOUD){
-    //listCommands.push("push","pull");
+        <h5 class="help">Commands git</h5>`
+        listCommand.forEach(commandString => {
+            messageString += `<p class="help">>git ${commandString}</p>`
+        });
+    return messageString += `
+        <p class="help">
+            More information using 'git &lt;comand&gt; [-h|--help]'
+        </p>`
 }
+const DEFAULT_MESSAGE = {
+    tag:"info",
+    message:messageCallback(listCommands)
+};
+
 const aloneModeCommandManager = factoryCommandManager(
     listCommands,
     [
