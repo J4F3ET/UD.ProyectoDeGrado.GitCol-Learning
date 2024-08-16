@@ -3,7 +3,7 @@ import { factoryCommandManager } from "./comandManager/comandManager-factory.js"
 import { Observer } from "./dataViewer/Observer.js";
 const listCommands = ["init","commit","checkout","branch","log","merge"];
 if(REF_STORAGE_REPOSITORY_CLOUD){
-    listCommands.push("push","pull","clone","fetch");
+    listCommands.push("push","clone","fetch");
 }
 const messageCallback = (listCommand)=>{
     let messageString = `
