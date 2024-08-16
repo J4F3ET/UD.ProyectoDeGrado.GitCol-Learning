@@ -4,6 +4,7 @@ import {
     findAllTags,
     mergeChangesInBranchs,
     removeClassInRepository,
+    removeTags,
 } from "./utils.js";
 /**
  * @class
@@ -154,6 +155,8 @@ export class Push {
                 commit.tags = commit.tags.filter(t =>{!tagsRemove.has(t)})
             if(commit.id == idHeadCommitLocal)
                 commit.tags = commit.tags.filter(t => t == refBranch)
+            else if(commit.tags.includes(refBranch))
+                commit.tags = commit.tags.filter(t => t != refBranch)
             return commit
         })
     }
