@@ -73,6 +73,7 @@ export class Fetch {
         return commits
     }
     execute(data){
+        
         const repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
         const remote = JSON.parse(sessionStorage.getItem(this._remoteRepository));
 
@@ -81,15 +82,18 @@ export class Fetch {
 
         if(!findCommitsDiffBetweenRepositories(repository.commits, remote.commits).length)
             return createMessage(this._logRepository,'info','Already up to date.');
-        console.time('Execution time of commit');
+
         repository.commits = this.resolveTags(...Object.values(
             mergeChangesInRepositories(repository.commits,remote.commits)
         ))
-        console.timeEnd('Execution time of commit');
-        console.log(findAllTags(repository.commits))
+
         sessionStorage.setItem(
             this._dataRepository,
-            JSON.stringify(resolveIsHeadNull(repository))
+            JSON.stringify(
+                !repository.information.head
+                    ?resolveIsHeadNull(repository)
+                    :repository
+                )
         )
     }
 
