@@ -59,10 +59,9 @@ async function roomUpdate(id,mapParams) {
     }
 }
 async function roomUpdateCommitsToRepository(id, data) {
-    const stringData = JSON.stringify(data);
     const ref = database.ref(`/rooms/${id}/repository/commits`);
     try{
-        return ref.set(stringData).key;
+        return ref.set(data).key;
     }catch (error){
         console.error(error)
     }
@@ -199,5 +198,5 @@ export {
     roomRemoveMember,
     roomAddMember,
     roomGetByCode,
-    observeRoom
+    observeRoom,
 }

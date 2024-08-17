@@ -172,7 +172,7 @@ export class Commit{
      */
     callBackConfigMessage = (dataComand) =>{
         const indexConfig = dataComand.findIndex(data => data.includes('-m'));
-        const message = dataComand[indexConfig+1];
+        const message = dataComand[indexConfig+1].replace(/"/g, "&quot");;
         if(message == undefined || message == "")
             throw new Error('The message is empty');
         this._configurations.m.message = message;
