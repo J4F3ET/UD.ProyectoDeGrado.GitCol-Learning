@@ -56,7 +56,7 @@ export class Init{
         sessionStorage.setItem(this._repositoryName, JSON.stringify(
             {
                 information:{
-                    head:"",
+                    head:null,
                     repository:this._repositoryName,
                     config:{
                         user:{

@@ -1,22 +1,22 @@
 import { ComandManager } from "./ComandManager.js";
-import {Commit} from "./modules/Commit.js";
-import {Init} from "./modules/Init.js";
-import {Branch} from "./modules/Branch.js";
-import {Checkout} from "./modules/Checkout.js";
-import {Log} from "./modules/Log.js";
-import {Merge} from "./modules/Merge.js";
-import {Fetch} from "./modules/Fetch.js";
-import {Push} from "./modules/Push.js";
 const COMMANDMAPPINGS  = {
-    "init": Init,
-    "commit": Commit,
-    "checkout": Checkout,
-    "branch": Branch,
-    "log": Log,
-    "merge": Merge,
-    "fetch": Fetch,
-    "push": Push,
-}
+    "init": "./modules/Init.js",
+    "commit": "./modules/Commit.js",
+    "checkout": "./modules/Checkout.js",
+    "branch": "./modules/Branch.js",
+    "log": "./modules/Log.js",
+    "merge": "./modules/Merge.js",
+    "fetch": "./modules/Fetch.js",
+    "push": "./modules/Push.js",
+    "clone": "./modules/Clone.js"
+};
+const dynamicImportCommnad = async(command) => {
+    return (await import(
+        COMMANDMAPPINGS[command]
+    ))[command.charAt(0)
+        .toUpperCase() + command.slice(1)
+    ];
+};
 /**
  * @name factoryCommandManager
  * @description Create a command manager
@@ -26,10 +26,15 @@ const COMMANDMAPPINGS  = {
  */
 export const factoryCommandManager = (commands,args) => {
     const commandManager = new ComandManager(args[1]);
+
     if(sessionStorage.getItem('config')===null)
         sessionStorage.setItem('config',JSON.stringify({user:{ name:null, email:null }}));
-    commands.forEach((command) => {
-        commandManager.addComand(command,new COMMANDMAPPINGS[command](...args));
+    
+    commands.forEach(async(command) => {
+        commandManager.addComand(
+            command,
+            new (await dynamicImportCommnad(command))(...args)
+        );
     });
     return commandManager;
-};
+};  

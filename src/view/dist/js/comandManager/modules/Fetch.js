@@ -1,7 +1,9 @@
 import { 
     createMessage,
-    findLatestCommitsOfBranchs,
-    findCommitsDiffBetweenRepositories
+    findAllTags,
+    findCommitsDiffBetweenRepositories,
+    mergeChangesInRepositories,
+    resolveIsHeadNull
 } from "./utils.js";
 /**
  * @class
@@ -58,23 +60,41 @@ export class Fetch {
         this._logRepository = logRepository
         this._remoteRepository = remoteRepository
     }
-
+    resolveTags(changesId,commits){
+        commits.forEach(commit =>{
+            if(!commit.tags.length || !changesId.some(id => id == commit.id))
+                return 
+            commit.tags = commit.tags.map(t => {
+                if(t == "HEAD")
+                    return t
+                return this._remoteRepository.split("-")[0]+ "/" + t
+            });
+        })
+        return commits
+    }
     execute(data){
-        //console.time('Execution time of commit');
-        let repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
-        let remote = JSON.parse(sessionStorage.getItem(this._remoteRepository));
+        
+        const repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
+        const remote = JSON.parse(sessionStorage.getItem(this._remoteRepository));
+
         if(!repository || !remote)
             throw new Error('The repository is not initialized<br>Please initialize the repository first');
-        const diff = findCommitsDiffBetweenRepositories(repository.commits, remote.commits);
-        console.log(diff);
-        if(diff.length == 0){
-            console.log('Already up to date.');
-            createMessage(this._logRepository,'info','Already up to date.');
-            return;
-        }
-        //console.timeEnd('Execution time of commit');
-        const lastcommits = findLatestCommitsOfBranchs(repository.commits);
-        console.log(lastcommits);
+
+        if(!findCommitsDiffBetweenRepositories(repository.commits, remote.commits).length)
+            return createMessage(this._logRepository,'info','Already up to date.');
+
+        repository.commits = this.resolveTags(...Object.values(
+            mergeChangesInRepositories(repository.commits,remote.commits)
+        ))
+
+        sessionStorage.setItem(
+            this._dataRepository,
+            JSON.stringify(
+                !repository.information.head
+                    ?resolveIsHeadNull(repository)
+                    :repository
+                )
+        )
     }
 
     callbackHelp(){

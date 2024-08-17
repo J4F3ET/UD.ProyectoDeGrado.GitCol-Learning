@@ -2,7 +2,7 @@ export const defaultRepository = async (key) => {
     return {
         commits:'[]',
         information:{
-            head: "master",
+            head: null,
             repository:`origin${key}`,
         }
     }

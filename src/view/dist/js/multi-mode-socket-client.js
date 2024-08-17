@@ -1,10 +1,7 @@
 import { SocketHandler } from "./comandManager/SocketHandler.js";
-import { observerCloud} from "./mode-script.js";
-const socketManager = new SocketHandler(REF_STORAGE_REPOSITORY_CLOUD,observerCloud);
-
+import { observerCloud } from "./mode-script.js";
+const socketHandler = new SocketHandler(REF_STORAGE_REPOSITORY_CLOUD,observerCloud)
 document.getElementById('btnLeaveToRoom').addEventListener('click', () => {
-    socketManager.disconnect();
+    socketHandler.disconnect();
 });
-document.getElementById('btnPush').addEventListener('click', () => {
-    socketManager.sendUpdateRepository(JSON.parse(sessionStorage.getItem(REF_STORAGE_REPOSITORY)));
-});
+
