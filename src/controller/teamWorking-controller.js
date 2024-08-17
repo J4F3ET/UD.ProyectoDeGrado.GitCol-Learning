@@ -3,6 +3,7 @@ import {releaseVerificationMiddleware} from "./util/login-middleware .js";
 import { verifyUserInRoomMiddleware } from "./util/teamWorking-middleware.js";
 import { roomRemoveMember,roomGet } from "../model/room-service.js";
 import {auth} from "../model/firebase-service.js";
+import { parseToRoomObject } from "../model/utils.js";
 const router = Router();
 /**
  * @openapi
@@ -39,10 +40,7 @@ router.get("/teamWorking*",releaseVerificationMiddleware,verifyUserInRoomMiddlew
 		}).end();
 		return;
 	}
-	const repository = {
-		information:roomData.repository.information,
-		commits:JSON.parse(roomData.repository.commits)||[]
-	};
+	const repository  = (await parseToRoomObject(req.query.room,roomData)).repository
 	res.render("multi-mode-screen", {
 		REF_STORAGE_REPOSITORY: "local" + req.query.room,
 		REF_STORAGE_REPOSITORY_CLOUD: "origin" + req.query.room,

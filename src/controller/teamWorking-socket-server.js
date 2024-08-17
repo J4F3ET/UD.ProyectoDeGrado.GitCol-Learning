@@ -4,6 +4,7 @@ import {
     roomUpdateCommitsToRepository,
     observeRoom,
 } from "../model/room-service.js";
+import { parseToCommitObject } from "../model/utils.js";
 export class SocketHandler {
     constructor(io){
         this.server = io;
@@ -58,9 +59,12 @@ export class SocketHandler {
         this.sendUpdateRepositoryToChannel(channel);
     };
     async sendUpdateRepositoryToChannel(channel){
-        observeRoom(channel, (data) => {
-            const commitsJSON = JSON.parse(data.repository.commits);
-            this.server.to(channel).emit('updateRepository', commitsJSON);
+        observeRoom(channel, async (data) => {
+            this.server.to(channel)
+                .emit(
+                    'updateRepository',
+                    await Promise.all(data.repository.commits.map(parseToCommitObject))
+                );
         });
     };
 }
