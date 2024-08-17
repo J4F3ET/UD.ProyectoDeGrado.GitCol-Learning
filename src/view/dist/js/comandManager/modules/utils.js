@@ -422,7 +422,7 @@ function createCod() {
 function createRegister(commits,parent,information,message){
     let tags = [information.head,"HEAD"];
     const classList = ["commit","checked-out"];
-    if(information.head.includes("detached")){
+    if(information.head.includes("detached")||parent.class.includes("detached-head")){
         tags = tags.filter(tag => tag != information.head);
         classList.push("detached-head");
     }
