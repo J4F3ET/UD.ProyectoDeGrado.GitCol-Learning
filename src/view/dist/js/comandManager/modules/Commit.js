@@ -112,11 +112,13 @@ export class Commit{
             //console.timeEnd('Execution time of commit');
             return
         }
-        var head = currentHead(storage.commits);
+        let head = currentHead(storage.commits);
         const response = createRegister(storage.commits,head,storage.information,this._configurations.m.message);
         head = removeTags(["HEAD",storage.information.head],head);
         head = removeClassFromCommit(head,"checked-out");
         storage.commits = updateCommitToCommits(response.commits,head);
+        if(response.commit.class.includes("detached-head"))
+            storage.information.head = "detached at " +response.commit.id 
         storage.commits.push(response.commit);
         sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
         //console.timeEnd('Execution time of commit');
