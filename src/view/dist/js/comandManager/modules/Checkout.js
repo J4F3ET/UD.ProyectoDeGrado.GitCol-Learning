@@ -48,6 +48,14 @@ export class Checkout {
      * @readonly
      */
     _logRepository = 'log';
+        /**
+     * @type {string}
+     * @description Name of the remote repository
+     * @default 'origin-'
+     * @memberof! Checkout#
+     * @readonly
+     */
+    _remoteRepository = 'origin-';
     /**
      * @constructor
      * @param {string} dataRepository Name of the repository
@@ -59,9 +67,11 @@ export class Checkout {
      * @example new Checkout('repository')
      * @example new Checkout('repository','log')
      */
-    constructor(dataRepository,logRepository) {
+    constructor(dataRepository,logRepository,remoteRepository) {
         this._dataRepository = dataRepository;
         this._logRepository = logRepository;
+        if(remoteRepository)
+            this._remoteRepository = remoteRepository;
     }
     /**
      * @name comand
@@ -94,6 +104,8 @@ export class Checkout {
             throw new Error(`The star-point "${dataComand.pop()}" does not exist`);
         const commitCurrentHead = currentHead(storage.commits);
         storage.information.head = this._configurations.b.nameBranch??branch??`detached at ${commit.id}`;
+        if(storage.information.head.includes(this._remoteRepository.split("-")[0]||"origin"))
+            storage.information.head = `detached at ${commit.id}`;
         if(commit.id !== commitCurrentHead.id){
             storage.commits = this.goToCommit(
                 this.removeHeadTag(
