@@ -114,7 +114,10 @@ export class Commit{
         }
         let head = currentHead(storage.commits);
         const response = createRegister(storage.commits,head,storage.information,this._configurations.m.message);
-        head = removeTags(["HEAD",storage.information.head],head);
+        if(!storage.information.head.includes("deteached"))
+            head = removeTags(["HEAD",storage.information.head],head);
+        else
+            head = removeTags(["HEAD"],head)
         head = removeClassFromCommit(head,"checked-out");
         storage.commits = updateCommitToCommits(response.commits,head);
         if(response.commit.class.includes("detached-head"))
@@ -172,7 +175,7 @@ export class Commit{
      */
     callBackConfigMessage = (dataComand) =>{
         const indexConfig = dataComand.findIndex(data => data.includes('-m'));
-        const message = dataComand[indexConfig+1].replace(/"/g, "&quot");;
+        const message = dataComand[indexConfig+1].replace(/"/g, "&quot").replace(/'/g, "&apos");
         if(message == undefined || message == "")
             throw new Error('The message is empty');
         this._configurations.m.message = message;
