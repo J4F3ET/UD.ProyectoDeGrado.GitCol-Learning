@@ -102,30 +102,39 @@ export class Push {
         const commiIdtLocal = repository.commits.find(findCommit)?.id
         const commitIdRemote = remote.commits.find(findCommit)?.id
         //Solo si la rama existe se efectura esta seccion de codigo
-        if(branchsRemote.includes(refBranch)){
-            if(!commitsRepositoryId.has(commitIdRemote))
-                throw new Error(`
-                    Failed to push some refs to ${this._remoteRepository} <br>
-                    Updates were rejected because the remote contains work that you do 
-                    not have locally. This is usually caused by another repository pushing 
-                    to the same ref. You may want to first integrate the remote changes 
-                    (e.g., 'git pull ...') before pushing again.
-                `)
-            if(commitsRemoteId.has(commiIdtLocal))
-                return createMessage(
-                    this._logRepository,
-                    'info',
-                    'Already up to date.'
-                )
-        }else if(commitsRemoteId.has(commiIdtLocal)){
+        const existsBranchInRemote = branchsRemote.includes(refBranch)
+
+        if(existsBranchInRemote && !commitsRepositoryId.has(commitIdRemote))
+            throw new Error(`
+                Failed to push some refs to ${this._remoteRepository} <br>
+                Updates were rejected because the remote contains work that you do 
+                not have locally. This is usually caused by another repository pushing 
+                to the same ref. You may want to first integrate the remote changes 
+                (e.g., 'git pull ...') before pushing again.
+            `)
+        if(existsBranchInRemote && commiIdtLocal == commitIdRemote)
+            return createMessage(
+                this._logRepository,
+                'info',
+                'Already up to date.'
+            )
+        if(existsBranchInRemote && commitsRemoteId.has(commiIdtLocal))
+            return this._socketHandler.sendUpdateRepository(
+                this.moveTag(
+                    remote,
+                    refBranch,
+                    commitIdRemote,
+                    commiIdtLocal
+                ))
+        if(!existsBranchInRemote && commitsRemoteId.has(commiIdtLocal)){
             remote.commits.forEach(commit => {
                 if(commit.id == commiIdtLocal){
                     commit.tags.push(refBranch)
                 }
             })
             return this._socketHandler.sendUpdateRepository(remote)
-            
         }
+        
         const response = mergeChangesInBranchs(
             remote.commits,
             repository.commits,
@@ -195,6 +204,15 @@ export class Push {
             if(!currentConfig.includes(config))
                 throw new Error(`The configuration "${config}" is not valid`);
         });
+    }
+    moveTag(repository, branch, idCommitOrigin,idCommitDestination){
+        repository.commits.forEach(commit => {
+            if(commit.id == idCommitDestination)
+                commit.tags.push(branch)
+            else if(commit.id == idCommitOrigin)
+                commit.tags = commit.tags.filter(t => t != branch)
+        })
+        return repository
     }
     callbackHelp(){
         let message = `
