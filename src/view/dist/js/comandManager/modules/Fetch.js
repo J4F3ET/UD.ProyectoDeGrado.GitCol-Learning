@@ -98,6 +98,16 @@ export class Fetch {
     }
 
     callbackHelp(){
-        createMessage('info', 'The pull command is used to fetch from and integrate with another repository or a local branch', 'pull [options] [<repository> [<refspec>…​]]')
+        createMessage('info', `
+            <h5>Concept</h5>
+            <p class="help">Download objects and refs from another repository</p>
+            <h5>Syntax</h5>
+            <p class="help">git fetch</p>
+            <p class="help">git fetch -h</p>
+            <h5>Configurations</h5>
+            <ul>
+                <li><p class="help">-h,--help &nbsp;&nbsp;&nbsp;Show the message</p></li>
+            </ul>`
+        )
     }
 }
