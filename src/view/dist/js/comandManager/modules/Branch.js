@@ -153,7 +153,7 @@ export class Branch{
      * @returns {JSON[]} Array with the new commits of the repository
      */
     changeDetachedCommitToCommit(commit,commits){
-        if(!commit.class.includes("detached-head"))
+        if(!commit || !commit.class.includes("detached-head") )
             return commits
         let parent;
         const newListCommits = commits.map(c=>{
