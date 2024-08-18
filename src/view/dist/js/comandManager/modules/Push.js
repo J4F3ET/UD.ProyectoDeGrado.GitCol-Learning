@@ -4,7 +4,6 @@ import {
     findAllTags,
     mergeChangesInBranchs,
     removeClassInRepository,
-    removeTags,
 } from "./utils.js";
 /**
  * @class
@@ -68,11 +67,13 @@ export class Push {
         this._socketHandler = new SocketHandler(remoteRepository)
     }
 
-    execute(dataComand){
+    async execute(dataComand){
         const remote = JSON.parse(sessionStorage.getItem(this._remoteRepository));
         const repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
+
         if(!repository||!remote)
             throw new Error('The repository does not exist')
+
         const values = dataComand.filter(data => data.charAt(0) !== '-')
         const refRemote = values[0]||'origin'
         const refBranch = values[1]|| repository.information.head
@@ -88,6 +89,7 @@ export class Push {
             if(!continueExecution)
                 return;
         }
+
         if(values.length !== 0 && values.length !== 2)
             throw new Error('Repository and resfspec were not correctly specified.')
         
@@ -101,7 +103,6 @@ export class Push {
         const commitsRepositoryId = new Set(repository.commits.map((c)=> c.id))
         const commiIdtLocal = repository.commits.find(findCommit)?.id
         const commitIdRemote = remote.commits.find(findCommit)?.id
-        //Solo si la rama existe se efectura esta seccion de codigo
         const existsBranchInRemote = branchsRemote.includes(refBranch)
 
         if(existsBranchInRemote && !commitsRepositoryId.has(commitIdRemote))
@@ -112,12 +113,14 @@ export class Push {
                 to the same ref. You may want to first integrate the remote changes 
                 (e.g., 'git pull ...') before pushing again.
             `)
+
         if(existsBranchInRemote && commiIdtLocal == commitIdRemote)
             return createMessage(
                 this._logRepository,
                 'info',
                 'Already up to date.'
             )
+
         if(existsBranchInRemote && commitsRemoteId.has(commiIdtLocal))
             return this._socketHandler.sendUpdateRepository(
                 this.moveTag(
@@ -126,6 +129,7 @@ export class Push {
                     commitIdRemote,
                     commiIdtLocal
                 ))
+                
         if(!existsBranchInRemote && commitsRemoteId.has(commiIdtLocal)){
             remote.commits.forEach(commit => {
                 if(commit.id == commiIdtLocal){
@@ -150,22 +154,28 @@ export class Push {
             ),
             ["checked-out","detached-head"]
         )
+
         this._socketHandler.sendUpdateRepository(remote)
     }
     removeTagsTheChanges(commits,changesId,refBranch,idHeadCommitLocal){
+        
         const tagsRemove = new Set(commits.flatMap(c =>{
             if(changesId.has(c.id))
                 return c.tags||[]
         }))
+
         tagsRemove.delete(refBranch)
         changesId.delete(idHeadCommitLocal)
+
         return commits.map(commit=>{
             if(changesId.has(commit.id))
                 commit.tags = commit.tags.filter(t =>{!tagsRemove.has(t)})
+
             if(commit.id == idHeadCommitLocal)
                 commit.tags = commit.tags.filter(t => t == refBranch)
             else if(commit.tags.includes(refBranch))
                 commit.tags = commit.tags.filter(t => t != refBranch)
+
             return commit
         })
     }
@@ -205,6 +215,17 @@ export class Push {
                 throw new Error(`The configuration "${config}" is not valid`);
         });
     }
+        /**
+     * @name moveTag
+     * @description Move tag from idCommitOrigin to idCommitDestination
+     * @memberof! Push#
+     * @method
+     * @param {Object} Repository Object represent repository and containd array of commits
+     * @param {string} branch Name of branch(tag)
+     * @param {string} idCommitOrigin id of commit (old commit)
+     * @param {string} idCommitDestination id of commit (new commit)
+     * @returns {Object} repository
+     */
     moveTag(repository, branch, idCommitOrigin,idCommitDestination){
         repository.commits.forEach(commit => {
             if(commit.id == idCommitDestination)
@@ -214,6 +235,12 @@ export class Push {
         })
         return repository
     }
+    /**
+     * @name callBackHelp
+     * @description Callback to the help of the command
+     * @memberof! Push#
+     * @callback callBackHelp
+     */
     callbackHelp(){
         let message = `
         <h5>Concept</h5>
