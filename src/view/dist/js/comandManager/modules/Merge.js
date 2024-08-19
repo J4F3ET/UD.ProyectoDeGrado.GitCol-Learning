@@ -73,7 +73,7 @@ export class Merge {
             throw new Error('There are no branch master');
         this.resolveConfiguration(dataComand);
         const commitFetch = getCommitStartPoint(dataComand, storage.commits);
-        if(commitFetch === null)
+        if(!commitFetch)
             throw new Error('The commit does not exist');
         const parentsCommitFetch = findAllParents(storage.commits, commitFetch).map(commit=>commit.id);
         const commitHead = currentHead(storage.commits);
