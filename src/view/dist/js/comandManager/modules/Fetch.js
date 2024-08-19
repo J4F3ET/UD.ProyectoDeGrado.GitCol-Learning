@@ -61,14 +61,19 @@ export class Fetch {
         this._remoteRepository = remoteRepository
     }
     resolveTags(changesId,commits){
-        commits.forEach(commit =>{
-            if(!commit.tags.length || !changesId.some(id => id == commit.id))
-                return 
-            commit.tags = commit.tags.map(t => {
-                if(t == "HEAD")
-                    return t
-                return this._remoteRepository.split("-")[0]+ "/" + t
-            });
+        const refRemote = this._remoteRepository.split("-")[0]
+        commits.forEach( commit =>{
+            if(!changesId.some(id => id == commit.id)){
+                if(!commit.tags.length) return
+                commit.tags = commit.tags.filter(t => 
+                    !t.includes(refRemote)
+                )
+            }else{
+                commit.tags = commit.tags.map(t => {
+                    if(t == "HEAD") return t
+                    return refRemote + "/" + t
+                });
+            }
         })
         return commits
     }
@@ -86,7 +91,7 @@ export class Fetch {
         repository.commits = this.resolveTags(...Object.values(
             mergeChangesInRepositories(repository.commits,remote.commits)
         ))
-
+        
         sessionStorage.setItem(
             this._dataRepository,
             JSON.stringify(
