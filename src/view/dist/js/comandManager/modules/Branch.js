@@ -310,7 +310,7 @@ export class Branch{
         const branch = values[0];
         if(branch === "")
             throw new Error('The name of the branch is empty');
-        if(existBranchOrEndPoint(storage.commits,branch))
+        if(await existBranchOrEndPoint(storage.commits,branch))
             throw new Error(`The branch already exist or name "${branch}" invalid`);
         const head = currentHead(storage.commits);
         storage.commits = storage.commits.filter(commit => commit.id !== head.id);
