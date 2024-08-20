@@ -67,23 +67,31 @@ export class Merge {
      */
     execute(dataComand){
         let storage = JSON.parse(sessionStorage.getItem(this._dataRepository));
+
         if(!storage)
             throw new Error('The repository is not initialized');
-        if(storage.commits.length === 0)
+
+        if(!storage.commits.length)
             throw new Error('There are no branch master');
+
         this.resolveConfiguration(dataComand);
         const commitFetch = getCommitStartPoint(dataComand, storage.commits);
+
         if(!commitFetch)
             throw new Error('The commit does not exist');
+
         const parentsCommitFetch = findAllParents(storage.commits, commitFetch).map(commit=>commit.id);
         const commitHead = currentHead(storage.commits);
         const parentsCommitHead = findAllParents(storage.commits, commitHead).map(commit=>commit.id);
+
         if(parentsCommitHead.includes(commitFetch.id))
             throw new Error('Already up to date');
+
         if(parentsCommitFetch.includes(commitHead.id))
             storage = this.resolveMovilityTag(storage, commitFetch, commitHead);
         else
             storage = this.resolveCreateRegister(storage, commitFetch, commitHead);
+
         sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
     /**
@@ -98,12 +106,16 @@ export class Merge {
      */
     resolveMovilityTag(storage, commitFetch, commitHead){
         let commits = storage.commits;
+
         if(!storage.information.head.includes('detached')){
             commits =  moveTagToCommit(commits,commitHead,commitFetch,storage.information.head);
+
             if(commitFetch.class.includes('detached-head'))
                 commits = changeDetachedCommitToCommit(commitFetch,commits);
+
         }else
             storage.information.head = 'detached to '+commitFetch.id;
+
         commits = updateHeadCommit(commits,commitHead, commitFetch);
         storage.commits = commits;
         return storage;
@@ -119,16 +131,24 @@ export class Merge {
      * @returns {Object} newStorage
      */
     resolveCreateRegister(storage, commitFetch, commitHead){
-        let {commits,commit} = createRegister(storage.commits,commitHead,storage.information,'merge');
+        let {commits,commit} = createRegister(
+            storage.commits,
+            commitHead,storage.information,
+            'merge'
+        );
+
         commit.unions.push(commitFetch.id);
         commits.push(commit);
         commitHead=removeTags(['HEAD'],commitHead);
         commitHead.class = commitHead.class.filter(clas=>clas!=='checked-out');
+        
         if(!storage.information.head.includes('detached')){
             commitHead = removeTags([storage.information.head],commitHead);
         }else
             storage.information.head = 'detached to '+commit.id;
-        storage.commits = updateCommitToCommits(commits,commitHead);
+        
+            storage.commits = updateCommitToCommits(commits,commitHead);
+
         return storage;
     }
 

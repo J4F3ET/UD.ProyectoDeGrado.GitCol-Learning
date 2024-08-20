@@ -1,4 +1,10 @@
-import { currentHead,getCommitStartPoint,createMessage,changeDetachedCommitToCommit} from './utils.js';
+import {
+    currentHead,
+    getCommitStartPoint,
+    createMessage,
+    changeDetachedCommitToCommit,
+    existBranchOrEndPoint
+} from './utils.js';
 /**
  * @class
  * @classdesc This class is responsible for switching branches or restoring working tree files
@@ -92,20 +98,27 @@ export class Checkout {
     */
     execute(dataComand){
         //console.time('Execution time of checkout command');
-        if(sessionStorage.getItem(this._dataRepository)===null)
-            throw new Error('The repository does not exist');
         const storage = JSON.parse(sessionStorage.getItem(this._dataRepository))
+        if(!storage)
+            throw Error('The repository does not exist');
+
         if(storage.commits.length == 0)
-            throw new Error('The repository does not have commits');
+            throw Error('The repository does not have commits');
+
         this.resetConfig();
         this.resolveConfigurations(dataComand);
+
         const {branch,commit} = this.resolveObjetiveToGo(storage.commits,dataComand);
+
         if(commit === undefined)
-            throw new Error(`The star-point "${dataComand.pop()}" does not exist`);
+            throw Error(`The star-point "${dataComand.pop()}" does not exist`);
+
         const commitCurrentHead = currentHead(storage.commits);
         storage.information.head = this._configurations.b.nameBranch??branch??`detached at ${commit.id}`;
+
         if(storage.information.head.includes(this._remoteRepository.split("-")[0]||"origin"))
             storage.information.head = `detached at ${commit.id}`;
+
         if(commit.id !== commitCurrentHead.id){
             storage.commits = this.goToCommit(
                 this.removeHeadTag(
@@ -115,10 +128,12 @@ export class Checkout {
                 commit.id
             );
         }
-        if(this._configurations.b.nameBranch !== null){
+
+        if(this._configurations.b.nameBranch){
             storage.commits = this.createBranch(storage.commits,this._configurations.b.nameBranch);
             storage.information.head = this._configurations.b.nameBranch;
         }
+
         createMessage(this._logRepository,'info',`Switched to '${this._configurations.b.nameBranch??branch??commit.id}'`);
         sessionStorage.setItem(this._dataRepository,JSON.stringify(storage));
         //console.timeEnd('Execution time of checkout command');
@@ -210,8 +225,8 @@ export class Checkout {
      * @returns {JSON[]} Array of commits with the new branch
      */
     createBranch(commits,name){
-        if(commits.some(commit => commit.tags.includes(name)))
-            throw new Error(`Already exist the branch '${name}'`);
+        if(existBranchOrEndPoint(commits,name))
+            throw new Error(`Already exist the branch or name invalid '${name}'`);
         const head = currentHead(commits);
         commits = commits.filter(commit => commit.id !== head.id);
         head.tags.push(name);
