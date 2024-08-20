@@ -62,7 +62,7 @@ function findAllTags(commits){
         .filter(nameBranch => nameBranch != 'HEAD')
 }
 /**
- * @name findChildrens
+ * @name findAllChildrens
  * @function
  * @memberof utils
  * @description Find all the childrens of a commit by id
@@ -92,6 +92,7 @@ function findAllChildrens(commits,id,childrens = []){
  * @return {JSON[]} Array of commits that beloging to param commit
  */
 function findAllParents(commits,commit,parents=[]){
+    if (!commit) return []
     const parentsCommits = commits.filter((comt)=>
             comt.id == commit.parent || commit.unions?.includes(comt.id)
         );
@@ -169,6 +170,15 @@ function createMessage(nameRefLog='log',tag='info',message){
     log.push({tag,message});
     sessionStorage.setItem(nameRefLog,JSON.stringify(log));
 }
+/**
+ * @name resolveIsHeadNull
+ * @function
+ * @memberof utils
+ * @description Solution if HEAD is null or current not expecificate
+ * @param {JSON} repository Object repository
+ * @param {string} tagDefault Name of the deful branch or tag, value default is "master"
+ * @returns {JSON} repository object with HEad especificated
+ */
 function resolveIsHeadNull(repository,tagDefault = "master"){
     const tags = findAllTags(repository.commits)
     const master = tags.find(t => t.includes(tagDefault))
@@ -189,6 +199,7 @@ function resolveIsHeadNull(repository,tagDefault = "master"){
             break
         }
     }
+
     return repository
 }
 /**
@@ -249,7 +260,20 @@ function removeClassInRepository(commits,classToRemove){
         return commit
     })
 }
-
+/**
+ * @name existBranchOrEndPoint
+ * @function
+ * @memberof utils
+ * @description Remove a class in all repository
+ * @param {JSON[]} commits Commits is array to the repository
+ * @param {String} branch Name the tag(branch)
+ * @returns {boolean} True if exist and false not exits 
+ */
+function existBranchOrEndPoint(commits,branch){
+    const tags = new Set([...findAllTags(commits),"detached","HEAD"])
+    const idCommits = new Set(commits.map(commit => commit.id))
+    return idCommits.has(branch) || tags.has(branch);
+}
 // *** SYSTEM OF RAMIFICATION BY COMMITS(REGISTERS)***
 /**
  * @name SPACE_BETWEEN_COMMITS_X
@@ -608,7 +632,7 @@ function findChangesBetweenBranchs(commitsDestination,commitsOrigin,nameBranch){
 
 }
 /**	
- * @name findChangesBetweenBranchs
+ * @name mergeChangesInBranchs
  * @function
  * @memberof utils
  * @description Find changes between repositories using branch especificated
@@ -696,9 +720,21 @@ function addCommitChangeToBranch(commitsDestination,parent = {cx:-30,cy:334},com
     commit.class.push("detached-head")
     return [...response.commits,commit]
 }
-
-function mergeChangesInRepositories(commitsDestination,commitsOrigin){
-    const tags = findAllTags(commitsOrigin)
+/**	
+ * @name mergeChangesInRepositories
+ * @function
+ * @memberof utils
+ * @description Merger changes in all repository or tags(branchs) especificate
+ * @param {JSON[]} commitsDestination Array of commits destination of the changes
+ * @param {JSON[]} commitsOrigin Array of commits origin of the changes
+ * @param {Strign[]?} tags Names of branch
+ * @returns {{changesId:string[],repository:JSON[]}} changesId is array with ids, repository is array of commits
+ */
+function mergeChangesInRepositories(
+    commitsDestination,
+    commitsOrigin,
+    tags = findAllTags(commitsOrigin)
+){
     return tags.reduce(
         (acc, t) => {
             const { repository, changesId } = mergeChangesInBranchs(acc.repository, commitsOrigin, t);
@@ -727,10 +763,18 @@ function findCommitsEqualBetweenRepositories(commitsDestination,commitsOrigin){
     });
     return commitsEqual;
 }
-
+/**
+ * @name findCommitLink
+ * @function
+ * @memberof utils
+ * @description Find the commit that are link between two array of commits
+ * @param {JSON[]} idPotentialParents Array of commits of potential parents
+ * @param {JSON[]} idParentsOfChildrens Array of commits of parents of the HEAD  
+ * @returns {JSON|null} Commit link or null
+ */
 function findCommitLink(idPotentialParents,idParentsOfChildrens){
     return idParentsOfChildrens.find(
-        idParentChild => idPotentialParents.includes(idParentChild)
+        idParentOfChild => idPotentialParents.includes(idParentOfChild)
     )|| null
 }
 
@@ -741,6 +785,7 @@ export {
     createRegister,
     currentHead,
     deleteCommitsRecursivelyUntil,
+    existBranchOrEndPoint,
     findAllChildrens,
     findAllExceptionCommitsToDelete,
     findAllParents,
