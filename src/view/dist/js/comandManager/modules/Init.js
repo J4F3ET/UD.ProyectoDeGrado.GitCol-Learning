@@ -50,7 +50,7 @@ export class Init{
         this._repositoryName = repositoryName;
         this._logRepository = logRepository
     }
-    execute(dataComand = ""){
+    async execute(dataComand = ""){
         this.resetConfiguration;
         this.resolveConfiguration(dataComand);
         sessionStorage.setItem(this._repositoryName, JSON.stringify(
@@ -88,7 +88,7 @@ export class Init{
      * @example resolveConfiguration(['-q'])
      * @example resolveConfiguration(['-h'])
      */
-    resolveConfiguration(config){
+    async resolveConfiguration(config){
         if(config.length===0)
             return;
         const clearConfig = config.map(conf=>conf.replace(/^--?/,'').charAt(0));
@@ -105,7 +105,7 @@ export class Init{
      * @memberof! Init#
      * @description Show the help of the command in the console
      */
-    callbackHelp=()=>{
+    callbackHelp=async ()=>{
         let message = `
         <h5>Concept</h5>
         <p class="help">Create an empty Git repository or reinitialize an existing one</p>
@@ -125,5 +125,5 @@ export class Init{
      * @memberof! Init#
      * @description Reset the configuration of the command
      */
-    resetConfiguration = ()=> {this.quiet = false};
+    resetConfiguration = async ()=> {this.quiet = false};
 }

@@ -5,7 +5,8 @@ import {
     updateCommitToCommits, 
     removeClassFromCommit,
     createRegister,
-    createCod
+    getRepository,
+    newRegister
 } from "./utils.js";
 /**
  * @class
@@ -33,21 +34,21 @@ export class Commit{
     _configurations = {
         m:{
             message: "None",
-            callback:(dataComand)=>this.callBackConfigMessage(dataComand),
+            callback:async (dataComand)=> this.callBackConfigMessage(dataComand),
         },
         a:{
             files: ["index.html","style.css","script.js"],
-            callback: (dataComand)=>this.callBackConfigFiles(dataComand),
+            callback: async (dataComand)=> this.callBackConfigFiles(dataComand),
         },
         h:{
-            callback:(dataComand)=>this.callBackHelp(dataComand)
+            callback:async (dataComand)=> this.callBackHelp(dataComand)
         }
     };
     /**
-         * @member {string}
-         * @description Name of space the local storage who contain the data referent to history of the commits(register but not commands)
-         * @memberof! Commit# 
-        */
+     * @member {string}
+     * @description Name of space the local storage who contain the data referent to history of the commits(register but not commands)
+     * @memberof! Commit# 
+    */
     _dataRepository = 'repository';
     /**
      * @member {string}
@@ -85,43 +86,50 @@ export class Commit{
      * @example execute(['-h'])
      * @memberof! Commit#
      */
-    execute(dataComand){
+    async execute(dataComand){
         //console.time('Execution time of commit');
-        if(sessionStorage.getItem(this._dataRepository)===null)
+        const storage =  await getRepository(this._dataRepository)
+
+        if(!storage)
             throw new Error('The repository does not exist');
-        let continueExecution = true;
-        this.resolveConfiguration(dataComand).forEach(config => {
-            continueExecution = this._configurations[config].callback(dataComand);
-        });
-        if(!continueExecution) return;
-        const storage = JSON.parse(sessionStorage.getItem(this._dataRepository));// Array of commits
-        if(storage.commits.length == 0){
+
+        if(!await this.resolveConfiguration(dataComand)) 
+            return;
+
+        if(!storage.commits.length){
             storage.information.head = "master";
-            storage.commits.push({
-                id: createCod(),
-                parent: "init",
-                message: this._configurations.m.message,
-                tags: ["master", "HEAD"],
-                class: ["commit","checked-out"],
-                autor: storage.information.config.user.autor??JSON.parse(sessionStorage.getItem('config')).autor??null,
-                date: new Date().toLocaleString(),
-                cx: 50,
-                cy: 334,
-            });
-            sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
+            
+            storage.commits.push(await newRegister(
+                50,
+                334,
+                "init",
+                this._configurations.m.message,
+                ["master", "HEAD"],
+                ["commit","checked-out"],
+                storage.information.config.user.autor
+            ));
             //console.timeEnd('Execution time of commit');
-            return
+            return sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
         }
-        let head = currentHead(storage.commits);
-        const response = createRegister(storage.commits,head,storage.information,this._configurations.m.message);
+        let head = await currentHead(storage.commits);
+        const response = await createRegister(
+            storage.commits,
+            head,
+            storage.information,
+            this._configurations.m.message
+        );
+
         if(!storage.information.head.includes("deteached"))
-            head = removeTags(["HEAD",storage.information.head],head);
+            head = await removeTags(["HEAD",storage.information.head],head);
         else
-            head = removeTags(["HEAD"],head)
-        head = removeClassFromCommit(head,"checked-out");
-        storage.commits = updateCommitToCommits(response.commits,head);
+            head = await removeTags(["HEAD"],head)
+
+        head = await removeClassFromCommit(head,"checked-out");
+        storage.commits = await updateCommitToCommits(response.commits,head);
+
         if(response.commit.class.includes("detached-head"))
             storage.information.head = "detached at " +response.commit.id 
+
         storage.commits.push(response.commit);
         sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
         //console.timeEnd('Execution time of commit');
@@ -133,36 +141,43 @@ export class Commit{
      * @description Resolve the configuration of the command, extract the configuration of the command and validate it
      * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
      * @example resolveConfiguration(['-m','"message"','-a']) // ['m','a']
-     * @returns {String[]} Array with the letters of the configuration
+     * @returns {Promise<Boolean>} True if execute command, false do not execute commnad
      */
-    resolveConfiguration(dataComand) {
-        let configs = [] 
+    async resolveConfiguration(dataComand) {
+        let configs = new Set()
+        let continueExecution = true
         dataComand.forEach(c => {
             if(c.startsWith("-")||c.startsWith("--"))
-                configs.push(c.replace(/^(-{1,2})([a-zA-Z])/, "$2").charAt(0))//Remove the "-" or "--" of the configuration and select second group 
+                configs.add(c.replace(/^(-{1,2})([a-zA-Z])/, "$2").charAt(0))//Remove the "-" or "--" of the configuration and select second group 
         });
-        this.validateConfig(configs);
-        configs = configs.filter((c,i,self) => self.indexOf(c) === i);
-        return configs;
+        await this.validateConfig(configs);
+        for (const config of configs) {
+            if (!await this._configurations[config].callback(dataComand)) {
+                continueExecution = false;
+                break;
+            }
+        }
+
+    return continueExecution;
     }
     /**
      * @name validateConfig
      * @method
      * @memberof! Commit#
      * @description Validate the configuration of the command
-     * @param {String[]} configs Array with the letters of the configuration
+     * @param {Set<String>} configs Array with the letters of the configuration
      * @example validateConfig(['m','a']) // true
      * @throws {Error} The configuration is empty
      * @throws {Error} The configuration "${config}" is not valid
      */
-    validateConfig(configs){
-        if(configs.length == 0)
-            throw new Error('The configuration is empty');
+    async validateConfig(configs){
+        if(!configs.size)
+            throw Error('The configuration is empty');
         const currentConfig = Object.keys(this._configurations);
-        configs.forEach(config => {
+        for(const config of configs){
             if(!currentConfig.includes(config))
-                throw new Error(`The configuration "${config}" is not valid`);
-        });
+                throw Error(`The configuration "${config}" is not valid`);
+        }
     }
     /**
      * @name callBackConfigMessage
@@ -171,14 +186,14 @@ export class Commit{
      * @description Callback to the configuration of the message
      * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
      * @throws {Error} The message is empty
-     * @returns {Boolean} True if the configuration is valid
+     * @returns {Promise<Boolean>} True if the configuration is valid
      */
-    callBackConfigMessage = (dataComand) =>{
+    callBackConfigMessage = async (dataComand) =>{
         const indexConfig = dataComand.findIndex(data => data.includes('-m'));
-        const message = dataComand[indexConfig+1].replace(/"/g, "&quot").replace(/'/g, "&apos");
+        const message = dataComand[indexConfig+1];
         if(message == undefined || message == "")
             throw new Error('The message is empty');
-        this._configurations.m.message = message;
+        this._configurations.m.message = message.replace(/"/g, "&quot").replace(/'/g, "&apos");
         return true;
     }
     /**
@@ -187,15 +202,17 @@ export class Commit{
      * @callback callBackConfigFiles
      * @description Callback to the configuration of the files
      * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
-     * @returns {Boolean} True if the configuration is valid for continue the execution of the command
+     * @returns {Promise<Boolean>} True if the configuration is valid for continue the execution of the command
      * @example callBackConfigFiles(['-m','"message"','-a']) // true
      * @example callBackConfigFiles(['-a']) // false
      */
-    callBackConfigFiles = (dataComand) =>{
-        if(!dataComand.includes('m'))
+    callBackConfigFiles = async (dataComand) =>{
+        if(!dataComand.includes('-m'))
             throw new Error('The configuration "-m" is obligatory for use the configuration "-a"');
+
         const files = this._configurations.a.files.map(file => `<li>>${file}</li>`).join('');
         createMessage(this._logRepository,'info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);
+        
         return true;
     }
     /**
@@ -204,12 +221,12 @@ export class Commit{
      * @memberof! Commit#
      * @callback callBackHelp
      * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
-     * @returns {Boolean} True if the configuration is valid for continue the execution of the command
+     * @returns {Promise<Boolean>} True if the configuration is valid for continue the execution of the command
      * @example callBackHelp(['-h']) // false
      * @example callBackHelp(['-m','"message"','-h']) // true
      */
-    callBackHelp = (dataComand) =>{
-        let message = `
+    callBackHelp = async (dataComand) =>{
+        createMessage(this._logRepository,'info',`
         <h5>Concept</h5>
         <p class="help">Record changes to the repository</p>
         <h5>Syntax</h5>
@@ -224,8 +241,8 @@ export class Commit{
             <li class="help">-a&nbsp;&nbsp;&nbsp;Add all files to the commit(files system no implemented)</li>
             <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>`
-        createMessage(_logRepository,'info',message);
-        return dataComand.includes('-m');
+        );
+        return dataComand.includes('-m')?true:false;
     }
 
 }

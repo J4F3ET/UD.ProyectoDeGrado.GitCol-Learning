@@ -4,7 +4,9 @@ import {
     createMessage,
     changeDetachedCommitToCommit,
     existBranchOrEndPoint,
-    getRepository
+    getRepository,
+    removeTags,
+    removeClassFromCommit
 } from './utils.js';
 /**
  * @class
@@ -29,11 +31,17 @@ export class Checkout {
     _configurations = {
         q:{
             useConfig: false,
-            callback: ()=> this._configurations.q.useConfig = true
+            callback: ()=> {
+                this._configurations.q.useConfig = true
+                return true
+            }
         },
         b:{
             nameBranch: null,
-            callback: (name=null)=>this._configurations.b.nameBranch = name
+            callback: (name=null)=>{
+                this._configurations.b.nameBranch = name
+                return true
+            }
         },
         h:{
             callback:()=>this.callbackHelp()
@@ -100,24 +108,24 @@ export class Checkout {
     async execute(dataComand){
         //console.time('Execution time of checkout command');
         const storage = await getRepository(this._dataRepository);
-
+        
         this.resetConfig();
-
+        
         if(!storage)
             throw Error('The repository does not exist');
 
         if(storage.commits.length == 0)
             throw Error('The repository does not have commits');
 
-        
-        this.resolveConfigurations(dataComand);
+        if(!await this.resolveConfigurations(dataComand))
+            return
 
         const {branch,commit} = await this.resolveObjetiveToGo(storage.commits,dataComand);
 
         if(!commit)
             throw Error(`The star-point "${dataComand.pop()}" does not exist`);
 
-        const commitCurrentHead = currentHead(storage.commits);
+        const commitCurrentHead = await currentHead(storage.commits);
         storage.information.head = this._configurations.b.nameBranch??branch??`detached at ${commit.id}`;
 
         if(storage.information.head.includes(this._remoteRepository.split("-")[0]||"origin"))
@@ -150,20 +158,22 @@ export class Checkout {
      * @param {string[]} dataComand Data of the command
      */
     async resolveConfigurations(dataComand){
+        let continueProces = true;
         let clearConfig = new Map();
-        dataComand.forEach(async(data,index) => {
+        dataComand.forEach((data,index) => {
             if(data.substring(0,1) == '-')
                 clearConfig.set(
                     (data.replace(/^(-{1,2})([a-zA-Z])/, "$2").charAt(0)),
                     dataComand[index+1]	
                 );
         });
-        clearConfig.forEach(async(value,key) => {
+        clearConfig.forEach((value,key) => {
             key=key=='o'?'b':key;
             if(!this._configurations[key])
                 throw new Error(`The option '--${key}' does not exist`);
-            this._configurations[key].callback(value);
+            continueProces = this._configurations[key].callback(value);
         });
+        return continueProces
     }
     /**
      * @name resolveObjetiveToGo
@@ -192,9 +202,9 @@ export class Checkout {
      * @returns {Promise<JSON[]>} Array of commits
      */
     async removeHeadTag(commits,head){
-        commits = await Promise.all(commits.filter(async commit => commit.id !== head.id));
-        head.tags = await Promise.all(head.tags.filter(async tag => tag !== 'HEAD'));
-        head.class = await Promise.all(head.class.filter(async classC => classC !== 'checked-out'));
+        commits = commits.filter(commit => commit.id !== head.id);
+        head = await removeTags(["HEAD"],head)
+        head = await removeClassFromCommit(head,'checked-out');
         commits.push(head);
         return commits;
     }
@@ -209,12 +219,12 @@ export class Checkout {
      * @returns {Promise<JSON[]>} Array of commits with the new head
      */
     async goToCommit(commits,id){
-        const commit = await Promise.all(commits.find(async commit => commit.id === id));
+        const commit = commits.find( commit => commit.id === id);
         if(!commit)
             throw new Error('The commit does not exist');
         commit.tags.push('HEAD');
         commit.class.push('checked-out');
-        commits = await Promise.all(commits.filter(async commit => commit.id !== id));
+        commits = commits.filter( commit => commit.id !== id);
         commits.push(commit);
         return commits;
     }
@@ -230,8 +240,8 @@ export class Checkout {
     async createBranch(commits,name){
         if(await existBranchOrEndPoint(commits,name))
             throw new Error(`Already exist the branch or name invalid '${name}'`);
-        const head = currentHead(commits);
-        commits = await Promise.all(commits.filter(async commit => commit.id !== head.id));
+        const head = await currentHead(commits);
+        commits = commits.filter(commit => commit.id !== head.id);
         head.tags.push(name);
         commits.push(head);
         if(head.class.includes("detached-head"))
@@ -261,7 +271,7 @@ export class Checkout {
             <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>`
         createMessage(this._logRepository,'info',message);
-        throw new Error('');
+        return false
     }
     /**
      * @name resetConfig

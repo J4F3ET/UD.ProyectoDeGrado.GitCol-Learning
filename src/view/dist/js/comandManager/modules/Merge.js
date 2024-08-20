@@ -8,7 +8,8 @@ import {
     changeDetachedCommitToCommit,
     updateHeadCommit,
     moveTagToCommit,
-    updateCommitToCommits
+    updateCommitToCommits,
+    removeClassFromCommit
 } from "./utils.js"
 /**
  * @class
@@ -26,7 +27,7 @@ export class Merge {
      */
     _configurations = {
         h:{
-            callback: ()=>{}
+            callback: async()=>{this.callbackHelp()}
         }
     }
     /**
@@ -65,7 +66,7 @@ export class Merge {
      * @throws {Error} The repository is not initialized
      * @throws {Error} There are no branch master
      */
-    execute(dataComand){
+    async execute(dataComand){
         let storage = JSON.parse(sessionStorage.getItem(this._dataRepository));
 
         if(!storage)
@@ -74,23 +75,33 @@ export class Merge {
         if(!storage.commits.length)
             throw new Error('There are no branch master');
 
-        this.resolveConfiguration(dataComand);
-        const commitFetch = getCommitStartPoint(dataComand, storage.commits);
+        if(! await this.resolveConfiguration(dataComand))
+            return
+
+        const commitFetch = await getCommitStartPoint(dataComand, storage.commits);
 
         if(!commitFetch)
             throw new Error('The commit does not exist');
 
-        const parentsCommitFetch = findAllParents(storage.commits, commitFetch).map(commit=>commit.id);
-        const commitHead = currentHead(storage.commits);
-        const parentsCommitHead = findAllParents(storage.commits, commitHead).map(commit=>commit.id);
+        const parentsCommitFetch = await Promise.all(
+            (await findAllParents(storage.commits, commitFetch))
+                .map(async commit=>commit.id)
+        );
+
+        const commitHead = await currentHead(storage.commits);
+
+        const parentsCommitHead = await Promise.all(
+            (await findAllParents(storage.commits, commitHead))
+                .map(async commit=>commit.id)
+        );
 
         if(parentsCommitHead.includes(commitFetch.id))
             throw new Error('Already up to date');
 
         if(parentsCommitFetch.includes(commitHead.id))
-            storage = this.resolveMovilityTag(storage, commitFetch, commitHead);
+            storage = await this.resolveMovilityTag(storage, commitFetch, commitHead);
         else
-            storage = this.resolveCreateRegister(storage, commitFetch, commitHead);
+            storage = await this.resolveCreateRegister(storage, commitFetch, commitHead);
 
         sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
@@ -104,20 +115,19 @@ export class Merge {
      * @param {JSON} commitHead Commit head
      * @returns {Object} newStorage
      */
-    resolveMovilityTag(storage, commitFetch, commitHead){
+    async resolveMovilityTag(storage, commitFetch, commitHead){
         let commits = storage.commits;
 
         if(!storage.information.head.includes('detached')){
-            commits =  moveTagToCommit(commits,commitHead,commitFetch,storage.information.head);
+            commits =  await moveTagToCommit(commits,commitHead,commitFetch,storage.information.head);
 
             if(commitFetch.class.includes('detached-head'))
-                commits = changeDetachedCommitToCommit(commitFetch,commits);
+                commits = await changeDetachedCommitToCommit(commitFetch,commits);
 
         }else
             storage.information.head = 'detached to '+commitFetch.id;
 
-        commits = updateHeadCommit(commits,commitHead, commitFetch);
-        storage.commits = commits;
+        storage.commits = await updateHeadCommit(commits,commitHead, commitFetch);
         return storage;
     }
     /**
@@ -128,26 +138,27 @@ export class Merge {
      * @param {Object} storage Data of the repository
      * @param {JSON} commitFetch Commit fetch
      * @param {JSON} commitHead Commit head
-     * @returns {Object} newStorage
+     * @returns {Promise<Object>} newStorage
      */
-    resolveCreateRegister(storage, commitFetch, commitHead){
+    async resolveCreateRegister(storage, commitFetch, commitHead){
         let {commits,commit} = createRegister(
             storage.commits,
-            commitHead,storage.information,
+            commitHead,
+            storage.information,
             'merge'
         );
 
         commit.unions.push(commitFetch.id);
         commits.push(commit);
-        commitHead=removeTags(['HEAD'],commitHead);
-        commitHead.class = commitHead.class.filter(clas=>clas!=='checked-out');
+        commitHead= await removeTags(['HEAD'],commitHead);
+        commitHead =  await removeClassFromCommit(commitHead,"checked-out");
         
         if(!storage.information.head.includes('detached')){
-            commitHead = removeTags([storage.information.head],commitHead);
+            commitHead = await removeTags([storage.information.head],commitHead);
         }else
             storage.information.head = 'detached to '+commit.id;
         
-            storage.commits = updateCommitToCommits(commits,commitHead);
+        storage.commits = await updateCommitToCommits(commits,commitHead);
 
         return storage;
     }
@@ -159,9 +170,11 @@ export class Merge {
      * @description Resolve the configurations of the merge
      * @param {string[]} dataComand
      */
-    resolveConfiguration(dataComand){
+    async resolveConfiguration(dataComand){
+        let continueProcess = true
         if(dataComand.includes('-h'))
-            this._configurations.h.callback();
+            continueProcess = await this._configurations.h.callback();
+        return continueProcess
     }
     /**
      * @memberof Merge#
@@ -170,7 +183,7 @@ export class Merge {
      * @description Show the message of help
      * @param {string} message
      */
-    callbackHelp = ()=>{
+    callbackHelp = async()=>{
         let message = `
         <h5>Concept</h5>
         <p class="help">Join two or more development histories together</p>
@@ -183,7 +196,7 @@ export class Merge {
             <li><p class="help">-h,--help &nbsp;&nbsp;&nbsp;Show the message</p></li>
         </ul>`;
         createMessage(this._logRepository,'info',message);
-        throw new Error('');
+        return false
     }
 }
 

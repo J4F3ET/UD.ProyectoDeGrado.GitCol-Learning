@@ -1,4 +1,4 @@
-import { createMessage,findAllParents,getCommitStartPoint, getRepository } from "./utils.js";
+import { createMessage,findAllParents,getCommitStartPoint, getRepository, removeClassFromCommit } from "./utils.js";
 /**
  * @class Log
  * @classdesc This class is responsible for showing the commit logs
@@ -26,11 +26,17 @@ export class Log{
         n:{
             use:false,
             value:null,
-            callback:()=>this._configurations.n.use=true,
+            callback:()=>{
+                this._configurations.n.use=true
+                return true
+            }
         },
         oneline:{
             use:false,
-            callback:()=>this._configurations.oneline.use=true,
+            callback:()=>{
+                this._configurations.oneline.use=true
+                return true
+            }
         }
     };
     /**
@@ -84,6 +90,7 @@ export class Log{
      */
     async execute(dataComand){
         let storage = await getRepository(this._repositoryName);
+        
         this.resetConfig();
 
         if(!storage)
@@ -94,7 +101,8 @@ export class Log{
 
         setTimeout(()=>this.removeClassLog(),1000);
 
-        this.resolveConfiguration(dataComand);
+        if(!await this.resolveConfiguration(dataComand))
+            return
 
         const startPoint = await getCommitStartPoint(dataComand,storage.commits);
 
@@ -125,12 +133,10 @@ export class Log{
      */
     removeClassLog = async()=>{
         let storage = JSON.parse(sessionStorage.getItem(this._repositoryName));
-        storage.commits = storage.commits.map((commit)=>{
-            commit.class = commit.class.filter((cl)=>cl !== 'logging');
-            return commit;
-        });
+        storage.commits = await Promise.all(storage.commits.map(async (commit)=>{
+            return removeClassFromCommit(commit,'logging');
+        }));
         sessionStorage.setItem(this._repositoryName,JSON.stringify(storage));
-        
     }
     /**
      * @name resolveFiltersCommits
@@ -161,10 +167,11 @@ export class Log{
      * @param {string[]} dataComand 
      */
     async resolveConfiguration(dataComand){
+        let continueProces = true 
         dataComand.forEach((comand,index)=>{
             const clearComand = comand.replace(/^--?/,'');
             if(clearComand in this._configurations){
-                this._configurations[clearComand].callback();
+                continueProces = this._configurations[clearComand].callback();
                 if(this._configurations[clearComand].hasOwnProperty('value'))
                     this._configurations[clearComand].value = dataComand[index+1];
             }else if(/^\d+$/.test(clearComand)){
@@ -173,6 +180,7 @@ export class Log{
             }else if(index != dataComand.length - 1)
                 throw new Error('Invalid option');
         });
+        return continueProces
     }
     /**
      * @name resetConfig
@@ -196,7 +204,7 @@ export class Log{
      */
     async generatorMessage(infoHead,commits){
         let message = '';
-        commits.forEach(async(commit)=>{
+        new Set(commits).forEach(async(commit)=>{
             let tags = '';
             commit.tags.forEach(async(tag)=>{
                 if(tag === 'HEAD'){
@@ -221,10 +229,10 @@ export class Log{
      * @method
      */
     async generatorOnelineMessage(infoHead,commits){
-        let message = '';
-        commits.forEach(async (commit)=>{
+        let message = ''; 
+        new Set(commits).forEach((commit)=>{
             let tags = '';  
-            commit.tags.forEach(async(tag)=>{
+            commit.tags.forEach((tag)=>{
                 if(tag === 'HEAD'){
                     const head = infoHead.includes('detached')?infoHead.split(' ').pop():infoHead;
                     tags += `<b>HEAD</b>&nbsp;->&nbsp;${head},&nbsp`;
@@ -257,6 +265,6 @@ export class Log{
             <li class="help">[--oneline]&nbsp;&nbsp;&nbsp;This is a shorthand for "--pretty=oneline --abbrev-commit" used together.</li>
         </ul>`;
         createMessage(this._logRepository,"info",message);
-        throw new Error('');
+        return false
     }
 }
