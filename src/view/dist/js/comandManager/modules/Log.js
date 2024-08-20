@@ -1,4 +1,4 @@
-import { createMessage,findAllParents,getCommitStartPoint } from "./utils.js";
+import { createMessage,findAllParents,getCommitStartPoint, getRepository } from "./utils.js";
 /**
  * @class Log
  * @classdesc This class is responsible for showing the commit logs
@@ -82,43 +82,40 @@ export class Log{
      * @memberof! Log#
      * @method
      */
-    execute(dataComand){
-        let storage = JSON.parse(sessionStorage.getItem(this._repositoryName));
-        if(storage === null)
-            throw Error("Repository not found")
-        if(storage.commits.length === 0)
-            throw Error("Repository is empty")
+    async execute(dataComand){
+        let storage = await getRepository(this._repositoryName);
         this.resetConfig();
+
+        if(!storage)
+            throw Error("Repository not found")
+
+        if(!storage.commits.length)
+            throw Error("Repository is empty")
+
         setTimeout(()=>this.removeClassLog(),1000);
+
         this.resolveConfiguration(dataComand);
-        const startPoint = this.getCommitStartPoint(dataComand,storage.commits);
-        const listCommits = this.resolveFiltersCommits(storage.commits,startPoint);
-        const idListCommits = listCommits.map((commit)=>commit.id);
-        storage.commits = storage.commits.map((commit)=>{
-            if(idListCommits.includes(commit.id))
+
+        const startPoint = await getCommitStartPoint(dataComand,storage.commits);
+
+        if(!startPoint)
+            throw new Error(`ambiguous argument '${dataComand.pop()}': unknown revision or path not in the working tree.`)
+
+        const listCommits = await this.resolveFiltersCommits(storage.commits,startPoint);
+        const idListCommits = new Set(await Promise.all(listCommits.map(async commit => commit.id)));
+        
+        storage.commits = await Promise.all(storage.commits.map(async(commit)=>{
+            if(idListCommits.has(commit.id))
                 commit.class.push('logging');
             return commit
-        });
+        }));
+
         if(this._configurations.oneline.use)
             this.generatorOnelineMessage(storage.information.head,listCommits);
         else
             this.generatorMessage(storage.information.head,listCommits);
+
         sessionStorage.setItem(this._repositoryName,JSON.stringify(storage));
-    }
-    /**
-     * @name getCommitStartPoint
-     * @description Get the commit start point
-     * @param {string[]} dataComand Data of the command
-     * @param {Object[]} commits List of commits
-     * @returns {Object} Commit start point
-     * @method
-     * @memberof! Log#
-     */
-    getCommitStartPoint(dataComand,commits){
-        const startPoint = getCommitStartPoint(dataComand,commits);
-        if(startPoint === undefined)
-            throw Error(`ambiguous argument '${dataComand.pop()}': unknown revision or path not in the working tree.`)
-        return startPoint
     }
     /**
      * @name removeClassLog
@@ -126,7 +123,7 @@ export class Log{
      * @memberof! Log#
      * @callback removeClassLog
      */
-    removeClassLog = ()=>{
+    removeClassLog = async()=>{
         let storage = JSON.parse(sessionStorage.getItem(this._repositoryName));
         storage.commits = storage.commits.map((commit)=>{
             commit.class = commit.class.filter((cl)=>cl !== 'logging');
@@ -140,12 +137,12 @@ export class Log{
      * @description Resolve the filters that will be used in the commits
      * @param {JSON[]} commits List of commits
      * @param {JSON} commit Commit start point
-     * @returns {JSON[]} List of commits
+     * @returns {Promise<JSON[]>} List of commits
      * @memberof! Log#
      * @method
      */
-    resolveFiltersCommits(commits,commit){
-        const childs = findAllParents(commits,commit);
+    async resolveFiltersCommits(commits,commit){
+        const childs = await findAllParents(commits,commit);
         childs.push(commit)
         childs.sort((a,b)=>new Date(a.date)-new Date(b.date));
         if(this._configurations.n.use){
@@ -163,9 +160,9 @@ export class Log{
      * @method
      * @param {string[]} dataComand 
      */
-    resolveConfiguration(dataComand){
+    async resolveConfiguration(dataComand){
         dataComand.forEach((comand,index)=>{
-            const clearComand = comand.replace(/^--?/,'').charAt(0);
+            const clearComand = comand.replace(/^--?/,'');
             if(clearComand in this._configurations){
                 this._configurations[clearComand].callback();
                 if(this._configurations[clearComand].hasOwnProperty('value'))
@@ -183,7 +180,7 @@ export class Log{
      * @memberof! Log#
      * @callback resetConfig
      */
-    resetConfig=()=>{
+    resetConfig= async ()=>{
         this._configurations.n.use = false;
         this._configurations.n.value = null;
         this._configurations.oneline.use = false;
@@ -197,11 +194,11 @@ export class Log{
      * @memberof! Log#
      * @method
      */
-    generatorMessage(infoHead,commits){
+    async generatorMessage(infoHead,commits){
         let message = '';
-        commits.forEach((commit)=>{
+        commits.forEach(async(commit)=>{
             let tags = '';
-            commit.tags.forEach((tag)=>{
+            commit.tags.forEach(async(tag)=>{
                 if(tag === 'HEAD'){
                     const head = infoHead.includes('detached')?infoHead.split(' ').pop():infoHead;
                     tags += `<b>HEAD</b>&nbsp;->&nbsp;${head},&nbsp`;
@@ -223,11 +220,11 @@ export class Log{
      * @memberof! Log#
      * @method
      */
-    generatorOnelineMessage(infoHead,commits){
+    async generatorOnelineMessage(infoHead,commits){
         let message = '';
-        commits.forEach((commit)=>{
+        commits.forEach(async (commit)=>{
             let tags = '';  
-            commit.tags.forEach((tag)=>{
+            commit.tags.forEach(async(tag)=>{
                 if(tag === 'HEAD'){
                     const head = infoHead.includes('detached')?infoHead.split(' ').pop():infoHead;
                     tags += `<b>HEAD</b>&nbsp;->&nbsp;${head},&nbsp`;
@@ -244,7 +241,7 @@ export class Log{
      * @memberof! Log#
      * @callback callbackHelp
      */
-    callbackHelp=()=>{
+    callbackHelp= async()=>{
         let message = `
         <h5>Concept</h5>
         <p class="help">Show commit logs</p>
