@@ -5,7 +5,7 @@ import {
     deleteCommitsRecursivelyUntil,
     findAllExceptionCommitsToDelete,
     removeTagById,
-    findAllTags
+    existBranchOrEndPoint
 } from "./utils.js";
 /**
  * @class
@@ -311,7 +311,7 @@ export class Branch{
         const branch = values[0];
         if(branch === "")
             throw new Error('The name of the branch is empty');
-        if(this.existBranchOrEndPoint(storage.commits,branch))
+        if(existBranchOrEndPoint(storage.commits,branch))
             throw new Error(`The branch already exist or name "${branch}" invalid`);
         const head = currentHead(storage.commits);
         storage.commits = storage.commits.filter(commit => commit.id !== head.id);
@@ -321,11 +321,7 @@ export class Branch{
             storage.commits = this.changeDetachedCommitToCommit(head,storage.commits)
         return storage;
     };
-    existBranchOrEndPoint(commits,branch){
-        const tags = new Set([...findAllTags(commits),"detached","HEAD"])
-        const idCommits = new Set(commits.map(commit => commit.id))
-        return idCommits.has(branch) || tags.has(branch);
-    }
+    
     /**
      * @name callBackConfigRename
      * @memberof Branch#
