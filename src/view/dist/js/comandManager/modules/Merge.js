@@ -9,7 +9,10 @@ import {
     updateHeadCommit,
     moveTagToCommit,
     updateCommitToCommits,
-    removeClassFromCommit
+    removeClassFromCommit,
+    resolveCreateMergeRegister,
+    resolveMovilityTagInMerge,
+    getRepository
 } from "./utils.js"
 /**
  * @class
@@ -67,7 +70,8 @@ export class Merge {
      * @throws {Error} There are no branch master
      */
     async execute(dataComand){
-        let storage = JSON.parse(sessionStorage.getItem(this._dataRepository));
+
+        let storage = await getRepository(this._dataRepository);
 
         if(!storage)
             throw new Error('The repository is not initialized');
@@ -99,70 +103,12 @@ export class Merge {
             throw new Error('Already up to date');
 
         if(parentsCommitFetch.includes(commitHead.id))
-            storage = await this.resolveMovilityTag(storage, commitFetch, commitHead);
+            storage = await resolveMovilityTagInMerge(storage, commitFetch, commitHead);
         else
-            storage = await this.resolveCreateRegister(storage, commitFetch, commitHead);
+            storage = await resolveCreateMergeRegister(storage, commitFetch, commitHead);
 
         sessionStorage.setItem(this._dataRepository, JSON.stringify(storage));
     }
-    /**
-     * @memberof Merge#
-     * @name resolveMovilityTag
-     * @method
-     * @description Resolve the movility tag in case that the commit fetch is a parent of the commit head
-     * @param {Object} storage Data of the repository
-     * @param {JSON} commitFetch Commit fetch
-     * @param {JSON} commitHead Commit head
-     * @returns {Object} newStorage
-     */
-    async resolveMovilityTag(storage, commitFetch, commitHead){
-        let commits = storage.commits;
-
-        if(!storage.information.head.includes('detached')){
-            commits =  await moveTagToCommit(commits,commitHead,commitFetch,storage.information.head);
-
-            if(commitFetch.class.includes('detached-head'))
-                commits = await changeDetachedCommitToCommit(commitFetch,commits);
-
-        }else
-            storage.information.head = 'detached to '+commitFetch.id;
-
-        storage.commits = await updateHeadCommit(commits,commitHead, commitFetch);
-        return storage;
-    }
-    /**
-     * @memberof Merge#
-     * @name resolveCreateRegister
-     * @method
-     * @description Resolve the creation of the register in case that the commit fetch isn't parent of the commit head
-     * @param {Object} storage Data of the repository
-     * @param {JSON} commitFetch Commit fetch
-     * @param {JSON} commitHead Commit head
-     * @returns {Promise<Object>} newStorage
-     */
-    async resolveCreateRegister(storage, commitFetch, commitHead){
-        let {commits,commit} = createRegister(
-            storage.commits,
-            commitHead,
-            storage.information,
-            'merge'
-        );
-
-        commit.unions.push(commitFetch.id);
-        commits.push(commit);
-        commitHead= await removeTags(['HEAD'],commitHead);
-        commitHead =  await removeClassFromCommit(commitHead,"checked-out");
-        
-        if(!storage.information.head.includes('detached')){
-            commitHead = await removeTags([storage.information.head],commitHead);
-        }else
-            storage.information.head = 'detached to '+commit.id;
-        
-        storage.commits = await updateCommitToCommits(commits,commitHead);
-
-        return storage;
-    }
-
     /**
      * @memberof Merge#
      * @name resolveConfiguration
