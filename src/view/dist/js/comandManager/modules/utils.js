@@ -9,9 +9,9 @@
  * @description Remove tags from a commit
  * @param {String[]} tags Tags to be removed
  * @param {JSON} commit Commit to be removed the tag
- * @returns {JSON} Commit with the tag removed
+ * @returns {Promise<JSON>} Commit with the tag removed
  */
-function removeTags(tags,commit){
+async function removeTags(tags,commit){
     tags.forEach(tag => {
         commit.tags = commit.tags.filter(t => t != tag)
     });
@@ -24,12 +24,12 @@ function removeTags(tags,commit){
  * @description Remove tags in all repository
  * @param {String[]} tags Tags to be removed
  * @param {JSON[]} commits Array of commits
- * @returns {JSON[]} Commits with the tag removed
+ * @returns {Promise<JSON[]>} Commits with the tag removed
  */
-function removeTagsInRepository(tags,commits){
-    return commits.map((commit) => {
+async function removeTagsInRepository(tags,commits){
+    return await Promise.all(commits.map(async(commit) => {
         return removeTags(tags,commit)
-    })
+    }))
 }
 /**
  * @name removeTagOfCommit
@@ -39,14 +39,32 @@ function removeTagsInRepository(tags,commits){
  * @param {JSON[]} commits Array with the commits of the repository
  * @param {string} name Name of the tag to remove
  * @param {string} id Id of the commit
- * @returns {JSON[]} Array with the new commits of the repository
+ * @returns {Promise<JSON[]>} Array with the new commits of the repository
  */
-function removeTagById(commits,name,id){
-    return commits.map(commit => {
+async function removeTagById(commits,name,id){
+    return await Promise.all(commits.map(async commit => {
         if(commit.id === id && commit.tags.includes(name))
-            commit.tags = commit.tags.filter(tag => tag !== name);
+            commit = await removeTags([name],commit);
         return commit;
-    });
+    }));
+}
+async function implementTagsRemotesInRepository(refRemote,changesId,commits){
+    return await Promise.all(commits.map(async commit =>{
+        if(!changesId.some(id => id == commit.id)){
+
+            if(commit.tags.length)
+                commit.tags = commit.tags.filter(t => !t.includes(refRemote))
+
+        }else{
+
+            commit.tags = await Promise.all(commit.tags.map(async t => {
+                if(t == "HEAD") return t
+                return refRemote + "/" + t
+            }));
+
+        }
+        return commit
+    }))
 }
 /**
  * @name findAllTags
@@ -54,15 +72,17 @@ function removeTagById(commits,name,id){
  * @memberof utils
  * @description Find all tags in array to commits
  * @param {JSON[]} commits Array with the commits of the repository
- * @returns {String[]} Array with tags name
+ * @returns {Promise<String[]>} Array with tags name
  */
-function findAllTags(commits){
-    return commits
-        .flatMap(commit => commit.tags || [])
-        .filter(nameBranch => nameBranch != 'HEAD')
+async function findAllTags(commits){
+    const allTags = (await Promise.all(
+        commits.map(async commit => commit.tags || [])
+    )).flat();
+    const filteredTags = allTags.filter(nameBranch => nameBranch && nameBranch !== 'HEAD');
+    return filteredTags;
 }
 /**
- * @name findChildrens
+ * @name findAllChildrens
  * @function
  * @memberof utils
  * @description Find all the childrens of a commit by id
@@ -70,12 +90,12 @@ function findAllTags(commits){
  * @param {string} id Id of the commit
  * @param {JSON[]} childrens Array with the childrens of the commit
  */
-function findAllChildrens(commits,id,childrens = []){
+async function findAllChildrens(commits,id,childrens = []){
     const childrensFisrtGen = commits
         .filter(commitStorage => commitStorage.parent == id);
     if(childrensFisrtGen.length==0)
         return childrens;
-    childrensFisrtGen.forEach(commit => {
+    childrensFisrtGen.forEach(async commit => {
         childrens.push(commit);
         findAllChildrens(commits,commit.id,childrens);
     });
@@ -89,17 +109,18 @@ function findAllChildrens(commits,id,childrens = []){
  * @param {JSON[]} commits Array of commits currents to repository
  * @param {JSON} commit Object representation a commit(register to repository)
  * @param {JSON[]} parents Array of commits that beloging to param commit
- * @return {JSON[]} Array of commits that beloging to param commit
+ * @return {Promise<JSON[]>} Array of commits that beloging to param commit
  */
-function findAllParents(commits,commit,parents=[]){
+async function findAllParents(commits,commit,parents=[]){
+    if (!commit) return []
     const parentsCommits = commits.filter((comt)=>
             comt.id == commit.parent || commit.unions?.includes(comt.id)
         );
     if(parentsCommits.length === 0)
         return parents;
-    parentsCommits.forEach((parent)=>{
+    parentsCommits.forEach(async (parent)=>{
         parents.push(parent);
-        parents.concat(...findAllParents(commits,parent,parents));
+        parents.concat(...(await findAllParents(commits,parent,parents)));
     });
     return parents;
 }
@@ -126,11 +147,13 @@ function findLatestCommitsOfBranchs(commits){
  * @description Find the commits that are different between two repositories
  * @param {JSON[]} commitsDestination Array of commits of the destination(to) 
  * @param {JSON[]} commitsOrigin Array of commits of the origin(from)
- * @returns {JSON[]} Array of commits that are different between the two repositories
+ * @returns {Promise<JSON[]>} Array of commits that are different between the two repositories
  */
-function findCommitsDiffBetweenRepositories(commitsDestination,commitsOrigin){
+async function findCommitsDiffBetweenRepositories(commitsDestination,commitsOrigin){
     const commitsDiff = [];
-    const destinationCommitId = new Set(commitsDestination.map(commit => commit.id));
+    const destinationCommitId = new Set(
+        await Promise.all(commitsDestination.map(async commit => commit.id))
+    );
     commitsOrigin.forEach(commitOrigin => {
         if(!destinationCommitId.has(commitOrigin.id))
             commitsDiff.push(commitOrigin);
@@ -144,15 +167,16 @@ function findCommitsDiffBetweenRepositories(commitsDestination,commitsOrigin){
  * @description Get the start-point requested by the user
  * @param {string[]} dataComand command data
  * @param {JSON[]} commits list of commits
- * @returns {JSON|undefined} Commit object or undefined if the commit does not exist
+ * @returns {Promise<JSON|undefined>} Commit object or undefined if the commit does not exist
  */
-function getCommitStartPoint(dataComand,commits){
+async function getCommitStartPoint(dataComand,commits){
     const lastData = dataComand[dataComand.length -1];
     let startPoint = commits.find((commit)=>commit.id === lastData);
     if(startPoint === undefined)
         startPoint = commits.find((commit)=>commit.tags.includes(lastData));
     return startPoint;
 }
+const getRepository = async (key)=> JSON.parse(sessionStorage.getItem(key))
 /**
  * @name createMessage
  * @function
@@ -162,15 +186,84 @@ function getCommitStartPoint(dataComand,commits){
  * @param {String} message Message to be added to the log
  * @example createMessage('info','<div class="files"><h5>Add files to the commit</h5><ul><li>>index.html</li><li>>style.css</li><li>>script.js</li></ul></div>')
  */
-function createMessage(nameRefLog='log',tag='info',message){
-    if(sessionStorage.getItem(nameRefLog)===null)
+async function createMessage(nameRefLog='log',tag='info',message){
+    const log = await getRepository(nameRefLog);
+    if(!log)
         return;
-    const log = JSON.parse(sessionStorage.getItem(nameRefLog));
     log.push({tag,message});
     sessionStorage.setItem(nameRefLog,JSON.stringify(log));
 }
-function resolveIsHeadNull(repository,tagDefault = "master"){
-    const tags = findAllTags(repository.commits)
+    /**
+     * @memberof utils
+     * @name resolveCreateMergeRegister
+     * @function
+     * @description Resolve the creation of the register in case that the commit fetch isn't parent of the commit head
+     * @param {Object} storage Data of the repository
+     * @param {JSON} commitFetch Commit fetch
+     * @param {JSON} commitHead Commit head
+     * @returns {Promise<Object>} newStorage
+     */
+    async function resolveCreateMergeRegister(storage, commitFetch, commitHead){
+        let {commits,commit} = await createRegister(
+            storage.commits,
+            commitHead,
+            storage.information,
+            'merge'
+        );
+
+        commit.unions.push(commitFetch.id);
+        commits.push(commit);
+        commitHead= await removeTags(['HEAD'],commitHead);
+        commitHead =  await removeClassFromCommit(commitHead,"checked-out");
+        
+        if(!storage.information.head.includes('detached')){
+            commitHead = await removeTags([storage.information.head],commitHead);
+        }else
+            storage.information.head = 'detached to '+commit.id;
+        
+        storage.commits = await updateCommitToCommits(commits,commitHead);
+
+        if(commitFetch.class.includes("detached-head"))
+            storage.commits = await changeDetachedCommitToCommit(commitFetch,storage.commits)
+
+        return storage;
+    }
+    /**
+     * @memberof utils
+     * @name resolveMovilityTag
+     * @method
+     * @description Resolve the movility tag in case that the commit fetch is a parent of the commit head
+     * @param {Object} storage Data of the repository
+     * @param {JSON} commitFetch Commit fetch
+     * @param {JSON} commitHead Commit head
+     * @returns {Object} newStorage
+     */
+    async function resolveMovilityTagInMerge(storage, commitFetch, commitHead){
+        let commits = storage.commits;
+
+        if(!storage.information.head.includes('detached')){
+            commits =  await moveTagToCommit(commits,commitHead,commitFetch,storage.information.head);
+
+            if(commitFetch.class.includes('detached-head'))
+                commits = await changeDetachedCommitToCommit(commitFetch,commits);
+
+        }else
+            storage.information.head = 'detached to '+commitFetch.id;
+
+        storage.commits = await updateHeadCommit(commits,commitHead, commitFetch);
+        return storage;
+    }
+/**
+ * @name resolveIsHeadNull
+ * @function
+ * @memberof utils
+ * @description Solution if HEAD is null or current not expecificate
+ * @param {JSON} repository Object repository
+ * @param {string} tagDefault Name of the deful branch or tag, value default is "master"
+ * @returns {Promise<JSON>} repository object
+ */
+async function resolveIsHeadNull(repository,tagDefault = "master"){
+    const tags = await findAllTags(repository.commits)
     const master = tags.find(t => t.includes(tagDefault))
 
     if(!master)
@@ -189,6 +282,7 @@ function resolveIsHeadNull(repository,tagDefault = "master"){
             break
         }
     }
+
     return repository
 }
 /**
@@ -198,9 +292,9 @@ function resolveIsHeadNull(repository,tagDefault = "master"){
  * @description Update a commit in the local storage
  * @param {JSON[]} commits Array of commits
  * @param {JSON} newCommit New commit to be updated in the local storage
- * @returns {JSON[]} Commit updated in the local storage
+ * @returns {Promise<JSON[]>} Commit updated in the local storage
  */
-function updateCommitToCommits(commits,newCommit){
+async function updateCommitToCommits(commits,newCommit){
     commits.forEach(oldCommit => {
         if(oldCommit.id == newCommit.id){
             Object.assign(oldCommit, newCommit);
@@ -215,10 +309,11 @@ function updateCommitToCommits(commits,newCommit){
  * @description Remove a class from a commit
  * @param {JSON} commit Commit to be removed the class
  * @param {String} classToRemove Class to be removed
- * @returns {String[]} Array to the class with classToRemove removed
+ * @returns {Promise<JSON>} Array to the class with classToRemove removed
  */
-function removeClassFromCommit(commit,classToRemove){
-    return commit.class = commit.class.filter(classC => classC !== classToRemove);
+async function removeClassFromCommit(commit,classToRemove){
+    commit.class = commit.class.filter(classC => classC !== classToRemove);
+    return commit
 }
 /**
  * @name removeManyClassFromCommit
@@ -249,7 +344,20 @@ function removeClassInRepository(commits,classToRemove){
         return commit
     })
 }
-
+/**
+ * @name existBranchOrEndPoint
+ * @function
+ * @memberof utils
+ * @description Remove a class in all repository
+ * @param {JSON[]} commits Commits is array to the repository
+ * @param {String} branch Name the tag(branch)
+ * @returns {Promise<boolean>} True if exist and false not exits 
+ */
+async function existBranchOrEndPoint(commits,branch){
+    const tags = new Set([...(await findAllTags(commits)),"detached","HEAD"])
+    const idCommits = new Set(await Promise.all(commits.map(async commit => commit.id)))
+    return idCommits.has(branch) || tags.has(branch);
+}
 // *** SYSTEM OF RAMIFICATION BY COMMITS(REGISTERS)***
 /**
  * @name SPACE_BETWEEN_COMMITS_X
@@ -277,9 +385,9 @@ const SPACE_BETWEEN_COMMITS_Y = 80;
  * @param {JSON[]} commits Array of commits
  * @param {Int} parentCx Coordenate "X" of the parent commit(HEAD)
  * @param {Int} parentCy Coordenate "Y" of the parent commit(HEAD)
- * @returns {JSON} Array of commits and the location of the new commit, the return Object contains whit the key "commits" and "location"
+ * @returns {Promise<JSON>} Array of commits and the location of the new commit, the return Object contains whit the key "commits" and "location"
  */
-function resolveLocationCommit(commits,parentCx,parentCy){
+async function resolveLocationCommit(commits,parentCx,parentCy){
     //Case 1
     const possibleX = parentCx + SPACE_BETWEEN_COMMITS_X;
     if(
@@ -299,7 +407,7 @@ function resolveLocationCommit(commits,parentCx,parentCy){
         .filter(commit => commit.cx == parentCx && commit.cy != parentCy);
         
     if(commitThisUbicationOnParentY.length == 0){
-        const possibleY = generateLocationCommitCase2(
+        const possibleY = await generateLocationCommitCase2(
             parentCy,
             commitsInPossiteY,
             commitsInNegativeY
@@ -307,7 +415,7 @@ function resolveLocationCommit(commits,parentCx,parentCy){
         return {commits,location:[possibleX,possibleY]};
     }
     //Case 3
-    const response = generateLocationCommitCase3(
+    const response = await generateLocationCommitCase3(
         commits,
         parentCy,
         commitsInPossiteY,
@@ -323,9 +431,9 @@ function resolveLocationCommit(commits,parentCx,parentCy){
  * @param {Int} parentCy Coordenate "Y" of the parent commit(HEAD)
  * @param {JSON[]} commitsInPossiteY Commits that are above the "X" possible location
  * @param {JSON[]} commitsInNegativeY Commits that are below the "X" possible location
- * @returns {Int} Coordenate "Y" of the new commit
+ * @returns {Promise<Int>} Coordenate "Y" of the new commit
  */
-function generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativeY){
+async function generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativeY){
     if(commitsInPossiteY.length == 0)
         return parentCy - SPACE_BETWEEN_COMMITS_Y;
 
@@ -346,13 +454,13 @@ function generateLocationCommitCase2(parentCy,commitsInPossiteY,commitsInNegativ
  * @param {Int} parentCy Coordenate "Y" of the parent commit(HEAD)
  * @param {JSON[]} commitsInPossiteY array of commits that are above the "X" possible location 
  * @param {JSON[]} commitsInNegativeY array of commits that are below the "X" possible location 
- * @returns {JSON} Coordenate "Y" of the new commit and the array of commits updated, the return Object contains whit the key "commits" and "cy"
+ * @returns {Promise<JSON>} Coordenate "Y" of the new commit and the array of commits updated, the return Object contains whit the key "commits" and "cy"
  */
-function generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsInNegativeY){
+async function generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsInNegativeY){
     if(commitsInPossiteY.length <= commitsInNegativeY.length){
         const SPACE_BETWEEN_COMMITS_Y_NEGATIVE = SPACE_BETWEEN_COMMITS_Y * (-1)
-        commitsInPossiteY.forEach(commit => {
-            commits = updateLocationChildsOfCommit(
+        commitsInPossiteY.forEach(async commit => {
+            commits = await updateLocationChildsOfCommit(
                 commits,
                 SPACE_BETWEEN_COMMITS_Y_NEGATIVE,
                 commit.id
@@ -360,8 +468,8 @@ function generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsI
         });
         return {commits,cy:(parentCy - SPACE_BETWEEN_COMMITS_Y)}; 
     }else{  
-        commitsInNegativeY.forEach(commit => {
-            commits = updateLocationChildsOfCommit(
+        commitsInNegativeY.forEach(async commit => {
+            commits = await updateLocationChildsOfCommit(
                 commits,
                 SPACE_BETWEEN_COMMITS_Y,
                 commit.id);
@@ -377,30 +485,30 @@ function generateLocationCommitCase3(commits,parentCy,commitsInPossiteY,commitsI
  * @param {JSON[]} commits Array of commits
  * @param {Int} SPACE_BETWEEN_COMMITS_Y Space between commits in the "Y" axis(positive or negative)
  * @param {String} idCommitParent Id of the commit parent
- * @returns {JSON[]} Array of commits updated
+ * @returns {Promise<JSON[]>} Array of commits updated
  */
-function updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y,idCommitParent){
+async function updateLocationChildsOfCommit(commits,SPACE_BETWEEN_COMMITS_Y,idCommitParent){
     const childs = commits.filter(commit => commit.parent == idCommitParent);
     const commitParent = commits.find(c => c.id == idCommitParent);
     commitParent.cy = commitParent.cy + SPACE_BETWEEN_COMMITS_Y;
     if(childs.length != 0){
-        childs.forEach(child => {
-            commits = updateLocationChildsOfCommit(
+        childs.forEach(async child => {
+            commits = await updateLocationChildsOfCommit(
                 commits,
                 SPACE_BETWEEN_COMMITS_Y,
                 child.id);
         });
     }
-    return updateCommitToCommits(commits,commitParent);
+    return await updateCommitToCommits(commits,commitParent);
 }
 /**
  * @name createCod
  * @function
  * @memberof utils
  * @description Create a random code of 7 characters
- * @returns {string} Returns a random code of 7 characters
+ * @returns {Promise<string>} Returns a random code of 7 characters
  */
-function createCod() {   
+async function createCod() {   
     const dictionary = 'abcdefghijklmnopqrstuvwxyz0123456789';
     let code = '';
     for (let i = 0; i < 7; i++) {
@@ -417,28 +525,56 @@ function createCod() {
  * @param {JSON[]} commits Array of commits
  * @param {JSON} parent  Commit parent to create the new commit
  * @param {String} currentHeadBranch Name of the current head branch
- * @returns {JSON} Array of commits and JSON the new commit, the return Object contains whit the key "commits" and "commit"
+ * @returns {Promise<JSON>} Array of commits and JSON the new commit, the return Object contains whit the key "commits" and "commit"
  */
-function createRegister(commits,parent,information,message){
+async function createRegister(commits,parent,information,message){
     let tags = [information.head,"HEAD"];
     const classList = ["commit","checked-out"];
     if(information.head.includes("detached")||parent.class.includes("detached-head")){
         tags = tags.filter(tag => tag != information.head);
         classList.push("detached-head");
     }
-    const response = resolveLocationCommit(commits,parent.cx,parent.cy);
-    return {commits:(response.commits),commit:{
-        id: createCod(),
+    const response = await resolveLocationCommit(commits,parent.cx,parent.cy);
+    return {
+        commits:(response.commits),
+        commit:await newRegister(
+            response.location[0],
+            response.location[1],
+            parent.id,
+            message,
+            tags,
+            classList
+        )
+    }
+}
+/**
+ * @name newRegister
+ * @function
+ * @memberof utils
+ * @description Create a new commit
+ * @param {int} cx Location in axis x
+ * @param {int} cy  Location in axis y
+ * @param {string} parent  Id the parent
+ * @param {string} message Meesage of commit
+ * @param {string[]} tags Array of the branchs
+ * @param {string[]} classList Array of the class
+ * @param {string} [autor=null] Autor name of commit
+ * @param {string[]} [unions=[]] Array of the id commits of the commit
+ * @returns {Promise<Object>} JSON the new commit
+ */
+async function newRegister(cx,cy,parent,message,tags,classList,autor = null,unions =[]){
+    return {
+        id: await createCod(),
         message,
-        parent: parent.id,
-        unions: [],
+        parent,
+        unions,
         tags,
-        class: classList,
-        autor: information.config.user.autor??JSON.parse(sessionStorage.getItem('config')).user.autor??null,
+        class:classList,
+        autor: autor??JSON.parse(sessionStorage.getItem('config')).user.autor??null,
         date: new Date().toLocaleString(),
-        cx:response.location[0],
-        cy:response.location[1]
-    }};
+        cx,
+        cy
+    }
 }
 /**
  * @name findAllExceptionCommitsToDelete
@@ -488,7 +624,7 @@ function deleteCommitsRecursivelyUntil(commits,commitObj,pointsObjetive){
  * @memberof utils
  * @description Returns the current head of the repository
  * @param {Object[]} commits Data of the local storage of the repository
- * @returns {JSON} Data of the current head
+ * @returns {Promise<JSON>} Data of the current head
  */
 function currentHead(commits) {
     return commits.find(element => element.tags.includes('HEAD')); 
@@ -500,20 +636,20 @@ function currentHead(commits) {
  * @description Change the class of the commit "detached-head" recursively to the parent commit
  * @param {JSON} commit Commit to change the class
  * @param {JSON[]} commits Array of commits
- * @returns {JSON[]} Array of commits with the new class
+ * @returns {Promise<JSON[]>} Array of commits with the new class
  */
-function changeDetachedCommitToCommit(commit,commits){
-    if(!commit.class.includes("detached-head"))
+async function changeDetachedCommitToCommit(commit,commits){
+    if(!commit ||!commit.class.includes("detached-head"))
         return commits
     let parent;
-    const newListCommits = commits.map(c=>{
+    const newListCommits =await Promise.all(commits.map(async c=>{
         if(c.id == commit.id)
-            c.class = c.class.filter(item=> item !="detached-head")
+            c = await removeClassFromCommit(commit,"detached-head")
         if(c.id == commit.parent)
             parent = c
         return c
-    })
-    return changeDetachedCommitToCommit(parent,newListCommits);
+    }))
+    return await changeDetachedCommitToCommit(parent,newListCommits);
 }
 /**
  * @name updateHeadCommit
@@ -523,15 +659,15 @@ function changeDetachedCommitToCommit(commit,commits){
  * @param {JSON[]} commits Array of commits
  * @param {JSON} oldHead Old head of the repository
  * @param {JSON} newHead New head of the repository
- * @returns {JSON[]} Array of commits updated
+ * @returns {Promise<JSON[]>} Array of commits updated
  */
-function updateHeadCommit(commits,oldHead,newHead){
+async function updateHeadCommit(commits,oldHead,newHead){
     newHead.tags.push('HEAD');
     oldHead.tags = oldHead.tags.filter(tag => tag != 'HEAD');
     newHead.class.push('checked-out');
-    oldHead.class = oldHead.class.filter(classC => classC != 'checked-out');
-    commits = updateCommitToCommits(commits,newHead);
-    commits = updateCommitToCommits(commits,oldHead);
+    oldHead = await removeClassFromCommit(oldHead,'checked-out');
+    commits = await updateCommitToCommits(commits,newHead);
+    commits = await updateCommitToCommits(commits,oldHead);
     return commits;
 }
 /**	
@@ -543,13 +679,13 @@ function updateHeadCommit(commits,oldHead,newHead){
  * @param {JSON} startCommit Commit where the tag is located
  * @param {JSON} destinationCommit Commit where the tag is going to be moved
  * @param {String} tag Tag to be moved
- * @returns {JSON[]} Array of commits updated
+ * @returns {Promise<JSON[]>} Array of commits updated
  */
-function moveTagToCommit(commits,startCommit,destinationCommit,tag){
+async function moveTagToCommit(commits,startCommit,destinationCommit,tag){
     startCommit.tags = startCommit.tags.filter(t => t != tag);
     destinationCommit.tags.push(tag);
-    commits = updateCommitToCommits(commits,startCommit);
-    commits = updateCommitToCommits(commits,destinationCommit);
+    commits = await updateCommitToCommits(commits,startCommit);
+    commits = await updateCommitToCommits(commits,destinationCommit);
     return commits;
 }
 
@@ -562,31 +698,31 @@ function moveTagToCommit(commits,startCommit,destinationCommit,tag){
  * @param {JSON[]} commitsDestination Array of commits destination of the changes
  * @param {JSON[]} commitsOrigin Array of commits origin
  * @param {String} nameBranch Name branch
- * @returns {JSON[]} Array of commits changes between branch
+ * @returns {Promise<JSON[]>} Array of commits changes between branch
  */
-function findChangesBetweenBranchs(commitsDestination,commitsOrigin,nameBranch){
+async function findChangesBetweenBranchs(commitsDestination,commitsOrigin,nameBranch){
     const commitHeadOrigin = commitsOrigin.find(
         (commit) => commit.tags.includes(nameBranch)
     )
 
-    const historyBranchOrigin =  [...findAllParents(
+    const historyBranchOrigin =  [...(await findAllParents(
         commitsOrigin,
         commitHeadOrigin
-    ),commitHeadOrigin]
+    )),commitHeadOrigin]
     
-    const commitsDiffGlobal = findCommitsDiffBetweenRepositories(
+    const commitsDiffGlobal = await findCommitsDiffBetweenRepositories(
         commitsDestination,
         commitsOrigin
     )
     
-    const commitsEquals = findCommitsEqualBetweenRepositories(
+    const commitsEquals = await findCommitsEqualBetweenRepositories(
         commitsDestination,
         historyBranchOrigin
     )
     
-    const idCommitLinkDestination = findCommitLink(
-        commitsEquals.map(commit => commit.id),
-        commitsDiffGlobal.map(commit => commit.parent)
+    const idCommitLinkDestination = await findCommitLink(
+        await Promise.all(commitsEquals.map(async commit => commit.id)),
+        await Promise.all(commitsDiffGlobal.map(async commit => commit.parent))
     )
     
     const commitHeadDestination = 
@@ -594,13 +730,13 @@ function findChangesBetweenBranchs(commitsDestination,commitsOrigin,nameBranch){
         commitsDestination.find(commit => commit.id == idCommitLinkDestination)
         
     const historyBranchDestination  = commitHeadDestination?  [
-        ...findAllParents(commitsDestination,commitHeadDestination),
+        ...(await findAllParents(commitsDestination,commitHeadDestination)),
         commitHeadDestination
-    ]:findAllParents(commitsDestination,commitHeadDestination)
+    ]:await findAllParents(commitsDestination,commitHeadDestination)
 
-    return findCommitsDiffBetweenRepositories(
+    return await findCommitsDiffBetweenRepositories(
         commitsDestination,
-        findCommitsDiffBetweenRepositories(
+        await findCommitsDiffBetweenRepositories(
             historyBranchDestination,
             historyBranchOrigin
         )
@@ -608,17 +744,17 @@ function findChangesBetweenBranchs(commitsDestination,commitsOrigin,nameBranch){
 
 }
 /**	
- * @name findChangesBetweenBranchs
+ * @name mergeChangesInBranchs
  * @function
  * @memberof utils
  * @description Find changes between repositories using branch especificated
  * @param {JSON[]} commitsDestination Array of commits destination
  * @param {JSON[]} commitsOrigin Array of commits origin white the changes
  * @param {String} nameBranch Name of branch to merge
- * @returns {{changesId: Set<String>, repository: JSON[]}} Array of commits(repository)
+ * @returns {Promise<{changesId: Set<String>, repository: JSON[]}>} Array of commits(repository)
  */
-function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch){
-    const commitsChanges = findChangesBetweenBranchs(
+async function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch){
+    const commitsChanges = await findChangesBetweenBranchs(
         commitsDestination,
         commitsOrigin,
         nameBranch
@@ -630,7 +766,7 @@ function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch){
     
     return {
         changesId : new Set(commitsChanges.map(c=>c.id)),
-        repository :  addChangesRecursivelyToRepository(
+        repository :  await addChangesRecursivelyToRepository(
             commitsDestination,
             commitsChanges
         )
@@ -643,9 +779,9 @@ function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch){
  * @description Add changes in commits(repository) array
  * @param {JSON[]} commits Array of commits destination of the changes
  * @param {JSON[]} changes Array of changes
- * @returns {JSON[]} Array of commits(repository) with changes implemented
+ * @returns {Promise<JSON[]>} Array of commits(repository) with changes implemented
  */
-function addChangesRecursivelyToRepository(commits,changes){
+async function addChangesRecursivelyToRepository(commits,changes){
     if(changes.length == 0)
         return commits
     const commitIdSet = new Set(
@@ -671,9 +807,9 @@ function addChangesRecursivelyToRepository(commits,changes){
     }
     const change = changes.find(c =>c.parent == idParent)
     const parent = commits.find(c => c.id == idParent)
-    const responseCommits = addCommitChangeToBranch(commits,parent,change)
+    const responseCommits = await addCommitChangeToBranch(commits,parent,change)
     const newChanges = changes.filter(c => c.id != change.id)
-    return addChangesRecursivelyToRepository(responseCommits,newChanges)
+    return await addChangesRecursivelyToRepository(responseCommits,newChanges)
 }
 /**	
  * @name addCommitChangeToBranch
@@ -683,10 +819,10 @@ function addChangesRecursivelyToRepository(commits,changes){
  * @param {JSON[]} commitsDestination Array of commits destination of the changes
  * @param {JSON} parent Commit parent of change(commit)
  * @param {JSON} commit Commit change(commit)
- * @returns {JSON[]} Array of commits(repository) with change implemented
+ * @returns {Promise<JSON[]>} Array of commits(repository) with change implemented
  */
-function addCommitChangeToBranch(commitsDestination,parent = {cx:-30,cy:334},commit){
-    const response = resolveLocationCommit(
+async function addCommitChangeToBranch(commitsDestination,parent = {cx:-30,cy:334},commit){
+    const response = await resolveLocationCommit(
         commitsDestination,
         parent.cx,
         parent.cy
@@ -696,17 +832,30 @@ function addCommitChangeToBranch(commitsDestination,parent = {cx:-30,cy:334},com
     commit.class.push("detached-head")
     return [...response.commits,commit]
 }
-
-function mergeChangesInRepositories(commitsDestination,commitsOrigin){
-    const tags = findAllTags(commitsOrigin)
-    return tags.reduce(
-        (acc, t) => {
-            const { repository, changesId } = mergeChangesInBranchs(acc.repository, commitsOrigin, t);
+/**	
+ * @name mergeChangesInRepositories
+ * @function
+ * @memberof utils
+ * @description Merger changes in all repository or tags(branchs) especificate
+ * @param {JSON[]} commitsDestination Array of commits destination of the changes
+ * @param {JSON[]} commitsOrigin Array of commits origin of the changes
+ * @param {Promise<Strign[]>|null} tagsPromise Names of branch
+ * @returns {Promise<{changesId:string[],repository:JSON[]}>} changesId is array with ids, repository is array of commits
+ */
+async function mergeChangesInRepositories(
+    commitsDestination,
+    commitsOrigin,
+    tagsPromise = findAllTags(commitsOrigin)
+){
+    const tags = await tagsPromise
+    return await tags.reduce(async(accPromise, t) => {
+            const acc =  await accPromise
+            const { repository, changesId } = await mergeChangesInBranchs(acc.repository, commitsOrigin, t);
             acc.changesId.push(...changesId.values());
             acc.repository = repository;
             return acc;
         },
-        { changesId: [], repository: commitsDestination }
+        Promise.resolve({ changesId: [], repository: commitsDestination })
     );
 }
 /**
@@ -716,31 +865,41 @@ function mergeChangesInRepositories(commitsDestination,commitsOrigin){
  * @description Find the commits that are different between two repositories
  * @param {JSON[]} commitsDestination Array of commits of the destination(to) 
  * @param {JSON[]} commitsOrigin Array of commits of the origin(from)
- * @returns {JSON[]} Array of commits that are equals between the two repositories
+ * @returns {Promise<JSON[]>} Array of commits that are equals between the two repositories
  */
-function findCommitsEqualBetweenRepositories(commitsDestination,commitsOrigin){
+async function findCommitsEqualBetweenRepositories(commitsDestination,commitsOrigin){
     const commitsEqual = [];
-    const destinationCommitId = new Set(commitsDestination.map(commit => commit.id));
-    commitsOrigin.forEach(commitOrigin => {
+    const destinationCommitId = new Set(
+        await Promise.all(commitsDestination.map(async commit => commit.id))
+    );
+    (commitsOrigin.forEach(commitOrigin => {
         if(destinationCommitId.has(commitOrigin.id))
             commitsEqual.push(commitOrigin);
-    });
+    }));
     return commitsEqual;
 }
-
-function findCommitLink(idPotentialParents,idParentsOfChildrens){
+/**
+ * @name findCommitLink
+ * @function
+ * @memberof utils
+ * @description Find the commit that are link between two array of commits
+ * @param {JSON[]} idPotentialParents Array of commits of potential parents
+ * @param {JSON[]} idParentsOfChildrens Array of commits of parents of the HEAD  
+ * @returns {Promise<JSON|null>} Commit link or null
+ */
+async function findCommitLink(idPotentialParents,idParentsOfChildrens){
     return idParentsOfChildrens.find(
-        idParentChild => idPotentialParents.includes(idParentChild)
+        idParentOfChild => idPotentialParents.includes(idParentOfChild)
     )|| null
 }
 
 export {
     changeDetachedCommitToCommit,
-    createCod,
     createMessage,
     createRegister,
     currentHead,
     deleteCommitsRecursivelyUntil,
+    existBranchOrEndPoint,
     findAllChildrens,
     findAllExceptionCommitsToDelete,
     findAllParents,
@@ -748,9 +907,12 @@ export {
     findCommitsDiffBetweenRepositories,
     findLatestCommitsOfBranchs,
     getCommitStartPoint,
+    getRepository,
     mergeChangesInBranchs,
     mergeChangesInRepositories,
     moveTagToCommit,
+    newRegister,
+    implementTagsRemotesInRepository,
     removeClassFromCommit,
     removeClassInRepository,
     removeTagById,
@@ -758,6 +920,8 @@ export {
     removeTagsInRepository,
     resolveLocationCommit,
     resolveIsHeadNull,
+    resolveMovilityTagInMerge,
+    resolveCreateMergeRegister,
     updateCommitToCommits,
     updateHeadCommit
 }

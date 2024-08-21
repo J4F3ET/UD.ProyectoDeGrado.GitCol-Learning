@@ -1,8 +1,9 @@
 import { 
     createMessage,
-    findAllTags,
     findCommitsDiffBetweenRepositories,
+    getRepository,
     mergeChangesInRepositories,
+    implementTagsRemotesInRepository,
     resolveIsHeadNull
 } from "./utils.js";
 /**
@@ -60,44 +61,47 @@ export class Fetch {
         this._logRepository = logRepository
         this._remoteRepository = remoteRepository
     }
-    resolveTags(changesId,commits){
-        commits.forEach(commit =>{
-            if(!commit.tags.length || !changesId.some(id => id == commit.id))
-                return 
-            commit.tags = commit.tags.map(t => {
-                if(t == "HEAD")
-                    return t
-                return this._remoteRepository.split("-")[0]+ "/" + t
-            });
-        })
-        return commits
-    }
-    execute(data){
+
+    async execute(data){
         
-        const repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
-        const remote = JSON.parse(sessionStorage.getItem(this._remoteRepository));
+        const repository = await getRepository(this._dataRepository);
+        const remote = await getRepository(this._remoteRepository);
 
         if(!repository || !remote)
             throw new Error('The repository is not initialized<br>Please initialize the repository first');
 
-        if(!findCommitsDiffBetweenRepositories(repository.commits, remote.commits).length)
+        if(!(await findCommitsDiffBetweenRepositories(repository.commits, remote.commits)).length)
             return createMessage(this._logRepository,'info','Already up to date.');
 
-        repository.commits = this.resolveTags(...Object.values(
-            mergeChangesInRepositories(repository.commits,remote.commits)
+        repository.commits = await implementTagsRemotesInRepository(
+            this._remoteRepository.split("-")[0],
+            ...Object.values(await mergeChangesInRepositories(
+                repository.commits,
+                remote.commits
+            )
         ))
-
+        
         sessionStorage.setItem(
             this._dataRepository,
             JSON.stringify(
                 !repository.information.head
-                    ?resolveIsHeadNull(repository)
+                    ?await resolveIsHeadNull(repository)
                     :repository
                 )
         )
     }
 
-    callbackHelp(){
-        createMessage('info', 'The pull command is used to fetch from and integrate with another repository or a local branch', 'pull [options] [<repository> [<refspec>…​]]')
+    callbackHelp = async()=>{
+        createMessage('info', `
+            <h5>Concept</h5>
+            <p class="help">Download objects and refs from another repository</p>
+            <h5>Syntax</h5>
+            <p class="help">git fetch</p>
+            <p class="help">git fetch -h</p>
+            <h5>Configurations</h5>
+            <ul>
+                <li><p class="help">-h,--help &nbsp;&nbsp;&nbsp;Show the message</p></li>
+            </ul>`
+        )
     }
 }

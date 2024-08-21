@@ -2,6 +2,7 @@ import { SocketHandler } from "../SocketHandler.js";
 import { 
     createMessage,
     findAllTags,
+    getRepository,
     mergeChangesInBranchs,
     removeClassInRepository,
     removeTags,
@@ -68,17 +69,20 @@ export class Push {
         this._socketHandler = new SocketHandler(remoteRepository)
     }
 
-    execute(dataComand){
-        const remote = JSON.parse(sessionStorage.getItem(this._remoteRepository));
-        const repository = JSON.parse(sessionStorage.getItem(this._dataRepository));
+    async execute(dataComand){
+        const remote = await getRepository(this._remoteRepository);
+        const repository = await getRepository(this._dataRepository);
+
         if(!repository||!remote)
             throw new Error('The repository does not exist')
+
         const values = dataComand.filter(data => data.charAt(0) !== '-')
+
+        const branchsLocal = await findAllTags(repository.commits)
+        const branchsRemote = await findAllTags(remote.commits)
         const refRemote = values[0]||'origin'
         const refBranch = values[1]|| repository.information.head
-        const branchsLocal = findAllTags(repository.commits)
-        const branchsRemote = findAllTags(remote.commits)
-
+        
         const findCommit = (commit) => commit.tags.includes(refBranch)
 
         let continueExecution = true;
@@ -88,6 +92,7 @@ export class Push {
             if(!continueExecution)
                 return;
         }
+
         if(values.length !== 0 && values.length !== 2)
             throw new Error('Repository and resfspec were not correctly specified.')
         
@@ -97,43 +102,60 @@ export class Push {
         if(!branchsLocal.includes(refBranch))
             throw new Error(`Branch '<strong>${refBranch}</strong>' does not exist in local`)
 
-        const commitsRemoteId = new Set(remote.commits.map((c)=> c.id))
-        const commitsRepositoryId = new Set(repository.commits.map((c)=> c.id))
+        const commitsRemoteId = new Set(
+            await Promise.all(remote.commits.map(async (c)=> c.id))
+        )
+
+        const commitsRepositoryId = new Set(
+            await Promise.all(repository.commits.map(async (c)=> c.id))
+        )
+
         const commiIdtLocal = repository.commits.find(findCommit)?.id
         const commitIdRemote = remote.commits.find(findCommit)?.id
-        //Solo si la rama existe se efectura esta seccion de codigo
-        if(branchsRemote.includes(refBranch)){
-            if(!commitsRepositoryId.has(commitIdRemote))
-                throw new Error(`
-                    Failed to push some refs to ${this._remoteRepository} <br>
-                    Updates were rejected because the remote contains work that you do 
-                    not have locally. This is usually caused by another repository pushing 
-                    to the same ref. You may want to first integrate the remote changes 
-                    (e.g., 'git pull ...') before pushing again.
-                `)
-            if(commitsRemoteId.has(commiIdtLocal))
-                return createMessage(
-                    this._logRepository,
-                    'info',
-                    'Already up to date.'
-                )
-        }else if(commitsRemoteId.has(commiIdtLocal)){
+        const existsBranchInRemote = branchsRemote.includes(refBranch)
+
+        if(existsBranchInRemote && !commitsRepositoryId.has(commitIdRemote))
+            throw new Error(`
+                Failed to push some refs to ${this._remoteRepository} <br>
+                Updates were rejected because the remote contains work that you do 
+                not have locally. This is usually caused by another repository pushing 
+                to the same ref. You may want to first integrate the remote changes 
+                (e.g., 'git pull ...') before pushing again.
+            `)
+
+        if(existsBranchInRemote && commiIdtLocal == commitIdRemote)
+            return createMessage(
+                this._logRepository,
+                'info',
+                'Already up to date.'
+            )
+
+        if(existsBranchInRemote && commitsRemoteId.has(commiIdtLocal))
+            return this._socketHandler.sendUpdateRepository(
+                this.moveTag(
+                    remote,
+                    refBranch,
+                    commitIdRemote,
+                    commiIdtLocal
+                ))
+                
+        if(!existsBranchInRemote && commitsRemoteId.has(commiIdtLocal)){
             remote.commits.forEach(commit => {
                 if(commit.id == commiIdtLocal){
                     commit.tags.push(refBranch)
                 }
             })
             return this._socketHandler.sendUpdateRepository(remote)
-            
         }
-        const response = mergeChangesInBranchs(
+        
+        const response = await mergeChangesInBranchs(
             remote.commits,
             repository.commits,
             refBranch
         )
         
         remote.commits = removeClassInRepository(
-            this.removeTagsTheChanges(
+            await this.removeTagsTheChanges(
                 response.repository,
                 response.changesId,
                 refBranch,
@@ -141,24 +163,30 @@ export class Push {
             ),
             ["checked-out","detached-head"]
         )
+
         this._socketHandler.sendUpdateRepository(remote)
     }
-    removeTagsTheChanges(commits,changesId,refBranch,idHeadCommitLocal){
+    async removeTagsTheChanges(commits,changesId,refBranch,idHeadCommitLocal){
+        
         const tagsRemove = new Set(commits.flatMap(c =>{
             if(changesId.has(c.id))
                 return c.tags||[]
         }))
+
         tagsRemove.delete(refBranch)
         changesId.delete(idHeadCommitLocal)
-        return commits.map(commit=>{
+
+        return await Promise.all(commits.map(async commit=>{
             if(changesId.has(commit.id))
-                commit.tags = commit.tags.filter(t =>{!tagsRemove.has(t)})
+                commit.tags = commit.tags.filter(t =>!tagsRemove.has(t))
+
             if(commit.id == idHeadCommitLocal)
                 commit.tags = commit.tags.filter(t => t == refBranch)
             else if(commit.tags.includes(refBranch))
-                commit.tags = commit.tags.filter(t => t != refBranch)
+                commit = await removeTags([refBranch],commit)
+
             return commit
-        })
+        }))
     }
     /**
      * @name resolveConfiguration
@@ -196,6 +224,32 @@ export class Push {
                 throw new Error(`The configuration "${config}" is not valid`);
         });
     }
+        /**
+     * @name moveTag
+     * @description Move tag from idCommitOrigin to idCommitDestination
+     * @memberof! Push#
+     * @method
+     * @param {Object} Repository Object represent repository and containd array of commits
+     * @param {string} branch Name of branch(tag)
+     * @param {string} idCommitOrigin id of commit (old commit)
+     * @param {string} idCommitDestination id of commit (new commit)
+     * @returns {Object} repository
+     */
+    moveTag(repository, branch, idCommitOrigin,idCommitDestination){
+        repository.commits.forEach(async commit => {
+            if(commit.id == idCommitDestination)
+                commit.tags.push(branch)
+            else if(commit.id == idCommitOrigin)
+                commit = await removeTags([branch],commit)
+        })
+        return repository
+    }
+    /**
+     * @name callBackHelp
+     * @description Callback to the help of the command
+     * @memberof! Push#
+     * @callback callBackHelp
+     */
     callbackHelp(){
         let message = `
         <h5>Concept</h5>

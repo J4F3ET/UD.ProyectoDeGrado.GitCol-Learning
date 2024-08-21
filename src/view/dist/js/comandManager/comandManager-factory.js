@@ -8,7 +8,8 @@ const COMMANDMAPPINGS  = {
     "merge": "./modules/Merge.js",
     "fetch": "./modules/Fetch.js",
     "push": "./modules/Push.js",
-    "clone": "./modules/Clone.js"
+    "clone": "./modules/Clone.js",
+    "pull": "./modules/Pull.js"
 };
 const dynamicImportCommnad = async(command) => {
     return (await import(
