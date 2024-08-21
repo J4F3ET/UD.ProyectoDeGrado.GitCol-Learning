@@ -3,6 +3,7 @@ import {
     findCommitsDiffBetweenRepositories,
     getRepository,
     mergeChangesInRepositories,
+    implementTagsRemotesInRepository,
     resolveIsHeadNull
 } from "./utils.js";
 /**
@@ -60,23 +61,7 @@ export class Fetch {
         this._logRepository = logRepository
         this._remoteRepository = remoteRepository
     }
-    async resolveTags(changesId,commits){
-        const refRemote = this._remoteRepository.split("-")[0]
-        commits.forEach( commit =>{
-            if(!changesId.some(id => id == commit.id)){
-                if(!commit.tags.length) return
-                commit.tags = commit.tags.filter(t => 
-                    !t.includes(refRemote)
-                )
-            }else{
-                commit.tags = commit.tags.map(t => {
-                    if(t == "HEAD") return t
-                    return refRemote + "/" + t
-                });
-            }
-        })
-        return commits
-    }
+
     async execute(data){
         
         const repository = await getRepository(this._dataRepository);
@@ -88,8 +73,12 @@ export class Fetch {
         if(!(await findCommitsDiffBetweenRepositories(repository.commits, remote.commits)).length)
             return createMessage(this._logRepository,'info','Already up to date.');
 
-        repository.commits = await this.resolveTags(...Object.values(
-            await mergeChangesInRepositories(repository.commits,remote.commits)
+        repository.commits = await implementTagsRemotesInRepository(
+            this._remoteRepository.split("-")[0],
+            ...Object.values(await mergeChangesInRepositories(
+                repository.commits,
+                remote.commits
+            )
         ))
         
         sessionStorage.setItem(
