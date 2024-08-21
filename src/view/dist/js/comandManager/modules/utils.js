@@ -24,12 +24,12 @@ async function removeTags(tags,commit){
  * @description Remove tags in all repository
  * @param {String[]} tags Tags to be removed
  * @param {JSON[]} commits Array of commits
- * @returns {JSON[]} Commits with the tag removed
+ * @returns {Promise<JSON[]>} Commits with the tag removed
  */
-function removeTagsInRepository(tags,commits){
-    return commits.map((commit) => {
+async function removeTagsInRepository(tags,commits){
+    return await Promise.all(commits.map(async(commit) => {
         return removeTags(tags,commit)
-    })
+    }))
 }
 /**
  * @name removeTagOfCommit
@@ -47,6 +47,24 @@ async function removeTagById(commits,name,id){
             commit = await removeTags([name],commit);
         return commit;
     }));
+}
+async function implementTagsRemotesInRepository(refRemote,changesId,commits){
+    return await Promise.all(commits.map(async commit =>{
+        if(!changesId.some(id => id == commit.id)){
+
+            if(commit.tags.length)
+                commit.tags = commit.tags.filter(t => !t.includes(refRemote))
+
+        }else{
+
+            commit.tags = await Promise.all(commit.tags.map(async t => {
+                if(t == "HEAD") return t
+                return refRemote + "/" + t
+            }));
+
+        }
+        return commit
+    }))
 }
 /**
  * @name findAllTags
@@ -175,6 +193,66 @@ async function createMessage(nameRefLog='log',tag='info',message){
     log.push({tag,message});
     sessionStorage.setItem(nameRefLog,JSON.stringify(log));
 }
+    /**
+     * @memberof utils
+     * @name resolveCreateMergeRegister
+     * @function
+     * @description Resolve the creation of the register in case that the commit fetch isn't parent of the commit head
+     * @param {Object} storage Data of the repository
+     * @param {JSON} commitFetch Commit fetch
+     * @param {JSON} commitHead Commit head
+     * @returns {Promise<Object>} newStorage
+     */
+    async function resolveCreateMergeRegister(storage, commitFetch, commitHead){
+        let {commits,commit} = await createRegister(
+            storage.commits,
+            commitHead,
+            storage.information,
+            'merge'
+        );
+
+        commit.unions.push(commitFetch.id);
+        commits.push(commit);
+        commitHead= await removeTags(['HEAD'],commitHead);
+        commitHead =  await removeClassFromCommit(commitHead,"checked-out");
+        
+        if(!storage.information.head.includes('detached')){
+            commitHead = await removeTags([storage.information.head],commitHead);
+        }else
+            storage.information.head = 'detached to '+commit.id;
+        
+        storage.commits = await updateCommitToCommits(commits,commitHead);
+
+        if(commitFetch.class.includes("detached-head"))
+            storage.commits = await changeDetachedCommitToCommit(commitFetch,storage.commits)
+
+        return storage;
+    }
+    /**
+     * @memberof utils
+     * @name resolveMovilityTag
+     * @method
+     * @description Resolve the movility tag in case that the commit fetch is a parent of the commit head
+     * @param {Object} storage Data of the repository
+     * @param {JSON} commitFetch Commit fetch
+     * @param {JSON} commitHead Commit head
+     * @returns {Object} newStorage
+     */
+    async function resolveMovilityTagInMerge(storage, commitFetch, commitHead){
+        let commits = storage.commits;
+
+        if(!storage.information.head.includes('detached')){
+            commits =  await moveTagToCommit(commits,commitHead,commitFetch,storage.information.head);
+
+            if(commitFetch.class.includes('detached-head'))
+                commits = await changeDetachedCommitToCommit(commitFetch,commits);
+
+        }else
+            storage.information.head = 'detached to '+commitFetch.id;
+
+        storage.commits = await updateHeadCommit(commits,commitHead, commitFetch);
+        return storage;
+    }
 /**
  * @name resolveIsHeadNull
  * @function
@@ -182,7 +260,7 @@ async function createMessage(nameRefLog='log',tag='info',message){
  * @description Solution if HEAD is null or current not expecificate
  * @param {JSON} repository Object repository
  * @param {string} tagDefault Name of the deful branch or tag, value default is "master"
- * @returns {Promise<JSON>} repository object with HEad especificated
+ * @returns {Promise<JSON>} repository object
  */
 async function resolveIsHeadNull(repository,tagDefault = "master"){
     const tags = await findAllTags(repository.commits)
@@ -771,7 +849,6 @@ async function mergeChangesInRepositories(
 ){
     const tags = await tagsPromise
     return await tags.reduce(async(accPromise, t) => {
-            console.log(await accPromise,t)
             const acc =  await accPromise
             const { repository, changesId } = await mergeChangesInBranchs(acc.repository, commitsOrigin, t);
             acc.changesId.push(...changesId.values());
@@ -835,6 +912,7 @@ export {
     mergeChangesInRepositories,
     moveTagToCommit,
     newRegister,
+    implementTagsRemotesInRepository,
     removeClassFromCommit,
     removeClassInRepository,
     removeTagById,
@@ -842,6 +920,8 @@ export {
     removeTagsInRepository,
     resolveLocationCommit,
     resolveIsHeadNull,
+    resolveMovilityTagInMerge,
+    resolveCreateMergeRegister,
     updateCommitToCommits,
     updateHeadCommit
 }
