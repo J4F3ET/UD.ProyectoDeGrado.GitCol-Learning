@@ -3,7 +3,7 @@ import { factoryCommandManager } from "./comandManager/comandManager-factory.js"
 import { Observer } from "./dataViewer/Observer.js";
 const listCommands = ["init","commit","checkout","branch","log","merge"];
 if(REF_STORAGE_REPOSITORY_CLOUD){
-    listCommands.push("push","clone","fetch");
+    listCommands.push("push","clone","fetch","pull");
 }
 const messageCallback = (listCommand)=>{
     let messageString = `
@@ -71,10 +71,10 @@ const init = () => {
  * @description Execute the comand and show the result
  * @param {String} comand 
  */
-const executeCommand = (comand) => {
+const executeCommand = async(comand) => {
     comand !== "" ?aloneModeCommandManager.createMessage('comand',comand) : null;
     try {
-        aloneModeCommandManager.executeCommand(comand.trim());
+        await aloneModeCommandManager.executeCommand(comand.trim());
         observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
         setTimeout(()=>{
             observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY))

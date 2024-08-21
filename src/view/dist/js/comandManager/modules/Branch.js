@@ -4,7 +4,11 @@ import {
     findAllChildrens,
     deleteCommitsRecursivelyUntil,
     findAllExceptionCommitsToDelete,
-    removeTagById
+    removeTagById,
+    existBranchOrEndPoint,
+    changeDetachedCommitToCommit,
+    getRepository,
+    findAllTags
 } from "./utils.js";
 /**
  * @class
@@ -36,25 +40,25 @@ export class Branch{
     */
     _configurations = {
         c:{
-            callback:(storage,values)=> this.callBackCreateBranch(storage,values),
+            callback:async(storage,values)=> this.callBackCreateBranch(storage,values),
         },
         d:{
-            callback:(storage,values)=> this.callBackConfigDelete(storage,values),
+            callback:async(storage,values)=> this.callBackConfigDelete(storage,values),
         },
         r:{
-            callback:()=> this.callBackConfigRemoteBranch(),
+            callback:async()=> this.callBackConfigRemoteBranch(),
         },
         a:{
-            callback:(storage)=> this.callBackConfigAllBranch(storage),
+            callback:async(storage)=>  this.callBackConfigAllBranch(storage),
         },
         l:{
-            callback:(storage)=> this.callBackConfigList(storage),
+            callback:async(storage)=>  this.callBackConfigList(storage),
         },
         m:{
-            callback:(storage,branchs)=> this.callBackConfigRename(storage,branchs),
+            callback:async(storage,branchs)=> this.callBackConfigRename(storage,branchs),
         },
         h:{
-            callback:()=>this.callbackHelp()
+            callback:async()=>this.callbackHelp()
         }
     };
     /**
@@ -115,16 +119,22 @@ export class Branch{
      * @method
      * @param {Array} dataComand Array with the comand and the configurations
      */
-    execute(dataComand){
-        let storage = JSON.parse(sessionStorage.getItem(this._dataRepository));
+    async execute(dataComand){
+        let storage = await getRepository(this._dataRepository);
+
         if(!storage)
             throw new Error('The repository is not initialized');
+
         if(storage.commits.length === 0)
             throw new Error('There are no branch master');
+
         const [comand,...value] = this.resolveConfiguration(dataComand);
+
         if(!comand)
             throw new Error('The comand is not valid');
-        storage = comand.callback(storage,value)??storage;
+
+        storage = await comand.callback(storage,value)??storage;
+
         sessionStorage.setItem(this._dataRepository,JSON.stringify(storage));
     }
     /**
@@ -133,37 +143,19 @@ export class Branch{
      * @method
      * @memberof Branch#
      * @param {string[]} dataComand Array with the comand and the configurations
-     * @returns {Array<Function,string>} Array with the configuration and the values of the comand
+     * @returns {Promise<Array<Function,string>>} Array with the configuration and the values of the comand
      */
     resolveConfiguration(dataComand){
+
         if(dataComand.length === 0)
             return [this._configurations['l'],null];
+
         if(dataComand[0].substring(0,1) !== '-')
             return [this._configurations['c'],dataComand[0]];
+
         const comand = (dataComand[0].replace(/^--?/,'')).charAt(0);
+
         return [this._configurations[comand],...dataComand.slice(1)];
-    }
-    /**
-     * @name changeDetachedCommitToCommit
-     * @memberof Branch#
-     * @method
-     * @description Remove the class detached-head of the commit and the parents
-     * @param {JSON} commit  Commit to change the class
-     * @param {JSON[]} commits Array with the commits of the repository 
-     * @returns {JSON[]} Array with the new commits of the repository
-     */
-    changeDetachedCommitToCommit(commit,commits){
-        if(!commit.class.includes("detached-head"))
-            return commits
-        let parent;
-        const newListCommits = commits.map(c=>{
-            if(c.id == commit.id)
-                c.class = c.class.filter(item=> item !="detached-head")
-            if(c.id == commit.parent)
-                parent = c
-            return c
-        })
-        return this.changeDetachedCommitToCommit(parent,newListCommits);
     }
     /**
      * @name detachedBranchAsoociated
@@ -171,12 +163,12 @@ export class Branch{
      * @method
      * @description Find the branch associated to the detached head
      * @param {JSON} storage Storage of the repository
-     * @returns {String} Name of the branch associated to the detached head
+     * @returns {Promise<String>} Name of the branch associated to the detached head
      */
-    detachedBranchAsoociated(storage){
-        const idCurrentDetached = currentHead(storage.commits).id;
-        const firstCommit = this.findFirstCommitAssociatedToDeteached(storage.commits,idCurrentDetached);
-        const branch = this.findBranchAssociatedToCommit(storage.commits,firstCommit.id);
+    async detachedBranchAsoociated(storage){
+        const idCurrentDetached = await currentHead(storage.commits).id;
+        const firstCommit = await this.findFirstCommitAssociatedToDeteached(storage.commits,idCurrentDetached);
+        const branch = await this.findBranchAssociatedToCommit(storage.commits,firstCommit.id);
         return branch;
     }
     /**
@@ -186,13 +178,13 @@ export class Branch{
      * @description Find the first commit associated to the detached head
      * @param {JSON[]} commits Array with the commits of the repository
      * @param {String} id Id of the commit
-     * @returns {JSON} Object with the commit associated to the detached head
+     * @returns {Promise<JSON>} Object with the commit associated to the detached head
      */
-    findFirstCommitAssociatedToDeteached(commits,id){
+    async findFirstCommitAssociatedToDeteached(commits,id){
         const parent = commits.find(commit => commit.id == id);
         if(!parent.class.includes('detached-head'))
             return parent;
-        return this.findFirstCommitAssociatedToDeteached(commits,parent.parent);
+        return await this.findFirstCommitAssociatedToDeteached(commits,parent.parent);
     }
     /**
      * @name findBranchAssociatedToCommit
@@ -201,13 +193,15 @@ export class Branch{
      * @description Find the branch associated to the commit
      * @param {JSON[]} commits Array with the commits of the repository
      * @param {String} id Id of the commit
-     * @returns {String} Name of the branch associated to the commit
+     * @returns {Promise<String>} Name of the branch associated to the commit
      */
-    findBranchAssociatedToCommit(commits,id){
-        const child = commits.find(commit => commit.parent == id&&!commit.class.includes('detached-head'));
+    async findBranchAssociatedToCommit(commits,id){
+        const child = commits.find(commit => 
+                commit.parent == id &&! commit.class.includes('detached-head')
+        );
         if(child.tags.length > 0)
             return child.tags[0];
-        return this.findBranchAssociatedToCommit(commits,child.id);
+        return await this.findBranchAssociatedToCommit(commits,child.id);
     }
     /**
      * @name callBackConfigList
@@ -216,11 +210,12 @@ export class Branch{
      * @description Call the method to create messages with the local branches of the repository and the remote branches
      * @param {JSON} storage Storage of the repository
      * @throws {Error} If the remote repository is not defined
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    callBackConfigAllBranch = (storage) => {
+    callBackConfigAllBranch = async (storage) => {
         this.callBackConfigList(storage);
-        this.callBackConfigRemoteBranch();
+        await this.callBackConfigRemoteBranch();
+        
     }
     /**
      * @name callBackConfigList
@@ -228,12 +223,15 @@ export class Branch{
      * @callback callBackConfigList
      * @description Call the method to create messages with the local branches of the repository
      * @param {JSON} storage Storage of the repository
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    callBackConfigList = (storage) => {
+    callBackConfigList = async (storage) => {
         const headBranch = storage.information.head;
-        const branches = storage.commits.flatMap(commit => commit.tags.filter(tag => tag !== 'HEAD'));
+        const refRemote = this._remoteRepository?.split("-")[0]??"origin"
+        const branches = await findAllTags(storage.commits)
         branches.forEach(branch => {
+            if(branch.includes(refRemote))
+                return
             const message = branch !== headBranch 
                 ? `<p>${branch}</p>`
                 :`<p style="color:#49be25">*${headBranch}</p>`;
@@ -246,14 +244,15 @@ export class Branch{
      * @callback callBackConfigRemoteBranch
      * @description Generate a message with the remote branches of the repository
      * @throws {Error} If the remote repository is not defined
-     * @returns {void}
+     * @returns {Promise<void>}
      */
-    callBackConfigRemoteBranch = () => {
-        if(!this._remoteRepository)
+    callBackConfigRemoteBranch = async () => {
+        const storage = await getRepository(this._remoteRepository);
+        if(!storage)
             throw new Error('The remote repository is not defined');
-        const storage = JSON.parse(sessionStorage.getItem(this._remoteRepository));
-        const branches = storage.commits.flatMap(commit => commit.tags.filter(tag => tag !== 'HEAD'));
-        branches.forEach(branch => createMessage(this._logRepository,'info',branch));
+        const branches = await findAllTags(storage.commits)
+        const refRemote = this._remoteRepository.split("-")[0]
+        branches.forEach(branch => createMessage(this._logRepository,'info',refRemote+"/"+branch));
     };
     /**
      * @name callBackConfigDelete
@@ -266,21 +265,28 @@ export class Branch{
      * @throws {Error} If the branch can not be deleted
      * @throws {Error} If the branch does not exist
      * @throws {Error} If the branch is the HEAD
-     * @returns {JSON} Storage of the repository with the branch deleted
+     * @returns {Promise<JSON>} Storage of the repository with the branch deleted
      */
-    callBackConfigDelete = (storage,values) => {
+    callBackConfigDelete = async (storage,values) => {
         const branch = values[0];
+
         if(branch === "")
             throw new Error('The name of the branch is empty');
+
         if(branch === 'master' || branch === 'HEAD' ||branch === storage.information.head)
             throw new Error(`The branch can not be deleted ${branch}`);
+
         const commitObj = storage.commits.find(commit => commit.tags.includes(branch));
+
         if(!commitObj)
             throw new Error('The branch does not exist');
+
         if(commitObj.tags.includes('HEAD'))
             throw new Error('The branch is the HEAD');
-        const childrens = findAllChildrens(storage.commits,commitObj.id);
-        const commitsWithoutBranch = removeTagById(storage.commits,branch,commitObj.id);
+
+        const childrens = await findAllChildrens(storage.commits,commitObj.id);
+        const commitsWithoutBranch = await removeTagById(storage.commits,branch,commitObj.id);
+
         if((childrens.some(commit => !commit.class.includes('detached-head')) && 
             childrens.length > 0)||
             commitObj.tags.length > 1
@@ -288,11 +294,13 @@ export class Branch{
             storage.commits = commitsWithoutBranch;
             return storage;
         }
+
         storage.commits =  deleteCommitsRecursivelyUntil(
             commitsWithoutBranch,
             commitObj,
             findAllExceptionCommitsToDelete(storage.commits)
         );
+
         return storage;
     }
     /**
@@ -304,22 +312,23 @@ export class Branch{
      * @param {String[]} values Name of the branch to create
      * @throws {Error} If the name of the branch is empty
      * @throws {Error} If the branch already exist
-     * @returns {JSON} Storage of the repository with the new branch
+     * @returns {Promise<JSON>} Storage of the repository with the new branch
      */
-    callBackCreateBranch = (storage,values) => {
+    callBackCreateBranch = async (storage,values) => {
         const branch = values[0];
         if(branch === "")
             throw new Error('The name of the branch is empty');
-        if(storage.commits.some(commit => commit.tags.includes(branch)))
-            throw new Error('The branch already exist');
-        const head = currentHead(storage.commits);
+        if(await existBranchOrEndPoint(storage.commits,branch))
+            throw new Error(`The branch already exist or name "${branch}" invalid`);
+        const head = await currentHead(storage.commits);
         storage.commits = storage.commits.filter(commit => commit.id !== head.id);
         head.tags.push(branch);
         storage.commits.push(head);
         if(head.class.includes("detached-head"))
-            storage.commits = this.changeDetachedCommitToCommit(head,storage.commits)
+            storage.commits = await changeDetachedCommitToCommit(head,storage.commits)
         return storage;
     };
+    
     /**
      * @name callBackConfigRename
      * @memberof Branch#
@@ -328,22 +337,28 @@ export class Branch{
      * @param {JSON} storage Storage of the repository
      * @param {String[]} branchs Array with the name of the branch and the new name
      * @throws {Error} If the command is not valid
-     * @returns {JSON} Storage of the repository with the branch renamed
+     * @returns {Promise<JSON>} Storage of the repository with the branch renamed
      */
-    callBackConfigRename = (storage,[name, newName]) => {
+    callBackConfigRename = async (storage,[name, newName]) => {
         if(!name)
             throw new Error('The command is not valid');
+
         if(!newName){
             newName = name;
-            name = storage.information.head.includes("detached")?this.detachedBranchAsoociated(storage):storage.information.head;
+            name = storage.information.head.includes("detached")? await this.detachedBranchAsoociated(storage):storage.information.head;
         }
-        storage.commits = storage.commits.map(commit => {
+
+        storage.commits = await Promise.all(storage.commits.map(async commit => {
             if(commit.tags.includes(name))
-                commit.tags = commit.tags.map(tag => tag === name ? newName : tag)
+                commit.tags = await Promise.all(
+                    commit.tags.map(async tag => tag === name ? newName : tag)
+                )
             return commit;
-        });
+        }));
+
         if(storage.information.head === name)
             storage.information.head = newName;
+
         return storage;
     }
     /**
@@ -352,7 +367,7 @@ export class Branch{
      * @callback callbackHelp
      * @description Create a message with the help of the comand
      */
-    callbackHelp=()=>{
+    callbackHelp= async ()=>{
         const message = `
         <h5>Concept</h5>
         <p class="help">List, create, or delete branches

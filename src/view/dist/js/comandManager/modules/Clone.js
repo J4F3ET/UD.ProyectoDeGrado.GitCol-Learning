@@ -1,5 +1,5 @@
 import { SocketHandler } from "../SocketHandler.js";
-import { createMessage } from "./utils.js";
+import { createMessage, getRepository } from "./utils.js";
 /**
  * @class
  * @classdesc Fetch from and integrate with another repository or a local branch
@@ -16,7 +16,7 @@ export class Clone {
     */
     _configurations = {
         h:{
-            callback: ()=>{this.callbackHelp()}
+            callback: async ()=>{this.callbackHelp()}
         }
     }
         /**
@@ -62,22 +62,21 @@ export class Clone {
         this._socketHandler = new SocketHandler(remoteRepository)
     }
 
-    execute(dataComand){
+    async execute(dataComand){
         let continueExecution = true;
 
-        for(const config of this.resolveConfiguration(dataComand)){
-            continueExecution = this._configurations[config].callback();
+        for(const config of await this.resolveConfiguration(dataComand)){
+            continueExecution = await this._configurations[config].callback();
             if(!continueExecution)
                 return;
         }
 
-        if(!dataComand.includes(this._remoteRepository)){
-            this._configurations.h.callback()
-            return
-        }
+        if(!dataComand.includes(this._remoteRepository))
+            return this._configurations.h.callback()
+
 
         sessionStorage.removeItem(this._dataRepository)
-        let repository =  JSON.parse(sessionStorage.getItem(this._remoteRepository))
+        let repository = await getRepository(this._remoteRepository)
         
         repository.information.repository = this._dataRepository
         repository.information.config = {
@@ -87,10 +86,10 @@ export class Clone {
             }
         }
         if(repository.commits.length)
-            repository = this.defaultBranch(repository)
+            repository = await this.defaultBranch(repository)
         sessionStorage.setItem(this._dataRepository,JSON.stringify(repository))
     }
-    defaultBranch(repository,nameBranch="master"){
+    async defaultBranch(repository,nameBranch="master"){
         repository.information.head = nameBranch
             repository.commits.forEach(commit => {
                 if(commit.tags.includes(nameBranch)){
@@ -107,9 +106,9 @@ export class Clone {
      * @description Resolve the configuration of the command, extract the configuration of the command and validate it
      * @param {String[]} dataComand Data to contain the configuration of the command, it is an array of strings
      * @example resolveConfiguration(['-m','"message"','-a']) // ['m','a']
-     * @returns {String[]} Array with the letters of the configuration
+     * @returns {Promise[String[]]} Array with the letters of the configuration
      */
-    resolveConfiguration(dataComand) {
+    async resolveConfiguration(dataComand) {
         let configs = [] 
         dataComand.forEach(c => {
             if(c.startsWith("-")||c.startsWith("--"))
@@ -129,15 +128,15 @@ export class Clone {
      * @throws {Error} The configuration is empty
      * @throws {Error} The configuration "${config}" is not valid
      */
-    validateConfig(configs){
+    async validateConfig(configs){
         const currentConfig = Object.keys(this._configurations);
         configs.forEach(config => {
             if(!currentConfig.includes(config))
                 throw new Error(`The configuration "${config}" is not valid`);
         });
     }
-    callbackHelp(){
-        let message = `
+    async callbackHelp(){
+        createMessage(this._logRepository,'info', `
         <h5>Concept</h5>
         <p class="help"> Clone a repository into a new directory</p>
         <p class="help"> <b>URL:</b> Use "<b>${this._remoteRepository}</b>"</p>
@@ -149,9 +148,7 @@ export class Clone {
         <ul>
             <li class="help">-h, --help&nbsp;&nbsp;&nbsp;Show the help</li>
         </ul>
-        `
-        
-        createMessage(this._logRepository,'info', message)
+        `)
         return false
     }
 }
