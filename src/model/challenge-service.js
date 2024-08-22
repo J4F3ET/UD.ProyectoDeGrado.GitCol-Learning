@@ -24,7 +24,13 @@ async function challengeFindById(id) {
  * @returns Promise<DataSnapshot>
  */
 async function challengeFindAll() {
-	return database.ref("challenges/").limitToFirst(10).get();
+	try {
+		return database.ref("challenges/").limitToFirst(10).get();
+	} catch (error) {
+		console.error(error);
+		return null;
+	}
+	
 }
 async function challengeFindByLevel(level) {
 	try {

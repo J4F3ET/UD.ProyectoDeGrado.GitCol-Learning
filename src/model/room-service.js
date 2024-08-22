@@ -35,8 +35,8 @@ async function roomCreate(code, description,owner, members, hidden,status = true
  * @returns {Promise<int>} : id of the room
  */
 async function roomUpdateRepository(id, data) {
-    const ref = database.ref("rooms/"+id+"/repository");
     try{
+        const ref = database.ref("rooms/"+id+"/repository");
         return ref.set(await data).key;
     }catch (error){
         console.error(error);
@@ -56,14 +56,17 @@ async function roomUpdate(id,mapParams) {
         });
     }catch(error){
         console.error(error)
+        return null
     }
 }
 async function roomUpdateCommitsToRepository(id, data) {
-    const ref = database.ref(`/rooms/${id}/repository/commits`);
+    
     try{
+        const ref = database.ref(`/rooms/${id}/repository/commits`);
         return ref.set(data).key;
     }catch (error){
         console.error(error)
+        return null
     }
 }
 /**
@@ -71,7 +74,12 @@ async function roomUpdateCommitsToRepository(id, data) {
  * @param {string} id : id of the room
  */
 async function roomDelete(id) {
-    return database.ref("rooms/"+id).remove();
+    try {
+        return database.ref("rooms/"+id).remove();
+    } catch (error) {
+        return null
+    }
+    
 }
 /**
  * roomGet - Get a room
@@ -91,7 +99,12 @@ async function roomGet(id) {
  * @returns {Promise<object>} : rooms
 */
 async function roomGetAll() {
-    return database.ref("rooms/").get();
+    try {
+        return database.ref("rooms/").get();
+    } catch (error) {
+        return null
+    }
+    
 }
 /**
  * roomGetAllPublic - Get all public rooms
