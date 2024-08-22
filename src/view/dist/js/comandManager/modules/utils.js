@@ -150,15 +150,17 @@ function findLatestCommitsOfBranchs(commits){
  * @returns {Promise<JSON[]>} Array of commits that are different between the two repositories
  */
 async function findCommitsDiffBetweenRepositories(commitsDestination,commitsOrigin){
-    const commitsDiff = [];
+
     const destinationCommitId = new Set(
         await Promise.all(commitsDestination.map(async commit => commit.id))
     );
-    commitsOrigin.forEach(commitOrigin => {
-        if(!destinationCommitId.has(commitOrigin.id))
-            commitsDiff.push(commitOrigin);
-    });
-    return commitsDiff;
+    const originCommitId = new Set(
+        await Promise.all(commitsOrigin.map(async commit => commit.id))
+    );
+
+    const commitsDiff = originCommitId.difference(destinationCommitId)
+
+    return commitsOrigin.filter(c => commitsDiff.has(c.id));
 }
 /**
  * @name getCommitStartPoint
@@ -702,9 +704,8 @@ async function moveTagToCommit(commits,startCommit,destinationCommit,tag){
  */
 async function findChangesBetweenBranchs(commitsDestination,commitsOrigin,nameBranch){
     const commitHeadOrigin = commitsOrigin.find(
-        (commit) => commit.tags.includes(nameBranch)
+        commit => commit.tags.includes(nameBranch)
     )
-
     const historyBranchOrigin =  [...(await findAllParents(
         commitsOrigin,
         commitHeadOrigin
@@ -754,23 +755,27 @@ async function findChangesBetweenBranchs(commitsDestination,commitsOrigin,nameBr
  * @returns {Promise<{changesId: Set<String>, repository: JSON[]}>} Array of commits(repository)
  */
 async function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch){
-    const commitsChanges = await findChangesBetweenBranchs(
+
+    const commitsChanges = Promise.all((await findChangesBetweenBranchs(
         commitsDestination,
-        commitsOrigin,
+        await copy(commitsOrigin),
         nameBranch
-    ) 
-    commitsChanges.forEach(change =>{
-        if(change.tags != 0)
-            change.tags = change.tags.filter(t => t==nameBranch)
-    })
-    
+    )).map(async change =>{
+        if(change.tags.length)
+            change.tags = change.tags.filter(t => t == nameBranch)
+        return change
+    }))
+
     return {
-        changesId : new Set(commitsChanges.map(c=>c.id)),
+        changesId : new Set(await Promise.all((await commitsChanges).map(async c=>c.id))),
         repository :  await addChangesRecursivelyToRepository(
             commitsDestination,
-            commitsChanges
+            await commitsChanges
         )
     }
+}
+async function copy(any){
+    return JSON.parse(JSON.stringify(any))
 }
 /**	
  * @name addChangesRecursivelyToRepository
@@ -848,8 +853,21 @@ async function mergeChangesInRepositories(
     tagsPromise = findAllTags(commitsOrigin)
 ){
     const tags = await tagsPromise
-    return await tags.reduce(async(accPromise, t) => {
+    return await tags.reduce(async (accPromise, t) => {
+
             const acc =  await accPromise
+
+            const commitHeadOrigin = commitsOrigin.find(c => c.tags.includes(t))
+        
+            if(acc.changesId.includes(commitHeadOrigin.id)){
+                for (const commit of acc.repository) {
+                    if(commitHeadOrigin.id != commit.id)
+                        continue
+                    commit.tags.push(t)
+                }
+                return acc
+            }
+            
             const { repository, changesId } = await mergeChangesInBranchs(acc.repository, commitsOrigin, t);
             acc.changesId.push(...changesId.values());
             acc.repository = repository;
@@ -868,15 +886,16 @@ async function mergeChangesInRepositories(
  * @returns {Promise<JSON[]>} Array of commits that are equals between the two repositories
  */
 async function findCommitsEqualBetweenRepositories(commitsDestination,commitsOrigin){
-    const commitsEqual = [];
     const destinationCommitId = new Set(
         await Promise.all(commitsDestination.map(async commit => commit.id))
     );
-    (commitsOrigin.forEach(commitOrigin => {
-        if(destinationCommitId.has(commitOrigin.id))
-            commitsEqual.push(commitOrigin);
-    }));
-    return commitsEqual;
+    const originCommitId = new Set(
+        await Promise.all(commitsOrigin.map(async commit => commit.id))
+    );
+
+    const commitsEquals = destinationCommitId.intersection(originCommitId);
+
+    return (commitsDestination.filter( c => commitsEquals.has(c.id)))
 }
 /**
  * @name findCommitLink
