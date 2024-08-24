@@ -48,23 +48,66 @@ async function removeTagById(commits,name,id){
         return commit;
     }));
 }
-async function implementTagsRemotesInRepository(refRemote,changesId,commits){
-    return await Promise.all(commits.map(async commit =>{
-        if(!changesId.some(id => id == commit.id)){
+/**
+ * @name implementTagsRemotesInRepository
+ * @function
+ * @memberof utils
+ * @description Implement new tags whit prefic of parameter refRemote
+ * @param {string} refRemote Name ref example "origin"
+ * @param {Set<string>} commitsHeadRemote Set of id commits
+ * @param {{changeMap:Map<string,string[]>}} changeMap Array of the object changes
+ * @param {JSON[]} commits Array of commits
+ * @returns {Promise<JSON[]>} Array with the new commits of the repository
+ */
+async function implementTagsRemotesInRepository(
+    refRemote,
+    commitsHeadRemote,
+    changeMap,
+    commits
+){
+    return await Promise.all(commits.map( async (commit,_,commits) =>{
 
-            if(commit.tags.length)
-                commit.tags = commit.tags.filter(t => !t.includes(refRemote))
+        if(!changeMap.has(commit.id)) return commit
 
-        }else{
-
-            commit.tags = await Promise.all(commit.tags.map(async t => {
-                if(t == "HEAD") return t
-                return refRemote + "/" + t
-            }));
-
-        }
-        return commit
+        return await resolveTagsInChange(
+            commit,
+            commits,
+            commitsHeadRemote,
+            changeMap,
+            refRemote
+        )
     }))
+}
+/**
+ * @name resolveTagsInChange
+ * @function
+ * @memberof utils
+ * @description Resolve conflic between tags of changes
+ * @param {JSON} commit  Commit change
+ * @param {JSON[]} commits Array of commits
+ * @param {Set<string>} commitsHeadRemote Set of id commits
+ * @param {{changeMap:Map<string,string[]>}} changeMap Array of the object changes
+ * @param {string} refRemote Name ref example "origin"
+ * @returns {Promise<JSON>} Commit with conflic resolved
+ */
+async function resolveTagsInChange(commit,commits,commitsHeadRemote,changeMap,refRemote){
+    if(commitsHeadRemote.has(commit.id)){
+        changeMap.get(commit.id).forEach(
+            tag => commit.tags = [...commit.tags,refRemote+"/"+tag]
+        )
+        commits.forEach(commitForEach => {
+            if(!commitForEach.tags.length || changeMap.has(commitForEach.id)) return
+
+            changeMap.get(commit.id).forEach(tagMap =>{
+                commitForEach.tags = commitForEach.tags.filter(t=> t != refRemote+"/"+tagMap)
+            })
+            
+        })
+    }
+    if(commit.class.includes("detached-head"))
+        commit.tags =  commit.tags.filter(tag => tag.includes(refRemote))
+
+    return commit
 }
 /**
  * @name findAllTags
@@ -78,8 +121,7 @@ async function findAllTags(commits){
     const allTags = (await Promise.all(
         commits.map(async commit => commit.tags || [])
     )).flat();
-    const filteredTags = allTags.filter(nameBranch => nameBranch && nameBranch !== 'HEAD');
-    return filteredTags;
+    return allTags.filter(nameBranch => nameBranch && nameBranch !== 'HEAD');
 }
 /**
  * @name findAllChildrens
@@ -735,13 +777,13 @@ async function findChangesBetweenBranchs(commitsDestination,commitsOrigin,nameBr
         commitHeadDestination
     ]:await findAllParents(commitsDestination,commitHeadDestination)
 
-    return await findCommitsDiffBetweenRepositories(
+    return await copy(await findCommitsDiffBetweenRepositories(
         commitsDestination,
         await findCommitsDiffBetweenRepositories(
             historyBranchDestination,
             historyBranchOrigin
         )
-    )
+    ))
 
 }
 /**	
@@ -758,7 +800,7 @@ async function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch
 
     const commitsChanges = Promise.all((await findChangesBetweenBranchs(
         commitsDestination,
-        await copy(commitsOrigin),
+        commitsOrigin,
         nameBranch
     )).map(async change =>{
         if(change.tags.length)
@@ -845,7 +887,7 @@ async function addCommitChangeToBranch(commitsDestination,parent = {cx:-30,cy:33
  * @param {JSON[]} commitsDestination Array of commits destination of the changes
  * @param {JSON[]} commitsOrigin Array of commits origin of the changes
  * @param {Promise<Strign[]>|null} tagsPromise Names of branch
- * @returns {Promise<{changesId:string[],repository:JSON[]}>} changesId is array with ids, repository is array of commits
+ * @returns {Promise<{changeMap:Map<string,string[]>,repository:JSON[]}>} changesId is array with ids, repository is array of commits
  */
 async function mergeChangesInRepositories(
     commitsDestination,
@@ -855,26 +897,78 @@ async function mergeChangesInRepositories(
     const tags = await tagsPromise
     return await tags.reduce(async (accPromise, t) => {
 
+            const commitHeadOrigin = commitsOrigin.find(c => c.tags.includes(t))
             const acc =  await accPromise
 
-            const commitHeadOrigin = commitsOrigin.find(c => c.tags.includes(t))
-        
-            if(acc.changesId.includes(commitHeadOrigin.id)){
+            if(acc.changeMap.has(commitHeadOrigin.id)){
                 for (const commit of acc.repository) {
                     if(commitHeadOrigin.id != commit.id)
                         continue
                     commit.tags.push(t)
+                    acc.changeMap.set(commit.id,commit.tags)
+                    break
                 }
                 return acc
             }
-            
-            const { repository, changesId } = await mergeChangesInBranchs(acc.repository, commitsOrigin, t);
-            acc.changesId.push(...changesId.values());
+
+            const { repository, changesId } = await mergeChangesInBranchs(
+                acc.repository,
+                commitsOrigin,
+                t
+            );
+
+            changesId.forEach(change => acc.changeMap.set(change,[t]));
             acc.repository = repository;
             return acc;
         },
-        Promise.resolve({ changesId: [], repository: commitsDestination })
+        Promise.resolve({ changeMap: new Map(), repository: commitsDestination })
     );
+}
+/**	
+ * @name findCommitsHead
+ * @function
+ * @memberof utils
+ * @description Find
+ * @param {JSON[]} commits Array of the commits
+ * @param {string} refRemote  By heads locals using refRemote example "origin" or not using refRemote by heads remotes 
+ * @returns {Promise<{Set<string>}>} Set with ids of heads of commits
+ */
+async function findCommitsHead(commits,refRemote = null){  
+    const heads = new Set()
+    for (const commit of commits){
+
+        if(refRemote && commit.tags.length){
+            commit.tags.forEach(t=>{
+                if(t.includes(refRemote))
+                    heads.add(commit.id)
+            })
+        }else if(!refRemote && commit.tags.length){
+            heads.add(commit.id)
+        }
+    }
+    return heads
+}
+/**	
+ * @name findCommitsChangeWithTags
+ * @function
+ * @memberof utils
+ * @description Find changes and return map of the changes
+ * @param {JSON[]} commits Array of the commits
+ * @param {Set<string>} headsDiff  Set with commit ids
+ * @returns {Promise<Map<string,string[]>>} Change map where key is id commit and value is the array with name tags(branch)
+ */
+async function findCommitsChangeWithTags(commits,headsDiff){
+    const result = new Map()
+    Promise.all(commits.map(async commit => {
+        if(!headsDiff.has(commit.id))return
+        
+        commit.tags.forEach(tag => {
+            result.set(commit.id,[...(result.get(commit.id)||[]),tag])
+        })
+    
+
+    }));
+    return result
 }
 /**
  * @name findCommitsEqualBetweenRepositories
@@ -924,6 +1018,8 @@ export {
     findAllParents,
     findAllTags,
     findCommitsDiffBetweenRepositories,
+    findCommitsHead,
+    findCommitsChangeWithTags,
     findLatestCommitsOfBranchs,
     getCommitStartPoint,
     getRepository,
