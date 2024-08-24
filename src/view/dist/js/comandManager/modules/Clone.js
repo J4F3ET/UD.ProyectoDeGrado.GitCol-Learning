@@ -41,7 +41,7 @@ export class Clone {
      * @default 'origin'
      * @memberof! Push#
      */
-     _remoteRepository = 'origin';
+     _remoteRepository = 'origin-';
     /**
      * @type {SocketHandler}
      * @description Name of the remote repository
@@ -77,7 +77,6 @@ export class Clone {
 
         sessionStorage.removeItem(this._dataRepository)
         let repository = await getRepository(this._remoteRepository)
-        
         repository.information.repository = this._dataRepository
         repository.information.config = {
             user:{
@@ -86,18 +85,27 @@ export class Clone {
             }
         }
         if(repository.commits.length)
-            repository = await this.defaultBranch(repository)
+            repository = await this.defaultBranch(repository,this._remoteRepository.split("-")[0])
+
         sessionStorage.setItem(this._dataRepository,JSON.stringify(repository))
     }
-    async defaultBranch(repository,nameBranch="master"){
+    async defaultBranch(repository,refRemote,nameBranch="master"){
         repository.information.head = nameBranch
-            repository.commits.forEach(commit => {
-                if(commit.tags.includes(nameBranch)){
-                    commit.tags.push("HEAD")
-                    commit.class.push("checked-out")
-                }   
-            });
-        return repository
+        repository.commits.forEach(async commit => {
+
+            if(!commit.tags.length) return
+            
+            commit.tags.push(...(
+                await Promise.all(commit.tags.map(async tag =>refRemote+"/"+tag))
+            ))
+            
+            if(commit.tags.includes(nameBranch)){
+                commit.tags.push("HEAD")
+                commit.class.push("checked-out")
+            }
+
+        });
+        return await repository
     }
     /**
      * @name resolveConfiguration
