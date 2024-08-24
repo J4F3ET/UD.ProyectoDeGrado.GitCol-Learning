@@ -21,7 +21,7 @@ export class Fetch {
      * @property {Function} h.callback Callback do responsability of generate a message in the console. With items as the concept, syntax and configurations.
      * @alias _configurations
      * @readonly
-     * @memberof! Init#
+     * @memberof! Fetch#
     */
     _configurations = {
         h:{
@@ -32,7 +32,7 @@ export class Fetch {
      * @type {string}
      * @description Name of the repository
      * @default 'repository'
-     * @memberof! Pull#
+     * @memberof! Fetch#
      * @readonly
      */
     _dataRepository = 'repository'
@@ -40,7 +40,7 @@ export class Fetch {
      * @type {string}
      * @description Name of the log repository
      * @default 'log'
-     * @memberof! Pull#
+     * @memberof! Fetch#
      * @readonly
      */
     _logRepository = 'log'
@@ -48,12 +48,13 @@ export class Fetch {
      * @type {string}
      * @description Name of the remote repository
      * @default 'origin'
-     * @memberof! Pull#
+     * @memberof! Fetch#
      * @readonly
      */
     _remoteRepository = 'origin';
     /**
      * @constructor
+     * @memberof! Fetch#
      * @param {string} dataRepository Name of the space where the repository will be saved
      * @param {string} logRepository Name of the space where the log will be saved
      * @description Create a new instance of Pull
@@ -63,8 +64,14 @@ export class Fetch {
         this._logRepository = logRepository
         this._remoteRepository = remoteRepository
     }
-
-    async execute(data){
+    /**
+     * @name execute
+     * @description Execute the command
+     * @method 
+     * @throws {Error}
+     * @memberof! Fetch#
+     */
+    async execute(){
         
         const repository = await getRepository(this._dataRepository);
         const remote = await getRepository(this._remoteRepository);
