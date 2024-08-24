@@ -220,6 +220,14 @@ async function getCommitStartPoint(dataComand,commits){
         startPoint = commits.find((commit)=>commit.tags.includes(lastData));
     return startPoint;
 }
+/**
+ * @name getCommitStartPoint
+ * @callback
+ * @memberof utils
+ * @description Get repository JSON
+ * @param {string} key repository key
+ * @returns {Promise<JSON|undefined>} Repository JSON
+ */
 const getRepository = async (key)=> JSON.parse(sessionStorage.getItem(key))
 /**
  * @name createMessage
@@ -237,66 +245,66 @@ async function createMessage(nameRefLog='log',tag='info',message){
     log.push({tag,message});
     sessionStorage.setItem(nameRefLog,JSON.stringify(log));
 }
-    /**
-     * @memberof utils
-     * @name resolveCreateMergeRegister
-     * @function
-     * @description Resolve the creation of the register in case that the commit fetch isn't parent of the commit head
-     * @param {Object} storage Data of the repository
-     * @param {JSON} commitFetch Commit fetch
-     * @param {JSON} commitHead Commit head
-     * @returns {Promise<Object>} newStorage
-     */
-    async function resolveCreateMergeRegister(storage, commitFetch, commitHead){
-        let {commits,commit} = await createRegister(
-            storage.commits,
-            commitHead,
-            storage.information,
-            'merge'
-        );
+/**
+ * @memberof utils
+ * @name resolveCreateMergeRegister
+ * @function
+ * @description Resolve the creation of the register in case that the commit fetch isn't parent of the commit head
+ * @param {Object} storage Data of the repository
+ * @param {JSON} commitFetch Commit fetch
+ * @param {JSON} commitHead Commit head
+ * @returns {Promise<Object>} newStorage
+ */
+async function resolveCreateMergeRegister(storage, commitFetch, commitHead){
+    let {commits,commit} = await createRegister(
+        storage.commits,
+        commitHead,
+        storage.information,
+        'merge'
+    );
 
-        commit.unions.push(commitFetch.id);
-        commits.push(commit);
-        commitHead= await removeTags(['HEAD'],commitHead);
-        commitHead =  await removeClassFromCommit(commitHead,"checked-out");
-        
-        if(!storage.information.head.includes('detached')){
-            commitHead = await removeTags([storage.information.head],commitHead);
-        }else
-            storage.information.head = 'detached to '+commit.id;
-        
-        storage.commits = await updateCommitToCommits(commits,commitHead);
+    commit.unions.push(commitFetch.id);
+    commits.push(commit);
+    commitHead= await removeTags(['HEAD'],commitHead);
+    commitHead =  await removeClassFromCommit(commitHead,"checked-out");
+    
+    if(!storage.information.head.includes('detached')){
+        commitHead = await removeTags([storage.information.head],commitHead);
+    }else
+        storage.information.head = 'detached to '+commit.id;
+    
+    storage.commits = await updateCommitToCommits(commits,commitHead);
 
-        if(commitFetch.class.includes("detached-head"))
-            storage.commits = await changeDetachedCommitToCommit(commitFetch,storage.commits)
+    if(commitFetch.class.includes("detached-head"))
+        storage.commits = await changeDetachedCommitToCommit(commitFetch,storage.commits)
 
-        return storage;
-    }
-    /**
-     * @memberof utils
-     * @name resolveMovilityTag
-     * @method
-     * @description Resolve the movility tag in case that the commit fetch is a parent of the commit head
-     * @param {Object} storage Data of the repository
-     * @param {JSON} commitFetch Commit fetch
-     * @param {JSON} commitHead Commit head
-     * @returns {Object} newStorage
-     */
-    async function resolveMovilityTagInMerge(storage, commitFetch, commitHead){
-        let commits = storage.commits;
+    return storage;
+}
+/**
+ * @memberof utils
+ * @name resolveMovilityTagInMerge
+ * @method
+ * @description Resolve the movility tag in case that the commit fetch is a parent of the commit head
+ * @param {Object} storage Data of the repository
+ * @param {JSON} commitFetch Commit fetch
+ * @param {JSON} commitHead Commit head
+ * @returns {Object} newStorage
+ */
+async function resolveMovilityTagInMerge(storage, commitFetch, commitHead){
+    let commits = storage.commits;
 
-        if(!storage.information.head.includes('detached')){
-            commits =  await moveTagToCommit(commits,commitHead,commitFetch,storage.information.head);
+    if(!storage.information.head.includes('detached')){
+        commits =  await moveTagToCommit(commits,commitHead,commitFetch,storage.information.head);
 
-            if(commitFetch.class.includes('detached-head'))
-                commits = await changeDetachedCommitToCommit(commitFetch,commits);
+        if(commitFetch.class.includes('detached-head'))
+            commits = await changeDetachedCommitToCommit(commitFetch,commits);
 
-        }else
-            storage.information.head = 'detached to '+commitFetch.id;
+    }else
+        storage.information.head = 'detached to '+commitFetch.id;
 
-        storage.commits = await updateHeadCommit(commits,commitHead, commitFetch);
-        return storage;
-    }
+    storage.commits = await updateHeadCommit(commits,commitHead, commitFetch);
+    return storage;
+}
 /**
  * @name resolveIsHeadNull
  * @function
@@ -311,7 +319,7 @@ async function resolveIsHeadNull(repository,tagDefault = "master"){
     const master = tags.find(t => t.includes(tagDefault))
 
     if(!master)
-        return resolveIsHeadNull(repository,tags.shift())
+        return resolveIsHeadNull(repository,tags.shift()||"master")
 
     //Si existe HEAD buscara el commit head si no buscara master
     const findConditionalParameter = (repository.commits.some(c => c.tags.includes("HEAD"))?"HEAD":master)
@@ -679,7 +687,7 @@ function currentHead(commits) {
  * @memberof! utils
  * @description Change the class of the commit "detached-head" recursively to the parent commit
  * @param {JSON} commit Commit to change the class
- * @param {JSON[]} commits Array of commits
+ * @param {JSON[]} commits Array of commits(repository.commits)
  * @returns {Promise<JSON[]>} Array of commits with the new class
  */
 async function changeDetachedCommitToCommit(commit,commits){
@@ -693,6 +701,10 @@ async function changeDetachedCommitToCommit(commit,commits){
             parent = c
         return c
     }))
+    await commit.unions.forEach(async union =>{
+        const commitUnion = newListCommits.find(c=>c.id == union)
+        newListCommits =  await changeDetachedCommitToCommit(commitUnion,newListCommits)
+    }) 
     return await changeDetachedCommitToCommit(parent,newListCommits);
 }
 /**
@@ -1005,7 +1017,6 @@ async function findCommitLink(idPotentialParents,idParentsOfChildrens){
         idParentOfChild => idPotentialParents.includes(idParentOfChild)
     )|| null
 }
-
 export {
     changeDetachedCommitToCommit,
     createMessage,
