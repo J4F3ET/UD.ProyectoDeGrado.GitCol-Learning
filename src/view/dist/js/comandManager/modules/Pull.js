@@ -1,19 +1,21 @@
 import { 
     createMessage,
     findCommitsDiffBetweenRepositories,
-    mergeChangesInRepositories,
-    implementTagsRemotesInRepository,
     getRepository,
     resolveCreateMergeRegister,
     resolveMovilityTagInMerge,
-    resolveIsHeadNull,
-    getCommitStartPoint,
     findAllTags,
-    findAllParents
+    findAllParents,
+    mergeChangesInRepositories,
+    implementTagsRemotesInRepository,
+    resolveIsHeadNull,
+    findCommitsChangeWithTags,
+    findCommitsHead,
+    changeDetachedCommitToCommit
 } from "./utils.js";
 /**
  * @class
- * @classdesc Fetch from and integrate with another repository or a local branch
+ * @classdesc The pull command is used to fetch from and integrate with another repository or a local branch'
  */
 export class Pull {
     _comand = 'pull'
@@ -71,72 +73,172 @@ export class Pull {
         this._logRepository = logRepository
         this._remoteRepository = remoteRepository
     }
-
+    /**
+     * @name execute
+     * @description Execute the command
+     * @method 
+     * @param {string[]} dataComand 
+     * @throws {Error}
+     * @memberof! Pull#
+     */
     async execute(dataComand){
-        console.time('Execution time of commit');
         const remoteRepository = await getRepository(this._remoteRepository)
-        let localRepository = await getRepository(this._dataRepository)
+        const localRepository = await getRepository(this._dataRepository)
         
         this.resetConfiguration()
         
         if(! remoteRepository|| ! localRepository)
             throw Error('The repository does not exist')
 
-        if(!(await findCommitsDiffBetweenRepositories(localRepository.commits, remoteRepository.commits)).length)
-           return createMessage(this._logRepository,'info','Already up to date.');
-        //-----------GIT FETCH
-        const refRemote = this._remoteRepository.split("-")[0]||"origin"
-        localRepository.commits = await implementTagsRemotesInRepository(
+        const refRemote = this._remoteRepository.split("-")[0]
+
+        let {repositoryFetch,errFetch} = await this.fetch(
+            dataComand[dataComand.length - 1],
             refRemote,
-            ...Object.values(await mergeChangesInRepositories(
-                localRepository.commits,
-                remoteRepository.commits
-            )
-        ))
+            localRepository,
+            remoteRepository
+        )
+        if(errFetch instanceof Error)
+            throw errFetch
 
-        if(!localRepository.information.head)
-            localRepository = await resolveIsHeadNull(localRepository)
-        //----------END GIT FETCH
-        //=========GIT MERGE
+        if(errFetch != null)
+            return createMessage(this._logRepository,'info',errFetch)
 
-        const tagsLocalRepository = new Set(await findAllTags(localRepository.commits)) 
-        const refBranchLocalPull = dataComand[dataComand.length-1]??localRepository.information.head??""
-        const refBranchRemotePull = refRemote+"/"+refBranchLocalPull 
+        const{repositoryMerge,errMerge} = await this.merge(refRemote,dataComand,repositoryFetch)
 
-        if(!tagsLocalRepository.has(refBranchLocalPull))
-            throw Error(`fatal: couldn't find local ref "${refBranchLocalPull}"`)
+        if(errMerge instanceof Error)
+            throw Error(errMerge)
 
-        if(!tagsLocalRepository.has(refBranchRemotePull))
-            throw Error(`fatal: couldn't find remote ref "${refBranchRemotePull}"`)
+        if(errMerge != null)
+            return createMessage(this._logRepository,'info',errMerge)
 
-        const commitRemotePull = localRepository.commits.find(c => c.tags.includes(refBranchRemotePull))
-
-        if(!commitRemotePull)
-            throw Error('The commit does not exist');
-
-        const commitLocalPull = localRepository.commits.find(c => c.tags.includes(refBranchLocalPull))
-
-        const parentsCommitRemotePull = new Set(await Promise.all(
-            (await findAllParents(localRepository.commits, commitRemotePull))
-                .map(async commit=>commit.id)
-        ));
-
-        const parentscommitLocalPull = new Set(await Promise.all(
-            (await findAllParents(localRepository.commits, commitLocalPull))
-                .map(async commit=>commit.id)
-        ));
-
-        if(parentscommitLocalPull.has(commitRemotePull.id))
-            return createMessage(this._logRepository,'info','Already up to date.');
-
-        if(parentsCommitRemotePull.has(commitLocalPull.id))
-            localRepository = await resolveMovilityTagInMerge(localRepository, commitRemotePull, commitLocalPull);
-        else
-            localRepository = await resolveCreateMergeRegister(localRepository, commitRemotePull, commitLocalPull);
-        
-        sessionStorage.setItem(this._dataRepository,JSON.stringify(localRepository))
+        sessionStorage.setItem(this._dataRepository,JSON.stringify(repositoryMerge))
         console.timeEnd('Execution time of commit');
     }
+
+    async fetch(tagByDataCommand="master",refRemote,localRepository,remoteRepository){
+        
+        const commitsDiff = await findCommitsDiffBetweenRepositories(localRepository.commits, remoteRepository.commits)
+        const headsLocal = await findCommitsHead(localRepository.commits,refRemote)
+        const headsRemote = await findCommitsHead(remoteRepository.commits)
+        const headsDiff = headsRemote.difference(headsLocal)
+
+        if(!commitsDiff.length && !headsDiff.size)
+            return {repositoryFetch:null,errFetch:'Already up to date.'}
+
+        try {
+            if(!commitsDiff.length && headsDiff.size)
+                localRepository.commits = await implementTagsRemotesInRepository(
+                    refRemote,
+                    headsRemote,
+                    await findCommitsChangeWithTags(
+                        remoteRepository.commits,
+                        headsDiff
+                    ),
+                    localRepository.commits
+                )
+            else
+                localRepository.commits = await implementTagsRemotesInRepository(
+                    refRemote,
+                    headsRemote,
+                    ...Object.values(await mergeChangesInRepositories(
+                        localRepository.commits,
+                        remoteRepository.commits
+                    )
+                ))
+    
+            if(!localRepository.information.head)
+                return {repositoryFetch:await resolveIsHeadNull(localRepository,tagByDataCommand),errFetch:null}
+            return {repositoryFetch:localRepository,err:null}
+        } catch (error) {
+            return {repositoryFetch:null,errFetch:error}
+        }
+        
+        
+    }
+
+    async merge(refRemote,dataComand,localRepository){
+
+        const tagsLocalRepository = new Set(await findAllTags(localRepository.commits)) 
+        const tagsLocalRepositoryWithoutReference = new Set()
+        const refBranchLocalPull = dataComand[dataComand.length-1]
+            ??(localRepository.information.head.includes("detached")
+                ?null
+                :localRepository.information.head
+            )
+            ??"master"
+        const refBranchRemotePull = refRemote+"/"+refBranchLocalPull 
+
+        tagsLocalRepository.forEach(tag=>{
+            if(tag.includes(refRemote)) return
+            tagsLocalRepositoryWithoutReference.add(tag)
+        })
+        try {
+            console.log("REF BRANCH LOCAL",refBranchLocalPull,dataComand[dataComand.length-1])
+            if(!tagsLocalRepository.has(refBranchRemotePull))
+                throw Error(`fatal: couldn't find remote ref "${refBranchRemotePull}"`)
+
+            if(!tagsLocalRepository.has(refBranchLocalPull)
+                &&tagsLocalRepositoryWithoutReference.size
+            ){
+                throw Error(`fatal: couldn't find local ref "${refBranchLocalPull}"`)
+            }
+    
+            const commitRemotePull = localRepository.commits.find(c => c.tags.includes(refBranchRemotePull))
+    
+            if(!commitRemotePull)
+                throw Error('The commit does not exist');
+
+            let commitLocalPull = localRepository.commits.find(c => c.tags.includes(refBranchLocalPull))
+            if(!tagsLocalRepository.has(refBranchLocalPull)
+                &&!tagsLocalRepositoryWithoutReference.size
+            ){
+                console.log(localRepository)
+                return {
+                    repositoryMerge:await this.especialCase(
+                        localRepository,
+                        refBranchLocalPull,
+                        commitRemotePull),
+                    errMerge:null
+                }
+            }
+
+            const parentsCommitRemotePull = new Set(await Promise.all(
+                (await findAllParents(localRepository.commits, commitRemotePull))
+                    .map(async commit=>commit.id)
+            ));
+    
+            const parentscommitLocalPull = new Set(await Promise.all(
+                (await findAllParents(localRepository.commits, commitLocalPull))
+                    .map(async commit=>commit.id)
+            ));
+    
+            if(parentscommitLocalPull.has(commitRemotePull.id))
+                return {repositoryMerge:null,errMerge:'Already up to date.'}
+            
+            const functionCase = parentsCommitRemotePull.has(commitLocalPull.id)
+                ?  resolveMovilityTagInMerge
+                : resolveCreateMergeRegister
+            
+            return{
+                repositoryMerge:await functionCase(localRepository,commitRemotePull,commitLocalPull),
+                errMerge:null
+            };
+        } catch (error) {
+            return {repositoryMerge:null,errMerge:error}
+        }
+    }
+
+    async especialCase(localRepository,tagHead,commitHead){
+        localRepository.information.head = tagHead
+        commitHead.tags.push(tagHead)
+        localRepository.commits = await changeDetachedCommitToCommit(
+            commitHead,
+            localRepository.commits
+        )
+        return localRepository
+    }
+
     /**
      * @memberof Pull#
      * @name resolveConfiguration

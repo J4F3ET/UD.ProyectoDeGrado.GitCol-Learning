@@ -3,13 +3,6 @@ import {
     currentHead,
     findAllParents,
     getCommitStartPoint,
-    createRegister,
-    removeTags,
-    changeDetachedCommitToCommit,
-    updateHeadCommit,
-    moveTagToCommit,
-    updateCommitToCommits,
-    removeClassFromCommit,
     resolveCreateMergeRegister,
     resolveMovilityTagInMerge,
     getRepository

@@ -4,7 +4,9 @@ import {
     getRepository,
     mergeChangesInRepositories,
     implementTagsRemotesInRepository,
-    resolveIsHeadNull
+    resolveIsHeadNull,
+    findCommitsChangeWithTags,
+    findCommitsHead
 } from "./utils.js";
 /**
  * @class
@@ -19,7 +21,7 @@ export class Fetch {
      * @property {Function} h.callback Callback do responsability of generate a message in the console. With items as the concept, syntax and configurations.
      * @alias _configurations
      * @readonly
-     * @memberof! Init#
+     * @memberof! Fetch#
     */
     _configurations = {
         h:{
@@ -30,7 +32,7 @@ export class Fetch {
      * @type {string}
      * @description Name of the repository
      * @default 'repository'
-     * @memberof! Pull#
+     * @memberof! Fetch#
      * @readonly
      */
     _dataRepository = 'repository'
@@ -38,7 +40,7 @@ export class Fetch {
      * @type {string}
      * @description Name of the log repository
      * @default 'log'
-     * @memberof! Pull#
+     * @memberof! Fetch#
      * @readonly
      */
     _logRepository = 'log'
@@ -46,12 +48,13 @@ export class Fetch {
      * @type {string}
      * @description Name of the remote repository
      * @default 'origin'
-     * @memberof! Pull#
+     * @memberof! Fetch#
      * @readonly
      */
     _remoteRepository = 'origin';
     /**
      * @constructor
+     * @memberof! Fetch#
      * @param {string} dataRepository Name of the space where the repository will be saved
      * @param {string} logRepository Name of the space where the log will be saved
      * @description Create a new instance of Pull
@@ -61,8 +64,14 @@ export class Fetch {
         this._logRepository = logRepository
         this._remoteRepository = remoteRepository
     }
-
-    async execute(data){
+    /**
+     * @name execute
+     * @description Execute the command
+     * @method 
+     * @throws {Error}
+     * @memberof! Fetch#
+     */
+    async execute(){
         
         const repository = await getRepository(this._dataRepository);
         const remote = await getRepository(this._remoteRepository);
@@ -70,17 +79,35 @@ export class Fetch {
         if(!repository || !remote)
             throw new Error('The repository is not initialized<br>Please initialize the repository first');
 
-        if(!(await findCommitsDiffBetweenRepositories(repository.commits, remote.commits)).length)
+        const refRemote = this._remoteRepository.split("-")[0]
+        const commitsDiff = await findCommitsDiffBetweenRepositories(repository.commits, remote.commits)
+        const headsLocal = await findCommitsHead(repository.commits,refRemote)
+        const headsRemote = await findCommitsHead(remote.commits)
+        const headsDiff = headsRemote.difference(headsLocal)
+
+
+        if(!commitsDiff.length && !headsDiff.size)
             return createMessage(this._logRepository,'info','Already up to date.');
 
-        repository.commits = await implementTagsRemotesInRepository(
-            this._remoteRepository.split("-")[0],
-            ...Object.values(await mergeChangesInRepositories(
-                repository.commits,
-                remote.commits
+        if(!commitsDiff.length && headsDiff.size)
+            repository.commits = await implementTagsRemotesInRepository(
+                refRemote,
+                headsRemote,
+                await findCommitsChangeWithTags(
+                    remote.commits,
+                    headsDiff
+                ),
+                repository.commits
             )
-        ))
-        
+        else
+            repository.commits = await implementTagsRemotesInRepository(
+                refRemote,
+                headsRemote,
+                ...Object.values(await mergeChangesInRepositories(
+                    repository.commits,
+                    remote.commits
+                )
+            ))
         sessionStorage.setItem(
             this._dataRepository,
             JSON.stringify(
