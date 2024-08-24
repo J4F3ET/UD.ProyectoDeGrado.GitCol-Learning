@@ -137,12 +137,12 @@ npm run docs
     - [x] **git checkout -h**: Show the help of the command.
     - [x] **git checkout -b "BranchName"**: Create a branch with the specified name and change to it.
     - [x] **git checkout -q "BranchName"**: Change to the branch with the specified name.
-6. [ ] **git push**: Upload the changes to the remote repository.
-    - [ ] **git push -h**: Show the help of the command.
-7. [ ] **git pull**: Download the changes from the remote repository.
-    - [ ] **git pull -h**: Show the help of the command.
-8. [ ] **git merge**: Merge two branches.
-    - [ ] **git merge -h**: Show the help of the command.
+6. [x] **git push**: Upload the changes to the remote repository.
+    - [x] **git push -h**: Show the help of the command.
+7. [x] **git pull**: Download the changes from the remote repository.
+    - [x] **git pull -h**: Show the help of the command.
+8. [x] **git merge**: Merge two branches.
+    - [x] **git merge -h**: Show the help of the command.
 
 ### Possible commands to be implemented in the future
 
