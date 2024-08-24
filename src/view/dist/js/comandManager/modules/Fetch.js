@@ -4,7 +4,9 @@ import {
     getRepository,
     mergeChangesInRepositories,
     implementTagsRemotesInRepository,
-    resolveIsHeadNull
+    resolveIsHeadNull,
+    findCommitsChangeWithTags,
+    findCommitsHead
 } from "./utils.js";
 /**
  * @class
@@ -70,17 +72,35 @@ export class Fetch {
         if(!repository || !remote)
             throw new Error('The repository is not initialized<br>Please initialize the repository first');
 
-        if(!(await findCommitsDiffBetweenRepositories(repository.commits, remote.commits)).length)
+        const refRemote = this._remoteRepository.split("-")[0]
+        const commitsDiff = await findCommitsDiffBetweenRepositories(repository.commits, remote.commits)
+        const headsLocal = await findCommitsHead(repository.commits,refRemote)
+        const headsRemote = await findCommitsHead(remote.commits)
+        const headsDiff = headsRemote.difference(headsLocal)
+
+
+        if(!commitsDiff.length && !headsDiff.size)
             return createMessage(this._logRepository,'info','Already up to date.');
 
-        repository.commits = await implementTagsRemotesInRepository(
-            this._remoteRepository.split("-")[0],
-            ...Object.values(await mergeChangesInRepositories(
-                repository.commits,
-                remote.commits
+        if(!commitsDiff.length && headsDiff.size)
+            repository.commits = await implementTagsRemotesInRepository(
+                refRemote,
+                headsRemote,
+                await findCommitsChangeWithTags(
+                    remote.commits,
+                    headsDiff
+                ),
+                repository.commits
             )
-        ))
-        
+        else
+            repository.commits = await implementTagsRemotesInRepository(
+                refRemote,
+                headsRemote,
+                ...Object.values(await mergeChangesInRepositories(
+                    repository.commits,
+                    remote.commits
+                )
+            ))
         sessionStorage.setItem(
             this._dataRepository,
             JSON.stringify(
