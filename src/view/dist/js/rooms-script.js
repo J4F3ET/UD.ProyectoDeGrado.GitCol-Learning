@@ -1,4 +1,4 @@
-import {logout} from "./userAuth-observer.js";
+import {logout,goToHome} from "./userAuth-observer.js";
 const dialogCreateRoom = document.getElementById("dialogCreateRoom");
 const dialogSearchRoom = document.getElementById("dialogSearchRoom");
 const RESPONSE_BAD_REQUEST = 400
@@ -22,7 +22,7 @@ function loginToRoom(code){
 			alert(response)
 			
 		if(response.status == RESPONSE_UNKNOWN_USER || response.status == RESPONSE_UNAUTHORIZED)
-			window.location.href = "/home";
+			goToHome();
 	});
 }
 function getCardRoom(room) {
@@ -71,7 +71,7 @@ async function getRoomsPublic(){
 	}
 
 	if(!response.ok)
-		window.location.href = "/home";
+		await goToHome();
 
 	return response.json();
 }
@@ -101,7 +101,7 @@ function validateInputRoomCode(element){
 				callback(!response.ok)
 
 			else if(!response.ok)
-				window.location.href = "/home";
+				goToHome();
 		});
 	}else{
 		required.textContent = "The code is already in use";
@@ -127,10 +127,8 @@ document.getElementById("inputRoomCode").addEventListener("input", (e) => {
 	validateInputRoomCode(e.target);
 });
 document.getElementById("btnLogout").addEventListener("click", async () => {
-	const response = logout()
-	const data = (await response).json();
-	if ((await response).status === 200)
-		window.location.href = (await data).url||"/home";
+	logout()
+	goToHome()
 });
 document.getElementById("btnSubmitCreateRoom").addEventListener("click", (e) => {
 	const code = document.getElementById("inputRoomCode").value;
@@ -151,7 +149,7 @@ document.getElementById("btnSubmitCreateRoom").addEventListener("click", (e) => 
 	}).then((response) => {
 
 		if(!response.ok && response.status != RESPONSE_BAD_REQUEST)
-			window.location.href = "/home";
+			goToHome();
 
 		if(response.status == RESPONSE_BAD_REQUEST)
 			return alert(response)
