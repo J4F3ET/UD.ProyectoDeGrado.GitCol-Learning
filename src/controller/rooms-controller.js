@@ -37,7 +37,6 @@ router.get(
 	(req, res) =>
 {
 	res.render("rooms-screen");
-	res.end();
 });
 /**
  * @openapi
@@ -78,7 +77,7 @@ router.get(
 router.get("/rooms/fit", releaseVerificationMiddleware, async(req, res) => {
 
 	const room = await roomGetByCode(req.query.code);
-	
+
 	if(!room)
 		return res.sendStatus(404)
 
@@ -93,8 +92,6 @@ router.get("/rooms/fit", releaseVerificationMiddleware, async(req, res) => {
 		return res.sendStatus(500)
 
 	res.json(room)
-	res.sendStatus(200);	
-	res.end();
 });
 /**
  * @openapi

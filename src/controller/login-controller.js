@@ -45,7 +45,7 @@ router.post("/login", releaseVerificationMiddleware, (req, res) => {
  *     description: De
  *     responses:
  *       200:
- *         description: Éxito. Redirige a la pantalla de login.
+ *         description: Succes
  *         content:
  *           application/json:
  *             schema:
@@ -54,9 +54,14 @@ router.post("/login", releaseVerificationMiddleware, (req, res) => {
  *                 url:
  *                   type: string
  *                   example: /home
+ *       401:
+ *         description: Unauthorized and redirect to error view
+ *         content:
+ *           text/html:
+ *             example: error-screen.ejs
  */
 router.get("/logout", releaseVerificationMiddleware, (req, res) => {
-	res.clearCookie("access_token").status(200).json({url: "/home"});
+	res.clearCookie("access_token");
 	res.end();
 });
 export default router;
