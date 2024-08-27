@@ -110,10 +110,9 @@ export class Log{
             throw new Error(`ambiguous argument '${dataComand.pop()}': unknown revision or path not in the working tree.`)
 
         const listCommits = await this.resolveFiltersCommits(storage.commits,startPoint);
-        const idListCommits = new Set(await Promise.all(listCommits.map(async commit => commit.id)));
-        
+        const setListCommits = new Set(await Promise.all(listCommits.map(async commit => commit.id)))
         storage.commits = await Promise.all(storage.commits.map(async(commit)=>{
-            if(idListCommits.has(commit.id))
+            if(setListCommits.has(commit.id))
                 commit.class.push('logging');
             return commit
         }));
@@ -148,14 +147,13 @@ export class Log{
      * @method
      */
     async resolveFiltersCommits(commits,commit){
-        const childs = await findAllParents(commits,commit);
-        childs.push(commit)
-        childs.sort((a,b)=>new Date(a.date)-new Date(b.date));
+        let childs = [commit,...await findAllParents(commits,commit)];
+        childs.sort((a,b)=>new Date(a.date)- new Date(b.date));
         if(this._configurations.n.use){
             if(this._configurations.n.value > childs.length)
                 createMessage(this._logRepository,"error","The number of commits is greater than the number of commits the log has");
             else
-                return childs.slice(this._configurations.n.value);
+                childs = childs.slice(0,this._configurations.n.value);
         }
         return childs;
     }
