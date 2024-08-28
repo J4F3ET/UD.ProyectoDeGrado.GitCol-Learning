@@ -255,7 +255,7 @@ export class Log{
         <h5>Syntax</h5>
         <p class="help">git log [-n &lt;number&gt;| -&lt;number&gt;] [start-point]</p>
         <p class="help">git log -h | --help</p>
-        <h5>_Configurations</h5>
+        <h5>Configurations</h5>
         <h6 class="help">Optional</h6>
         <ul>
             <li class="help">-n &lt;number&gt;&nbsp;&nbsp;&nbsp;Limit the number of commits to show</li>
