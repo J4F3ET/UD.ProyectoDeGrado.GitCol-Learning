@@ -26,7 +26,7 @@ body{
   animation: show-dialog .7s .5s both ease-in-out;
   box-sizing: border-box;
   color: var(--text-color);
-  font-size: 1.3rem;
+  font-size: var(--font-size-mobile);
   overflow: hidden;
 }
 .dialog[open].second::backdrop{
@@ -72,10 +72,10 @@ body{
   background: var(--bg-color);
   padding: 1rem;
   border-radius: 1rem;
-  width: 25%;
-  max-width: 400px;
-  min-width: 300px;
-  min-height: 46px;
+  width: 400px !important;
+  height: 80px !important;
+  min-width: 400px !important;
+  min-height: 80px !important;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -85,11 +85,11 @@ body{
 }
 .card__description{
   font-weight: normal;
-  font-size: small;
+  font-size: var(--font-size-small-large);
 }
 .card__info{
-  font-size:medium;
-  font-weight: bold;
+  font-size:var(--font-size-large);
+  font-weight:500;
   color: var(--orange-color);
   span{
     font-weight: normal;
@@ -152,7 +152,7 @@ button:disabled{
   }
 .room__title {
     text-align: center;
-    font-size: var(--long-font-size);
+    font-size: var(--font-size-h1-large);
     margin-bottom: 1.25rem;
   }
 .room__inputs, .room__box {
@@ -185,7 +185,7 @@ button:disabled{
   color: var(--text-color);
 }
 .room__box i {
-  font-size: 1.25rem;
+  font-size: var(--font-size-mobile);
 }
 .container_checkBox {
   display: flex;
@@ -204,8 +204,15 @@ button:disabled{
   cursor: pointer;
 }
 .btn.width {
-  width: 100%;
   max-width: none;
+}
+#btnLoginToRoom{
+  width: 100%;
+}
+.btn {
+  font-size: var(--font-size-mobile);
+  min-width: fit-content;
+  min-height: fit-content;
 }
 .room__button:hover {
     transform: scale(1.03);
@@ -214,7 +221,7 @@ button:disabled{
     box-shadow: 0 0 .5rem var(--text-color) ;
 }
 .room__register {
-  font-size: var(--small-font-size);
+  font-size: var(--font-size-mobile);
   margin: .5rem;
   text-align: center;
 }
@@ -224,19 +231,6 @@ button:disabled{
 }
 .room__register a:hover {
   text-decoration: underline;
-}
-.room_select{
-  background-color: transparent;
-  color: var(--text-color);
-  padding: 1rem 0;
-  font-size: 1.5rem;
-  font-weight: 500;
-}
-.room_option{
-  color: var(--text-color);
-  background-color: var(--bg-color);
-  font-size: 1.5rem;
-  font-weight: 500;
 }
 .container_dialog{
   display: flex;
@@ -270,7 +264,7 @@ button:disabled{
   background-color: var(--bg-color);
 }
 .small{
-  font-size: small;
+  font-size: var(--font-size-small-mobile);
   &.red{
     color: var(--red-color);
   }
@@ -296,27 +290,42 @@ button:disabled{
       opacity: 1;
   }
 }
-  /* RESPONSIVE */
-  @media (max-width: 1200px){
-      html{
-          font-size: 55%;
-      }
-      .btn {
-        font-size: large;
-        width: 97%;
-        height: 50%;
-      }
+
+/* Tabletas */
+@media (min-width: 576px) {
+  .dialog {
+    font-size: var(--font-size-tablet);
   }
-  @media screen and (min-width: 576px) {
-    .room {
-      justify-content: center;
-    }
-    .room__form {
-      width: 420px;
-      padding-inline: 2.5rem;
-    }
+  .room__box i {
+    font-size: var(--font-size-tablet);
+  }
+  .room {
+    justify-content: center;
+  }
+  .room__form {
+    width: 420px;
+    padding-inline: 2.5rem;
+  }
+  .room__title {
+    margin-bottom: 2rem;
+  }
+}
+/* Laptops y escritorios */
+@media (min-width: 768px) {   
+  .dialog {
+    font-size: var(--font-size-desktop);
+  }
+  .room__box i {
+    font-size: var(--font-size-desktop);
+  }
+}
+/* Monitores anchos */
+@media (min-width: 1200px) {
+  .dialog {
+    font-size: var(--font-size-large);
+  }
+  .room__box i {
+    font-size: var(--font-size-large);
+  }
   
-    .room__title {
-      margin-bottom: 2rem;
-    }
-  }
+}

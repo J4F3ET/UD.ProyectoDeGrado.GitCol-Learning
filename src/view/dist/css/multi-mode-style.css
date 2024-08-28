@@ -8,11 +8,20 @@
 .show-repository{
     animation: show-repository ease-in-out 0.5s forwards;
 }
+.btn-only-icon{
+    width: min-content;
+    height: min-content;
+}
 .toggle-repository-btn{
+    font-size: var(--font-size-mobile);
+    font-weight: 500;
     display: flex;
-    justify-content: center;
+    height: min-content;
+    max-width: 180px;
+    min-width: 180px;
+    justify-content: flex-start;
+    gap: .5rem;
     align-items: center;
-    font-size: 26px;
     &:hover{
         cursor: pointer;
     }
@@ -54,5 +63,23 @@
     }
     .repositories-container {
         height: 85%;
+    }
+}
+/* Tabletas */
+@media (min-width: 576px) {
+    .toggle-repository-btn{
+        font-size: var(--font-size-tablet);
+    }
+}
+/* Laptops y escritorios */
+@media (min-width: 768px) {   
+    .toggle-repository-btn{
+        font-size: var(--font-size-desktop);
+    }
+}
+/* Monitores anchos */
+@media (min-width: 1200px) {
+    .toggle-repository-btn{
+        font-size: var(--font-size-large);
     }
 }

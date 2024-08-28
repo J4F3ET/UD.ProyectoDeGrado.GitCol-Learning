@@ -24,17 +24,16 @@
     justify-content: space-between;
     align-items: center;
     z-index: 100;
-    box-shadow: 0 0 1rem black;
+    box-shadow: 0 0 .5rem var(--black-color);
 }
 .logo{
-    font-size: 3vw;
-    font-family: "Virgil";
+    font-size: var(--font-size-h1-mobile);
     color: var(--blue-color);
     font-weight: 600;
     cursor: default;
 }
 #menu-icon{
-    font-size: 3.6rem;
+    font-size: var(--font-size-h1-large);
     color: var(--text-color);
     display: none;
 }
@@ -44,7 +43,7 @@
     align-items: center;
 }
 .item-navbar{
-    font-size: 1.3vw;
+    font-size: var(--font-size-h1-mobile);;
     color: var(--text-color);
     margin: 1rem;
     transition: .3s;
@@ -108,7 +107,7 @@
     align-items: center;
     min-width: min-content;
     text-align: center;
-    font-size: max-content;
+    font-size: var(--font-size-h1-mobile);
     text-shadow: 0 0 1rem var(--text-color);
     color: var(--text-color);
 }
@@ -121,10 +120,12 @@
 }
 .card{
     width: 80%;
-    max-width: 1000px;
+    height: fit-content;
+    max-width: 800px;
     display: flex;
     backdrop-filter: blur(10px);
-    box-shadow: 0 5px 10px var(--text-color);
+    border: solid 2px var(--orange-color);
+    box-shadow: 5px 5px 0px var(--orange-lite-color);
     flex-direction: column;
     border-radius: 10px;
     text-align: center;
@@ -132,83 +133,23 @@
 }
 .heading {
     text-align: center;
-    font-size: 4rem ;
+    font-size: var(--font-size-h1-mobile) ;
 }
 .overview-content h2 {  
     text-align: center;
     line-height: 2;
 }
+.card>.overview-content>.heading{
+    margin: 0;
+}
 .overview-content p{
     text-align: justify;
-    font-size:  1.9rem;
+    font-size:  var(--font-size-mobile);
     margin: 1rem 0 1rem;
 }
 /* LEVELS SECTION DESING */
 .heading{
     margin-bottom: 5rem;
-}
-.levels-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap:2rem;
-}
-/* LEVELS CARD DESING */
-.level_card {
-    position: relative;
-    width: 300px;
-    height: 200px;
-    background-color: var(--second-bg-color);
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    perspective: 1000px;
-    box-shadow: 0 5px 0 0 #a8a8a880;
-    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
-}
-.level_card .icons-level-container {
-    width: 48px;
-    fill: #333;
-    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: inline-flex;
-    justify-content: center;
-    font-size: 40px;
-}
-.level_card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(182, 182, 182, 0.2);
-}
-.level_card_content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    background-color: var(--second-bg-color);
-    transform: rotateX(-90deg);
-    transform-origin: bottom;
-    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.level_card:hover .level_card_content {
-    transform: rotateX(0deg);
-}
-.level_card_title {
-    margin: 0;
-    font-size: 24px;
-    color: var(--text-color);
-    font-weight: 700;
-}
-.level_card_description {
-    margin: 10px 0 0;
-    font-size: 14px;
-    color: var(--text-color);
-    line-height: 1.4;
 }
 /* MISION AND VISION SECTION DESING */
 .mision-vision-section{
@@ -239,11 +180,11 @@
     text-align: left;
     line-height: 1.2;
     & h2{
-        font-size: 3.6rem;
+        font-size: var(--font-size-h2-mobile);
         font-weight: 700;
     }
     & p{
-        font-size: 1.6rem;
+        font-size: var(--font-size-mobile);
         margin: 2rem 0 3rem;
     }
 }
@@ -258,9 +199,9 @@
 .perfile_card {
     width: 350px;
     height: 404px;
-    background: var(--second-bg-color);
+    backdrop-filter: blur(10px);
     border: 2px solid var(--orange-color);
-    box-shadow: 5px 5px #ffa67f;
+    box-shadow: 5px 5px var(--orange-lite-color);
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -285,11 +226,11 @@
 .perfile_card-title {
     text-align: center;
     color: var(--text-color);
-    font-size: 30px;
+    font-size:var(--font-size-h1-desktop);
     font-weight: 400;
 }
 .perfile_card-title span {
-    font-size: 25px;
+    font-size: var(--font-size-h2-desktop);
     color: var(--text-color);
 }
 .perfile_card-socials {
@@ -313,7 +254,7 @@
 .perfile_card-socials-btn i {
     width: 100%;
     height: 100%;
-    font-size: 50px;
+    font-size: var(--font-size-extra-large);
     color: var(--orange-color);
 }
 .perfile_card:hover > .perfile_card-socials {
@@ -338,7 +279,7 @@
     padding: 2rem 9%;
     background: var(--second-bg-color-trasparent);
     backdrop-filter: blur(5px);
-    font-size: 1.6rem;
+    font-size: var(--font-size-mobile);
 }
 .footer a{
     text-align: center;
@@ -346,15 +287,82 @@
 }
 
 /* RESPONSIVE */
-
-@media (max-width: 1200px){
-    html{
-        font-size: 55%;
+/* Tabletas */
+@media (min-width: 576px) {
+    .logo{
+        font-size: var(--font-size-h1-tablet);
+    }
+    #menu-icon{
+        font-size: var(--font-size-h1-tablet);
+    }
+    .github-link {
+        font-size: var(--font-size-tablet);
+    }
+    .heading {
+        font-size: var(--font-size-h1-tablet);
+    }
+    .overview-content p{
+        font-size:  var(--font-size-tablet);
+    }
+    .content-mision-vision{
+        & h2{
+            font-size: var(--font-size-h2-tablet);
+        }
+        & p{
+            font-size: var(--font-size-tablet);
+        }
     }
 }
-@media (max-height: 700px){
-    html{
-        font-size: 70%;
+/* Laptops y escritorios */
+@media (min-width: 768px) {   
+    .logo{
+        font-size: var(--font-size-h1-desktop);
+    }
+    #menu-icon{
+        font-size: var(--font-size-h1-desktop);
+    }
+    .github-link {
+        font-size: var(--font-size-desktop);
+    }
+    .heading {
+        font-size: var(--font-size-h1-desktop) ;
+    }
+    .overview-content p{
+        font-size:  var(--font-size-desktop);
+    }
+    .content-mision-vision{
+        & h2{
+            font-size: var(--font-size-h2-desktop);
+        }
+        & p{
+            font-size: var(--font-size-desktop);
+        }
+    }
+}
+/* Monitores anchos */
+@media (min-width: 1200px) {
+    .logo{
+        font-size: var(--font-size-h1-large);
+    }
+    #menu-icon{
+        font-size: var(--font-size-h1-large);
+    }
+    .github-link {
+        font-size: var(--font-size-large);
+    }
+    .heading {
+        font-size: var(--font-size-h1-large) ;
+    }
+    .overview-content p{
+        font-size:  var(--font-size-large);
+    }
+    .content-mision-vision{
+        & h2{
+            font-size: var(--font-size-h2-large);
+        }
+        & p{
+            font-size: var(--font-size-large);
+        }
     }
 }
 @media (max-width: 991px){
@@ -372,9 +380,6 @@
     #menu-icon{
         display: block;
     }
-    .logo{
-        font-size:3rem;
-    }
     .home-navbar{
         position: absolute;
         top: 100%;
@@ -391,19 +396,12 @@
     }
     .item-navbar {
         display: block;
-        font-size: 2rem;
         margin: 3rem 0;
     }
     /* -------Home Section------- */
     .home-section {
         min-height: 50vh;
         flex-direction: column;
-    }
-    .content-home-section h3 {
-        font-size: 2.6rem;
-    }
-    .content-home-section h1 {
-        font-size: 5rem;
     }
     .banner-home-img{
         width: 40vw;
@@ -422,6 +420,5 @@
     }
     .overview-img img {
         width: 50vw;
-        margin-top: 4rem;
     }
 }
