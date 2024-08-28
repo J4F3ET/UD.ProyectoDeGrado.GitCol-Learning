@@ -3,15 +3,18 @@ const containerRepositoryCloud = document.getElementById("svgContainerCloud");
 const toggleRepository = async () => {
     const btnToggle = document.getElementById("btnToggleRepository");
     const icono = btnToggle.querySelector("i");
+    const text = btnToggle.querySelector("p")
     const currentShowRepository = btnToggle.dataset.repository;
     if(currentShowRepository === "Local"){
         showElement(containerRepositoryLocal,containerRepositoryCloud);
-        changeClassList(icono,"cloud","folder");
         btnToggle.dataset.repository = "Cloud";
+        changeClassList(icono,"cloud","folder");
+        text.innerText = "Go to local"
     }else if(currentShowRepository === "Cloud"){
         showElement(containerRepositoryCloud,containerRepositoryLocal);
-        changeClassList(icono,"folder","cloud");
         btnToggle.dataset.repository = "Local";
+        changeClassList(icono,"folder","cloud");
+        text.innerText  = "Go to remote"
     }
 }
 async function showElement(elementHide,elementShow){
