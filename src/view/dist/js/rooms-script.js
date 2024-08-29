@@ -1,23 +1,28 @@
-import {logout} from "./userAuth-observer.js";
+import {logout,goToHome} from "./userAuth-observer.js";
 const dialogCreateRoom = document.getElementById("dialogCreateRoom");
 const dialogSearchRoom = document.getElementById("dialogSearchRoom");
+const RESPONSE_BAD_REQUEST = 400
+const RESPONSE_UNAUTHORIZED = 401
+const RESPONSE_UNKNOWN_USER = 403
+const RESPONSE_NOT_FOUND = 404
+const RESPONSE_INTERNAL_SERVER_ERROR = 500
+const alert = (response) => Swal.fire({
+	position: "center",
+	icon: "error",
+	title: response.statusText,
+	showConfirmButton: false,
+	timer: 1500
+});
 function loginToRoom(code){
 	fetch(`/rooms/fit?code=${code}`).then((response) => {
-		if(!response.ok)
-			window.location.href = "/home";
-		response.json().then((data) => {
-			if(data.ok && data.response !== false){
-				window.location.href = `/teamWorking?room=${data.response}`;
-			}else{
-				Swal.fire({
-					position: "center",
-					icon: "error",
-					title: "Room not found",
-					showConfirmButton: false,
-					timer: 1500
-				});
-			}
-		})
+
+		if(response.ok)
+			response.json().then((data) => window.location.href = `/teamWorking?room=${data}`)
+		else
+			alert(response)
+			
+		if(response.status == RESPONSE_UNKNOWN_USER || response.status == RESPONSE_UNAUTHORIZED)
+			goToHome();
 	});
 }
 function getCardRoom(room) {
@@ -59,10 +64,16 @@ function getCardRoom(room) {
 	return card;
 }
 async function getRoomsPublic(){
-	const response = fetch("/rooms/all/public");
-	if(!(await response).ok)
-		window.location.href = "/home"; 
-	return (await response).json();
+	const response = await fetch("/rooms/all/public");
+	if(response.status == RESPONSE_NOT_FOUND){
+		alert(response)
+		return null
+	}
+
+	if(!response.ok)
+		await goToHome();
+
+	return response.json();
 }
 function updateValidateRequirement(element,validation) {
 	if(validation){
@@ -79,15 +90,18 @@ function checkInputRoomCode(element,code){
 function validateInputRoomCode(element){
 	const validLetterAndNumber = /^[A-Z0-9]+$/;
 	const required = document.getElementById("validRoomCode");
+	const callback =  (data)=>{
+		updateValidateRequirement(required,data);
+		required.textContent = data ? "Room code available" : "The code is already in use";
+		document.getElementById("btnSubmitCreateRoom").disabled = checkInputRoomCode(element,data.code);
+	}
 	if(element.value.length > 3){
 		fetch(`/rooms/code?code=${element.value}`).then((response) => {
-			if(!response.ok)
-				window.location.href = "/home";
-			response.json().then((data) => {
-				updateValidateRequirement(required,data.code);
-				required.textContent = data.code ? "Room code available" : "The code is already in use";
-				document.getElementById("btnSubmitCreateRoom").disabled = checkInputRoomCode(element,data.code);
-			})
+			if(response.status == RESPONSE_NOT_FOUND || response.ok)
+				callback(!response.ok)
+
+			else if(!response.ok)
+				goToHome();
 		});
 	}else{
 		required.textContent = "The code is already in use";
@@ -113,10 +127,8 @@ document.getElementById("inputRoomCode").addEventListener("input", (e) => {
 	validateInputRoomCode(e.target);
 });
 document.getElementById("btnLogout").addEventListener("click", async () => {
-	const response = logout()
-	const data = (await response).json();
-	if ((await response).status === 200)
-		window.location.href = (await data).url||"/home";
+	logout()
+	goToHome()
 });
 document.getElementById("btnSubmitCreateRoom").addEventListener("click", (e) => {
 	const code = document.getElementById("inputRoomCode").value;
@@ -135,12 +147,16 @@ document.getElementById("btnSubmitCreateRoom").addEventListener("click", (e) => 
 		},
 		body: JSON.stringify(room)
 	}).then((response) => {
-		if(!response.ok)
-			window.location.href = "/home";
 
-		response.json().then((data) => {
+		if(!response.ok && response.status != RESPONSE_BAD_REQUEST)
+			goToHome();
+
+		if(response.status == RESPONSE_BAD_REQUEST)
+			return alert(response)
+
+		response.json().then((idRoom) => {
 			dialogCreateRoom.close();
-			window.location.href = `/teamWorking?room=${data.room}`;
+			window.location.href = `/teamWorking?room=${idRoom}`;
 		})
 	});
 });
@@ -156,10 +172,12 @@ document.getElementById("btnLoginToRoom").addEventListener("click", (e) => {
 
 document.getElementById("btnCancelCreateRoom").addEventListener("click", () => dialogCreateRoom.close());
 document.getElementById("btnFindRoom").addEventListener("click", async() => {
-	const roomsJson = getRoomsPublic();
+	const rooms = await getRoomsPublic();
+	if(!rooms)
+		return
 	const container = document.getElementById("container_rooms_public");
 	container.innerHTML = "";
-	(await roomsJson).rooms.forEach(room => container.appendChild(getCardRoom(room)));
+	rooms.forEach(room => container.appendChild(getCardRoom(room)));
 	dialogSearchRoom.showModal();
 });
 document.getElementById("btnCancelSearchRoom").addEventListener("click", () => dialogSearchRoom.close());

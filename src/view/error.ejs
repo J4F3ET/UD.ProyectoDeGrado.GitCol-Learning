@@ -17,15 +17,13 @@
 <body class=" body body-error scrollable">
 	<div class="error-container">
 		<h1 class="title-error text red">
-			Error <%= error.status %>
+			<i class="nes-icon ban"></i>
+			<p>Error <%= error.status %></p>
 		</h1>
 		<p class="message-error text">
 			<%= error.message %>
 		</p>
 	</div>
-	<figure class="figure">
-		<img class="cat_error" src="dist/assets/img/error.jpeg" alt="cat">
-	</figure>
 	<a class="btn green btn-only-icon"href="/">
 		<i class="nes-icon caret-left"></i> Home
 	</a>
@@ -35,5 +33,6 @@
 	<script src="dist/assets/lib/particlesjs-config.json"></script>
 	<!--OBSERVER Auth Observer-->
 	<script type="module" src="dist/js/userNotAuth-observer.js"></script>
+	<script type="module" src="dist/js/error-script.js"></script>
 </body>
 </html>

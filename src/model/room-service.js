@@ -109,7 +109,7 @@ async function roomGetAll() {
 /**
  * roomGetAllPublic - Get all public rooms
  * @throws error
- * @returns {Promise<{id: string, code: string, description: string, members: int}|[]>} : rooms public or empty array
+ * @returns {Promise<[{id: string, code: string, description: string, members: int}]|[]>} : rooms public or empty array
  */
 async function roomGetAllPublic(){
     try {

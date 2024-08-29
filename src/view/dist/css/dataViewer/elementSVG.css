@@ -1,16 +1,16 @@
 #emptyContainer{
     margin-top: 2rem;
-    border: 2px #D45050;
+    border: 2px  var(--red-color);
     border-style: dashed none;
 }
 .emptyTitle{
-    font-size: 2.5rem;
+    font-size: var(--font-size-h1-mobile);
     font-weight: 600;
-    stroke: #D45050;
-    fill: #D45050;
+    stroke: var(--red-color);
+    fill:  var(--red-color);
 }
 .empyText{
-    font-size: 1.5rem;
+    font-size: var(--font-size-mobile);
     color: var(--text-color);
     stroke: var(--text-color);
     fill: var(--text-color);
@@ -20,19 +20,40 @@ text.title-property {
     fill: var(--orange-color);
 }
 text.text-property{
-    fill: #ffffff;
+    fill: var(--white-color);
 }
 g.container-text-data-repository {
+    font-size: var(--font-size-large);
     text-anchor:middle;
-    font-size: 1.5rem;
     fill: var(--text-color);
 }
 strong{
     font-weight:800;
-
 }
-@media screen and (max-width: 1106px){
+/* Tabletas */
+@media (min-width: 576px) {
+    .emptyTitle{
+        font-size: var(--font-size-h1-tablet);
+    }
     .empyText{
-        font-weight: 100;
+        font-size: var(--font-size-tablet);
+    }
+}
+/* Laptops y escritorios */
+@media (min-width: 768px) {   
+    .emptyTitle{
+        font-size: var(--font-size-h1-desktop);
+    }
+    .empyText{
+        font-size: var(--font-size-desktop);
+    }
+}
+/* Monitores anchos */
+@media (min-width: 1200px) {
+    .emptyTitle{
+        font-size: var(--font-size-h1-large);
+    }
+    .empyText{
+        font-size: var(--font-size-large);
     }
 }

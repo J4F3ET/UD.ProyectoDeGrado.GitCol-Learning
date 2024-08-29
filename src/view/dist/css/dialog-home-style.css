@@ -10,7 +10,7 @@
     animation: show-dialog .7s .5s both ease-in-out;
     box-sizing: border-box;
     color: var(--text-color);
-    font-size: 1.3rem;
+    font-size: var(--font-size-mobil);
     overflow: hidden;
 }
 .dialog[open].second::backdrop{
@@ -31,7 +31,7 @@
     color: var(--text-color);
     padding: .5rem 1rem;
     border-radius: 1rem;
-    font-size: 1.4rem;
+    font-size: var(--font-size-mobile);
     margin-top: 1rem;
 }
 .container_dialog{
@@ -53,7 +53,7 @@
     background-size: cover;
 }
 .title_dialog{
-    font-size: 3.5rem;
+    font-size: var(--font-size-h1-mobile);
     margin: 1rem 0;
     color: var(--text-color);
 }
@@ -170,7 +170,7 @@
     background-color: var(--red-color);
     color: var(--text-color);
     border-radius: 0 0;
-    font-size: 1.5rem;
+    font-size: var(--font-size-h1-mobile);
     cursor: pointer;
 }
 .btn_dialog_coursel{
@@ -233,12 +233,55 @@
         opacity: 1;
     }
 }
-@media (max-width: 768px){
+/* Tabletas */
+@media (min-width: 576px) {
+    .dialog{
+        font-size: var(--font-size-tablet);
+    }
+    .alert{
+        font-size: var(--font-size-tablet)
+    }
+    .title_dialog{
+        font-size: var(--font-size-h1-tablet)
+    }
+    .btn_dialog_start{
+        font-size: var(--font-size-h1-tablet)
+    }
+}
+/* Laptops y escritorios */
+@media (max-width: 768px) {
     .section_dialog.img{
         display: none;
     }
     .fixed-end{
         top: 0;
         left: 0;
+    }
+    .dialog{
+        font-size: var(--font-size-desktop);
+    }
+    .alert{
+        font-size: var(--font-size-desktop)
+    }
+    .title_dialog{
+        font-size: var(--font-size-h1-desktop)
+    }
+    .btn_dialog_start{
+        font-size: var(--font-size-h1-desktop)
+    }
+}
+/* Monitores anchos */
+@media (min-width: 1200px) {
+    .dialog{
+        font-size: var(--font-size-large);
+    }
+    .alert{
+        font-size: var(--font-size-large)
+    }
+    .title_dialog{
+        font-size: var(--font-size-h1-large)
+    }
+    .btn_dialog_start{
+        font-size: var(--font-size-h1-large)
     }
 }

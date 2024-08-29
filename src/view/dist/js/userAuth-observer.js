@@ -10,11 +10,11 @@ export async function logout() {
 	auth.signOut();
 	return response;
 }
-onAuthStateChanged(auth, (user) => {
+export async function goToHome(){
+	window.location.href = "/";
+}
+onAuthStateChanged(auth,async (user) => {
 	if (user) return;
-	logout().then((response) => {
-		response.json().then((data) => {
-			window.location.href = data.url;
-		});
-	});
+	logout()
+	goToHome()
 });

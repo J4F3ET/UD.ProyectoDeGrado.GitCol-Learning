@@ -21,8 +21,8 @@
     --text-color: #FFFDF9;
     --text-shell-color: #3cff00;
     --orange-color: #FA8E5F;
+    --orange-lite-color:#FFA67F;
     --red-color: #D45050;
-    --orange-color: #FA8E5F;
     --yellow-color: #FACA89;
     --green-color: #83BD86;
     --cyan-color: #54C6B8;
@@ -37,9 +37,42 @@
     --gray-color: #C4BDB7;
     --white-color: #FFFDF9;
     --black-color: #0A0F17;
+    --black-lite-color: #0f1621;
     --long-font-size: 2.5rem;
     --normal-font-size: 1.3rem;
     --small-font-size: .8rem;
+    /* Tamaño de fuente base */
+    --font-size-base: 1rem;
+
+    /* Tamaños de fuente para móviles */
+    --font-size-mobile: var(--font-size-base);
+    --font-size-h1-mobile: 1.5rem; /* 24px */
+    --font-size-h2-mobile: 1.25rem; /* 20px */
+    --font-size-h3-mobile: 1.125rem; /* 18px */
+    --font-size-small-mobile: 0.875rem; /* 14px */
+
+    /* Tamaños de fuente para tabletas */
+    --font-size-tablet: 1.0625rem; /* 17px */
+    --font-size-h1-tablet: 1.75rem; /* 28px */
+    --font-size-h2-tablet: 1.5rem; /* 24px */
+    --font-size-h3-tablet: 1.25rem; /* 20px */
+    --font-size-small-tablet: 0.9375rem; /* 15px */
+
+    /* Tamaños de fuente para laptops y escritorios */
+    --font-size-desktop: 1.125rem; /* 18px */
+    --font-size-h1-desktop: 2rem; /* 32px */
+    --font-size-h2-desktop: 1.75rem; /* 28px */
+    --font-size-h3-desktop: 1.5rem; /* 24px */
+    --font-size-small-desktop: 1rem; /* 16px */
+
+    /* Tamaños de fuente para monitores anchos */
+    --font-size-large: 1.55rem; /* 20px */
+    --font-size-h1-large: 2.55rem; /* 36px */
+    --font-size-h2-large: 2.3rem; /* 32px */
+    --font-size-h3-large: 2rem; /* 28px */
+    --font-size-small-large: 1.125rem; /* 18px */
+
+    --font-size-extra-large: 4rem
 }
 #particles-js{
     width: 100%;

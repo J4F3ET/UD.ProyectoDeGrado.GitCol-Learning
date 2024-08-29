@@ -9,22 +9,32 @@ const router = Router();
  * @openapi
  * /teamWorking:
  *   get:
- *     summary: Endpoint para obtener la pantalla de trabajo en equipo.
- *     description: Retorna la pantalla de trabajo en equipo (multi-mode-screen).
+ *     summary: Endpoint get page multi mode 
+ *     description: Return page team worki  (multi-mode-screen).
  *     parameters:
  *       - in: query
  *         name: room
  *         required: true
- *         description: Key de la sala a la que se quiere unir el usuario.
+ *         description: Key to room
  *         schema:
  *           type: string
  *           example: -No7-v6_p1qqbKY2gfzp
  *     responses:
  *       200:
- *         description: Éxito. Retorna la pantalla de trabajo en equipo.
+ *         description: Succes return page
  *         content:
  *           text/html:
  *             example: multi-mode-screen.ejs
+ *       401:
+ *         description: Unauthorized and redirect to error view
+ *         content:
+ *           text/html:
+ *             example: error-screen.ejs
+ *       404:
+ *         description: Room not found
+ *         content:
+ *           text/html:
+ *             example: error-screen.ejs
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
@@ -33,12 +43,12 @@ router.get("/teamWorking*",releaseVerificationMiddleware,verifyUserInRoomMiddlew
 	const roomSnapshot = await roomGet(req.query.room);
 	const roomData = roomSnapshot.val();
 	if (!roomData){
-		res.render("error", {
+		return res.render("error", {
 			error: err,
 			message: "Room not found",
 			status: 404
-		}).end();
-		return;
+		});
+		
 	}
 	const repository  = (await parseToRoomObject(req.query.room,roomData)).repository
 	res.render("multi-mode-screen", {
@@ -52,28 +62,43 @@ router.get("/teamWorking*",releaseVerificationMiddleware,verifyUserInRoomMiddlew
  * @openapi
  * /teamWorking:
  *   patch:
- *     summary: Endpoint para remover un usuario de una sala.
- *     description: Verifica si el usuario está en la sala, lo remueve de la sala.
+ *     summary: Endpoint- Remove user to room 
+ *     description: Delete user to room
  *     parameters:
  *       - in: query
  *         name: room
  *         required: true
- *         description: Key de la sala a la que se quiere unir el usuario.
+ *         description: Room key
  *         schema:
  *           type: string
  *           example: -No7-v6_p1qqbKY2gfzp
  *     responses:
  *       200:
- *         description: Éxito. Retorna la sala para redireccionar al usuario.
+ *         description: Succes return boolean
  *         content:
  *           application/json:
  *             examples:
  *               example1:
  *                 value:
- *                   success: true # Indicando que el usuario fue removido de la sala (boolean)
+ *                   success: true
  *               example2:
  *                 value:
- *                   success: false # Indicando que el usuario no fue removido de la sala (boolean)
+ *                   success: false
+ *       401:
+ *         description: Unauthorized and redirect to error view
+ *         content:
+ *           text/html:
+ *             example: error-screen.ejs
+ *       403:
+ *         description: Unknown user and redirect to error view
+ *         content:
+ *           text/html:
+ *             example: error-screen.ejs
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           text/html:
+ *             example: error-screen.ejs
  *     security: 
  *       - bearerAuth: []
  *       - cookieAuth: []
