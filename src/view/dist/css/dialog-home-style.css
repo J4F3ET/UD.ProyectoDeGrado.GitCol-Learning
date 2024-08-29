@@ -12,6 +12,7 @@
     color: var(--text-color);
     font-size: var(--font-size-mobil);
     overflow: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 .dialog[open].second::backdrop{
     animation:none;
