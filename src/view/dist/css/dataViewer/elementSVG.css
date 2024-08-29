@@ -23,7 +23,7 @@ text.text-property{
     fill: var(--white-color);
 }
 g.container-text-data-repository {
-    font-size: var(--font-size-mobile);
+    font-size: var(--font-size-large);
     text-anchor:middle;
     fill: var(--text-color);
 }
@@ -38,9 +38,6 @@ strong{
     .empyText{
         font-size: var(--font-size-tablet);
     }
-    g.container-text-data-repository {
-        font-size: var(--font-size-tablet);
-    }
 }
 /* Laptops y escritorios */
 @media (min-width: 768px) {   
@@ -50,9 +47,6 @@ strong{
     .empyText{
         font-size: var(--font-size-desktop);
     }
-    g.container-text-data-repository {
-        font-size: var(--font-size-desktop);
-    }
 }
 /* Monitores anchos */
 @media (min-width: 1200px) {
@@ -60,9 +54,6 @@ strong{
         font-size: var(--font-size-h1-large);
     }
     .empyText{
-        font-size: var(--font-size-large);
-    }
-    g.container-text-data-repository {
         font-size: var(--font-size-large);
     }
 }

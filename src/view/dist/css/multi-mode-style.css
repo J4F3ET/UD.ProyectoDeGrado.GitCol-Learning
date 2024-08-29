@@ -83,3 +83,12 @@
         font-size: var(--font-size-large);
     }
 }
+@media screen and (max-width: 1106px){
+    .container-help-and-svg{
+        height: fit-content;
+    }
+    .container-svg>svg{
+        height: 99vh;
+        width: 100vw;
+    }
+}
