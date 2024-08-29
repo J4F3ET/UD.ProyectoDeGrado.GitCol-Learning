@@ -33,6 +33,7 @@ body{
   animation:none;
 }
 .dialog::backdrop{
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   background-color: rgba(0, 0, 0, 0.411);
 }
@@ -256,6 +257,7 @@ button:disabled{
   margin-inline: 1.5rem;
   background-color: transparent;
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: var(--orange-color) .2rem solid;
   box-shadow: 5px 5px #ffa179;
   padding: 2.5rem 1rem;

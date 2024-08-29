@@ -20,6 +20,7 @@
     width: 100vw;
     padding: .5% 2%;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -201,6 +202,7 @@
     width: 350px;
     height: 404px;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 2px solid var(--orange-color);
     box-shadow: 5px 5px var(--orange-lite-color);
     border-radius: 5px;
@@ -280,6 +282,7 @@
     padding: 2rem 9%;
     background: var(--second-bg-color-trasparent);
     backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     font-size: var(--font-size-mobile);
 }
 .footer a{
