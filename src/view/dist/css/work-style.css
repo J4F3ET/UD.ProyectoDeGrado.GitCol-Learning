@@ -1,3 +1,6 @@
+:root{
+    --footer-space :3rem
+}
 body{
     width: 100vw;
     height: 100vh;
@@ -43,7 +46,7 @@ body{
 .container-input-shell{
     display: flex;
     justify-content: start;
-    height: 3rem;
+    height: var(--footer-space);
     align-items: center;
     padding: .5rem;
     border: solid 1.5px var(--orange-color);
@@ -89,6 +92,7 @@ body{
         grid-column: 1;
         justify-content: flex-start;
         max-height: 20rem;
+        padding-bottom: var(--footer-space);
     }
     .container-help-and-svg{
         grid-row: 1;
