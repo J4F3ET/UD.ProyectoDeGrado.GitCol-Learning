@@ -1,9 +1,6 @@
 /* Initial Configuration  */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-@font-face {
-	font-family: "Virgil";
-	src: url("../assets/font/Virgil.woff2");
-}
+
 *{
     margin: 0;
     padding: 0;
@@ -13,6 +10,7 @@
     outline: none;
     scroll-behavior: smooth;
     font-family: 'Poppins',sans-serif;
+    -webkit-touch-callout: none;
 }
 :root{
     --bg-color: #1B263B;
@@ -42,14 +40,14 @@
     --normal-font-size: 1.3rem;
     --small-font-size: .8rem;
     /* Tamaño de fuente base */
-    --font-size-base: 1rem;
+    --font-size-base: .8rem;
 
     /* Tamaños de fuente para móviles */
-    --font-size-mobile: var(--font-size-base);
-    --font-size-h1-mobile: 1.5rem; /* 24px */
-    --font-size-h2-mobile: 1.25rem; /* 20px */
-    --font-size-h3-mobile: 1.125rem; /* 18px */
-    --font-size-small-mobile: 0.875rem; /* 14px */
+    --font-size-mobile: .8rem;
+    --font-size-h1-mobile: 1.3rem; /* 24px */
+    --font-size-h2-mobile: 1.1rem; /* 20px */
+    --font-size-h3-mobile: 1rem; /* 18px */
+    --font-size-small-mobile: 0.575rem; /* 14px */
 
     /* Tamaños de fuente para tabletas */
     --font-size-tablet: 1.0625rem; /* 17px */
@@ -98,7 +96,7 @@
 .btn{
     border: none;
     outline: none;
-    min-width: 10rem;
+    min-width: fit-content;
     max-width: 13rem;
     height: max-content;
     margin: .5rem;

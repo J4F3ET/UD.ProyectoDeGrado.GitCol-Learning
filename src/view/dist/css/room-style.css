@@ -27,7 +27,6 @@ body{
   box-sizing: border-box;
   color: var(--text-color);
   font-size: var(--font-size-mobile);
-  overflow: hidden;
 }
 .dialog[open].second::backdrop{
   animation:none;
@@ -59,7 +58,7 @@ body{
 .dialog_item.row{
   display: flex;
   flex-direction: row;
-  width: 50%;
+  width: 100%;
   align-items: baseline;
   justify-content: space-evenly;
   flex-wrap: nowrap;
@@ -67,16 +66,18 @@ body{
 .dialog_input{
   width: 60%;
   min-width: 200px;
+  max-width: 400px;
   padding: 1rem;
 }
 .card{
   background: var(--bg-color);
   padding: 1rem;
   border-radius: 1rem;
-  width: 400px !important;
-  height: 80px !important;
-  min-width: 400px !important;
-  min-height: 80px !important;
+  width: 80%;
+  height: 80px;
+  min-width: 210px;
+  min-height: 80px;
+  max-width: 400px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -86,10 +87,10 @@ body{
 }
 .card__description{
   font-weight: normal;
-  font-size: var(--font-size-small-large);
+  font-size: var(--font-size-small-mobile);
 }
 .card__info{
-  font-size:var(--font-size-large);
+  font-size:var(--font-size-mobile);
   font-weight:500;
   color: var(--orange-color);
   span{
@@ -311,6 +312,12 @@ button:disabled{
   .room__title {
     margin-bottom: 2rem;
   }
+  .card__description{
+    font-size: var(--font-size-small-tablet);
+  }
+  .card__info{
+    font-size:var(--font-size-tablet);
+  }
 }
 /* Laptops y escritorios */
 @media (min-width: 768px) {   
@@ -319,6 +326,12 @@ button:disabled{
   }
   .room__box i {
     font-size: var(--font-size-desktop);
+  }
+  .card__description{
+    font-size: var(--font-size-small-desktop);
+  }
+  .card__info{
+    font-size:var(--font-size-desktop);
   }
 }
 /* Monitores anchos */
@@ -329,5 +342,10 @@ button:disabled{
   .room__box i {
     font-size: var(--font-size-large);
   }
-  
+  .card__description{
+    font-size: var(--font-size-small-large);
+  }
+  .card__info{
+    font-size:var(--font-size-large);
+  }
 }

@@ -91,9 +91,10 @@ function validateInputRoomCode(element){
 	const validLetterAndNumber = /^[A-Z0-9]+$/;
 	const required = document.getElementById("validRoomCode");
 	const callback =  (data)=>{
+		console.log(checkInputRoomCode(element,element.value))
 		updateValidateRequirement(required,data);
 		required.textContent = data ? "Room code available" : "The code is already in use";
-		document.getElementById("btnSubmitCreateRoom").disabled = checkInputRoomCode(element,data.code);
+		document.getElementById("btnSubmitCreateRoom").disabled = checkInputRoomCode(element,element.value);
 	}
 	if(element.value.length > 3){
 		fetch(`/rooms/code?code=${element.value}`).then((response) => {

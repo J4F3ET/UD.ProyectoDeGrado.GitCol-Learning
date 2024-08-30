@@ -25,19 +25,19 @@ async function roomCreate(code, description,owner, members, hidden,status = true
         console.error(error);
         return null;
     }
-    return roomUpdateRepository(key,defaultRepository(key));
-    
+    roomUpdateRepository(key,defaultRepository(key));
+    return key
 }
 /**
  * roomUpdateRepository - Update the repository of a room
  * @param {string} id : id of the room
  * @param {Promise} data : object with the params to update
- * @returns {Promise<int>} : id of the room
+ * @returns {Promise<void>}
  */
 async function roomUpdateRepository(id, data) {
     try{
         const ref = database.ref("rooms/"+id+"/repository");
-        return ref.set(await data).key;
+        ref.set(await data).key;
     }catch (error){
         console.error(error);
     }
