@@ -23,6 +23,7 @@ body{
 }
 .container-log{
     height: 90vh;
+    min-height: 5rem;
     background-color: var(--black-color);
     box-shadow: 3px 3px 10px var(--black-color);
     padding: 10px;
@@ -59,10 +60,11 @@ body{
     flex-direction: column;
 }
 .container-panel-help{  
-    padding:3px;
-    display:flex;
+    padding: 3px;
+    display: flex;
     justify-content: end;
     background-color: transparent;
+    align-items: center
 }
 .container-svg{
     display: inline-block;
@@ -79,7 +81,21 @@ body{
     box-shadow: 2px 2px 8px var(--black-color);
 
 }
-@media screen and (max-width: 1106px){
+.btn-icon-string{
+    font-size: var(--font-size-tablet) !important;
+    font-weight: 500;
+    display: flex;
+    height: min-content;
+    max-width: max-content;
+    min-width: min-content;
+    justify-content: flex-start;
+    gap: .5rem;
+    align-items: center;
+    &:hover{
+        cursor: pointer;
+    }
+}
+@media(max-width: 1106px){
     body {
         display: grid;
         grid-template-rows: auto auto ;
@@ -124,20 +140,4 @@ body{
     .container-log{
         height: 80%;
     }
-}
-/* ---------------------------------- */
-#card {    
-    width: 100%;
-    border-radius: 15px;
-    background-color: var(--second-bg-color);
-	box-shadow: 2px 2px 8px var(--text-color);   
-}
-#logInput {
-    display: grid;
-    row-gap: 1.25rem;
-    border-radius: 1.5rem;
-    padding-inline: 42%;
-    padding-left: 5%;
-    grid-template-columns: 1fr max-content;
-    border: 2px solid hsla(0, 0%, 100%, .7);
 }
