@@ -1,3 +1,4 @@
+import { driveUsageMode } from "./drivejs-mode-script.js";
 const containerRepositoryLocal = document.getElementById("svgContainer");
 const containerRepositoryCloud = document.getElementById("svgContainerCloud");
 const toggleRepository = async () => {
@@ -40,3 +41,26 @@ async function leaveToRoom(){
     window.location.href = "/rooms";
 };
 document.getElementById("btnToggleRepository").addEventListener("click",() => toggleRepository());
+document.getElementById("btnTutorial").addEventListener("click",()=>
+    driveUsageMode(
+        {
+            element: document.querySelector(".show-repository").firstElementChild,
+            popover: {
+            title: 'Command visualization',
+            description: 'In this section you will see a graphical representation of the commands you have executed.',
+            side: "left",
+            align: 'start'
+            }
+        },
+        {
+            element: '#btnToggleRepository',
+            popover: {
+              title: 'Button to change repository',
+              description: 'This button will toggle between the local and remote repository.',
+              side: "left",
+              align: 'start'
+            }
+        }
+
+    ).drive()
+)

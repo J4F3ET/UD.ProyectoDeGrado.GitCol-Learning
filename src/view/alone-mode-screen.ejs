@@ -9,6 +9,7 @@
 			type="image/x-icon"
 		/>
 		<title> Col-Learning</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
         <link rel="stylesheet" href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css"/>
         <link rel="stylesheet" href="dist/css/reset.css">
         <link rel="stylesheet" href="dist/css/global.css">
@@ -19,6 +20,9 @@
         <link rel="stylesheet" href="dist/css/dataViewer/tag.css">
         <link rel="stylesheet" href="dist/css/dataViewer/text.css">
         <link rel="stylesheet" href="dist/css/dataViewer/log.css">
+        <link rel="stylesheet" href="dist/css/driverjs-style.css">
+
+        <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
         <script>
             const REF_STORAGE_REPOSITORY = "local";
             const REF_STORAGE_REPOSITORY_CLOUD = null;
@@ -36,8 +40,8 @@
         </section>
         <section class="container-help-and-svg" id="contentContainer">
             <div class="container-panel-help" id="panelHelpContainer">
-                <button class="btn orange btn-only-icon" title="solution">
-                    <i class="nes-icon star"></i>
+                <button id="btnTutorial" class="btn orange btn-icon-string" title="solution">
+                    <i class="nes-icon exclamation-circle"> </i>&nbsp;&nbsp;Tutorial
                 </button>
                 <button id="btnExit" class="btn red btn-only-icon" title="back">
                     <i class="nes-icon times"></i>
@@ -47,7 +51,8 @@
             </div>
         </section>
 	</body>
-    <script src="/dist/js/alone-mode-script.js"></script>
+    <script type="module" src="./dist/js/drivejs-mode-script.js"></script>
+    <script type="module" src="./dist/js/alone-mode-script.js"></script>
     <script type="module" src="./dist/js/mode-script.js"></script>
 	<script type="module" src="./dist/js/userNotAuth-observer.js"></script>
 </html>
