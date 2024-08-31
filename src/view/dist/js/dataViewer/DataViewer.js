@@ -590,7 +590,7 @@ export class DataViewer{
      * @return {void}
      */
     updateLineOfCommit(dataCommit,parent){
-        const line = this._svg.getElementById(dataCommit.parent+"-"+dataCommit.id);
+        const line = this._svg.getElementById(parent.id+"-"+dataCommit.id);
         line.setAttribute("x1", dataCommit.cx);
         line.setAttribute("y1", dataCommit.cy);
         line.setAttribute("x2", parent.cx);
