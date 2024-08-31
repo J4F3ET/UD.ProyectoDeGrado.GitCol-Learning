@@ -1,4 +1,5 @@
 import {logout,goToHome} from "./userAuth-observer.js";
+import { driveHelpRoom } from "./drivejs-mode-script.js";
 const dialogCreateRoom = document.getElementById("dialogCreateRoom");
 const dialogSearchRoom = document.getElementById("dialogSearchRoom");
 const RESPONSE_BAD_REQUEST = 400
@@ -182,3 +183,6 @@ document.getElementById("btnFindRoom").addEventListener("click", async() => {
 	dialogSearchRoom.showModal();
 });
 document.getElementById("btnCancelSearchRoom").addEventListener("click", () => dialogSearchRoom.close());
+document.getElementById("helpLoginToRoom").addEventListener("click",()=>{
+	driveHelpRoom().drive()
+})

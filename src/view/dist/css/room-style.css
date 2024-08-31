@@ -3,6 +3,9 @@ body{
     font-family: 'Poppins',sans-serif;
 }
 /* HEADER*/
+.back{
+  min-height: 5rem;
+}
 .back>.btn {
   display: inline-flex;
   justify-content: center;
@@ -140,6 +143,7 @@ button:disabled{
     height: 80vh;
     display: grid;
     align-items: center;
+    align-content: center;
     gap: .5rem;
   }
 .room__form {
@@ -206,7 +210,7 @@ button:disabled{
   cursor: pointer;
 }
 .btn.width {
-  max-width: none;
+  max-width: 100%;
 }
 #btnLoginToRoom{
   width: 100%;
@@ -226,12 +230,13 @@ button:disabled{
   font-size: var(--font-size-mobile);
   margin: .5rem;
   text-align: center;
+  cursor: pointer;
 }
-.room__register a {
+.room__register{
   color: var(--text-color);
   font-weight: 500;
 }
-.room__register a:hover {
+.room__register:hover {
   text-decoration: underline;
 }
 .container_dialog{
@@ -267,7 +272,7 @@ button:disabled{
   background-color: var(--bg-color);
 }
 .small{
-  font-size: var(--font-size-small-mobile);
+  font-size: var(--font-size-mobile);
   &.red{
     color: var(--red-color);
   }

@@ -3,6 +3,14 @@
     height: 100%;
 }
 .hidden-repository{
+    animation: none;
+    display: none;
+}
+.show-repository{
+    animation: none;
+    display: block;
+}
+.hidden-repository{
     animation: hidden-repository ease-in-out 0.5s forwards;
 }
 .show-repository{
@@ -11,20 +19,6 @@
 .btn-only-icon{
     width: min-content;
     height: min-content;
-}
-.toggle-repository-btn{
-    font-size: var(--font-size-mobile);
-    font-weight: 500;
-    display: flex;
-    height: min-content;
-    max-width: 180px;
-    min-width: 180px;
-    justify-content: flex-start;
-    gap: .5rem;
-    align-items: center;
-    &:hover{
-        cursor: pointer;
-    }
 }
 @keyframes hidden-repository {
     0%{
@@ -53,37 +47,10 @@
     }
 }
 @media screen and (max-width: 1106px) {
-    .hidden-repository{
-        animation: none;
-        display: none;
-    }
-    .show-repository{
-        animation: none;
-        display: block;
-    }
+    
     .repositories-container {
         height: 85%;
     }
-}
-/* Tabletas */
-@media (min-width: 576px) {
-    .toggle-repository-btn{
-        font-size: var(--font-size-tablet);
-    }
-}
-/* Laptops y escritorios */
-@media (min-width: 768px) {   
-    .toggle-repository-btn{
-        font-size: var(--font-size-desktop);
-    }
-}
-/* Monitores anchos */
-@media (min-width: 1200px) {
-    .toggle-repository-btn{
-        font-size: var(--font-size-large);
-    }
-}
-@media screen and (max-width: 1106px){
     .container-help-and-svg{
         height: fit-content;
     }

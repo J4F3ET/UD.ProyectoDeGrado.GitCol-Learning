@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {releaseVerificationMiddleware} from "./util/login-middleware .js";
 import { verifyUserInRoomMiddleware } from "./util/teamWorking-middleware.js";
-import { roomRemoveMember,roomGet } from "../model/room-service.js";
+import { roomRemoveMember,roomGet,roomDelete } from "../model/room-service.js";
 import {auth} from "../model/firebase-service.js";
 import { parseToRoomObject } from "../model/utils.js";
 const router = Router();
@@ -106,7 +106,11 @@ router.get("/teamWorking*",releaseVerificationMiddleware,verifyUserInRoomMiddlew
 router.patch("/teamWorking",releaseVerificationMiddleware,verifyUserInRoomMiddleware, async(req, res) => {
 	try {
 		const user = auth.verifyIdToken(req.headers.cookie.split("=")[1]);
-		res.json({success: await roomRemoveMember(req.query.room, (await user).uid)});
+		const removestatus = await roomRemoveMember(req.query.room, (await user).uid)
+		const room = (await roomGet(req.query.room)).val()
+		if(!room.hasOwnProperty("members"))
+			roomDelete(req.query.room)
+		res.json({success: removestatus});
 	} catch (error) {
 		render("error", {
 			error: error,
