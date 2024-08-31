@@ -11,11 +11,15 @@
 		/>
 		<!-- --------- BOX ICONS ---------- -->
         <link href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css" rel="stylesheet" />
+		<!-- DRIVEJS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
         <!-- CSS -->
 		<link rel="stylesheet" href="dist/css/reset.css" />
 		<link rel="stylesheet" href="dist/css/global.css">
 		<link rel="stylesheet" href="dist/css/room-style.css"/>
-		
+		<link rel="stylesheet" href="dist/css/driverjs-style.css"/>
+
+		<script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
 	<body>
@@ -32,7 +36,7 @@
 					<Label>
 						Code
 					</Label>
-					<div class="room__box">
+					<div id="inputCodeRoomToLogin" class="room__box">
 						<span>
 							<i class="nes-icon search"></i>
 						</span>
@@ -50,7 +54,7 @@
 					</div>
 					<small class="small">Write the code for the room</small>
 					<small class="small">
-						<ul>
+						<ul id="listRequirementsRoomLogin">
 							<li class="invalidRequirements" id="validLetterAndNumberSearch">Only letters and numbers are allowed</li>
 							<li class="invalidRequirements" id="validMinCharactersSearch">Minimum 4 characters</li>
 							<li class="invalidRequirements" id="validMaxCharactersSearch">Maximum 8 characters</li>
@@ -58,7 +62,7 @@
 					</small>
 				</div>
 				<button disabled id="btnLoginToRoom" type="submit" class="btn green width">Login</button>
-				<div class="room__register">Not logged in ? <a href="#">Help</a></div>
+				<div id="helpLoginToRoom" class="room__register">Not logged in ? Help</div>
 			</form>
 			<button id="btnFindRoom" class="btn width">Search room</button>
 			<button id="btnCreateRoom" class="btn width">Create room</button>

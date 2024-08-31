@@ -37,4 +37,46 @@ export const driveUsageMode = (...steps) => {
     return getDriver(defaultUsageModelSteps)
   return getDriver([...defaultUsageModelSteps,...steps])
 };
-
+const helpRooms = [
+  {
+    element: '#inputCodeRoomToLogin',
+    popover: {
+      title: 'Enter your code to room',
+      description: 'Write code and press \'enter\'. Example \'ASDF\'',
+      side: "left",
+      align: 'start'
+    }
+  },
+  {
+    element: '#listRequirementsRoomLogin',
+    popover: {
+      title: 'Verify requirements',
+      description: 'The code must meet the following requirements. Example \'ASDF\'',
+      side: "left",
+      align: 'start'
+    }
+  },
+  {
+    element: '#btnLoginToRoom',
+    popover: {
+      title: 'Button login',
+      description: 'If the code is valid, the button to click on it will be enabled.Example \'ASDF\'',
+      side: "left",
+      align: 'start'
+    }
+  },
+  {
+    element: '#btnFindRoom',
+    popover: {
+      title: 'Search room',
+      description: 'If for some reason you cannot find the room, try searching in the public rooms.',
+      side: "left",
+      align: 'start'
+    }
+  }
+]
+export const driveHelpRoom = (...steps) =>{
+  if(!steps.length)
+    return getDriver(helpRooms,)
+  return getDriver([...helpRooms,...steps])
+};
