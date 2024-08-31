@@ -163,8 +163,27 @@ export class Push {
             ),
             ["checked-out","detached-head"]
         )
-
+        repository.commits = await this.updateTagRefInRepository(repository.commits,refBranch,refRemote);
         this._socketHandler.sendUpdateRepository(remote)
+        sessionStorage.setItem(this._dataRepository,JSON.stringify(repository))
+    }
+    async updateTagRefInRepository(commits,refbranch,refRemote){
+        return Promise.all(commits.map(async commit=>{
+
+            if(!commit.tags.length)
+                return commit
+            
+            const fullRefRemote = refRemote+"/"+refbranch
+            const tags = new Set(commit.tags)
+
+            if(tags.has(refbranch))
+                commit.tags = [...commit.tags,fullRefRemote]
+
+            if(tags.has(fullRefRemote))
+                commit.tags = commit.tags.filter(t=> t!=fullRefRemote)
+
+            return commit
+        }))
     }
     async removeTagsTheChanges(commits,changesId,refBranch,idHeadCommitLocal){
         
