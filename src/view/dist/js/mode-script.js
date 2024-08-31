@@ -38,9 +38,9 @@ const observer = new Observer()
 let accountComands = listComands.length;
 // EVENT LISTENERS
 document.addEventListener("DOMContentLoaded", () => init());
-document.getElementById("comandInput").addEventListener("keyup",(e) => {
+document.getElementById("comandInput").addEventListener("keyup",async(e) => {
     if(e.key === "ArrowUp"){
-        accountComands= accountComands === 0 ? listComands.length-1 : accountComands-1;
+        accountComands= accountComands == 0 ? listComands.length-1 : accountComands-1;
         e.target.value = listComands[accountComands] || "";
         return;
     }
@@ -50,7 +50,7 @@ document.getElementById("comandInput").addEventListener("keyup",(e) => {
         return
     }
     if(e.key === "Enter"){
-        executeCommand(e.target.value);
+        await executeCommand(e.target.value);
         e.target.value = "";
         listComands = JSON.parse(sessionStorage.getItem(REF_STORAGE_LOG)).filter(log => log.tag === "comand").map(log => log.message);
         accountComands = listComands.length;
@@ -83,7 +83,6 @@ const executeCommand = async(comand) => {
         aloneModeCommandManager.createMessage('error',error.message);
     }finally{
         observer.notify(sessionStorage.getItem(REF_STORAGE_LOG))
-        accountComands = 1;
     }
 };
 // OBSERVER
