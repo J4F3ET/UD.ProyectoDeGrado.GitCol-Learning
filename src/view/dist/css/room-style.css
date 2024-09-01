@@ -132,7 +132,7 @@ input[type="checkbox"]:checked::before {
   transform: scale(1);
 }
 button:disabled{
-  cursor: not-allowed;
+  cursor: var(--cursor-not-allowed-style),auto;
   opacity: 0.5;
 }
 /* END DIALOG */
@@ -207,7 +207,7 @@ button:disabled{
   border-radius: 4rem;
   color: var(--black-color);
   font-weight: 500;
-  cursor: pointer;
+  cursor: var(--cursor-pointer-style),auto;
 }
 .btn.width {
   max-width: 100%;
@@ -222,7 +222,7 @@ button:disabled{
 }
 .room__button:hover {
     transform: scale(1.03);
-    cursor: pointer;
+    cursor: var(--cursor-pointer-style),auto;
     transition: all 0.2s ease-in-out;
     box-shadow: 0 0 .5rem var(--text-color) ;
 }
@@ -230,7 +230,7 @@ button:disabled{
   font-size: var(--font-size-mobile);
   margin: .5rem;
   text-align: center;
-  cursor: pointer;
+  cursor: var(--cursor-pointer-style),auto;
 }
 .room__register{
   color: var(--text-color);

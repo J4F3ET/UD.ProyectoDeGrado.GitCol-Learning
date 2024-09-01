@@ -174,7 +174,7 @@
     color: var(--text-color);
     border-radius: 0 0;
     font-size: var(--font-size-h1-mobile);
-    cursor: pointer;
+    cursor: var(--cursor-pointer-style),auto;
 }
 .btn_dialog_coursel{
     margin: 1rem;
@@ -191,8 +191,13 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    gap: 10%;
+    gap: 5%;
+    height: 16px;
     width: 100%;
+}
+.icon-provider-container-dialog>svg{
+    height: 200%;
+    width: 50%;
 }
 @keyframes show-text-dialog {
     0% {
