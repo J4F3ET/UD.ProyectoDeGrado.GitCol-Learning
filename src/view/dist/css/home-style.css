@@ -31,7 +31,7 @@
     font-size: var(--font-size-h1-mobile);
     color: var(--blue-color);
     font-weight: 600;
-    cursor: default;
+    cursor: var(--cursor-style),auto;
 }
 #menu-icon{
     font-size: var(--font-size-h1-large);
@@ -255,7 +255,7 @@
     height: 25px;
     border: none;
     background: transparent;
-    cursor: pointer;
+    cursor: var(--cursor-pointer-style),auto;
 }
 .perfile_card-socials-btn i {
     width: 100%;

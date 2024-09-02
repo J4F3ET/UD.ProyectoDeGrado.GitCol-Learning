@@ -12,7 +12,20 @@
     font-family: 'Poppins',sans-serif;
     -webkit-touch-callout: none;
 }
+html{
+    cursor: var(--cursor-style),auto;
+}
+button, 
+a, 
+input, 
+select, 
+textarea {
+    cursor: var(--cursor-pointer-style),auto;
+}
 :root{
+    --cursor-style:url(../assets/img/cursor.png);
+    --cursor-pointer-style: url(../assets/img/cursor_point.png);
+    --cursor-not-allowed-style: url(../assets/img/cursor_not-allowed.png);
     --bg-color: #1B263B;
     --second-bg-color: #465166;
     --second-bg-color-trasparent: #465166a6;
@@ -108,7 +121,7 @@
     border-radius: 5px;
     transition: all ease 0.1s;
     box-shadow: 0px 5px 0px 0px #2e3542;
-    cursor: pointer;
+    cursor: var(--cursor-pointer-style),auto;
     &.green{
         background-color: var(--green-color);
         box-shadow: 0px 5px 0px 0px #acffb0;
