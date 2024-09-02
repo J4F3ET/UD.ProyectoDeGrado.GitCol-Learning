@@ -60,11 +60,11 @@ export class SocketHandler {
     };
     async sendUpdateRepositoryToChannel(channel){
         observeRoom(channel, async (data) => {
-            this.server.to(channel)
-                .emit(
-                    'updateRepository',
-                    await Promise.all(data.repository.commits.map(parseToCommitObject))
-                );
+            if(!data) return
+            this.server.to(channel).emit(
+                'updateRepository',
+                await Promise.all(data.repository.commits.map(parseToCommitObject))
+            );
         });
     };
 }

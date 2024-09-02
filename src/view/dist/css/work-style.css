@@ -92,7 +92,7 @@ body{
     gap: .5rem;
     align-items: center;
     &:hover{
-        cursor: pointer;
+        cursor: var(--cursor-pointer-style),auto;
     }
 }
 @media(max-width: 1106px){

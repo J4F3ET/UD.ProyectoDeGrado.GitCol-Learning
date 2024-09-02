@@ -464,8 +464,7 @@ export class DataViewer{
                 return
             const gContainerText = document.createElementNS("http://www.w3.org/2000/svg","g");
             const xTitle = this.widthText(key) + 30;
-            const widthText = this.widthText(data[key])
-            const xText = widthText + (widthText>100?(widthText*0.6):(xTitle*1.5))
+            const xText = this.resolveLocationOfTextByInfoSVG(xTitle,data[key])
             const y = 35*(index+1);
             const titleProperty = this.createText(xTitle,y,`${key}:`);
             const textProperty = this.createText(xText,y,data[key]);
@@ -477,6 +476,14 @@ export class DataViewer{
             gContainerText.appendChild(textProperty);
             gContainerData.appendChild(gContainerText);
         });
+    }
+    resolveLocationOfTextByInfoSVG(xKey,value){
+        const widthText = this.widthText(value);
+        const multiploMinWidthText = xKey >= 100?1.7:1.55
+        return widthText + (widthText>100
+            ?(xKey*1.35)
+            :(xKey*multiploMinWidthText)
+        )
     }
     /**
      * @name updateCommitToSvg
@@ -590,7 +597,7 @@ export class DataViewer{
      * @return {void}
      */
     updateLineOfCommit(dataCommit,parent){
-        const line = this._svg.getElementById(dataCommit.parent+"-"+dataCommit.id);
+        const line = this._svg.getElementById(parent.id+"-"+dataCommit.id);
         line.setAttribute("x1", dataCommit.cx);
         line.setAttribute("y1", dataCommit.cy);
         line.setAttribute("x2", parent.cx);
