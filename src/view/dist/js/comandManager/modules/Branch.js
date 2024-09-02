@@ -213,9 +213,8 @@ export class Branch{
      * @returns {Promise<void>}
      */
     callBackConfigAllBranch = async (storage) => {
-        this.callBackConfigList(storage);
+        await this.callBackConfigList(storage);
         await this.callBackConfigRemoteBranch();
-        
     }
     /**
      * @name callBackConfigList
@@ -228,15 +227,16 @@ export class Branch{
     callBackConfigList = async (storage) => {
         const headBranch = storage.information.head;
         const refRemote = this._remoteRepository?.split("-")[0]??"origin"
-        const branches = await findAllTags(storage.commits)
-        branches.forEach(branch => {
-            if(branch.includes(refRemote))
-                return
-            const message = branch !== headBranch 
-                ? `<p>${branch}</p>`
-                :`<p style="color:#49be25">*${headBranch}</p>`;
-            createMessage(this._logRepository,'info',message);
-        });
+        const branches = (await findAllTags(storage.commits)).filter(b=>!b.includes(refRemote))
+        for await (const branch of branches) {
+            createMessage(
+                this._logRepository,
+                'info',
+                branch == headBranch 
+                    ?`<p style="color:#49be25">*${headBranch}</p>`
+                    : `<p>${branch}</p>`
+            );
+        }
     };
     /**
      * @name callBackConfigRemoteBranch
@@ -252,7 +252,9 @@ export class Branch{
             throw new Error('The remote repository is not defined');
         const branches = await findAllTags(storage.commits)
         const refRemote = this._remoteRepository.split("-")[0]
-        branches.forEach(branch => createMessage(this._logRepository,'info',refRemote+"/"+branch));
+        for await (const branch of branches) {
+            createMessage(this._logRepository,'info',refRemote+"/"+branch)
+        }
     };
     /**
      * @name callBackConfigDelete

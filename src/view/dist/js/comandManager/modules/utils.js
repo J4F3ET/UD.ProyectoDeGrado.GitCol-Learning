@@ -240,10 +240,8 @@ const getRepository = async (key)=> JSON.parse(sessionStorage.getItem(key))
  */
 async function createMessage(nameRefLog='log',tag='info',message){
     const log = await getRepository(nameRefLog);
-    if(!log)
-        return;
-    log.push({tag,message});
-    sessionStorage.setItem(nameRefLog,JSON.stringify(log));
+    if(!log) return;
+    sessionStorage.setItem(nameRefLog,JSON.stringify([...log,{tag,message}]));
 }
 /**
  * @memberof utils
