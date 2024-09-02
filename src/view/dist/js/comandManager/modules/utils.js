@@ -808,7 +808,7 @@ async function findChangesBetweenBranchs(commitsDestination,commitsOrigin,nameBr
  */
 async function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch){
 
-    const commitsChanges = Promise.all((await findChangesBetweenBranchs(
+    const commitsChanges = await Promise.all((await findChangesBetweenBranchs(
         commitsDestination,
         commitsOrigin,
         nameBranch
@@ -819,10 +819,10 @@ async function mergeChangesInBranchs(commitsDestination,commitsOrigin,nameBranch
     }))
 
     return {
-        changesId : new Set(await Promise.all((await commitsChanges).map(async c=>c.id))),
+        changesId : new Set(await Promise.all(commitsChanges.map(async c=>c.id))),
         repository :  await addChangesRecursivelyToRepository(
             commitsDestination,
-            await commitsChanges
+            commitsChanges
         )
     }
 }
@@ -846,6 +846,7 @@ async function addChangesRecursivelyToRepository(commits,changes){
             commits.map(commit => commit.id):
             []
     );
+    commitIdSet.add("init")
     const parentsChange = new Set(changes.map(c => c.parent))
 
     let idParent = null

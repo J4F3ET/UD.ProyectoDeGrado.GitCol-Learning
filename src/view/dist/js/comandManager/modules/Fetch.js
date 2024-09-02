@@ -71,8 +71,9 @@ export class Fetch {
      * @throws {Error}
      * @memberof! Fetch#
      */
-    async execute(){
-        
+    async execute(dataComand){
+        if(dataComand.includes("-h"||"--help"))
+            return this.callbackHelp()
         const repository = await getRepository(this._dataRepository);
         const remote = await getRepository(this._remoteRepository);
 
@@ -108,6 +109,7 @@ export class Fetch {
                     remote.commits
                 )
             ))
+        console.log(repository.commits)
         sessionStorage.setItem(
             this._dataRepository,
             JSON.stringify(
@@ -119,7 +121,7 @@ export class Fetch {
     }
 
     callbackHelp = async()=>{
-        createMessage('info', `
+        createMessage(this._logRepository,'info', `
             <h5>Concept</h5>
             <p class="help">Download objects and refs from another repository</p>
             <h5>Syntax</h5>
