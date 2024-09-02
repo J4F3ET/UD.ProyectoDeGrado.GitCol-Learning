@@ -71,7 +71,7 @@
 .section_dialog.info{
     padding:2% 5%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     backdrop-filter: blur(10px); /* Aplica el efecto de desenfoque */
     -webkit-backdrop-filter: blur(10px);
@@ -107,17 +107,38 @@
     justify-content: flex-end;
     align-items: flex-end;
 }
+.btn_dialog_close{
+    padding: 1rem;
+    display: flex;
+    position: fixed;
+    z-index: 2;
+    top: -.5rem;
+    right: -.5rem;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
 .fixed-end{
     position: fixed;
+    z-index: 2;
     top: -1rem;
     left: -1rem;
 }
 .section_dialog_item.group_buttons_dialog{
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    max-height: 1rem;
-    margin: 2rem 1rem;
+    max-height: 100%;
+    height: min-content;
+    margin: 1rem 1rem;
+    flex-wrap: wrap;
+    align-content: center;
+}
+.section_dialog_item.group_buttons_dialog.no-wrap-buttons{
+    flex-wrap: nowrap;
+}
+.section_dialog_item.group_buttons_dialog>.btn{
+  width: 150px;
+  height: 40px;
 }
 .item_dialog{
     display: flex;
@@ -246,6 +267,9 @@
     .dialog{
         font-size: var(--font-size-tablet);
     }
+    .section_dialog.info{
+        justify-content: center;
+    }
     .alert{
         font-size: var(--font-size-tablet)
     }
@@ -260,6 +284,9 @@
 @media(max-width: 768px){
     .section_dialog.img{
         display: none;
+    }
+    .btn_dialog_close{
+        display: flex
     }
     .fixed-end{
         top: 0;
