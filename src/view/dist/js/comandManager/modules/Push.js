@@ -130,7 +130,8 @@ export class Push {
                 'Already up to date.'
             )
 
-        if(existsBranchInRemote && commitsRemoteId.has(commiIdtLocal))
+        if(existsBranchInRemote && commitsRemoteId.has(commiIdtLocal)){
+            this.updateTag(repository,refBranch,refRemote)
             return this._socketHandler.sendUpdateRepository(
                 this.moveTag(
                     remote,
@@ -138,6 +139,8 @@ export class Push {
                     commitIdRemote,
                     commiIdtLocal
                 ))
+
+        }
                 
         if(!existsBranchInRemote && commitsRemoteId.has(commiIdtLocal)){
             remote.commits.forEach(commit => {
@@ -145,6 +148,7 @@ export class Push {
                     commit.tags.push(refBranch)
                 }
             })
+            this.updateTag(repository,refBranch,refRemote)
             return this._socketHandler.sendUpdateRepository(remote)
         }
         
@@ -163,8 +167,15 @@ export class Push {
             ),
             ["checked-out","detached-head"]
         )
-        repository.commits = await this.updateTagRefInRepository(repository.commits,refBranch,refRemote);
+        this.updateTag(repository,refBranch,refRemote)
         this._socketHandler.sendUpdateRepository(remote)
+    }
+    async updateTag(repository,refBranch,refRemote){
+        repository.commits = await this.updateTagRefInRepository(
+            repository.commits,
+            refBranch,
+            refRemote
+        );
         sessionStorage.setItem(this._dataRepository,JSON.stringify(repository))
     }
     async updateTagRefInRepository(commits,refbranch,refRemote){
