@@ -89,12 +89,8 @@ const getCourseInforOfMode = async (mode) => {
 }
 async function toogleMode(mode){
     const newImageElement = getImgInforOfMode(mode);
-    const newInfoTetx = generatorInfoDialogFromMode(mode);
     const newCourseText = getCourseInforOfMode(mode);
     const imgElement = dialogSelectMode.querySelector('.img_cat');
-    const infoTetx = dialogSelectMode.querySelector('.dialog_block_info').firstChild;
-    dialogSelectMode.querySelector('.dialog_block_info')
-        .replaceChild(await newInfoTetx,infoTetx);
     dialogSelectMode.querySelector('.dialog_block_img')
         .replaceChild(await newImageElement, imgElement);
     dialogSelectMode.querySelector('.dialog_block_course').innerHTML = await newCourseText;

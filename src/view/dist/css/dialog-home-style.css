@@ -5,9 +5,9 @@
     position: fixed;
     margin: auto;
     max-width: 80%;
-    height: 90vh;
+    height: fit-content;
     max-height: 600px;
-    min-height: 500px;
+    min-height: min-content;
     animation: show-dialog .7s .5s both ease-in-out;
     box-sizing: border-box;
     color: var(--text-color);
