@@ -54,3 +54,43 @@ export const errorNotConfiguration = (module,command)=>{
         `Try use the command 'git ${module} -h' for more information`
     );
 }
+/**
+ * @name errorCommitNotFound
+ * @description Create a new error for the command not found commit
+ * @param {String} module Name of the module
+ * @param {String} commitId Id of the commit
+ * @returns {ErrorModule}
+ */
+export const errorCommitNotFound = (module,startPoint)=>{ 
+    return new ErrorModule(
+        module,
+        `The commit ${startPoint??null} does not exist`,
+        `Try use the command 'git ${module} -h' for more information`
+    );
+}
+/**
+ * @name errorAlreadyUpToDate
+ * @description Create a new error for the command already up to date
+ * @param {String} module Name of the module
+ * @returns {ErrorModule}
+ */
+export const errorAlreadyUpToDate = (module)=>{ 
+    return new ErrorModule(
+        module,
+        `Already up to date.`,
+        `The information of the repository is already up to date. Try use the command 'git ${module} -h' for more information `
+    );
+}
+/**
+ * @name errorEmptyRepository
+ * @description Create a new error for the command empty repository
+ * @param {String} module Name of the module
+ * @returns {ErrorModule}
+ */
+export const errorEmptyRepository = (module)=>{ 
+    return new ErrorModule(
+        module,
+        `The repository is empty`,
+        `Please, try again using 'git commit -m "message"'`
+    );
+}
