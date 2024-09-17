@@ -13,6 +13,11 @@ import {
     findCommitsHead,
     changeDetachedCommitToCommit
 } from "./utils.js";
+import { 
+    ErrorModule,
+    errorNotInitialized,
+    errorCommitNotFound
+} from "./error.js";
 /**
  * @class
  * @classdesc The pull command is used to fetch from and integrate with another repository or a local branch'
@@ -88,7 +93,7 @@ export class Pull {
         this.resetConfiguration()
         
         if(! remoteRepository|| ! localRepository)
-            throw Error('The repository does not exist')
+            throw errorNotInitialized(this._comand);
 
         const refRemote = this._remoteRepository.split("-")[0]
 
@@ -107,7 +112,7 @@ export class Pull {
         const{repositoryMerge,errMerge} = await this.merge(refRemote,dataComand,repositoryFetch)
 
         if(errMerge instanceof Error)
-            throw Error(errMerge)
+            throw errMerge
 
         if(errMerge != null)
             return createMessage(this._logRepository,'info',errMerge)
@@ -151,7 +156,11 @@ export class Pull {
                 return {repositoryFetch:await resolveIsHeadNull(localRepository,tagByDataCommand),errFetch:null}
             return {repositoryFetch:localRepository,err:null}
         } catch (error) {
-            return {repositoryFetch:null,errFetch:error}
+            return {repositoryFetch:null,errFetch:new ErrorModule(
+                this._comand,
+                error.message,
+                `Please, try again using the command 'git pull <remote> <branch>'. By more information use the command 'git pull -h'`
+            )}
         }
         
         
@@ -174,20 +183,26 @@ export class Pull {
             tagsLocalRepositoryWithoutReference.add(tag)
         })
         try {
-            console.log("REF BRANCH LOCAL",refBranchLocalPull,dataComand[dataComand.length-1])
             if(!tagsLocalRepository.has(refBranchRemotePull))
-                throw Error(`fatal: couldn't find remote ref "${refBranchRemotePull}"`)
+                throw ErrorModule(this._comand,
+                    `fatal merge: couldn't find remote ref "${refBranchRemotePull}"`,
+                    `Please, try again using the command 'git branch -a' to see the branches of the repository is necessary the remote branch`
+                );
 
             if(!tagsLocalRepository.has(refBranchLocalPull)
                 &&tagsLocalRepositoryWithoutReference.size
             ){
-                throw Error(`fatal: couldn't find local ref "${refBranchLocalPull}"`)
+                throw ErrorModule(
+                    this._comand,
+                    `fatal merge: couldn't find local ref "${refBranchLocalPull}"`,
+                    `Please, try again using the command 'git branch -a' to see the branches of the repository is necessary the local branch`
+                );
             }
     
             const commitRemotePull = localRepository.commits.find(c => c.tags.includes(refBranchRemotePull))
     
             if(!commitRemotePull)
-                throw Error('The commit does not exist');
+                throw errorCommitNotFound(this._comand,refBranchRemotePull);
 
             let commitLocalPull = localRepository.commits.find(c => c.tags.includes(refBranchLocalPull))
             if(!tagsLocalRepository.has(refBranchLocalPull)

@@ -8,6 +8,13 @@ import {
     removeTags,
     removeClassFromCommit
 } from './utils.js';
+import { 
+    ErrorModule,
+    errorNotInitialized,
+    errorNotConfiguration,
+    errorCommitNotFound,
+    errorEmptyRepository
+} from "./error.js";
 /**
  * @class
  * @classdesc This class is responsible for switching branches or restoring working tree files
@@ -112,10 +119,10 @@ export class Checkout {
         this.resetConfig();
         
         if(!storage)
-            throw Error('The repository does not exist');
+            throw errorNotInitialized(this._comand);
 
         if(storage.commits.length == 0)
-            throw Error('The repository does not have commits');
+            throw errorEmptyRepository(this._comand);
 
         if(!await this.resolveConfigurations(dataComand))
             return
@@ -123,7 +130,7 @@ export class Checkout {
         const {branch,commit} = await this.resolveObjetiveToGo(storage.commits,dataComand);
 
         if(!commit)
-            throw Error(`The star-point "${dataComand.pop()}" does not exist`);
+            throw new ErrorModule(this._comand,`The star-point "${dataComand.pop()}" does not exist`,`Please, try again using a valid start-point, 'master' or 'HEAD' or a valid branch name`);
 
         const commitCurrentHead = await currentHead(storage.commits);
         storage.information.head = this._configurations.b.nameBranch??branch??`detached at ${commit.id}`;
@@ -170,7 +177,7 @@ export class Checkout {
         clearConfig.forEach((value,key) => {
             key=key=='o'?'b':key;
             if(!this._configurations[key])
-                throw new Error(`The option '--${key}' does not exist`);
+                throw errorNotConfiguration(this._comand,`--${key}`);
             continueProces = this._configurations[key].callback(value);
         });
         return continueProces
@@ -188,7 +195,7 @@ export class Checkout {
         const commitStartPoint = await getCommitStartPoint(dataComand,commits);
         const startPoint = dataComand[dataComand.length-1];
         if(commitStartPoint === undefined)
-            throw new Error(`The start-point ${startPoint} does not exist`);
+            throw new ErrorModule(this._comand,`The start-point "${startPoint}" does not exist`,`Please, try again using start-point 'master' or 'HEAD' or a valid branch name`);
         const commitByBranch = commits.find(commit => commit.tags.includes(startPoint));
         return {branch:commitByBranch?startPoint:null,commit:commitStartPoint};
     }
@@ -221,7 +228,7 @@ export class Checkout {
     async goToCommit(commits,id){
         const commit = commits.find( commit => commit.id === id);
         if(!commit)
-            throw new Error('The commit does not exist');
+            throw errorCommitNotFound(this._comand);
         commit.tags.push('HEAD');
         commit.class.push('checked-out');
         commits = commits.filter( commit => commit.id !== id);
@@ -239,7 +246,7 @@ export class Checkout {
      */
     async createBranch(commits,name){
         if(await existBranchOrEndPoint(commits,name))
-            throw new Error(`Already exist the branch or name invalid '${name}'`);
+            throw new ErrorModule(this._comand,`Already exist the branch or name invalid '${name}'`,`Please, try again using a valid name`);
         const head = await currentHead(commits);
         commits = commits.filter(commit => commit.id !== head.id);
         head.tags.push(name);

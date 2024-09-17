@@ -1,4 +1,16 @@
-import { createMessage,findAllParents,getCommitStartPoint, getRepository, removeClassFromCommit } from "./utils.js";
+import { 
+    createMessage,
+    findAllParents,
+    getCommitStartPoint,
+    getRepository,
+    removeClassFromCommit
+} from "./utils.js";
+import { 
+    ErrorModule,
+    errorNotInitialized,
+    errorNotConfiguration,
+    errorEmptyRepository
+} from "./error.js";
 /**
  * @class Log
  * @classdesc This class is responsible for showing the commit logs
@@ -94,10 +106,10 @@ export class Log{
         this.resetConfig();
 
         if(!storage)
-            throw Error("Repository not found")
+            throw errorNotInitialized(this._comand);
 
         if(!storage.commits.length)
-            throw Error("Repository is empty")
+            throw errorEmptyRepository(this._comand);
 
         setTimeout(()=>this.removeClassLog(),1000);
 
@@ -107,7 +119,11 @@ export class Log{
         const startPoint = await getCommitStartPoint(dataComand,storage.commits);
 
         if(!startPoint)
-            throw new Error(`ambiguous argument '${dataComand.pop()}': unknown revision or path not in the working tree.`)
+            throw new ErrorModule(
+                this._comand,
+                `ambiguous argument '${dataComand.pop()}': unknown revision or path not in the working tree.`,
+                `Please, try again using a valid start-point, 'master' or 'HEAD' or a valid branch name`
+            );
 
         const listCommits = await this.resolveFiltersCommits(storage.commits,startPoint);
         const setListCommits = new Set(await Promise.all(listCommits.map(async commit => commit.id)))
@@ -176,7 +192,7 @@ export class Log{
                 this._configurations.n.value = parseInt(clearComand);
                 this._configurations.n.use = true;
             }else if(index != dataComand.length - 1)
-                throw new Error('Invalid option');
+                throw errorNotConfiguration(this._comand,clearComand);
         });
         return continueProces
     }

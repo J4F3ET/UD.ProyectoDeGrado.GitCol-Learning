@@ -7,6 +7,12 @@ import {
     resolveMovilityTagInMerge,
     getRepository
 } from "./utils.js"
+import { 
+    errorNotInitialized,
+    errorCommitNotFound,
+    errorAlreadyUpToDate,
+    errorEmptyRepository
+} from "./error.js";
 /**
  * @class
  * @classesc Join two or more development histories together
@@ -67,10 +73,10 @@ export class Merge {
         let storage = await getRepository(this._dataRepository);
 
         if(!storage)
-            throw new Error('The repository is not initialized');
+            throw errorNotInitialized(this._comand);
 
         if(!storage.commits.length)
-            throw new Error('There are no branch master');
+            throw errorEmptyRepository(this._comand);
 
         if(! await this.resolveConfiguration(dataComand))
             return
@@ -78,7 +84,7 @@ export class Merge {
         const commitFetch = await getCommitStartPoint(dataComand, storage.commits);
 
         if(!commitFetch)
-            throw new Error('The commit does not exist');
+            throw errorCommitNotFound(this._comand);
 
         const parentsCommitFetch = await Promise.all(
             (await findAllParents(storage.commits, commitFetch))
@@ -93,7 +99,7 @@ export class Merge {
         );
 
         if(parentsCommitHead.includes(commitFetch.id))
-            throw new Error('Already up to date');
+            throw errorAlreadyUpToDate(this._comand);
 
         if(parentsCommitFetch.includes(commitHead.id))
             storage = await resolveMovilityTagInMerge(storage, commitFetch, commitHead);
