@@ -1,5 +1,6 @@
 import { SocketHandler } from "../SocketHandler.js";
 import { createMessage, getRepository } from "./utils.js";
+import { errorNotConfiguration} from "./error.js";
 /**
  * @class
  * @classdesc Fetch from and integrate with another repository or a local branch
@@ -140,7 +141,7 @@ export class Clone {
         const currentConfig = Object.keys(this._configurations);
         configs.forEach(config => {
             if(!currentConfig.includes(config))
-                throw new Error(`The configuration "${config}" is not valid`);
+                throw errorNotConfiguration(this._comand,config);
         });
     }
     async callbackHelp(){

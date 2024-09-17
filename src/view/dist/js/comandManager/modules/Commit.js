@@ -8,6 +8,11 @@ import {
     getRepository,
     newRegister
 } from "./utils.js";
+import { 
+    ErrorModule,
+    errorNotInitialized,
+    errorNotConfiguration,
+} from "./error.js";
 /**
  * @class
  * @classdesc This class is responsible for creating a new commit in the repository. Represents the command "commit" of the git
@@ -91,7 +96,7 @@ export class Commit{
         const storage =  await getRepository(this._dataRepository)
 
         if(!storage)
-            throw new Error('The repository does not exist');
+            throw errorNotInitialized(this._comand);
 
         if(!await this.resolveConfiguration(dataComand)) 
             return;
@@ -172,11 +177,11 @@ export class Commit{
      */
     async validateConfig(configs){
         if(!configs.size)
-            throw Error('The configuration is empty');
+            throw new ErrorModule(this._comand,'The configuration is empty',`Please, try again using the command 'git ${this._comand} -m "message"'`);
         const currentConfig = Object.keys(this._configurations);
         for(const config of configs){
             if(!currentConfig.includes(config))
-                throw Error(`The configuration "${config}" is not valid`);
+                throw errorNotConfiguration(this._comand,config);
         }
     }
     /**
@@ -192,7 +197,7 @@ export class Commit{
         const indexConfig = dataComand.findIndex(data => data.includes('-m'));
         const message = dataComand[indexConfig+1];
         if(message == undefined || message == "")
-            throw new Error('The message is empty');
+            throw new ErrorModule(this._comand,'The message is empty',`Please, try again using the command 'git ${this._comand} -m "message"'`);
         this._configurations.m.message = message.replace(/"/g, "&quot").replace(/'/g, "&apos");
         return true;
     }
@@ -208,7 +213,11 @@ export class Commit{
      */
     callBackConfigFiles = async (dataComand) =>{
         if(!dataComand.includes('-m'))
-            throw new Error('The configuration "-m" is obligatory for use the configuration "-a"');
+            throw new ErrorModule(
+                this._comand,
+                'The configuration "-m" is obligatory for use the configuration "-a"',
+                `Please, try again using the command 'git ${this._comand} -m "message" -a'`
+            );
 
         const files = this._configurations.a.files.map(file => `<li>>${file}</li>`).join('');
         createMessage(this._logRepository,'info',`<div class="files"><h5>Add files to the commit</h5><ul>${files}</ul></div>`);

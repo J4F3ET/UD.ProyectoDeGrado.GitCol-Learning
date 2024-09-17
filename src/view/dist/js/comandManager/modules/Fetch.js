@@ -8,6 +8,7 @@ import {
     findCommitsChangeWithTags,
     findCommitsHead
 } from "./utils.js";
+import { errorNotInitialized} from "./error.js";
 /**
  * @class
  * @classdesc Download objects and refs from another repository
@@ -78,7 +79,7 @@ export class Fetch {
         const remote = await getRepository(this._remoteRepository);
 
         if(!repository || !remote)
-            throw new Error('The repository is not initialized<br>Please initialize the repository first');
+            throw errorNotInitialized(this._comand);
 
         const refRemote = this._remoteRepository.split("-")[0]
         const commitsDiff = await findCommitsDiffBetweenRepositories(repository.commits, remote.commits)

@@ -1,4 +1,9 @@
 import { SocketHandler } from "../SocketHandler.js";
+import {
+    ErrorModule,
+    errorNotConfiguration,
+    errorNotInitialized
+} from "./error.js";
 import { 
     createMessage,
     findAllTags,
@@ -74,7 +79,7 @@ export class Push {
         const repository = await getRepository(this._dataRepository);
 
         if(!repository||!remote)
-            throw new Error('The repository does not exist')
+            throw errorNotInitialized(this._comand);
 
         const values = dataComand.filter(data => data.charAt(0) !== '-')
 
@@ -94,13 +99,25 @@ export class Push {
         }
 
         if(values.length !== 0 && values.length !== 2)
-            throw new Error('Repository and resfspec were not correctly specified.')
+            throw new ErrorModule(
+                this._comand,
+                'Repository and resfspec were not correctly specified.',
+                `Please, try again using the command 'git push <remote> <branch>'. By more information use the command 'git push -h'`
+            );
         
         if(refRemote != this._remoteRepository.split('-')[0])
-            throw new Error(`Remote '<strong>${refRemote}</strong>' does not exist <br> By default the only existing connection at the moment is '<b>origin</b>'`)
+            throw new ErrorModule(
+                this._comand,
+                `Remote '<strong>${refRemote}</strong>' does not exist <br> By default the only existing connection at the moment is '<b>origin</b>'`,
+                `Please, try again using the command 'git push <remote> <branch>'. By more information use the command 'git push -h'`
+            );
         
         if(!branchsLocal.includes(refBranch))
-            throw new Error(`Branch '<strong>${refBranch}</strong>' does not exist in local`)
+            throw new ErrorModule(
+                this._comand,
+                `Branch '<strong>${refBranch}</strong>' does not exist in local`,
+                `Please, try again using the command 'git branch -l' to see the branches of the repository`
+            );
 
         const commitsRemoteId = new Set(
             await Promise.all(remote.commits.map(async (c)=> c.id))
@@ -115,13 +132,14 @@ export class Push {
         const existsBranchInRemote = branchsRemote.includes(refBranch)
 
         if(existsBranchInRemote && !commitsRepositoryId.has(commitIdRemote))
-            throw new Error(`
-                Failed to push some refs to ${this._remoteRepository} <br>
-                Updates were rejected because the remote contains work that you do 
+            throw new ErrorModule(
+                this._comand,
+                `Failed to push some refs to ${this._remoteRepository}`,
+                `Updates were rejected because the remote contains work that you do 
                 not have locally. This is usually caused by another repository pushing 
                 to the same ref. You may want to first integrate the remote changes 
-                (e.g., 'git pull ...') before pushing again.
-            `)
+                (e.g., 'git pull ...') before pushing again.`    
+            );
 
         if(existsBranchInRemote && commiIdtLocal == commitIdRemote)
             return createMessage(
@@ -251,7 +269,7 @@ export class Push {
         const currentConfig = Object.keys(this._configurations);
         configs.forEach(config => {
             if(!currentConfig.includes(config))
-                throw new Error(`The configuration "${config}" is not valid`);
+                throw errorNotConfiguration(this._comand,config);
         });
     }
         /**

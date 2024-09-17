@@ -10,6 +10,11 @@ import {
     getRepository,
     findAllTags
 } from "./utils.js";
+import { 
+    ErrorModule,
+    errorNotInitialized,
+    errorNotConfiguration
+} from "./error.js";
 /**
  * @class
  * @classdesc Class to manage the branch of the repository
@@ -121,17 +126,18 @@ export class Branch{
      */
     async execute(dataComand){
         let storage = await getRepository(this._dataRepository);
-
+        if(dataComand.includes('-h'))
+            return this.callbackHelp();
         if(!storage)
-            throw new Error('The repository is not initialized');
-
-        if(storage.commits.length === 0)
-            throw new Error('There are no branch master');
+            throw errorNotInitialized(this._comand);
 
         const [comand,...value] = this.resolveConfiguration(dataComand);
-
+        
         if(!comand)
-            throw new Error('The comand is not valid');
+            throw errorNotConfiguration(this._comand,dataComand);
+        
+        if(storage.commits.length === 0)
+            return;
 
         storage = await comand.callback(storage,value)??storage;
 
@@ -249,7 +255,7 @@ export class Branch{
     callBackConfigRemoteBranch = async () => {
         const storage = await getRepository(this._remoteRepository);
         if(!storage)
-            throw new Error('The remote repository is not defined');
+            throw ErrorModule(this._comand,'The remote repository is not defined','The remote repository only exists in multi-user mode');
         const branches = await findAllTags(storage.commits)
         const refRemote = this._remoteRepository.split("-")[0]
         for await (const branch of branches) {
@@ -273,18 +279,18 @@ export class Branch{
         const branch = values[0];
 
         if(branch === "")
-            throw new Error('The name of the branch is empty');
+            throw new ErrorModule(this._comand,`The name '${branch}' of the branch is empty`,'Please, try again with a valid name');
 
         if(branch === 'master' || branch === 'HEAD' ||branch === storage.information.head)
-            throw new Error(`The branch can not be deleted ${branch}`);
+            throw new ErrorModule(this._comand,`The branch can not be deleted ${branch}`,'Please use a different name');
 
         const commitObj = storage.commits.find(commit => commit.tags.includes(branch));
 
         if(!commitObj)
-            throw new Error('The branch does not exist');
+            throw new ErrorModule(this._comand,'The branch does not exist','Please, try again with a valid name');
 
         if(commitObj.tags.includes('HEAD'))
-            throw new Error('The branch is the HEAD');
+            throw new ErrorModule(this._comand,'The branch is the HEAD','Please use a different name');
 
         const childrens = await findAllChildrens(storage.commits,commitObj.id);
         const commitsWithoutBranch = await removeTagById(storage.commits,branch,commitObj.id);
@@ -319,9 +325,9 @@ export class Branch{
     callBackCreateBranch = async (storage,values) => {
         const branch = values[0];
         if(branch === "")
-            throw new Error('The name of the branch is empty');
+            throw new ErrorModule(this._comand,`The name '${branch}' of the branch is empty`,'Please, try again with a valid name');
         if(await existBranchOrEndPoint(storage.commits,branch))
-            throw new Error(`The branch already exist or name "${branch}" invalid`);
+            throw new ErrorModule(this._comand,`The branch already exist or name "${branch}" invalid`,'Please, use a different name');
         const head = await currentHead(storage.commits);
         storage.commits = storage.commits.filter(commit => commit.id !== head.id);
         head.tags.push(branch);
