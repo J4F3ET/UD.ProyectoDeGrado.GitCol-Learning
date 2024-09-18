@@ -108,7 +108,11 @@ export class ComandManager {
             const commandModule = this._comands.get(command);
             return commandModule.execute(config);
         }
-        throw new Error('Command not found');
+        throw this.getErrorFormat(
+            'syntax',
+            `Command '${command}' not found`,
+            `Try use the command 'help' by see the commands to which you can use, and use 'git &ltcommand&gt -h' for more information about the command`
+        );
     }
     /** 
      * @memberof ComandManager#
@@ -136,10 +140,18 @@ export class ComandManager {
      */
     verifyComand(comand="") {
         if(comand === "")
-            throw new Error('The command is empty');
+            throw this.getErrorFormat(
+                'empty',
+                'The command is empty',
+                `Try use the command 'help' by see the commands to which you can use, example 'git init'`
+            );
         const refex = /^\s*git\s+(\S+)+(\s(.*))?$/;
         if(!refex.test(comand))
-            throw new Error('The command is not valid');
+            throw this.getErrorFormat(
+                'syntax',
+                'The command is not valid',
+                `Try use the command 'help' by see the commands to which you can use and verify the syntax of the command`
+            );
     }
     /**
      * @name splitComand
@@ -167,5 +179,21 @@ export class ComandManager {
         const matches = comandConfig.match(regex);
         return matches?matches.map(match => match.trim()):[];
     }
-
+    /**
+     * @method
+     * @memberof ComandManager#
+     * @description 
+     * @param {String} name Name of the error
+     * @param {String} message Message of the error
+     * @param {String} suggestion Suggestion of the error
+     * @returns {Error}
+     */
+    getErrorFormat(name,message,suggestion){
+        const messageError = `
+            > <strong>Error ${name}</strong><br>
+            > <strong>Message</strong>: ${message}<br>
+            > <strong>Suggestion</strong>: ${suggestion??''}
+        `;
+        return new Error(messageError);
+    }
 }
