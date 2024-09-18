@@ -50,7 +50,7 @@ export const errorNotInitialized = (module)=>{
 export const errorNotConfiguration = (module,command)=>{
     return new ErrorModule(
         module,
-        `The configuration "${command}" is not valid`,
+        `The parameter ${command} is not valid or value is not set`,
         `Try use the command 'git ${module} -h' for more information`
     );
 }
@@ -65,7 +65,7 @@ export const errorCommitNotFound = (module,startPoint)=>{
     return new ErrorModule(
         module,
         `The commit ${startPoint??null} does not exist`,
-        `Try use the command 'git ${module} -h' for more information`
+        `Try use the command 'git ${module} -h' for more information or use the command 'git commit -m "message"'`
     );
 }
 /**

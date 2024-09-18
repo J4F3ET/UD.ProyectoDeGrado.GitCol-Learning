@@ -33,6 +33,11 @@
     font-weight: 600;
     cursor: var(--cursor-style),auto;
 }
+.logo>small{
+    font-size: var(--font-size-small-mobile);
+    color: var(--text-color);
+    writing-mode: vertical-rl;
+}
 #menu-icon{
     font-size: var(--font-size-h1-large);
     color: var(--text-color);
