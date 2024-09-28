@@ -1,0 +1,49 @@
+
+/\ \  __/\ \        /\_ \                                       
+\ \ \/\ \ \ \     __\//\ \     ___    ___     ___ ___      __   
+ \ \ \ \ \ \ \  /'__`\\ \ \   /'___\ / __`\ /' __` __`\  /'__`\ 
+  \ \ \_/ \_\ \/\  __/ \_\ \_/\ \__//\ \L\ \/\ \/\ \/\ \/\  __/ 
+   \ `\___x___/\ \____\/\____\ \____\ \____/\ \_\ \_\ \_\ \____\
+    '\/__//__/  \/____/\/____/\/____/\/___/  \/_/\/_/\/_/\/____/                                                           
+                ______          
+                /\__  _\         
+                \/_/\ \/   ___   
+                   \ \ \  / __`\ 
+                    \ \ \/\ \L\ \
+                     \ \_\ \____/
+                      \/_/\/___/                                                                                                      
+     ____        __           ____            ___      
+    /\  _`\   __/\ \__       /\  _`\         /\_ \     
+    \ \ \L\_\/\_\ \ ,_\      \ \ \/\_\    ___\//\ \    
+     \ \ \L_L\/\ \ \ \/       \ \ \/_/_  / __`\\ \ \   
+      \ \ \/, \ \ \ \ \_       \ \ \L\ \/\ \L\ \\_\ \_ 
+       \ \____/\ \_\ \__\       \ \____/\ \____//\____\
+        \/___/  \/_/\/__/        \/___/  \/___/ \/____/
+ __                                                             
+/\ \                                     __                     
+\ \ \         __     __     _ __    ___ /\_\    ___      __     
+ \ \ \  __  /'__`\ /'__`\  /\`'__\/' _ `\/\ \ /' _ `\  /'_ `\   
+  \ \ \L\ \/\  __//\ \L\.\_\ \ \/ /\ \/\ \ \ \/\ \/\ \/\ \L\ \  
+   \ \____/\ \____\ \__/.\_\\ \_\ \ \_\ \_\ \_\ \_\ \_\ \____ \ 
+    \/___/  \/____/\/__/\/_/ \/_/  \/_/\/_/\/_/\/_/\/_/\/___L\ \
+                                                         /\____/
+                                                         \_/__/ 
+♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ Git Col-Learning ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥
+*                                                                  *
+*   Branches:                                                      *
+*     - master/main: main branch for production                    *
+*     - feature/*: isolate new features                            *
+*     - hotfix/*: emergency fixes                                  *
+*                                                                  *
+*   Best practices:                                                *
+*     - Use `git status` often to keep track of changes            *
+*     - Write clear, descriptive commit messages                   *
+*     - Use `git stash` to save work-in-progress temporarily       *
+*     - Use `git rebase` to clean up commit history                *
+*                                                                  *
+*   Handy commands:                                                *
+*     - `git log --oneline --graph`: visualize commit tree         *
+*     - `git diff`: view changes between commits or branches       *
+*     - `git cherry-pick`: apply a commit from another branch      *
+*                                                                  *
+♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥ ♥

@@ -36,7 +36,6 @@
 .logo>small{
     font-size: var(--font-size-small-mobile);
     color: var(--text-color);
-    writing-mode: vertical-rl;
 }
 #menu-icon{
     font-size: var(--font-size-h1-large);
