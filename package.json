@@ -8,7 +8,7 @@
 	},
 	"main": "server.js",
 	"scripts": {
-		"dev": "nodemon --exec babel-node server.js",
+		"dev": "babel-node --watch --watch-path=./src server.js",
 		"start": "babel-node server.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"docs": "jsdoc -c ./docs/jsdoc.json"
@@ -21,7 +21,6 @@
 		"express": "^4.18.2",
 		"firebase-admin": "^12.0.0",
 		"jsdoc": "^4.0.2",
-		"morgan": "^1.10.0",
 		"socket.io": "^4.7.4",
 		"swagger-jsdoc": "^6.2.8",
 		"swagger-themes": "^1.4.3",
