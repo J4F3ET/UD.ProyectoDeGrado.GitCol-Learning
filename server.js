@@ -22,16 +22,18 @@ app.use(express.urlencoded({ extended: true }));
 // Socket.io: Configuraciones de socket.io
 new SocketHandler(io);
 // Routes: Rutas de la aplicacion
-app.use(require("./src/controller/login-controller").default);
-app.use(require("./src/controller/home-controller").default);
-app.use(require("./src/controller/rooms-controller").default);
-app.use(require("./src/controller/teamWorking-controller").default);
-app.use(require("./src/controller/aloneWorking-controller").default);
-
+async function uploadCtrl(app) {
+	app.use((await import("./src/controller/login-controller")).default);
+	app.use((await import("./src/controller/home-controller")).default);
+	app.use((await import("./src/controller/rooms-controller")).default);
+	app.use((await import("./src/controller/teamWorking-controller")).default);
+	app.use((await import("./src/controller/aloneWorking-controller")).default);
+}
+uploadCtrl(app)
 // Static files: Archivos que se envian al navegador(frontend)
 app.use(express.static(path.join(__dirname, "src", "view")));
 
 server.listen(app.get("port"), () => {
-	console.log(` ${app.get("port")}`);
+	console.log(app.get("port"));
 	swaggerDoc(app, app.get("port"));
 });
