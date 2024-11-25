@@ -20,7 +20,7 @@ const options = {
 
 // Doc en formato json
 const swaggerSpec = swaggerJSDoc(options);
-export const swaggerDoc = (app,port) => {
+export const swaggerDoc = async (app,port) => {
     // Ruta para ver la documentacion
     app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerSpec,optionsSwagger));
     app.get("/api-docs.json",(req,res) => {
