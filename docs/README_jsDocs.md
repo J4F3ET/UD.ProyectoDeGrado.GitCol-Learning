@@ -51,7 +51,6 @@ The dependencies of the project are the following:
 - **Morgan**: To display in the console the requests that arrive at the server.
 - **EJS**: To render the views.
 - **Firebase-admin**: To connect the application with the Firebase database.
-- **dotenv**: To load environment variables.
 - **Socket.io**: To create the real-time connection between the server and the client.
 - **Swagger-jsdoc**: To document the API.
 - **Swagger-ui-express**: To visualize the API documentation.
