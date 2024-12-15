@@ -16,7 +16,6 @@
 	"author": "Danna He <dhsepulvedas@udistrital.edu.co>(https://github.com/Chocolatamargo2607), Jafet Stiven <jslopezz@udistrital.edu.co> (https://github.com/J4F3ET)",
 	"license": "MIT",
 	"dependencies": {
-		"dotenv": "^16.3.1",
 		"ejs": "^3.1.9",
 		"express": "^4.18.2",
 		"firebase-admin": "^12.0.0",
@@ -26,6 +25,7 @@
 		"swagger-jsdoc": "^6.2.8",
 		"swagger-themes": "^1.4.3",
 		"swagger-ui-express": "^5.0.0",
+		"ud.proyectodegrado.gitcol-learning": "file:",
 		"ws": "^8.17.1"
 	},
 	"devDependencies": {
