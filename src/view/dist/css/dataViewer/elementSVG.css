@@ -1,59 +1,59 @@
-#emptyContainer{
-    margin-top: 2rem;
-    border: 2px  var(--red-color);
-    border-style: dashed none;
+#emptyContainer {
+	margin-top: 2rem;
+	border: 2px var(--red-color);
+	border-style: dashed none;
 }
-.emptyTitle{
-    font-size: var(--font-size-h1-mobile);
-    font-weight: 600;
-    stroke: var(--red-color);
-    fill:  var(--red-color);
+.emptyTitle {
+	font-size: var(--font-size-h1-mobile);
+	font-weight: 600;
+	stroke: var(--red-color);
+	fill: var(--red-color);
 }
-.empyText{
-    font-size: var(--font-size-mobile);
-    color: var(--text-color);
-    stroke: var(--text-color);
-    fill: var(--text-color);
+.empyText {
+	font-size: var(--font-size-mobile);
+	color: var(--text-color);
+	stroke: var(--text-color);
+	fill: var(--text-color);
 }
 text.title-property {
-    font-weight: bolder;
-    fill: var(--orange-color);
+	font-weight: bolder;
+	fill: var(--orange-color);
 }
-text.text-property{
-    fill: var(--white-color);
+text.text-property {
+	fill: var(--white-color);
 }
 g.container-text-data-repository {
-    font-size: var(--font-size-large);
-    text-anchor:middle;
-    fill: var(--text-color);
+	font-size: var(--font-size-large);
+	text-anchor: middle;
+	fill: var(--text-color);
 }
-strong{
-    font-weight:800;
+strong {
+	font-weight: 800;
 }
 /* Tabletas */
 @media (min-width: 576px) {
-    .emptyTitle{
-        font-size: var(--font-size-h1-tablet);
-    }
-    .empyText{
-        font-size: var(--font-size-tablet);
-    }
+	.emptyTitle {
+		font-size: var(--font-size-h1-tablet);
+	}
+	.empyText {
+		font-size: var(--font-size-tablet);
+	}
 }
 /* Laptops y escritorios */
-@media (min-width: 768px) {   
-    .emptyTitle{
-        font-size: var(--font-size-h1-desktop);
-    }
-    .empyText{
-        font-size: var(--font-size-desktop);
-    }
+@media (min-width: 768px) {
+	.emptyTitle {
+		font-size: var(--font-size-h1-desktop);
+	}
+	.empyText {
+		font-size: var(--font-size-desktop);
+	}
 }
 /* Monitores anchos */
 @media (min-width: 1200px) {
-    .emptyTitle{
-        font-size: var(--font-size-h1-large);
-    }
-    .empyText{
-        font-size: var(--font-size-large);
-    }
+	.emptyTitle {
+		font-size: var(--font-size-h1-large);
+	}
+	.empyText {
+		font-size: var(--font-size-large);
+	}
 }

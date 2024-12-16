@@ -1,10 +1,10 @@
 import express from "express";
 import morgan from "morgan";
-import { Server } from 'socket.io';
+import {Server} from "socket.io";
 import path from "path";
-import { createServer } from 'node:http';
-import { SocketHandler } from "./src/controller/teamWorking-socket-server.js";
-import { swaggerDoc } from "./docs/swagger.js";
+import {createServer} from "node:http";
+import {SocketHandler} from "./src/controller/teamWorking-socket-server.js";
+import {swaggerDoc} from "./docs/swagger.js";
 
 const app = express();
 const server = createServer(app);
@@ -18,7 +18,7 @@ app.set("view engine", "ejs");
 // Middlewares: Funciones que se ejecutan antes de que lleguen a las rutas
 app.use(morgan("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 // Socket.io: Configuraciones de socket.io
 new SocketHandler(io);
 // Routes: Rutas de la aplicacion
@@ -29,7 +29,7 @@ async function uploadCtrl(app) {
 	app.use((await import("./src/controller/teamWorking-controller")).default);
 	app.use((await import("./src/controller/aloneWorking-controller")).default);
 }
-uploadCtrl(app)
+uploadCtrl(app);
 // Static files: Archivos que se envian al navegador(frontend)
 app.use(express.static(path.join(__dirname, "src", "view")));
 

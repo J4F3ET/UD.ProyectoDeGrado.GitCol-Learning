@@ -1,153 +1,153 @@
 /* Initial Configuration  */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    border: none;
-    outline: none;
-    scroll-behavior: smooth;
-    font-family: 'Poppins',sans-serif;
-    -webkit-touch-callout: none;
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	text-decoration: none;
+	border: none;
+	outline: none;
+	scroll-behavior: smooth;
+	font-family: "Poppins", sans-serif;
+	-webkit-touch-callout: none;
 }
-html{
-    cursor: var(--cursor-style),auto;
+html {
+	cursor: var(--cursor-style), auto;
 }
-button, 
-a, 
-input, 
-select, 
+button,
+a,
+input,
+select,
 textarea {
-    cursor: var(--cursor-pointer-style),auto;
+	cursor: var(--cursor-pointer-style), auto;
 }
-:root{
-    --cursor-style:url(../assets/img/cursor.png);
-    --cursor-pointer-style: url(../assets/img/cursor_point.png);
-    --cursor-not-allowed-style: url(../assets/img/cursor_not-allowed.png);
-    --bg-color: #1B263B;
-    --second-bg-color: #465166;
-    --second-bg-color-trasparent: #465166a6;
-    --text-color: #FFFDF9;
-    --text-shell-color: #3cff00;
-    --orange-color: #FA8E5F;
-    --orange-lite-color:#FFA67F;
-    --red-color: #D45050;
-    --yellow-color: #FACA89;
-    --green-color: #83BD86;
-    --cyan-color: #54C6B8;
-    --indigo-color: #465166;
-    --blue-color: #1E9FAB;
-    --blue-grey-color: #6A95D6;
-    --blue-dark-color: #1B263B;
-    --blue-dark-color-trasparent: #1B263Bb3;
-    --indigo-color-trasparent: #465166a6;
-    --purple-color: #C398C8;
-    --pink-color: #E891BD;
-    --gray-color: #C4BDB7;
-    --white-color: #FFFDF9;
-    --black-color: #0A0F17;
-    --black-lite-color: #0f1621;
-    --long-font-size: 2.5rem;
-    --normal-font-size: 1.3rem;
-    --small-font-size: .8rem;
-    /* Tamaño de fuente base */
-    --font-size-base: .8rem;
+:root {
+	--cursor-style: url(../assets/img/cursor.png);
+	--cursor-pointer-style: url(../assets/img/cursor_point.png);
+	--cursor-not-allowed-style: url(../assets/img/cursor_not-allowed.png);
+	--bg-color: #1b263b;
+	--second-bg-color: #465166;
+	--second-bg-color-trasparent: #465166a6;
+	--text-color: #fffdf9;
+	--text-shell-color: #3cff00;
+	--orange-color: #fa8e5f;
+	--orange-lite-color: #ffa67f;
+	--red-color: #d45050;
+	--yellow-color: #faca89;
+	--green-color: #83bd86;
+	--cyan-color: #54c6b8;
+	--indigo-color: #465166;
+	--blue-color: #1e9fab;
+	--blue-grey-color: #6a95d6;
+	--blue-dark-color: #1b263b;
+	--blue-dark-color-trasparent: #1b263bb3;
+	--indigo-color-trasparent: #465166a6;
+	--purple-color: #c398c8;
+	--pink-color: #e891bd;
+	--gray-color: #c4bdb7;
+	--white-color: #fffdf9;
+	--black-color: #0a0f17;
+	--black-lite-color: #0f1621;
+	--long-font-size: 2.5rem;
+	--normal-font-size: 1.3rem;
+	--small-font-size: 0.8rem;
+	/* Tamaño de fuente base */
+	--font-size-base: 0.8rem;
 
-    /* Tamaños de fuente para móviles */
-    --font-size-mobile: .8rem;
-    --font-size-h1-mobile: 1.3rem; /* 24px */
-    --font-size-h2-mobile: 1.1rem; /* 20px */
-    --font-size-h3-mobile: 1rem; /* 18px */
-    --font-size-small-mobile: 0.575rem; /* 14px */
+	/* Tamaños de fuente para móviles */
+	--font-size-mobile: 0.8rem;
+	--font-size-h1-mobile: 1.3rem; /* 24px */
+	--font-size-h2-mobile: 1.1rem; /* 20px */
+	--font-size-h3-mobile: 1rem; /* 18px */
+	--font-size-small-mobile: 0.575rem; /* 14px */
 
-    /* Tamaños de fuente para tabletas */
-    --font-size-tablet: 1.0625rem; /* 17px */
-    --font-size-h1-tablet: 1.75rem; /* 28px */
-    --font-size-h2-tablet: 1.5rem; /* 24px */
-    --font-size-h3-tablet: 1.25rem; /* 20px */
-    --font-size-small-tablet: 0.9375rem; /* 15px */
+	/* Tamaños de fuente para tabletas */
+	--font-size-tablet: 1.0625rem; /* 17px */
+	--font-size-h1-tablet: 1.75rem; /* 28px */
+	--font-size-h2-tablet: 1.5rem; /* 24px */
+	--font-size-h3-tablet: 1.25rem; /* 20px */
+	--font-size-small-tablet: 0.9375rem; /* 15px */
 
-    /* Tamaños de fuente para laptops y escritorios */
-    --font-size-desktop: 1.125rem; /* 18px */
-    --font-size-h1-desktop: 2rem; /* 32px */
-    --font-size-h2-desktop: 1.75rem; /* 28px */
-    --font-size-h3-desktop: 1.5rem; /* 24px */
-    --font-size-small-desktop: 1rem; /* 16px */
+	/* Tamaños de fuente para laptops y escritorios */
+	--font-size-desktop: 1.125rem; /* 18px */
+	--font-size-h1-desktop: 2rem; /* 32px */
+	--font-size-h2-desktop: 1.75rem; /* 28px */
+	--font-size-h3-desktop: 1.5rem; /* 24px */
+	--font-size-small-desktop: 1rem; /* 16px */
 
-    /* Tamaños de fuente para monitores anchos */
-    --font-size-large: 1.55rem; /* 20px */
-    --font-size-h1-large: 2.55rem; /* 36px */
-    --font-size-h2-large: 2.3rem; /* 32px */
-    --font-size-h3-large: 2rem; /* 28px */
-    --font-size-small-large: 1.125rem; /* 18px */
+	/* Tamaños de fuente para monitores anchos */
+	--font-size-large: 1.55rem; /* 20px */
+	--font-size-h1-large: 2.55rem; /* 36px */
+	--font-size-h2-large: 2.3rem; /* 32px */
+	--font-size-h3-large: 2rem; /* 28px */
+	--font-size-small-large: 1.125rem; /* 18px */
 
-    --font-size-extra-large: 4rem
+	--font-size-extra-large: 4rem;
 }
-#particles-js{
-    width: 100%;
+#particles-js {
+	width: 100%;
 }
 .scrollable::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+	width: 10px;
+	height: 10px;
 }
 .scrollable::-webkit-scrollbar-thumb {
-    background: var(--orange-color);
-    border-radius: 10px;
+	background: var(--orange-color);
+	border-radius: 10px;
 }
 .scrollable::-webkit-scrollbar-thumb:hover {
-    background: #ff783e;
+	background: #ff783e;
 }
 .scrollable::-webkit-scrollbar-track {
-    background: var(--second-bg-color);
-    border-radius: 10px;
+	background: var(--second-bg-color);
+	border-radius: 10px;
 }
 .scrollable::-webkit-scrollbar-thumb:active {
-    background-color: var(--orange-color);
+	background-color: var(--orange-color);
 }
-.btn{
-    border: none;
-    outline: none;
-    min-width: fit-content;
-    max-width: 13rem;
-    height: max-content;
-    margin: .5rem;
-    background-color: var(--second-bg-color);
-    padding: 10px 20px;
-    font-size: 100%;
-    font-weight: 700;
-    color: #fff;
-    border-radius: 5px;
-    transition: all ease 0.1s;
-    box-shadow: 0px 5px 0px 0px #2e3542;
-    cursor: var(--cursor-pointer-style),auto;
-    &.green{
-        background-color: var(--green-color);
-        box-shadow: 0px 5px 0px 0px #acffb0;
-    }
-    &.orange{
-        background-color: var(--orange-color);
-        box-shadow: 0px 5px 0px 0px #ffa67f;
-    }
-    &.red{
-        background-color: var(--red-color);
-        box-shadow: 0px 5px 0px 0px #fe9b9b;
-    }
+.btn {
+	border: none;
+	outline: none;
+	min-width: fit-content;
+	max-width: 13rem;
+	height: max-content;
+	margin: 0.5rem;
+	background-color: var(--second-bg-color);
+	padding: 10px 20px;
+	font-size: 100%;
+	font-weight: 700;
+	color: #fff;
+	border-radius: 5px;
+	transition: all ease 0.1s;
+	box-shadow: 0px 5px 0px 0px #2e3542;
+	cursor: var(--cursor-pointer-style), auto;
+	&.green {
+		background-color: var(--green-color);
+		box-shadow: 0px 5px 0px 0px #acffb0;
+	}
+	&.orange {
+		background-color: var(--orange-color);
+		box-shadow: 0px 5px 0px 0px #ffa67f;
+	}
+	&.red {
+		background-color: var(--red-color);
+		box-shadow: 0px 5px 0px 0px #fe9b9b;
+	}
 }
-.btn:active{
-    transform: translateY(5px);
-    box-shadow: 0px 0px 0px 0px #2e3542;
-    &.green{
-        box-shadow: 0px 0px 0px 0px #acffb0;
-    }
-    &.orange{
-        box-shadow: 0px 0px 0px 0px #ffa67f;
-    }
-    &.red{
-        box-shadow: 0px 0px 0px 0px #fe9b9b;
-    }
+.btn:active {
+	transform: translateY(5px);
+	box-shadow: 0px 0px 0px 0px #2e3542;
+	&.green {
+		box-shadow: 0px 0px 0px 0px #acffb0;
+	}
+	&.orange {
+		box-shadow: 0px 0px 0px 0px #ffa67f;
+	}
+	&.red {
+		box-shadow: 0px 0px 0px 0px #fe9b9b;
+	}
 }
-.btn-only-icon{
-    min-width: max-content;
+.btn-only-icon {
+	min-width: max-content;
 }

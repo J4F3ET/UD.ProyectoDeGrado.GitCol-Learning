@@ -1,15 +1,15 @@
-.comand{
-    color: var(--text-shell-color);
-    font-weight: 100;
+.comand {
+	color: var(--text-shell-color);
+	font-weight: 100;
 }
-.error{
-    color: #ff3d3d; 
-    font-weight: 200;
+.error {
+	color: #ff3d3d;
+	font-weight: 200;
 }
-.info{
-    color: #ffffff;
-    font-weight: 100;
-    li{
-        padding-left: 1rem;
-    }
+.info {
+	color: #ffffff;
+	font-weight: 100;
+	li {
+		padding-left: 1rem;
+	}
 }

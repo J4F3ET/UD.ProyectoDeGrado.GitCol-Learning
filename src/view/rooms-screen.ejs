@@ -2,7 +2,10 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
 		<title>Col-Learning</title>
 		<link
 			rel="shortcut icon"
@@ -10,14 +13,20 @@
 			type="image/x-icon"
 		/>
 		<!-- --------- BOX ICONS ---------- -->
-        <link href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css" rel="stylesheet" />
+		<link
+			href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css"
+			rel="stylesheet"
+		/>
 		<!-- DRIVEJS -->
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
-        <!-- CSS -->
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"
+		/>
+		<!-- CSS -->
 		<link rel="stylesheet" href="dist/css/reset.css" />
-		<link rel="stylesheet" href="dist/css/global.css">
-		<link rel="stylesheet" href="dist/css/room-style.css"/>
-		<link rel="stylesheet" href="dist/css/driverjs-style.css"/>
+		<link rel="stylesheet" href="dist/css/global.css" />
+		<link rel="stylesheet" href="dist/css/room-style.css" />
+		<link rel="stylesheet" href="dist/css/driverjs-style.css" />
 
 		<script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -34,36 +43,49 @@
 			<form autocomplete="off" class="room__form">
 				<h1 class="room__title">Room</h1>
 				<div class="room__inputs">
-					<Label>
-						Code
-					</Label>
+					<Label> Code </Label>
 					<div id="inputCodeRoomToLogin" class="room__box">
 						<span>
 							<i class="nes-icon search"></i>
 						</span>
-						<input 
-							id="inputSearchRoomCode" 
-							type="code" 
-							placeholder="Enter code" 
-							pattern="[A-Z0-9]+" 
+						<input
+							id="inputSearchRoomCode"
+							type="code"
+							placeholder="Enter code"
+							pattern="[A-Z0-9]+"
 							title="Only letters and numbers are allowed"
-							minlength="4" 
-							maxlength="8" 
-							required 
-							class="room__input" 
+							minlength="4"
+							maxlength="8"
+							required
+							class="room__input"
 						/>
 					</div>
 					<small class="small">Write the code for the room</small>
 					<small class="small">
 						<ul id="listRequirementsRoomLogin">
-							<li class="invalidRequirements" id="validLetterAndNumberSearch">Only letters and numbers are allowed</li>
-							<li class="invalidRequirements" id="validMinCharactersSearch">Minimum 4 characters</li>
-							<li class="invalidRequirements" id="validMaxCharactersSearch">Maximum 8 characters</li>
+							<li class="invalidRequirements" id="validLetterAndNumberSearch">
+								Only letters and numbers are allowed
+							</li>
+							<li class="invalidRequirements" id="validMinCharactersSearch">
+								Minimum 4 characters
+							</li>
+							<li class="invalidRequirements" id="validMaxCharactersSearch">
+								Maximum 8 characters
+							</li>
 						</ul>
 					</small>
 				</div>
-				<button disabled id="btnLoginToRoom" type="submit" class="btn green width">Login</button>
-				<div id="helpLoginToRoom" class="room__register">Not logged in ? Help</div>
+				<button
+					disabled
+					id="btnLoginToRoom"
+					type="submit"
+					class="btn green width"
+				>
+					Login
+				</button>
+				<div id="helpLoginToRoom" class="room__register">
+					Not logged in ? Help
+				</div>
 			</form>
 			<button id="btnFindRoom" class="btn width">Search room</button>
 			<button id="btnCreateRoom" class="btn width">Create room</button>
@@ -77,41 +99,50 @@
 						<label for="inputRoomCode">Code</label>
 						<div class="room__box">
 							<i class="nes-icon exclamation-circle"></i>
-							<input 
-								id="inputRoomCode" 
-								class="room__input" 
-								type="text" 
-								placeholder="Enter code " 
-								pattern="[A-Z0-9]+" 
+							<input
+								id="inputRoomCode"
+								class="room__input"
+								type="text"
+								placeholder="Enter code "
+								pattern="[A-Z0-9]+"
 								title="Only letters and numbers are allowed"
-								minlength="4" 
-								maxlength="8" 
-								required 
+								minlength="4"
+								maxlength="8"
+								required
 							/>
 						</div>
-						<small class="small">
-							Write the code for the room
-						</small>
+						<small class="small"> Write the code for the room </small>
 						<small class="small">
 							<ul>
-								<li class="invalidRequirements" id="validLetterAndNumber">Only letters and numbers are allowed</li>
-								<li class="invalidRequirements" id="validMinCharacters">Minimum 4 characters</li>
-								<li class="invalidRequirements" id="validMaxCharacters">Maximum 8 characters</li>
-								<li class="invalidRequirements" id="validRoomCode">The code is already in use</li>
+								<li class="invalidRequirements" id="validLetterAndNumber">
+									Only letters and numbers are allowed
+								</li>
+								<li class="invalidRequirements" id="validMinCharacters">
+									Minimum 4 characters
+								</li>
+								<li class="invalidRequirements" id="validMaxCharacters">
+									Maximum 8 characters
+								</li>
+								<li class="invalidRequirements" id="validRoomCode">
+									The code is already in use
+								</li>
 							</ul>
 						</small>
 					</div>
 					<div class="room__inputs">
-						<label for="inputRoomDescription">Description <small class="small red">*</small></label>
+						<label for="inputRoomDescription"
+							>Description <small class="small red">*</small></label
+						>
 						<div class="room__box">
 							<i class="nes-icon bars"></i>
-							<input id="inputRoomDescription"  
-								class="room__input" 
-								type="text" 
-								placeholder="Description" 
-								pattern="^(.|\s)*[a-zA-Z]+(.|\s)*$" 
+							<input
+								id="inputRoomDescription"
+								class="room__input"
+								type="text"
+								placeholder="Description"
+								pattern="^(.|\s)*[a-zA-Z]+(.|\s)*$"
 								title="Only letters and numbers are allowed"
-								maxlength="100"   
+								maxlength="100"
 							/>
 						</div>
 						<small class="small">Write the subject of the room</small>
@@ -119,15 +150,25 @@
 					<div class="room__inputs container_checkBox">
 						<label for="inputRoomHidden">Room public</label>
 						<div class="room__checkbox">
-							<input id="inputRoomHidden"  class="room__input" type="checkbox" />
+							<input id="inputRoomHidden" class="room__input" type="checkbox" />
 						</div>
 						<small class="small blue">
-							Check this box if you want the room to be public and visible to other users
+							Check this box if you want the room to be public and visible to
+							other users
 						</small>
 					</div>
 					<div class="room__buttons">
-						<button class="btn red" id="btnCancelCreateRoom" type="reset">Close</button>
-						<button class="btn green" id="btnSubmitCreateRoom" disabled type="submit">Create</button>
+						<button class="btn red" id="btnCancelCreateRoom" type="reset">
+							Close
+						</button>
+						<button
+							class="btn green"
+							id="btnSubmitCreateRoom"
+							disabled
+							type="submit"
+						>
+							Create
+						</button>
 					</div>
 				</form>
 			</div>
@@ -143,23 +184,25 @@
 						<div class="dialog_input">
 							<div class="room__inputs">
 								<div class="room__box">
-									<input 
-										id="inputFindRoomCode" 
-										class="room__input" 
-										type="text" 
-										placeholder="Enter code" 
-										pattern="[A-Z0-9]+" 
+									<input
+										id="inputFindRoomCode"
+										class="room__input"
+										type="text"
+										placeholder="Enter code"
+										pattern="[A-Z0-9]+"
 										title="Only letters and numbers are allowed"
-										minlength="4" 
-										maxlength="8" 
-										required 
+										minlength="4"
+										maxlength="8"
+										required
 									/>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="dialog_item">
-						<button class="btn_dialog_close btn red" id="btnCancelSearchRoom">X</button>
+						<button class="btn_dialog_close btn red" id="btnCancelSearchRoom">
+							X
+						</button>
 					</div>
 				</div>
 				<div class="container_dialog_item">
@@ -226,7 +269,6 @@
 						</div>
 					</div>
 				</div>
-				
 			</div>
 		</dialog>
 		<!-- END DIALOG SEARCH ROOM -->

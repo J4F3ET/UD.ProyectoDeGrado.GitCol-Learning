@@ -1,12 +1,13 @@
 import {Router} from "express";
 import {releaseVerificationMiddleware} from "./util/login-middleware .js";
+import {HttpStatus} from "./util/httpStatus.js";
 const router = Router();
 /**
  * @openapi
  * /login:
  *   post:
  *     summary: Endpoint for login
- *     description: Validate access token and assing a cookie 
+ *     description: Validate access token and assing a cookie
  *     requestBody:
  *       content:
  *         application/json:
@@ -34,7 +35,7 @@ const router = Router();
  *       - cookieAuth: []
  */
 router.post("/login", releaseVerificationMiddleware, (req, res) => {
-	res.status(200).json({url: "/rooms"});
+	res.status(HttpStatus.OK).json({url: "/rooms"});
 	res.end();
 });
 /**

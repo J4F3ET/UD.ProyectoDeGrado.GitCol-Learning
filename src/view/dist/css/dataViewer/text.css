@@ -1,76 +1,76 @@
-text.id-label,text.message-label{
-    text-anchor: middle;
-    fill: var(--white-color);
-    font-size: var(--font-size-small-mobile);
+text.id-label,
+text.message-label {
+	text-anchor: middle;
+	fill: var(--white-color);
+	font-size: var(--font-size-small-mobile);
 }
-text.id-label{
-    fill: var(--orange-color);
-    font-weight: 600;
+text.id-label {
+	fill: var(--orange-color);
+	font-weight: 600;
 }
-h6.help{
-    font-size: var(--font-size-mobile);
-    margin-left: .5rem;
+h6.help {
+	font-size: var(--font-size-mobile);
+	margin-left: 0.5rem;
 }
-h5.help{
-    font-size: var(--font-size-mobile);
+h5.help {
+	font-size: var(--font-size-mobile);
 }
-p{
-    font-size: var(--font-size-small-mobile);
+p {
+	font-size: var(--font-size-small-mobile);
 }
-p.help.underline{
-    color: var(--orange-color);
+p.help.underline {
+	color: var(--orange-color);
 }
-b{
-    color: var(--blue-grey-color);
+b {
+	color: var(--blue-grey-color);
 }
-li.help{
-    list-style: none;
-    margin-left: 1rem;
-    font-size: var(--font-size-small-mobile);
+li.help {
+	list-style: none;
+	margin-left: 1rem;
+	font-size: var(--font-size-small-mobile);
 }
 /* Tabletas */
 @media (min-width: 576px) {
-    h6.help{
-        font-size: var(--font-size-tablet);
-    }
-    h5.help{
-        font-size: var(--font-size-tablet);
-    }
-    p{
-        font-size: var(--font-size-smalltablet);
-    }
-    li.help{
-        font-size: var(--font-size-small-tablet);
-    }
-
+	h6.help {
+		font-size: var(--font-size-tablet);
+	}
+	h5.help {
+		font-size: var(--font-size-tablet);
+	}
+	p {
+		font-size: var(--font-size-smalltablet);
+	}
+	li.help {
+		font-size: var(--font-size-small-tablet);
+	}
 }
 /* Laptops y escritorios */
-@media (min-width: 768px) {   
-    h6.help{
-        font-size: var(--font-size-desktop);
-    }
-    h5.help{
-        font-size: var(--font-size-desktop);
-    }
-    p{
-        font-size: var(--font-size-small-desktop);
-    }
-    li.help{
-        font-size: var(--font-size-small-desktop);
-    }
+@media (min-width: 768px) {
+	h6.help {
+		font-size: var(--font-size-desktop);
+	}
+	h5.help {
+		font-size: var(--font-size-desktop);
+	}
+	p {
+		font-size: var(--font-size-small-desktop);
+	}
+	li.help {
+		font-size: var(--font-size-small-desktop);
+	}
 }
 /* Monitores anchos */
 @media (min-width: 1200px) {
-    h6.help{
-        font-size: var(--font-size-desktop);
-    }
-    h5.help{
-        font-size: var(--font-size-desktop);
-    }
-    p{
-        font-size: var(--font-size-small-desktop);
-    }
-    li.help{
-        font-size: var(--font-size-small-desktop);
-    }
+	h6.help {
+		font-size: var(--font-size-desktop);
+	}
+	h5.help {
+		font-size: var(--font-size-desktop);
+	}
+	p {
+		font-size: var(--font-size-small-desktop);
+	}
+	li.help {
+		font-size: var(--font-size-small-desktop);
+	}
 }

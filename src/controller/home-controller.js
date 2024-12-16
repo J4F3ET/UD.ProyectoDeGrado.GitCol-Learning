@@ -12,9 +12,9 @@ const router = Router();
  *      content:
  *          text/html:
  *             example: home-screen.ejs
- * 
-*/
-router.get('/', (req, res) => res.render("home-screen"));
+ *
+ */
+router.get("/", (req, res) => res.render("home-screen"));
 /**
  * @openapi
  * /home:
@@ -27,7 +27,7 @@ router.get('/', (req, res) => res.render("home-screen"));
  *      content:
  *          text/html:
  *             example: home-screen.ejs
- * 
-*/
-router.get('/home', (req, res) => res.redirect("/"));
+ *
+ */
+router.get("/home", (req, res) => res.redirect("/"));
 export default router;

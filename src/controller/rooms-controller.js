@@ -6,7 +6,7 @@ import {
 	roomCreate,
 	roomGetByCode,
 	roomAddMember,
-	roomGetAllPublic, 
+	roomGetAllPublic,
 } from "../model/room-service.js";
 const router = Router();
 /**
@@ -34,10 +34,10 @@ router.get(
 	"/rooms",
 	releaseVerificationMiddleware,
 	verifyUserInAnyRoomMiddleware,
-	(req, res) =>
-{
-	res.render("rooms-screen");
-});
+	(req, res) => {
+		res.render("rooms-screen");
+	}
+);
 /**
  * @openapi
  * /rooms/fit:
@@ -74,24 +74,20 @@ router.get(
  *       - bearerAuth: []
  *       - cookieAuth: []
  */
-router.get("/rooms/fit", releaseVerificationMiddleware, async(req, res) => {
-
+router.get("/rooms/fit", releaseVerificationMiddleware, async (req, res) => {
 	const room = await roomGetByCode(req.query.code);
 
-	if(!room)
-		return res.sendStatus(404)
+	if (!room) return res.sendStatus(404);
 
-	const user =  await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+	const user = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
 
-	if(!user)
-		return res.sendStatus(403)
+	if (!user) return res.sendStatus(403);
 
-	const response = await roomAddMember(room,user.uid);
+	const response = await roomAddMember(room, user.uid);
 
-	if(!response)
-		return res.sendStatus(500)
+	if (!response) return res.sendStatus(500);
 
-	res.json(room)
+	res.json(room);
 });
 /**
  * @openapi
@@ -121,9 +117,8 @@ router.get("/rooms/fit", releaseVerificationMiddleware, async(req, res) => {
  *       - bearerAuth: []
  *       - cookieAuth: []
  */
-router.get("/rooms/code", releaseVerificationMiddleware, async(req, res) => {
-	if(!await roomGetByCode(req.query.code))
-		return res.sendStatus(404);
+router.get("/rooms/code", releaseVerificationMiddleware, async (req, res) => {
+	if (!(await roomGetByCode(req.query.code))) return res.sendStatus(404);
 	res.end();
 });
 /**
@@ -172,9 +167,9 @@ router.get("/rooms/code", releaseVerificationMiddleware, async(req, res) => {
  *         - bearerAuth: []
  *         - cookieAuth: []
  */
-router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
-	const result = await auth.verifyIdToken(req.headers.cookie.split("=")[1])
-	const owner = result.name??result.email;
+router.post("/rooms", releaseVerificationMiddleware, async (req, res) => {
+	const result = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+	const owner = result.name ?? result.email;
 	const members = [result.uid];
 	const room = await roomCreate(
 		req.body.code,
@@ -183,8 +178,7 @@ router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
 		members,
 		req.body.hidden
 	);
-	if(!room)
-		return res.sendStatus(400)
+	if (!room) return res.sendStatus(400);
 	res.json(room);
 });
 /**
@@ -212,11 +206,14 @@ router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
  *       - bearerAuth: []
  *       - cookieAuth: []
  */
-router.get("/rooms/all/public", releaseVerificationMiddleware, async(req, res) => {
-	const rooms = await roomGetAllPublic();
-	if(!rooms.length)
-		return res.sendStatus(404)
-	res.json(rooms);
-});
+router.get(
+	"/rooms/all/public",
+	releaseVerificationMiddleware,
+	async (req, res) => {
+		const rooms = await roomGetAllPublic();
+		if (!rooms.length) return res.sendStatus(404);
+		res.json(rooms);
+	}
+);
 
 export default router;

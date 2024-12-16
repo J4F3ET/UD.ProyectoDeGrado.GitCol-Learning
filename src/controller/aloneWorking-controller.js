@@ -1,4 +1,4 @@
-import { Router } from "express";
+import {Router} from "express";
 const router = Router();
 /**
  * @openapi
@@ -13,7 +13,5 @@ const router = Router();
  *           text/html:
  *             example: alone-mode-screen.ejs
  */
-router.get("/aloneMode*",(req, res) => {
-    res.render("alone-mode-screen");
-});
+router.get("/aloneMode*", (req, res) => res.render("alone-mode-screen"));
 export default router;

@@ -5,16 +5,16 @@ export async function logout() {
 		method: "GET",
 		headers: {
 			"Content-Type": "application/json",
-		}
+		},
 	});
 	auth.signOut();
 	return response;
 }
-export async function goToHome(){
+export async function goToHome() {
 	window.location.href = "/";
 }
-onAuthStateChanged(auth,async (user) => {
+onAuthStateChanged(auth, async (user) => {
 	if (user) return;
-	logout()
-	goToHome()
+	logout();
+	goToHome();
 });
