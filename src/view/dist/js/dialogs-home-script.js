@@ -18,70 +18,6 @@ const getImgInforOfMode = async (mode) => {
 	);
 	return imgElement;
 };
-const generatorInfoDialogFromMode = async (mode) => {
-	const textSingle = `The Single User Mode allows you to freely 
-    explore the console and Git commands at your own pace. GitCol
-    Learning provides preset challenges with on-screen guides to
-    help you grasp the basics of Git. All of this takes place in
-    an individual environment, allowing you to focus on learning
-    independently.<br>`;
-	const textMulti = `The Multi-user Mode allows users to freely
-    explore the console and Git commands at their own pace. It
-    facilitates collaboration by simulating a remote repository
-    environment, where users can create private or public rooms
-    for real-time collaboration`;
-	const iconsAndTextSingle = [
-		{
-			icon: "bx bxs-user",
-			text: "Free use or individual practice of the environment",
-		},
-		{
-			icon: "bx bxs-graduation",
-			text: "Pre-set challenges with guides for learning",
-		},
-	];
-	const iconsAndTextMulti = [
-		{
-			icon: "bx bxs-user",
-			text: "Free use or individual practice of the environment",
-		},
-		{
-			icon: "bx bxs-cloud",
-			text: "Simulated environment of a remote repositor",
-		},
-		{
-			icon: "bx bxs-user-plus",
-			text: "Real-time collaboration with others",
-		},
-		{
-			icon: "bx bxs-home-alt-2",
-			text: "Creation of public and private rooms",
-		},
-	];
-	const items = Array.from(
-		{
-			length:
-				mode === "single"
-					? iconsAndTextSingle.length
-					: iconsAndTextMulti.length,
-		},
-		(_, i) => {
-			const element =
-				mode === "single" ? iconsAndTextSingle : iconsAndTextMulti;
-			return getItemDialog(element[i].icon, element[i].text);
-		}
-	);
-	const container = document.createElement("div");
-	const title = document.createElement("h3");
-	const info = document.createElement("p");
-	title.innerHTML = mode === "single" ? "Single user mode" : "Multi user mode";
-	info.classList.add("info_dialog");
-	info.innerHTML = mode === "single" ? textSingle : textMulti;
-	container.appendChild(title);
-	container.appendChild(info);
-	items.forEach((item) => container.appendChild(item));
-	return container;
-};
 const getItemDialog = (icon, text) => {
 	const item = document.createElement("div");
 	const iconElement = document.createElement("div");
@@ -118,8 +54,10 @@ const selectModeCallback = async (mode) => {
 	dialogSelectMode.close();
 	document.getElementById(idDialog).showModal();
 };
-const closeDialogCallback = async (dialogId) =>
+const closeDialogCallback = async (dialogId) => {
 	document.getElementById(dialogId)?.close();
+};
+
 openButtonDialog.forEach((element) => {
 	element.addEventListener("click", async () => {
 		toogleMode(modeElement.dataset.mode === "single" ? "multi" : "single");

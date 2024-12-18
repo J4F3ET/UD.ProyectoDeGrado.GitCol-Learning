@@ -216,10 +216,6 @@
 	height: 16px;
 	width: 100%;
 }
-.icon-provider-container-dialog > svg {
-	height: 200%;
-	width: 50%;
-}
 @keyframes show-text-dialog {
 	0% {
 		transform: translateY(-50%);
