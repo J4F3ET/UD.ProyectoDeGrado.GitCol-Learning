@@ -1,6 +1,7 @@
-import {Router} from "express";
-import {releaseVerificationMiddleware} from "./util/login-middleware .js";
-import {HttpStatus} from "./util/httpStatus.js";
+import { Router } from "express";
+import { releaseVerificationMiddleware } from "./util/login-middleware .js";
+import { HttpStatus } from "./util/httpStatus.js";
+import { userLogin } from "../model/user-service.js";
 const router = Router();
 /**
  * @openapi
@@ -34,8 +35,26 @@ const router = Router();
  *       - bearerAuth: []
  *       - cookieAuth: []
  */
-router.post("/login", releaseVerificationMiddleware, (req, res) => {
-	res.status(HttpStatus.OK).json({url: "/rooms"});
+router.post("/login", releaseVerificationMiddleware, async (req, res) => {
+	const { uid } = req.body;
+	if (!uid || uid == "") {
+		res
+			.clearCookie("access_token")
+			.status(HttpStatus.NOT_FOUND)
+			.json({ url: "/error" })
+			.end();
+		return;
+	}
+	const { err } = await userLogin(uid);
+	if (err) {
+		res
+			.clearCookie("access_token")
+			.status(HttpStatus.UNAUTHORIZED)
+			.json({ url: "/error" })
+			.end();
+		return;
+	}
+	res.status(HttpStatus.OK).json({ url: "/rooms" });
 	res.end();
 });
 /**
