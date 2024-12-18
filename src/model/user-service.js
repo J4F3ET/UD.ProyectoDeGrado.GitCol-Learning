@@ -133,7 +133,7 @@ const completedUser = async (objectAuth, objectDB) => {
 		null;
 	const provider = parseProvider(providerAuth, objectAuth.uid);
 	if (!objectDB) return { email, name, providers: [provider] };
-	if (!providesBD.includes((p) => p.providerId == provider.providerId)) {
+	if (!providesBD.flatMap((p) => p.providerId).includes(provider.providerId)) {
 		return { email, name, providers: providesBD.concat(provider) };
 	}
 	return { email, name, providers: providesBD };
