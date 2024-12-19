@@ -1,7 +1,8 @@
-import {findByUserToRoom, roomGet} from "../../model/room-service.js";
-import {CustomError} from "../../model/CustomError.js";
-import {auth} from "../../model/firebase-service.js";
-import {errorMiddleware} from "./error-middleware.js";
+import { findByUserToRoom, roomGet } from "../../model/room-service.js";
+import { getUserByAuthUid } from "../../model/user-service.js";
+import { CustomError } from "../../model/CustomError.js";
+import { auth } from "../../model/firebase-service.js";
+import { errorMiddleware } from "./error-middleware.js";
 import { HttpStatus } from "./httpStatus.js";
 // Middleware Express: Funciones que se ejecutan antes de que lleguen a las rutas
 export const verifyUserInAnyRoomMiddleware = async (req, res, next) => {
@@ -19,12 +20,13 @@ export const verifyUserInAnyRoomMiddleware = async (req, res, next) => {
 };
 export const verifyUserInRoomMiddleware = async (req, res, next) => {
 	try {
-		const data = auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+		const token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
 		const dataSnaptshot = roomGet(req.query.room);
-		const user = await data;
 		const room = await dataSnaptshot;
-		if (!(room.val() && user)) throw new Error("Unauthorized");
-		if (!room.val().members.includes(user.uid)) throw new Error("Unauthorized");
+		const { err, data } = await getUserByAuthUid(token.uid);
+		if (!token) throw new Error("Token not found");
+		if (!room.val() || err || !data) throw new Error("Room or user not found");
+		if (!room.val().members.includes(data.key)) throw new Error("Unauthorized");
 		next();
 	} catch (error) {
 		const err = new CustomError("Unauthorized", HttpStatus.UNAUTHORIZED);

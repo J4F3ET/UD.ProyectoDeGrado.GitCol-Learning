@@ -142,3 +142,32 @@ const findEmailInAuthObject = (objectAuth) => {
 	const email = objectAuth.email ?? objectAuth.providerData[0]?.email;
 	return email;
 };
+export const getUserByAuthUid = async (uid) => {
+	try {
+		const snapshot = await database
+			.ref(path)
+			.orderByChild("providers")
+			.once("value");
+		if (!snapshot.val()) return { err: true, data: null };
+		const { err, data } = await callbackFindUserByProviderUid(
+			uid,
+			snapshot.val()
+		);
+		if (!err) return { err: false, data };
+		return { err: false, data };
+	} catch (error) {
+		console.error("GETUSERBYAUTHUID", error);
+		return { err: true, data: error };
+	}
+};
+const callbackFindUserByProviderUid = async (uid, users) => {
+	for await (const [key, value] of Object.entries(users)) {
+		const providers = value.providers;
+		const user = await findUser(providers, uid);
+		if (user) return { err: false, data: { key, ...value } };
+	}
+	return null;
+};
+const findUser = async (providers, uid) => {
+	return providers.find((provider) => provider.userUid === uid) ?? null;
+};

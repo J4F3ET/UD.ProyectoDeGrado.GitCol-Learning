@@ -1,13 +1,15 @@
-import {Router} from "express";
-import {releaseVerificationMiddleware} from "./util/login-middleware .js";
-import {verifyUserInAnyRoomMiddleware} from "./util/teamWorking-middleware.js";
-import {auth} from "../model/firebase-service.js";
+import { Router } from "express";
+import { releaseVerificationMiddleware } from "./util/login-middleware .js";
+import { verifyUserInAnyRoomMiddleware } from "./util/teamWorking-middleware.js";
+import { auth } from "../model/firebase-service.js";
+import { getUserByAuthUid } from "../model/user-service.js";
 import {
 	roomCreate,
 	roomGetByCode,
 	roomAddMember,
 	roomGetAllPublic,
 } from "../model/room-service.js";
+import { HttpStatus } from "./util/httpStatus.js";
 const router = Router();
 /**
  * @openapi
@@ -169,8 +171,12 @@ router.get("/rooms/code", releaseVerificationMiddleware, async (req, res) => {
  */
 router.post("/rooms", releaseVerificationMiddleware, async (req, res) => {
 	const result = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
-	const owner = result.name ?? result.email;
-	const members = [result.uid];
+	const response = await getUserByAuthUid(result.uid);
+	if (response.err || !response.data.key || !response.data.email) {
+		return res.sendStatus(HttpStatus.NOT_FOUND);
+	}
+	const owner = response.data.email;
+	const members = [response.data.key];
 	const room = await roomCreate(
 		req.body.code,
 		req.body.description,
@@ -178,7 +184,7 @@ router.post("/rooms", releaseVerificationMiddleware, async (req, res) => {
 		members,
 		req.body.hidden
 	);
-	if (!room) return res.sendStatus(400);
+	if (!room) return res.sendStatus(HttpStatus.BAD_REQUEST);
 	res.json(room);
 });
 /**
