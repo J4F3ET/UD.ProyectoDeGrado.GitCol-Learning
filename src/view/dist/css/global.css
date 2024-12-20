@@ -25,7 +25,7 @@ textarea {
 :root {
 	--cursor-style: url(../assets/img/cursor.png);
 	--cursor-pointer-style: url(../assets/img/cursor_point.png);
-	--cursor-not-allowed-style: url(../assets/img/cursor_not-allowed.png);
+	--cursor-not-allowed-style: url(../assets/img/cursor_not-allowed.webp);
 	--bg-color: #0f1621;
 	--second-bg-color: #465166;
 	--second-bg-color-trasparent: #465166a6;
