@@ -25,8 +25,8 @@ textarea {
 :root {
 	--cursor-style: url(../assets/img/cursor.png);
 	--cursor-pointer-style: url(../assets/img/cursor_point.png);
-	--cursor-not-allowed-style: url(../assets/img/cursor_not-allowed.png);
-	--bg-color: #1b263b;
+	--cursor-not-allowed-style: url(../assets/img/cursor_not-allowed.webp);
+	--bg-color: #0f1621;
 	--second-bg-color: #465166;
 	--second-bg-color-trasparent: #465166a6;
 	--text-color: #fffdf9;
@@ -81,7 +81,7 @@ textarea {
 	--font-size-h1-large: 2.55rem; /* 36px */
 	--font-size-h2-large: 2.3rem; /* 32px */
 	--font-size-h3-large: 2rem; /* 28px */
-	--font-size-small-large: 1.125rem; /* 18px */
+	--font-size-small-large: 1.2rem; /* 18px */
 
 	--font-size-extra-large: 4rem;
 }

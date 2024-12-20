@@ -1,5 +1,5 @@
-import {logout, goToHome} from "./userAuth-observer.js";
-import {driveHelpRoom} from "./drivejs-mode-script.js";
+import { logout, goToHome } from "./userAuth-observer.js";
+import { driveHelpRoom } from "./drivejs-mode-script.js";
 const dialogCreateRoom = document.getElementById("dialogCreateRoom");
 const dialogSearchRoom = document.getElementById("dialogSearchRoom");
 const RESPONSE_BAD_REQUEST = 400;
@@ -100,7 +100,6 @@ function validateInputRoomCode(element) {
 	const validLetterAndNumber = /^[A-Z0-9]+$/;
 	const required = document.getElementById("validRoomCode");
 	const callback = (data) => {
-		console.log(checkInputRoomCode(element, element.value));
 		updateValidateRequirement(required, data);
 		required.textContent = data
 			? "Room code available"
@@ -183,7 +182,7 @@ document
 			},
 			body: JSON.stringify(room),
 		}).then((response) => {
-			if (!response.ok && response.status != RESPONSE_BAD_REQUEST) goToHome();
+			//if (!response.ok && response.status != RESPONSE_BAD_REQUEST) goToHome();
 
 			if (response.status == RESPONSE_BAD_REQUEST) return alert(response);
 

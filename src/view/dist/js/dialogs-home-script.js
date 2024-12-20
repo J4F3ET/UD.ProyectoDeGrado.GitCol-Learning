@@ -7,7 +7,7 @@ const modeElement = document.querySelector("[data-mode]");
 const getImgInforOfMode = async (mode) => {
 	const imgElement = document.createElement("img");
 	const path = `dist/assets/img/home/${
-		mode == "single" ? "cat_white.png" : "cats.png"
+		mode == "single" ? "cat_white.webp" : "cats.webp"
 	}`;
 	imgElement.classList.add("img_cat", mode == "single" ? "single" : "multi");
 	imgElement.setAttribute("loading", "lazy");
