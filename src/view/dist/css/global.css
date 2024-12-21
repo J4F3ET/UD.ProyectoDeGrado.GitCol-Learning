@@ -84,6 +84,8 @@ textarea {
 	--font-size-small-large: 1.2rem; /* 18px */
 
 	--font-size-extra-large: 4rem;
+
+	--height-header-home: 5rem;
 }
 #particles-js {
 	width: 100%;

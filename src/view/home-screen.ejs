@@ -28,16 +28,19 @@
 	</head>
 	<body class="body scrollable">
 		<header class="home-header">
-			<a href="/" class="logo">Git Col-Learning<small>demo</small></a>
-			<i class="nes-icon bars" id="menu-icon"></i>
-			<nav class="home-navbar">
-				<a href="#home" class="item-navbar active-link">Home</a>
-				<a href="#overview" class="item-navbar">Overview</a>
-				<a href="#usage-models" class="item-navbar">Usage Modes</a>
-				<a href="#mision-vision" class="item-navbar">Mision & Vision</a>
-				<a href="#about" class="item-navbar">About us</a>
-				<button class="btn orange btn-dialog">START!</button>
-			</nav>
+			<div class="nav-wrapper">
+				<a href="/" class="logo">Git Col-Learning<br /><small>demo</small></a>
+				<i class="nes-icon bars" id="menu-icon"></i>
+				<nav class="home-navbar">
+					<a href="#home" class="item-navbar active-link">Home</a>
+					<a href="#overview" class="item-navbar">Overview</a>
+					<a href="#usage-models" class="item-navbar">Usage Modes</a>
+					<a href="#mision-vision" class="item-navbar">Mision & Vision</a>
+					<a href="#about" class="item-navbar">About us</a>
+					<button class="btn orange btn-dialog">START!</button>
+					<button class="btn green btn-dialog">Login</button>
+				</nav>
+			</div>
 		</header>
 		<!--HOME SECTION DESING-->
 		<section class="view-section-especial home-section" id="home">
@@ -139,18 +142,21 @@
 			</div>
 		</section>
 		<!--MISION AND VISION SECTION DESING-->
-		<section id="mision-vision" class="view-section mision-vision-section">
+		<section
+			id="mision-vision"
+			class="container-mision-vision-section view-section"
+		>
 			<!--MISION SECTION DESING-->
 			<div class="item-mision-vision-section">
-				<div class="container-mision-vision-img">
+				<div class="container-mision-vision-img container-img-mision">
 					<img
-						class="img-mision-vision deg-right"
+						class="img-mision-vision"
 						loading="lazy"
-						src="https://i.redd.it/zym5pybotlja1.gif"
-						alt="The computer show line code"
+						src="dist/assets/img/home/mision-vision-1.webp"
+						alt="Computer room with a presentation of the git col learning application on a large screen."
 					/>
 				</div>
-				<div class="content-mision-vision">
+				<div class="card content-mision-vision">
 					<h2 class="heading">
 						Mision of<span class="multiple-text"> proyect</span>
 					</h2>
@@ -165,21 +171,23 @@
 			</div>
 			<!--VISION SECTION DESING-->
 			<div class="item-mision-vision-section">
-				<div class="content-mision-vision">
+				<div class="content-mision-vision card">
 					<h2 class="heading">
 						Vision of<span class="multiple-text"> proyect</span>
 					</h2>
 					<p>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-						eiusmod tempor incididunt ut labore et dolore magna aliqua
+						To be the preferred platform for students and educators to start
+						learning Git, facilitating the process of learning and practicing in
+						the best possible way Git, facilitating the process of learning and
+						practicing in the best possible way.
 					</p>
 				</div>
-				<div class="container-mision-vision-img">
+				<div class="container-mision-vision-img container-img-vision">
 					<img
-						class="img-mision-vision deg-left"
+						class="img-mision-vision"
 						loading="lazy"
-						src="https://38.media.tumblr.com/a401eaca1220428dc37379cbd7312e16/tumblr_nv44lndz1l1u6xnmoo1_1280.gif"
-						alt="Person see the computer"
+						src="dist/assets/img/home/mision-vision-2.webp"
+						alt="Room of computer, with a person see the computer"
 					/>
 				</div>
 			</div>
@@ -216,7 +224,7 @@
 				<div class="perfile_card">
 					<div class="perfile_card-photo">
 						<img
-							src="https://i.pinimg.com/564x/f8/41/b0/f841b07404202d58bab4aec4a9680192.jpg"
+							src="dist/assets/img/home/jafet.webp"
 							alt="Jafet Lopez"
 							lazy="loading"
 						/>

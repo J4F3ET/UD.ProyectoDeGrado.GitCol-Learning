@@ -6,55 +6,76 @@
 }
 .view-section-especial {
 	min-height: 100vh;
-	padding: 5rem 11% 1rem;
+	padding: 0rem 11%;
 }
 .view-section {
 	min-height: fit-content;
 	padding: 10rem 11% 2rem;
 }
+p {
+	font-size: var(--font-size-mobile);
+}
 /* NAVBAR SECTION DESING */
 .home-header {
-	position: fixed;
+	flex-shrink: 0;
+	position: sticky;
 	top: 0;
 	left: 0;
-	width: 100vw;
-	padding: 0.5% 10%;
+	right: 0;
 	backdrop-filter: blur(1.5rem);
 	-webkit-backdrop-filter: blur(1.5rem);
+	z-index: 100;
+	box-shadow: 0 0 0.5rem var(--black-color);
+	height: var(--height-header-home);
+}
+.nav-wrapper {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	z-index: 100;
-	box-shadow: 0 0 0.5rem var(--black-color);
+	width: min(80rem, 100vw);
+	margin: auto;
+	height: 100%;
 }
 .logo {
 	font-size: var(--font-size-h1-mobile);
 	color: var(--blue-color);
 	font-weight: 600;
 	cursor: var(--cursor-style), auto;
-}
-.logo > small {
-	font-size: var(--font-size-small-mobile);
-	color: var(--text-color);
+	text-wrap: nowrap;
+	line-height: 0.5;
+	margin-left: 1rem;
+	& > small {
+		font-size: var(--font-size-small-mobile);
+		color: var(--text-color);
+	}
 }
 #menu-icon {
 	font-size: var(--font-size-h1-large);
 	color: var(--text-color);
-	display: none;
+	display: block;
+	margin: 1rem;
+	width: 2rem;
+	height: 2rem;
 }
 .home-navbar {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	gap: 1rem;
+	display: none;
+}
+.active-link {
+	display: block;
 }
 .item-navbar {
 	font-size: var(--font-size-mobile);
 	color: var(--text-color);
-	margin: 1rem;
 	transition: 0.3s;
+	display: block;
+	margin: 3rem 0;
 }
 .item-navbar:hover,
-.item-navbar.active-link {
+.active-link {
 	color: var(--orange-color);
 	border: 1px var(--orange-color);
 	border-style: none none solid none;
@@ -98,9 +119,6 @@
 }
 .multiple-text {
 	color: var(--blue-color);
-}
-.content-home-section p {
-	font-size: var(--font-size-mobile);
 }
 .social-media {
 	display: flex;
@@ -168,7 +186,6 @@
 	margin: 0;
 }
 .overview-content p {
-	font-size: var(--font-size-mobile);
 	margin: 1rem 0 1rem;
 }
 /* USAGE MODELS DESING */
@@ -218,43 +235,59 @@
 	background-repeat: no-repeat;
 }
 /* MISION AND VISION SECTION DESING */
-.mision-vision-section {
+.container-mision-vision-section {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-	gap: 2rem;
+	gap: 4rem;
+}
+.mision-vision {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 .item-mision-vision-section {
 	display: flex;
 	justify-content: center;
+	flex-grow: 1;
+	height: max-content;
+	max-width: 100%;
 	align-items: center;
 	gap: 2rem;
+	flex-direction: column-reverse;
+	&:last-child {
+		flex-direction: column;
+	}
+}
+.container-mision-vision-img {
+	border-radius: 25px 25px 25px 25px;
+	box-shadow: 0 5px 10px black;
+	width: 100%;
+	max-width: 546px;
 }
 .img-mision-vision {
-	width: 500px;
-	border-radius: 5px;
-	box-shadow: 0 5px 10px black;
-	&.deg-left {
-		transform: rotate(-2deg);
-	}
-	&.deg-right {
-		transform: rotate(2deg);
-	}
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 .content-mision-vision {
+	justify-content: space-evenly;
 	text-align: left;
 	line-height: 1.2;
+	width: 100%;
+	max-width: 546px;
 	& h2 {
 		font-size: var(--font-size-h2-mobile);
 		font-weight: 700;
 	}
-	& p {
-		font-size: var(--font-size-mobile);
-		margin: 2rem 0 3rem;
-	}
 }
 /* ABOUT US SECTION DESING */
+.about > h2 {
+	margin-bottom: 1rem;
+}
 .container_perfile_card {
 	display: flex;
 	justify-content: space-evenly;
@@ -357,8 +390,8 @@
 /* RESPONSIVE */
 /* Tabletas */
 @media (min-width: 576px) {
-	.view-section-especial {
-		padding: 10rem 11% 2rem;
+	p {
+		font-size: var(--font-size-tablet);
 	}
 	.overview-img img {
 		width: 35dvw;
@@ -377,23 +410,23 @@
 	.usage-models-img img {
 		width: 20dvw;
 	}
-	.content-home-section h1 {
-		font-size: var(--font-size-h1-tablet);
-	}
-	.content-home-section h3 {
-		font-size: var(--font-size-h2-tablet);
-	}
-	.content-home-section p {
-		font-size: var(--font-size-tablet);
+	.content-home-section {
+		& h1 {
+			font-size: var(--font-size-h1-tablet);
+		}
+		& h3 {
+			font-size: var(--font-size-h2-tablet);
+		}
 	}
 	.card {
 		padding: 3rem;
 	}
 	.logo {
 		font-size: var(--font-size-h1-tablet);
-	}
-	#menu-icon {
-		font-size: var(--font-size-h1-tablet);
+
+		& > small {
+			font-size: var(--font-size-small-tablet);
+		}
 	}
 	.github-link {
 		font-size: var(--font-size-tablet);
@@ -401,43 +434,33 @@
 	.heading {
 		font-size: var(--font-size-h1-tablet);
 	}
-	.overview-content p {
-		font-size: var(--font-size-tablet);
-	}
 	.content-mision-vision {
+		padding: 1rem;
 		& h2 {
-			font-size: var(--font-size-h2-tablet);
+			font-size: var(--font-size-h3-tablet);
 		}
 		& p {
-			font-size: var(--font-size-tablet);
+			font-size: var(--font-size-small-tablet);
 		}
 	}
 }
 /* Laptops y escritorios */
 @media (min-width: 768px) {
-	.logo {
-		font-size: var(--font-size-h1-desktop);
-	}
-	.content-home-section h1 {
-		font-size: var(--font-size-h1-desktop);
-	}
-	.content-home-section h3 {
-		font-size: var(--font-size-h2-desktop);
-	}
-	.content-home-section p {
+	p {
 		font-size: var(--font-size-desktop);
 	}
-	.item-navbar {
-		font-size: var(--font-size-small-desktop);
+	.content-home-section {
+		& h1 {
+			font-size: var(--font-size-h1-desktop);
+		}
+		& h3 {
+			font-size: var(--font-size-h2-desktop);
+		}
 	}
 	.card {
 		flex-direction: row-reverse;
 		align-items: center;
 		max-width: 100%;
-	}
-
-	#menu-icon {
-		font-size: var(--font-size-h1-desktop);
 	}
 	.github-link {
 		font-size: var(--font-size-desktop);
@@ -446,38 +469,78 @@
 		font-weight: 600;
 		font-size: var(--font-size-h1-desktop);
 	}
-	.overview-content p {
-		font-size: var(--font-size-desktop);
-		text-align: left;
+	/* MISION AND VISION DESING */
+	.content-mision-vision {
+		max-width: 34.125rem;
 	}
 	.content-mision-vision {
 		& h2 {
-			font-size: var(--font-size-h2-desktop);
+			font-size: var(--font-size-h3-desktop);
 		}
 		& p {
-			font-size: var(--font-size-desktop);
+			font-size: var(--font-size-small-desktop);
 		}
 	}
+	/* .img-mision-vision {
+	} */
+	.overview-content p {
+		text-align: left;
+	}
 }
+/* Laptops y escritorios */
+@media (min-width: 992px) {
+	.logo {
+		font-size: var(--font-size-h1-desktop);
+	}
+	#menu-icon {
+		display: none;
+	}
+	.home-navbar {
+		position: static;
+		display: flex;
+	}
+	.item-navbar {
+		text-wrap: nowrap;
+		font-size: var(--font-size-mobile);
+	}
+	.content-mision-vision {
+		flex-direction: column;
+		width: 50%;
+		height: 100%;
+	}
+	.container-mision-vision-section {
+		height: 28rem;
+	}
+	.item-mision-vision-section {
+		& p {
+			font-size: var(--font-size-small-desktop);
+		}
+		flex-direction: row !important;
+	}
+	.container-mision-vision-img {
+		max-width: 546px;
+		height: 100%;
+	}
+}
+
 /* Monitores anchos */
 @media (min-width: 1200px) {
+	p {
+		font-size: var(--font-size-large);
+	}
 	.logo {
 		font-size: var(--font-size-h1-large);
 	}
 	.item-navbar {
-		font-size: var(--font-small-size-large);
+		font-size: var(--font-size-small-desktop);
 	}
-	.content-home-section h1 {
-		font-size: var(--font-size-extra-large);
-	}
-	.content-home-section h3 {
-		font-size: var(--font-size-h1-large);
-	}
-	.content-home-section p {
-		font-size: var(--font-size-h2-large);
-	}
-	#menu-icon {
-		font-size: var(--font-size-h1-large);
+	.content-home-section {
+		& h1 {
+			font-size: var(--font-size-extra-large);
+		}
+		& h3 {
+			font-size: var(--font-size-h1-large);
+		}
 	}
 	.github-link {
 		font-size: var(--font-size-large);
@@ -485,22 +548,14 @@
 	.heading {
 		font-size: var(--font-size-h1-large);
 	}
-	.overview-content p {
-		font-size: var(--font-size-large);
-	}
 	.content-mision-vision {
 		& h2 {
 			font-size: var(--font-size-h2-large);
 		}
-		& p {
-			font-size: var(--font-size-large);
-		}
 	}
 }
+/* Mobiles */
 @media (max-width: 991px) {
-	.header {
-		padding: 2rem 3%;
-	}
 	.card {
 		flex-direction: column;
 	}
@@ -511,28 +566,8 @@
 		padding: 2rem 3%;
 	}
 }
+/* Tabletas */
 @media (max-width: 768px) {
-	#menu-icon {
-		display: block;
-	}
-	.home-navbar {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		width: 100%;
-		padding: 1rem 3%;
-		background: var(--bg-color);
-		border-top: 0.1rem solid rgba(0, 0, 0, 0.2);
-		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
-		display: none;
-	}
-	.home-navbar.active-link {
-		display: block;
-	}
-	.item-navbar {
-		display: block;
-		margin: 3rem 0;
-	}
 	/* -------Home Section------- */
 	.home-section {
 		min-height: 50vh;
@@ -541,16 +576,5 @@
 	.banner-home-img {
 		width: 40vw;
 		margin-top: 4rem;
-	}
-	/* MISION AND VISION DESING */
-	.img-mision-vision {
-		width: 60vw;
-		border-radius: 25px 25px 25px 25px;
-	}
-	.item-mision-vision-section {
-		flex-direction: column-reverse;
-		&:last-child {
-			flex-direction: column;
-		}
 	}
 }
