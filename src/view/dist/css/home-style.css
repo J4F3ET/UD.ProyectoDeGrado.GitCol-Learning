@@ -10,7 +10,7 @@
 }
 .view-section {
 	min-height: fit-content;
-	padding: 10rem 11% 2rem;
+	padding: 10rem 11%;
 }
 p {
 	font-size: var(--font-size-mobile);
@@ -79,6 +79,27 @@ p {
 	color: var(--orange-color);
 	border: 1px var(--orange-color);
 	border-style: none none solid none;
+}
+.home-navbar.active-link {
+	position: fixed;
+	top: var(--height-header-home);
+	backdrop-filter: blur(1.5rem);
+	-webkit-backdrop-filter: blur(1.5rem);
+	width: min(80rem, 100vw);
+	background: #0f1621e2;
+	height: 80vh;
+	z-index: 100;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	& .item-navbar {
+		margin-top: 0.5rem;
+		margin-bottom: 0.5rem;
+		width: 100%;
+		display: block;
+		text-align: center;
+	}
 }
 /* HOME SECTION DESING */
 .home-section {
@@ -189,6 +210,12 @@ p {
 	margin: 1rem 0 1rem;
 }
 /* USAGE MODELS DESING */
+.view-section.usage-models-section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
 .usage-models-container {
 	display: flex;
 	justify-content: center;
@@ -263,7 +290,6 @@ p {
 	}
 }
 .container-mision-vision-img {
-	border-radius: 25px 25px 25px 25px;
 	box-shadow: 0 5px 10px black;
 	width: 100%;
 	max-width: 546px;
@@ -271,6 +297,7 @@ p {
 .img-mision-vision {
 	width: 100%;
 	height: 100%;
+	border-radius: 10px;
 	object-fit: cover;
 }
 .content-mision-vision {
@@ -386,7 +413,6 @@ p {
 	text-align: center;
 	font-size: 100%;
 }
-
 /* RESPONSIVE */
 /* Tabletas */
 @media (min-width: 576px) {
@@ -457,6 +483,9 @@ p {
 			font-size: var(--font-size-h2-desktop);
 		}
 	}
+	.usage-models-container {
+		width: var(--width-container-home) !important;
+	}
 	.card {
 		flex-direction: row-reverse;
 		align-items: center;
@@ -503,6 +532,9 @@ p {
 		text-wrap: nowrap;
 		font-size: var(--font-size-mobile);
 	}
+	.overview-container {
+		width: var(--width-container-home) !important;
+	}
 	.content-mision-vision {
 		flex-direction: column;
 		width: 50%;
@@ -522,7 +554,6 @@ p {
 		height: 100%;
 	}
 }
-
 /* Monitores anchos */
 @media (min-width: 1200px) {
 	p {
