@@ -32,20 +32,20 @@ window.onscroll = () => {
 };
 
 /*= SCROLL REVEAL =*/
-ScrollReveal({
-	//reset: true,
-	distance: "80px",
-	duration: 2000,
-	delay: 200,
-});
+// ScrollReveal({
+// 	//reset: true,
+// 	distance: "80px",
+// 	duration: 2000,
+// 	delay: 200,
+// });
 
-ScrollReveal().reveal(".home-content, .heading", {origin: "top"});
-ScrollReveal().reveal(
-	".home-img, .levels-container, .overview-content, .about-container",
-	{origin: "bottom"}
-);
-ScrollReveal().reveal(".home-content h1, .overview-img", {origin: "left"});
-ScrollReveal().reveal(".home-content p, .overview-content", {origin: "right"});
+// ScrollReveal().reveal(".home-content, .heading", {origin: "top"});
+// ScrollReveal().reveal(
+// 	".home-img, .levels-container, .overview-content, .about-container",
+// 	{origin: "bottom"}
+// );
+// ScrollReveal().reveal(".home-content h1, .overview-img", {origin: "left"});
+// ScrollReveal().reveal(".home-content p, .overview-content", {origin: "right"});
 
 /*= TYPED JS =*/
 const typed = new Typed(".multiple-text", {

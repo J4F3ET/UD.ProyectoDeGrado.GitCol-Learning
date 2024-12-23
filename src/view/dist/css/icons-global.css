@@ -25,7 +25,9 @@ i {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
-
+[class*="path"]:before {
+	color: currentColor !important;
+}
 .icon-github .path1:before {
 	content: "\e92c";
 	color: rgb(0, 0, 0);
