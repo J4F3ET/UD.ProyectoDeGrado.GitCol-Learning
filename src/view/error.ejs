@@ -12,25 +12,23 @@
 			type="image/x-icon"
 		/>
 		<title>Git Col-Learning</title>
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css"
-		/>
+
 		<link rel="stylesheet" href="dist/css/reset.css" />
 		<link rel="stylesheet" href="dist/css/global.css" />
+		<link rel="stylesheet" href="dist/css/icons-global.css" />
 		<link rel="stylesheet" href="dist/css/error-style.css" />
 		<script src="./dist/js/banner.js"></script>
 	</head>
 	<body class="body body-error scrollable">
 		<div class="error-container">
 			<h1 class="title-error text red">
-				<i class="nes-icon ban"></i>
+				<i class="icon-ban"></i>
 				<p>Error <%= error.status %></p>
 			</h1>
 			<p class="message-error text"><%= error.message %></p>
 		</div>
 		<a class="btn green btn-only-icon" href="/">
-			<i class="nes-icon caret-left"></i> Home
+			<i class="icon-caret-left"></i> Home
 		</a>
 		<div id="particles-js"></div>
 		<!--PARTICLE JS-->

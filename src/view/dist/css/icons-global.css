@@ -1,0 +1,215 @@
+@font-face {
+	font-family: "incon-";
+	src: url("../assets/fonts/nes-icon.eot?gnpxw1");
+	src: url("../assets/fonts/nes-icon.eot?gnpxw1#iefix")
+			format("embedded-opentype"),
+		url("../assets/fonts/nes-icon.ttf?gnpxw1") format("truetype"),
+		url("../assets/fonts/nes-icon.woff?gnpxw1") format("woff"),
+		url("../assets/fonts/nes-icon.svg?gnpxw1#nes-icon") format("svg");
+	font-weight: normal;
+	font-style: normal;
+	font-display: block;
+}
+
+i {
+	/* use !important to prevent issues with browser extensions that change fonts */
+	font-family: "incon-" !important;
+	speak-as: never;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-github .path1:before {
+	content: "\e92c";
+	color: rgb(0, 0, 0);
+}
+.icon-github .path2:before {
+	content: "\e92d";
+	margin-left: -1em;
+	color: rgb(51, 51, 51);
+}
+.icon-github .path3:before {
+	content: "\e92e";
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-github .path4:before {
+	content: "\e92f";
+	margin-left: -1em;
+	color: rgb(51, 51, 51);
+}
+.icon-github .path5:before {
+	content: "\e930";
+	margin-left: -1em;
+	color: rgb(0, 0, 0);
+}
+.icon-search-minus:before {
+	content: "\e900";
+}
+.icon-search-plus:before {
+	content: "\e901";
+}
+.icon-snes:before {
+	content: "\e902";
+}
+.icon-square:before {
+	content: "\e903";
+}
+.icon-star:before {
+	content: "\e904";
+}
+.icon-thumbs-up:before {
+	content: "\e905";
+}
+.icon-times:before {
+	content: "\e906";
+}
+.icon-trophy:before {
+	content: "\e907";
+}
+.icon-twitch:before {
+	content: "\e908";
+}
+.icon-twitch-square:before {
+	content: "\e909";
+	color: #6441a5;
+}
+.icon-twitter:before {
+	content: "\e90a";
+}
+.icon-twitter-square:before {
+	content: "\e90b";
+}
+.icon-user:before {
+	content: "\e90c";
+}
+.icon-users:before {
+	content: "\e90d";
+}
+.icon-youtube:before {
+	content: "\e90e";
+}
+.icon-youtube-square:before {
+	content: "\e90f";
+}
+.icon-ban:before {
+	content: "\e910";
+}
+.icon-bars:before {
+	content: "\e911";
+}
+.icon-bomb:before {
+	content: "\e912";
+}
+.icon-calendar:before {
+	content: "\e913";
+}
+.icon-caret-down:before {
+	content: "\e914";
+}
+.icon-caret-left:before {
+	content: "\e915";
+}
+.icon-caret-right:before {
+	content: "\e916";
+}
+.icon-caret-up:before {
+	content: "\e917";
+}
+.icon-check:before {
+	content: "\e918";
+}
+.icon-check-circle:before {
+	content: "\e919";
+}
+.icon-check-square:before {
+	content: "\e91a";
+}
+.icon-circle:before {
+	content: "\e91b";
+}
+.icon-cloud:before {
+	content: "\e91c";
+}
+.icon-cog:before {
+	content: "\e91d";
+}
+.icon-comment:before {
+	content: "\e91e";
+}
+.icon-database:before {
+	content: "\e91f";
+}
+.icon-discord:before {
+	content: "\e920";
+}
+.icon-envelope:before {
+	content: "\e921";
+}
+.icon-exclamation:before {
+	content: "\e922";
+}
+.icon-exclamation-circle:before {
+	content: "\e923";
+}
+.icon-exclamation-triangle:before {
+	content: "\e924";
+}
+.icon-exclamation-triangle-alt:before {
+	content: "\e925";
+}
+.icon-eye:before {
+	content: "\e926";
+}
+.icon-eye-slash:before {
+	content: "\e927";
+}
+.icon-facebook:before {
+	content: "\e928";
+}
+.icon-facebook-square:before {
+	content: "\e929";
+}
+.icon-file:before {
+	content: "\e92a";
+}
+.icon-folder:before {
+	content: "\e92b";
+}
+.icon-github-square:before {
+	content: "\e99f";
+}
+.icon-heart:before {
+	content: "\e9a0";
+}
+.icon-linkedin:before {
+	content: "\e9a1";
+}
+.icon-nes:before {
+	content: "\e9a2";
+}
+.icon-nes-jp:before {
+	content: "\e9a3";
+}
+.icon-pause:before {
+	content: "\e9a4";
+}
+.icon-play:before {
+	content: "\e9a5";
+}
+.icon-search:before {
+	content: "\e9a6";
+}
+.icon-embed2:before {
+	content: "\ea80";
+}
+.icon-terminal:before {
+	content: "\ea81";
+}
