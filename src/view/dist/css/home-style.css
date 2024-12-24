@@ -62,10 +62,10 @@ p {
 	text-wrap: nowrap;
 	line-height: 0.5;
 	margin-left: 1rem;
-	& > small {
-		font-size: var(--font-size-small-mobile);
-		color: var(--text-color);
-	}
+}
+.logo > small {
+	font-size: var(--font-size-small-mobile);
+	color: var(--text-color);
 }
 #menu-icon {
 	font-size: var(--font-size-h1-large);
@@ -111,14 +111,15 @@ p {
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	& .item-navbar {
-		margin-top: 0.5rem;
-		margin-bottom: 0.5rem;
-		width: 100%;
-		display: block;
-		text-align: center;
-	}
 }
+.home-navbar.active-link > .item-navbar {
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
+	width: 100%;
+	display: block;
+	text-align: center;
+}
+
 /* HOME SECTION DESING */
 .home-section {
 	display: flex;
@@ -302,9 +303,9 @@ p {
 	align-items: center;
 	gap: 2rem;
 	flex-direction: column-reverse;
-	&:last-child {
-		flex-direction: column;
-	}
+}
+.item-mision-vision-section:last-child {
+	flex-direction: column;
 }
 .container-mision-vision-img {
 	box-shadow: 0 5px 10px black;
@@ -323,10 +324,10 @@ p {
 	line-height: 1.2;
 	width: 100%;
 	max-width: 546px;
-	& h2 {
-		font-size: var(--font-size-h2-mobile);
-		font-weight: 700;
-	}
+}
+.content-mision-vision > h2 {
+	font-size: var(--font-size-h2-mobile);
+	font-weight: 700;
 }
 /* ABOUT US SECTION DESING */
 .about > h2 {
@@ -338,6 +339,9 @@ p {
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 50px;
+}
+.container_perfile_card > p {
+	width: 90%;
 }
 .perfile_card {
 	width: 300px;
@@ -431,6 +435,10 @@ p {
 		font-size: var(--font-size-mobile) !important;
 	}
 }
+.footer > .footer-text > p {
+	font-size: var(--font-size-mobile) !important;
+}
+
 /* RESPONSIVE */
 /* Tabletas */
 @media (min-width: 576px) {
@@ -454,23 +462,20 @@ p {
 	.usage-models-img img {
 		width: 20dvw;
 	}
-	.content-home-section {
-		& h1 {
-			font-size: var(--font-size-h1-tablet);
-		}
-		& h3 {
-			font-size: var(--font-size-h2-tablet);
-		}
+	.content-home-section > h1 {
+		font-size: var(--font-size-h1-tablet);
+	}
+	.content-home-section > h3 {
+		font-size: var(--font-size-h2-tablet);
 	}
 	.card {
 		padding: 3rem;
 	}
 	.logo {
 		font-size: var(--font-size-h1-tablet);
-
-		& > small {
-			font-size: var(--font-size-small-tablet);
-		}
+	}
+	.logo > small {
+		font-size: var(--font-size-small-tablet);
 	}
 	.github-link {
 		font-size: var(--font-size-tablet);
@@ -480,12 +485,12 @@ p {
 	}
 	.content-mision-vision {
 		padding: 1rem;
-		& h2 {
-			font-size: var(--font-size-h3-tablet);
-		}
-		& p {
-			font-size: var(--font-size-small-tablet);
-		}
+	}
+	.content-mision-vision > h2 {
+		font-size: var(--font-size-h3-tablet);
+	}
+	.content-mision-vision > p {
+		font-size: var(--font-size-small-tablet);
 	}
 }
 /* Laptops y escritorios */
@@ -496,13 +501,11 @@ p {
 	.footer > .footer-text > p {
 		font-size: var(--font-size-small-tablet) !important;
 	}
-	.content-home-section {
-		& h1 {
-			font-size: var(--font-size-h1-desktop);
-		}
-		& h3 {
-			font-size: var(--font-size-h2-desktop);
-		}
+	.content-home-section > h1 {
+		font-size: var(--font-size-h1-desktop);
+	}
+	.content-home-section > h3 {
+		font-size: var(--font-size-h2-desktop);
 	}
 	.usage-models-container {
 		width: var(--width-container-home) !important;
@@ -523,13 +526,11 @@ p {
 	.content-mision-vision {
 		max-width: 34.125rem;
 	}
-	.content-mision-vision {
-		& h2 {
-			font-size: var(--font-size-h3-desktop);
-		}
-		& p {
-			font-size: var(--font-size-small-desktop);
-		}
+	.content-mision-vision > h2 {
+		font-size: var(--font-size-h3-desktop);
+	}
+	.content-mision-vision > p {
+		font-size: var(--font-size-small-desktop);
 	}
 	/* .img-mision-vision {
 	} */
@@ -565,10 +566,10 @@ p {
 		height: 28rem;
 	}
 	.item-mision-vision-section {
-		& p {
-			font-size: var(--font-size-small-desktop);
-		}
 		flex-direction: row !important;
+	}
+	.item-mision-vision-section > p {
+		font-size: var(--font-size-desktop);
 	}
 	.container-mision-vision-img {
 		max-width: 546px;
@@ -583,13 +584,11 @@ p {
 	.item-navbar {
 		font-size: var(--font-size-small-desktop);
 	}
-	.content-home-section {
-		& h1 {
-			font-size: var(--font-size-extra-large);
-		}
-		& h3 {
-			font-size: var(--font-size-h1-large);
-		}
+	.content-home-section > h1 {
+		font-size: var(--font-size-extra-large);
+	}
+	.content-home-section > h3 {
+		font-size: var(--font-size-h1-large);
 	}
 	.github-link {
 		font-size: var(--font-size-large);
@@ -597,10 +596,8 @@ p {
 	.heading {
 		font-size: var(--font-size-h1-large);
 	}
-	.content-mision-vision {
-		& h2 {
-			font-size: var(--font-size-h2-large);
-		}
+	.content-mision-vision > h2 {
+		font-size: var(--font-size-h2-large);
 	}
 }
 /* Mobiles */

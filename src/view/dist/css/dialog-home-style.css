@@ -23,6 +23,7 @@
 	background-color: rgba(0, 0, 0, 0.411);
 }
 .dialog[open] {
+	display: table;
 	animation: show-dialog 0.5s ease forwards;
 }
 .dialog[open]::backdrop {
@@ -53,6 +54,7 @@
 	background-position-x: center;
 	background-position-y: center;
 	background-size: cover;
+	-webkit-background-size: cover;
 }
 .title_dialog {
 	font-size: var(--font-size-h1-mobile);

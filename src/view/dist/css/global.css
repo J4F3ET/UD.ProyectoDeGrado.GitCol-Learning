@@ -125,31 +125,31 @@ textarea {
 	transition: all ease 0.1s;
 	box-shadow: 0px 5px 0px 0px #2e3542;
 	cursor: var(--cursor-pointer-style), auto;
-	&.green {
-		background-color: var(--green-color);
-		box-shadow: 0px 5px 0px 0px #acffb0;
-	}
-	&.orange {
-		background-color: var(--orange-color);
-		box-shadow: 0px 5px 0px 0px #ffa67f;
-	}
-	&.red {
-		background-color: var(--red-color);
-		box-shadow: 0px 5px 0px 0px #fe9b9b;
-	}
+}
+.btn.green {
+	background-color: var(--green-color);
+	box-shadow: 0px 5px 0px 0px #acffb0;
+}
+.btn.orange {
+	background-color: var(--orange-color);
+	box-shadow: 0px 5px 0px 0px #ffa67f;
+}
+.btn.red {
+	background-color: var(--red-color);
+	box-shadow: 0px 5px 0px 0px #fe9b9b;
 }
 .btn:active {
 	transform: translateY(5px);
 	box-shadow: 0px 0px 0px 0px #2e3542;
-	&.green {
-		box-shadow: 0px 0px 0px 0px #acffb0;
-	}
-	&.orange {
-		box-shadow: 0px 0px 0px 0px #ffa67f;
-	}
-	&.red {
-		box-shadow: 0px 0px 0px 0px #fe9b9b;
-	}
+}
+.btn.green:active {
+	box-shadow: 0px 0px 0px 0px #acffb0;
+}
+.btn.orange:active {
+	box-shadow: 0px 0px 0px 0px #ffa67f;
+}
+.btn.red:active {
+	box-shadow: 0px 0px 0px 0px #fe9b9b;
 }
 .btn-only-icon {
 	min-width: max-content;
