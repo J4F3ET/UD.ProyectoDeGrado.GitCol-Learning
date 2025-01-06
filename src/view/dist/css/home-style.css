@@ -338,10 +338,8 @@ p {
 	justify-content: space-evenly;
 	align-items: center;
 	flex-wrap: wrap;
+	width: var(--width-container-home);
 	gap: 50px;
-}
-.container_perfile_card > p {
-	width: 90%;
 }
 .perfile_card {
 	width: 300px;

@@ -12,16 +12,6 @@
 	font-family: "Poppins", sans-serif;
 	-webkit-touch-callout: none;
 }
-html {
-	cursor: var(--cursor-style), auto;
-}
-button,
-a,
-input,
-select,
-textarea {
-	cursor: var(--cursor-pointer-style), auto;
-}
 :root {
 	--cursor-style: url(../assets/img/cursor.png);
 	--cursor-pointer-style: url(../assets/img/cursor_point.png);
@@ -87,6 +77,7 @@ textarea {
 
 	--height-header-home: 5rem;
 	--width-container-home: min(76.5rem, 90vw);
+	--width-container-dialog: min(76.5rem, 90vw);
 }
 #particles-js {
 	width: 100%;

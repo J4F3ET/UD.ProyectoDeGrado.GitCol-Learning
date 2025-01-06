@@ -1,0 +1,10 @@
+html {
+	cursor: var(--cursor-style), auto;
+}
+button,
+a,
+input,
+select,
+textarea {
+	cursor: var(--cursor-pointer-style), auto;
+}
