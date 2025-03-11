@@ -13,5 +13,9 @@ const router = Router();
  *           text/html:
  *             example: alone-mode-screen.ejs
  */
-router.get("/aloneMode*", (req, res) => res.render("alone-mode-screen"));
+router.get("/aloneMode/:name", async (req, res) => {
+    const conceptName = req.params.name;
+    console.log(conceptName);
+    res.render("alone-mode-screen")
+});
 export default router;
