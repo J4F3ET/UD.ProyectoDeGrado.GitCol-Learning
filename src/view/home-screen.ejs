@@ -11,7 +11,7 @@
 		<link
 			defer
 			rel="shortcut icon"
-			href="./dist/assets/fav-icon.ico"
+			href="/dist/assets/fav-icon.ico"
 			type="image/x-icon"
 		/>
 		<link rel="stylesheet" href="dist/css/reset.css" />
@@ -444,8 +444,30 @@
 						GitCol Learning: No Registration Required, Embrace Flexibility in
 						Single User Mode
 					</div>
+					<div class="input_selection_concept">
+						<select id="select_concept" class="input_concept">
+							<option value="initialize-repository">
+								initialize repository
+							</option>
+							<option value="first-commit">first commit</option>
+							<option value="view-commit-history">view commit history</option>
+							<option value="create-switch-branch">
+								create & switch branch
+							</option>
+							<option value="delete-rename-branch">
+								delete & rename branch
+							</option>
+							<option value="merge-branches">merge branches</option>
+							<option value="limited-commit-log">limited commit log</option>
+							<option value="git-help">read documentation</option>
+							<option value="list-branches">view branches</option>
+							<option value="switch-branches">switch branches</option>
+						</select>
+					</div>
 					<div class="section_dialog_item">
-						<a href="/aloneMode" class="btn_init btn red">git init</a>
+						<button id="btn_start_alone_mode" class="btn_init btn red unlock">
+							Start!
+						</button>
 					</div>
 				</div>
 				<div class="section_dialog img">
@@ -550,6 +572,6 @@
 		<script async src="dist/assets/lib/particles.min.js"></script>
 		<script defer src="dist/assets/lib/particlesjs-config.json"></script>
 		<!--BANNER JS-->
-		<script async src="./dist/js/banner.js"></script>
+		<script async src="/dist/js/banner.js"></script>
 	</body>
 </html>
