@@ -34,19 +34,7 @@
 			const REF_STORAGE_REPOSITORY = "local";
 			const REF_STORAGE_REPOSITORY_CLOUD = null;
 			const REF_STORAGE_LOG = "log";
-			// Ejemplo de concepto
-			const CONCEPT = {
-				name: "",
-				challenger: {
-					explanation: "",
-					steps: [],
-					log: [],
-				},
-				question: {
-					text: "",
-					options: [],
-				},
-			};
+			const CONCEPT = <%- JSON.stringify(concept) %>;
 		</script>
 	</head>
 	<body class="scrollable body">
