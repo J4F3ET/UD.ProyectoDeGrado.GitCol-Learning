@@ -1,4 +1,4 @@
-fetch("./dist/assets/banner.txt")
+fetch("/dist/assets/banner.txt")
 	.then((response) => response.text())
 	.then((text) => {
 		console.log(text);
