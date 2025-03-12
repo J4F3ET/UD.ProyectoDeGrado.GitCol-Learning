@@ -2,6 +2,12 @@ import { driveUsageMode } from "./drivejs-mode-script.js";
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+window.addEventListener("load", async () => {
+	if (!sessionStorage.getItem("firstLoad")) {
+		sessionStorage.setItem("firstLoad", "true");
+		await changeConcept();
+	}
+});
 document
 	.getElementById("btnExit")
 	.addEventListener("click", async () => (window.location.href = "/"));
@@ -17,42 +23,33 @@ document.getElementById("btnTutorial").addEventListener("click", async () =>
 		},
 	}).drive()
 );
-window.onload = async () => {
-	await changeConcept();
-};
-const changeConcept = async (btn) => {
+const changeConcept = async () => {
 	if (!CONCEPT) return;
-	console.log(CONCEPT);
 	changeChallengerConcept(CONCEPT.challenger);
 	changeQuestionConcept(CONCEPT.question);
 };
 const changeChallengerConcept = async (challenger) => {
-	const { logs, steps } = challenger;
+	const { log, steps } = challenger;
 	changeAllCommandsConcept(steps);
-	changeAllLogsConcept(logs);
+	console.log(log);
+	changeAllLogsConcept(log);
 };
 const changeAllLogsConcept = async (logs) => {
 	if (!logs) return;
-	logs.forEach((log) => changeLogConcept(log));
-};
-const changeLogConcept = async (log) => {
-	const { tag, message } = log;
+	console.log(logs);
 	const logContainer = document.getElementById("logContainer");
+	const logContainerParagraph = document.createElement("p");
+	logContainerParagraph.classList.add("info");
+	logs.forEach((log) => changeLogConcept(log, logContainerParagraph));
+	logContainer.appendChild(logContainerParagraph);
+};
+const changeLogConcept = async (log,container) => {
+	const { tag, message } = log;
+	if (!tag || !message) return;
 	const logParagraph = document.createElement("p");
-	logParagraph.innerText = message;
-	switch (tag) {
-		case "comand":
-			break;
-		case "error":
-			logParagraph.classList.add("error");
-			break;
-		case "info":
-			logParagraph.classList.add("help");
-			break;
-		default:
-			return;
-	}
-	logContainer.appendChild(logParagraph);
+	logParagraph.innerHTML = message;
+	logParagraph.classList.add("help");
+	container.appendChild(logParagraph);
 };
 const changeAllCommandsConcept = async (steps) => {
 	if (!steps) return;
