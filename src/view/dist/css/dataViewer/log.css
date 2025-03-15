@@ -13,3 +13,16 @@
 		padding-left: 1rem;
 	}
 }
+.explanation {
+	color: var(--orange-color);
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	& > b {
+		color: var(--blue-color);
+	}
+}
+.challenge-command-help {
+	text-decoration: underline;
+	cursor: var(--cursor-pointer-style), auto;
+	color: var(--text-shell-color) !important;
+}

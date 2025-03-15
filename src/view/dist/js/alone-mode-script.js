@@ -1,12 +1,12 @@
 import { driveUsageMode } from "./drivejs-mode-script.js";
+import { changeConcept } from "./utils/concept-config.js";
+import { observer } from "./mode-script.js";
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-window.addEventListener("load", async () => {
-	if (!sessionStorage.getItem("firstLoad")) {
-		sessionStorage.setItem("firstLoad", "true");
-		await changeConcept();
-	}
+window.addEventListener("load", () => {
+	changeConcept(CONCEPT);
+	observer.notify(sessionStorage.getItem(REF_STORAGE_LOG));
 });
 document
 	.getElementById("btnExit")
@@ -23,47 +23,6 @@ document.getElementById("btnTutorial").addEventListener("click", async () =>
 		},
 	}).drive()
 );
-const changeConcept = async () => {
-	if (!CONCEPT) return;
-	changeChallengerConcept(CONCEPT.challenger);
-	changeQuestionConcept(CONCEPT.question);
-};
-const changeChallengerConcept = async (challenger) => {
-	const { log, steps } = challenger;
-	changeAllCommandsConcept(steps);
-	console.log(log);
-	changeAllLogsConcept(log);
-};
-const changeAllLogsConcept = async (logs) => {
-	if (!logs) return;
-	console.log(logs);
-	const logContainer = document.getElementById("logContainer");
-	const logContainerParagraph = document.createElement("p");
-	logContainerParagraph.classList.add("info");
-	logs.forEach((log) => changeLogConcept(log, logContainerParagraph));
-	logContainer.appendChild(logContainerParagraph);
-};
-const changeLogConcept = async (log,container) => {
-	const { tag, message } = log;
-	if (!tag || !message) return;
-	const logParagraph = document.createElement("p");
-	logParagraph.innerHTML = message;
-	logParagraph.classList.add("help");
-	container.appendChild(logParagraph);
-};
-const changeAllCommandsConcept = async (steps) => {
-	if (!steps) return;
-	steps.forEach((step) => changeCommandConcept(step));
-};
-const changeCommandConcept = async (command) => {
-	const input = document.getElementById("comandInput");
-	input.value = command;
-	input.dispatchEvent(
-		new KeyboardEvent("keyup", { key: "Enter", keyCode: 13 })
-	);
-};
-//Esto se debe activar al momento de querer salir o de cambiar de reto
-const changeQuestionConcept = async (question) => {};
 
 // Handle login and logout buttons
 const btnDisable = async (btn) => {
