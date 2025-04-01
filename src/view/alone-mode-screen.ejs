@@ -30,6 +30,9 @@
 		<link async rel="stylesheet" href="/dist/css/dataViewer/text.css" />
 		<link async rel="stylesheet" href="/dist/css/dataViewer/log.css" />
 		<link async rel="stylesheet" href="/dist/css/driverjs-style.css" />
+
+		<link async rel="stylesheet" href="/dist/css/input-concept.css" />
+		
 		<script async>
 			const REF_STORAGE_REPOSITORY = "local";
 			const REF_STORAGE_REPOSITORY_CLOUD = null;
@@ -52,6 +55,31 @@
 		</section>
 		<section class="container-help-and-svg" id="contentContainer">
 			<div class="container-panel-help" id="panelHelpContainer">
+				<select id="select_concept" class="input_concept">
+					<option value="initialize-repository">
+						initialize repository
+					</option>
+					<option value="first-commit">first commit</option>
+					<option value="view-commit-history">view commit history</option>
+					<option value="create-switch-branch">
+						create &amp; switch branch
+					</option>
+					<option value="delete-rename-branch">
+						delete &amp; rename branch
+					</option>
+					<option value="merge-branches">merge branches</option>
+					<option value="limited-commit-log">limited commit log</option>
+					<option value="git-help">read documentation</option>
+					<option value="list-branches">view branches</option>
+					<option value="switch-branches">switch branches</option>
+				</select>
+				<button
+					id="btnTutorial"
+					class="btn orange btn-icon-string"
+					title="solution"
+				>
+					<i class="icon-exclamation-circle"> </i>&nbsp;&nbsp;Tutorial
+				</button>
 				<button id="btn_login" class="btn green" title="solution">Login</button>
 				<button
 					disabled
@@ -62,23 +90,11 @@
 				>
 					Logout
 				</button>
-				<button
-					id="btnTest"
-					class="btn orange btn-icon-string"
-					title="solution"
-				>
-					<i class="icon-exclamation-circle"> </i>&nbsp;&nbsp;Test
-				</button>
-				<button
-					id="btnTutorial"
-					class="btn orange btn-icon-string"
-					title="solution"
-				>
-					<i class="icon-exclamation-circle"> </i>&nbsp;&nbsp;Tutorial
-				</button>
+				
 				<button id="btnExit" class="btn red btn-only-icon" title="back">
 					<i class="icon-times"></i>
 				</button>
+				
 			</div>
 			<div id="svgContainer" class="container-svg scrollable"></div>
 		</section>
@@ -152,6 +168,44 @@
 			</section>
 		</dialog>
 		<!-- END DIALOG LOGIN -->
+		<!-- DIALOG QUESTION -->
+		<dialog id="dialog_question" class="dialog second">
+			<section class="view-section container_dialog">
+				<div class="btn_dialog_close">
+					<button
+						id="btn_close_question"
+						data-dialog="dialog_question"
+						class="close_dialog btn-times btn red"
+					>
+						<i data-dialog="dialog_question" class="icon-times white"></i>
+					</button>
+				</div>
+				<div class="section_dialog info">
+					<div class="section_dialog_item">
+						<h2 class="title_dialog">Question</h2>
+						<p class="text_dialog">
+							The question is the following:
+						</p>
+					</div>
+					<div class="section_dialog_item">
+						<p class="text_dialog">
+							<span class="question-text"><%= concept.question.text %></span>
+						</p>
+					</div>
+					<div class="section_dialog_item">
+						<% concept.question.options.forEach(function(option) { %>
+						<div class="option-container">
+							<input type="radio" name="question-options" id="<%= option %>" />
+							<label for="<%= option %>">
+								<span class="option-text"><%= option %></span>
+							</label>
+						</div>
+						<% }) %>
+					</div>
+					</div>
+				</div>
+			</section>
+		</dialog>
 	</body>
 	<!-- Script modules -->
 	<script type="module" src="/dist/js/mode-script.js"></script>
@@ -172,5 +226,6 @@
 	<script async type="module" src="/dist/js/utils/handler-nolog.js"></script>
 	<script async src="/dist/js/dialogs/dialog-login-home-script.js"></script>
 	<script defer type="module" src="/dist/js/login-script.js"></script>
+	<script async type="module" src="/dist/js/dialogs/dialog-question-concept-script.js"></script>
 	<script async src="/dist/js/banner.js"></script>
 </html>
