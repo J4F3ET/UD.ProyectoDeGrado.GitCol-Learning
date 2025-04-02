@@ -16,7 +16,7 @@
     cursor: var(--cursor-pointer-style), auto;
 }
 
-.input_concept:focus {
+.input_concept:active {
   border-color: #66afe9;
   outline: none;
   transform: translateY(5px);

@@ -1,7 +1,7 @@
 // Guarda la respuesta de la pregunta
 document
 	.getElementById("btnTest")
-	.addEventListener("click", async () => saveConcept("test"));
+	?.addEventListener("click", async () => saveConcept("test"));
 const saveConcept = async (response) => {
 	const { auth } = await import("../firebase-config.js");
 	saveResponse(response, auth.currentUser);

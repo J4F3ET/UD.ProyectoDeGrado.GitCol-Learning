@@ -21,6 +21,7 @@
 		<link defer rel="stylesheet" href="dist/css/font-global.css" />
 		<link defer rel="stylesheet" href="dist/css/home-style.css" />
 		<link defer rel="stylesheet" href="dist/css/dialog-home-style.css" />
+		<link defer rel="stylesheet" href="dist/css/input-concept.css" />
 		<script async src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script defer src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 	</head>
@@ -39,6 +40,14 @@
 						<button class="btn orange btn-dialog">START!</button>
 						<button id="btn_login" class="btn green btn-dialog-login">
 							Login
+						</button>
+						<button
+							disabled
+							style="display: inline"
+							id="btnLogout"
+							class="btn red"
+						>
+							Logou
 						</button>
 					</div>
 				</nav>
@@ -277,7 +286,7 @@
 		<!--FOOTER SECTION DESING-->
 		<footer class="footer">
 			<div class="footer-text">
-				<p>Copyright &copy; 2024 by Jafet Lopez | All Rights Reserved.</p>
+				<p>Copyright &copy;  <%= new Date().getFullYear() %> by Jafet Lopez | All Rights Reserved.</p>
 				<p>Contact: gitcollearning@gmail.com</p>
 			</div>
 			<a class="btn orange" href="#home">
@@ -568,6 +577,11 @@
 		<script defer src="dist/js/dialogs/dialog-single-home-script.js"></script>
 		<script defer src="dist/js/dialogs/dialog-login-home-script.js"></script>
 		<script defer type="module" src="dist/js/login-script.js"></script>
+		<script
+			defer
+			type="module"
+			src="dist/js/utils/btn-session-handler.js"
+		></script>
 		<!--PARTICLE JS-->
 		<script async src="dist/assets/lib/particles.min.js"></script>
 		<script defer src="dist/assets/lib/particlesjs-config.json"></script>

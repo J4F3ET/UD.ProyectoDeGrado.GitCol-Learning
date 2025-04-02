@@ -1,5 +1,5 @@
 const dialog_question = document.querySelector("#dialog_question");
-document.getElementById("btnTest").addEventListener("click", async () => {
+document.getElementById("btnTest")?.addEventListener("click", async () => {
 	openDialogQuestion();
 });
 document

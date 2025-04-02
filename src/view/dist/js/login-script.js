@@ -30,7 +30,6 @@ const login = async (user) => {
 		alertError(
 			HttpStatusErrorMessage[response.status] ?? HttpStatusErrorMessage[500]
 		);
-	else window.location.href = (await response.json()).url;
 };
 const alertError = (message) =>
 	Swal.fire({
