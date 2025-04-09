@@ -56,22 +56,17 @@
 		<section class="container-help-and-svg" id="contentContainer">
 			<div class="container-panel-help" id="panelHelpContainer">
 				<select id="select_concept" class="input_concept">
-					<option value="initialize-repository">
-						initialize repository
-					</option>
-					<option value="first-commit">first commit</option>
-					<option value="view-commit-history">view commit history</option>
-					<option value="create-switch-branch">
-						create &amp; switch branch
-					</option>
-					<option value="delete-rename-branch">
-						delete &amp; rename branch
-					</option>
-					<option value="merge-branches">merge branches</option>
-					<option value="limited-commit-log">limited commit log</option>
-					<option value="git-help">read documentation</option>
-					<option value="list-branches">view branches</option>
-					<option value="switch-branches">switch branches</option>
+					<option  value="initialize-repository"<%= current == 'initialize-repository' ? 'selected' : '' %>>initialize repository</option>
+					<option value="first-commit"<%= current == 'first-commit' ? 'selected' : '' %>>first commit</option>
+					<option value="view-commit-history"<%= current == 'view-commit-history' ? 'selected' : '' %>>view commit history</option>
+					<option value="create-switch-branch"<%= current == 'create-switch-branch' ? 'selected' : '' %>>create &amp; switch branch</option>
+					<option value="delete-rename-branch"<%= current == 'delete-rename-branch' ? 'selected' : '' %>>delete &amp; rename branch</option>
+					<option value="merge-branches" <%= current == 'merge-branches' ? 'selected' : '' %>>merge branches</option>
+					<option value="limited-commit-log"<%= current == 'limited-commit-log' ? 'selected' : '' %>>limited commit log</option>
+					<option value="git-help"<%= current == 'git-help' ? 'selected' : '' %>>read documentation</option>
+					<option value="list-branches"<%= current == 'list-branches' ? 'selected' : '' %>>view branches</option>
+					<option value="switch-branches" <%= current == 'switch-branches' ? 'selected' : '' %> >switch branches</option>
+					<option value="free-mode"<%= current == 'free-mode' ? 'selected' : '' %>>free mode</option>
 				</select>
 				<button
 					id="btnTutorial"
@@ -189,11 +184,11 @@
 					</div>
 					<div class="section_dialog_item">
 						<p class="text_dialog">
-							<span class="question-text"><%= concept.question.text %></span>
+							<span class="question-text"><%= concept?.question?.text %></span>
 						</p>
 					</div>
 					<div class="section_dialog_item">
-						<% concept.question.options.forEach(function(option) { %>
+						<% concept?.question?.options.forEach(function(option) { %>
 						<div class="option-container">
 							<input type="radio" name="question-options" id="<%= option %>" />
 							<label for="<%= option %>">

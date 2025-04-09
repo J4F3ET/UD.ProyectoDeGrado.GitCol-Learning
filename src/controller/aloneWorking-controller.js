@@ -16,10 +16,19 @@ const router = Router();
  */
 router.get("/aloneMode/:name", async (req, res) => {
 	const conceptName = req.params.name;
-    if (!conceptName) return res.sendStatus(404);
+	if (!conceptName) return res.sendStatus(404);
 	const concept = await getConcept(conceptName);
-	if (!concept) return res.sendStatus(404);
 
-	res.render("alone-mode-screen", { concept });
+	if (!concept)
+		return res.render("alone-mode-screen", {
+			concept: {
+				challenger: {
+					explanation:
+						"<br><b>Modo libre (modo por defecto si no encuentra el modo seleccionado)</b><br><br><p> Puedes usar con libertad la consola </p><br>",
+				},
+			},
+			current: "free-mode",
+		});
+	res.render("alone-mode-screen", { concept, current: conceptName });
 });
 export default router;
