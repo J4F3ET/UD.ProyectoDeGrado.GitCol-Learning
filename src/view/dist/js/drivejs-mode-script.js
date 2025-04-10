@@ -81,3 +81,25 @@ export const driveHelpRoom = (...steps) => {
 	if (!steps.length) return getDriver(helpRooms);
 	return getDriver([...helpRooms, ...steps]);
 };
+export const driverQuestionsChallenger = (options, text, title) => {
+	const description = `<p>${text}</p>`;
+	let optionLetter = 93; // Letra a en ASCII
+	options.forEach((option) => {
+		description.concat(`
+			<button class="btn orange option-btn" data-anwser=${option}">
+				${String.fromCharCode(optionLetter)}  ${option}
+			</button>
+		`);
+		optionLetter++;
+	});
+	return driver([
+		{
+			element: "#test",
+			popover: {
+				title: title,
+				description: description,
+				position: "bottom",
+			},
+		},
+	]);
+};

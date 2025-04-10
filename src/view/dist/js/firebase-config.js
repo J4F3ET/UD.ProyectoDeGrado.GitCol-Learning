@@ -5,7 +5,6 @@ import {
 	OAuthProvider,
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 const firebaseConfig = {
 	apiKey: "AIzaSyAkCtlBOfggn5B1ExluCRr43YwPbnUTu0s",
 	authDomain: "gitcol-learning.firebaseapp.com",
@@ -18,7 +17,6 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const googleAuthProvider = new GoogleAuthProvider();
 export const githubAuthProvider = new GithubAuthProvider();

@@ -1,6 +1,3 @@
-/* Initial Configuration  */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
-
 * {
 	margin: 0;
 	padding: 0;
@@ -12,20 +9,10 @@
 	font-family: "Poppins", sans-serif;
 	-webkit-touch-callout: none;
 }
-html {
-	cursor: var(--cursor-style), auto;
-}
-button,
-a,
-input,
-select,
-textarea {
-	cursor: var(--cursor-pointer-style), auto;
-}
 :root {
-	--cursor-style: url(../assets/img/cursor.png);
-	--cursor-pointer-style: url(../assets/img/cursor_point.png);
-	--cursor-not-allowed-style: url(../assets/img/cursor_not-allowed.webp);
+	--cursor-style: url(/dist/assets/img/cursor.png);
+	--cursor-pointer-style: url(/dist/assets/img/cursor_point.png);
+	--cursor-not-allowed-style: url(/dist/assets/img/cursor_not-allowed.webp);
 	--bg-color: #0f1621;
 	--second-bg-color: #465166;
 	--second-bg-color-trasparent: #465166a6;
@@ -84,6 +71,10 @@ textarea {
 	--font-size-small-large: 1.2rem; /* 18px */
 
 	--font-size-extra-large: 4rem;
+
+	--height-header-home: 5rem;
+	--width-container-home: min(76.5rem, 90vw);
+	--width-container-dialog: min(76.5rem, 90vw);
 }
 #particles-js {
 	width: 100%;
@@ -122,31 +113,31 @@ textarea {
 	transition: all ease 0.1s;
 	box-shadow: 0px 5px 0px 0px #2e3542;
 	cursor: var(--cursor-pointer-style), auto;
-	&.green {
-		background-color: var(--green-color);
-		box-shadow: 0px 5px 0px 0px #acffb0;
-	}
-	&.orange {
-		background-color: var(--orange-color);
-		box-shadow: 0px 5px 0px 0px #ffa67f;
-	}
-	&.red {
-		background-color: var(--red-color);
-		box-shadow: 0px 5px 0px 0px #fe9b9b;
-	}
+}
+.btn.green {
+	background-color: var(--green-color);
+	box-shadow: 0px 5px 0px 0px #acffb0;
+}
+.btn.orange {
+	background-color: var(--orange-color);
+	box-shadow: 0px 5px 0px 0px #ffa67f;
+}
+.btn.red {
+	background-color: var(--red-color);
+	box-shadow: 0px 5px 0px 0px #fe9b9b;
 }
 .btn:active {
 	transform: translateY(5px);
 	box-shadow: 0px 0px 0px 0px #2e3542;
-	&.green {
-		box-shadow: 0px 0px 0px 0px #acffb0;
-	}
-	&.orange {
-		box-shadow: 0px 0px 0px 0px #ffa67f;
-	}
-	&.red {
-		box-shadow: 0px 0px 0px 0px #fe9b9b;
-	}
+}
+.btn.green:active {
+	box-shadow: 0px 0px 0px 0px #acffb0;
+}
+.btn.orange:active {
+	box-shadow: 0px 0px 0px 0px #ffa67f;
+}
+.btn.red:active {
+	box-shadow: 0px 0px 0px 0px #fe9b9b;
 }
 .btn-only-icon {
 	min-width: max-content;

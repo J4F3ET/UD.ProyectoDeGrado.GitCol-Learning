@@ -1,6 +1,6 @@
-import {DataViewer} from "./dataViewer/DataViewer.js";
-import {factoryCommandManager} from "./comandManager/comandManager-factory.js";
-import {Observer} from "./dataViewer/Observer.js";
+import { DataViewer } from "./dataViewer/DataViewer.js";
+import { factoryCommandManager } from "./comandManager/comandManager-factory.js";
+import { Observer } from "./dataViewer/Observer.js";
 const listCommands = ["init", "commit", "checkout", "branch", "log", "merge"];
 if (REF_STORAGE_REPOSITORY_CLOUD) {
 	listCommands.push("push", "clone", "fetch", "pull");
@@ -34,7 +34,7 @@ let listComands =
 		?.filter((log) => log.tag === "comand")
 		?.map((log) => log.message) || [];
 const dataViewerLocal = new DataViewer(document.getElementById("svgContainer"));
-const observer = new Observer();
+export const observer = new Observer();
 let accountComands = listComands.length;
 // EVENT LISTENERS
 document.addEventListener("DOMContentLoaded", () => init());
@@ -102,7 +102,7 @@ const observerScroll = new MutationObserver(
 const observerScrollSvgHorizontal = new MutationObserver(
 	() => (containerSvg.scrollLeft = containerSvg.scrollWidth)
 );
-observerScroll.observe(containerLogs, {childList: true});
+observerScroll.observe(containerLogs, { childList: true });
 observerScrollSvgHorizontal.observe(containerSvg, {
 	childList: true,
 	subtree: true,
@@ -125,4 +125,17 @@ if (containerSvgCloud) {
 		subtree: true,
 	});
 }
-export {observerCloud};
+export { observerCloud };
+
+// MODULE CONSOLE LOG
+export const logConceptChallenge = async (tag, message) =>
+	aloneModeCommandManager.createMessage(tag, message);
+const eventHelp = async (e) => {
+	document.querySelectorAll(".challenge-command-help")?.forEach((element) => {
+		element.addEventListener("click", () => {
+			const command = element.textContent + " -h";
+			executeCommand(command.includes("git") ? command : "help");
+		});
+	});
+};
+setTimeout(eventHelp, 1000);

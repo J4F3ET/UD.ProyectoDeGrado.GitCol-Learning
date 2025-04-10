@@ -9,33 +9,24 @@
 		<title>Col-Learning</title>
 		<link
 			rel="shortcut icon"
-			href="./dist/assets/fav-icon.ico"
+			href="/dist/assets/fav-icon.ico"
 			type="image/x-icon"
 		/>
 		<!-- --------- BOX ICONS ---------- -->
-		<link
-			href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css"
-			rel="stylesheet"
-		/>
-		<!-- DRIVEJS -->
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"
-		/>
+
 		<!-- CSS -->
 		<link rel="stylesheet" href="dist/css/reset.css" />
-		<link rel="stylesheet" href="dist/css/global.css" />
-		<link rel="stylesheet" href="dist/css/room-style.css" />
-		<link rel="stylesheet" href="dist/css/driverjs-style.css" />
+		<link defer rel="stylesheet" href="dist/css/global.css" />
+		<link async rel="stylesheet" href="dist/css/font-global.css" />
+		<link rel="stylesheet" href="dist/css/icons-global.css" />
+		<link async rel="stylesheet" href="dist/css/cursor-global.css" />
 
-		<script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-		<script src="./dist/js/banner.js"></script>
+		<link defer rel="stylesheet" href="dist/css/room-style.css" />
 	</head>
 	<body>
 		<div class="back">
 			<a class="btn red" id="btnLogout">
-				<i class="nes-icon caret-left"></i>
+				<i class="icon-caret-left"></i>
 				Logout
 			</a>
 		</div>
@@ -46,7 +37,7 @@
 					<Label> Code </Label>
 					<div id="inputCodeRoomToLogin" class="room__box">
 						<span>
-							<i class="nes-icon search"></i>
+							<i class="icon-search"></i>
 						</span>
 						<input
 							id="inputSearchRoomCode"
@@ -98,7 +89,7 @@
 					<div class="room__inputs">
 						<label for="inputRoomCode">Code</label>
 						<div class="room__box">
-							<i class="nes-icon exclamation-circle"></i>
+							<i class="icon-exclamation-circle"></i>
 							<input
 								id="inputRoomCode"
 								class="room__input"
@@ -134,7 +125,7 @@
 							>Description <small class="small red">*</small></label
 						>
 						<div class="room__box">
-							<i class="nes-icon bars"></i>
+							<i class="icon-bars"></i>
 							<input
 								id="inputRoomDescription"
 								class="room__input"
@@ -277,15 +268,27 @@
 
 	<!--=============== REMIXICONS ===============-->
 	<link
+		async
 		rel="stylesheet"
 		href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css"
 		crossorigin=""
 	/>
-
-	<script type="module" src="./dist/js/userAuth-observer.js"></script>
-	<script type="module" src="./dist/js/rooms-script.js"></script>
+	<!-- Script -->
+	<script async type="module" src="/dist/js/userAuth-observer.js"></script>
+	<script async type="module" src="/dist/js/rooms-script.js"></script>
 
 	<!--PARTICLE JS-->
-	<script src="dist/assets/lib/particles.min.js"></script>
-	<script src="dist/assets/lib/particlesjs-config.json"></script>
+	<script async src="dist/assets/lib/particles.min.js"></script>
+	<script defer src="dist/assets/lib/particlesjs-config.json"></script>
+
+	<!-- Drivejs -->
+	<link async rel="stylesheet" href="dist/css/driverjs-style.css" />
+	<script
+		async
+		src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"
+	></script>
+	<!-- Banner -->
+	<script async src="/dist/js/banner.js"></script>
+	<!-- SweetAlert2 -->
+	<script async src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </html>

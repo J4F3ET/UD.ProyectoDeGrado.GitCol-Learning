@@ -6,8 +6,7 @@
 	margin: auto;
 	max-width: 80%;
 	height: fit-content;
-	max-height: 600px;
-	min-height: min-content;
+	min-height: fit-content;
 	animation: show-dialog 0.7s 0.5s both ease-in-out;
 	box-sizing: border-box;
 	color: var(--text-color);
@@ -23,10 +22,19 @@
 	background-color: rgba(0, 0, 0, 0.411);
 }
 .dialog[open] {
+	display: table;
 	animation: show-dialog 0.5s ease forwards;
 }
 .dialog[open]::backdrop {
 	animation: show-dialog 0.3s ease forwards;
+}
+.blur {
+	background-color: var(--bg-color);
+	filter: blur(1rem);
+	-webkit-filter: blur(1rem);
+}
+.exeption-blur {
+	z-index: 1;
 }
 .alert {
 	background: var(--red-color);
@@ -53,6 +61,7 @@
 	background-position-x: center;
 	background-position-y: center;
 	background-size: cover;
+	-webkit-background-size: cover;
 }
 .title_dialog {
 	font-size: var(--font-size-h1-mobile);
@@ -203,6 +212,23 @@
 	height: 50%;
 	background-color: transparent;
 }
+button.unlock {
+	cursor: var(--cursor-pointer-style), auto;
+}
+span.unlock {
+	display: none;
+}
+button.lock {
+	background-color: var(--second-bg-color) !important;
+	box-shadow: 0px 5px 0px 0px var(--black-color) !important;
+	cursor: var(--cursor-not-allowed-style), auto !important;
+}
+img.lock {
+	filter: grayscale(100%);
+}
+span.lock {
+	display: block;
+}
 .info_dialog {
 	animation: show-text-dialog 0.5s linear forwards;
 }
@@ -215,6 +241,11 @@
 	gap: 5%;
 	height: 16px;
 	width: 100%;
+}
+.about {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 @keyframes show-text-dialog {
 	0% {

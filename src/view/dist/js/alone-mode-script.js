@@ -1,9 +1,15 @@
-import {driveUsageMode} from "./drivejs-mode-script.js";
+import { driveUsageMode } from "./drivejs-mode-script.js";
+import { changeConcept } from "./utils/concept-config.js";
+import { observer } from "./mode-script.js";
 
-document.getElementById("btnExit").addEventListener("click", () => {
-	window.location.href = "/";
+window.addEventListener("load", () => {
+	changeConcept(CONCEPT);
+	observer.notify(sessionStorage.getItem(REF_STORAGE_LOG));
 });
-document.getElementById("btnTutorial").addEventListener("click", () => {
+document
+	.getElementById("btnExit")
+	.addEventListener("click", async () => (window.location.href = "/"));
+document.getElementById("btnTutorial").addEventListener("click", async () =>
 	driveUsageMode({
 		element: "#svg",
 		popover: {
@@ -13,5 +19,5 @@ document.getElementById("btnTutorial").addEventListener("click", () => {
 			side: "left",
 			align: "start",
 		},
-	}).drive();
-});
+	}).drive()
+);
