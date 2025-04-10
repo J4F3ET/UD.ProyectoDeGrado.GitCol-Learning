@@ -2,13 +2,27 @@ const dialog_question = document.querySelector("#dialog_question");
 document.getElementById("btnTest")?.addEventListener("click", async () => {
 	openDialogQuestion();
 });
-document
-	.getElementById("btn_close_question")
-	.addEventListener("click", async () => await closeDialogQuestion());
-const openDialogQuestion = async () => {
-	console.log(dialog_question);
+
+export const openDialogQuestion = async () => {
 	dialog_question.showModal();
-};
-const closeDialogQuestion = async () => {
-	dialog_question.close();
+	return await new Promise((resolve) => {
+		document
+			.getElementById("btn_answer_question")
+			.addEventListener("click", () => {
+				dialog_question.close();
+				resolve();
+			});
+		document
+			.getElementById("btn_cancel_question")
+			.addEventListener("click", () => {
+				dialog_question.close();
+				resolve(null);
+			});
+		document
+			.getElementById("btn_close_question")
+			.addEventListener("click", async () => {
+				dialog_question.close();
+				resolve(null);
+			});
+	});
 };
