@@ -2,8 +2,8 @@
 
 export const saveConcept = async (response) => {
 	const { auth } = await import("../firebase-config.js");
-	saveResponse(response, auth.currentUser);
 	saveChanllengerLog(auth.currentUser);
+	await saveResponse(response, auth.currentUser);
 };
 const saveResponse = async (response, user = null) => {
 	if (!user) saveResponseInSessionStorage(response);
@@ -28,9 +28,6 @@ const getElementSessionStorage = async (element) => {
 const setElementSessionStorage = async (element, value) => {
 	if (await getElementSessionStorage(element)) return;
 	sessionStorage.setItem(element, JSON.stringify(value));
-};
-const saveConceptInSessionStorage = async (concept) => {
-	setElementSessionStorage("concept", concept);
 };
 const getConceptSessionStorage = async () => {
 	const conceptObject = await getElementSessionStorage("concept");
@@ -57,4 +54,7 @@ export const saveResponseInSessionStorage = async (response) => {
 	const conceptUser = await getConceptSessionStorage();
 	conceptUser.question = response;
 	saveConceptInSessionStorage(conceptUser);
+};
+const saveConceptInSessionStorage = async (concept) => {
+	setElementSessionStorage("concept", concept);
 };

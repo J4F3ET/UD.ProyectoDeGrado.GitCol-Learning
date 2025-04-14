@@ -1,25 +1,23 @@
-import { logConceptChallenge } from "../mode-script.js";
-import { openDialogQuestion } from "../dialogs/dialog-question-concept-script.js";
-import { saveConcept } from "./handler-nolog.js";
 export const changeConcept = async (concept) => {
 	if (!concept || !concept?.challenger) return;
 	changeChallengeConcept(concept.challenger);
 };
 const changeChallengeConcept = async (challenger) => {
-	const { explanation, steps, log } = challenger;
 	clearExplanation();
+	const { explanation, steps, log } = challenger;
 	changeAllCommandsConcept(steps);
 	changeAllLogsConcept([{ message: explanation, tag: "explanation" }, ...log?? []]);
 };
 
 const changeAllLogsConcept = async (logs) => {
 	if (!logs) return;
-	logs.forEach((log) => changeLogConcept(log));
+	const { logConceptChallenge } = await import("../mode-script.js");
+	logs.forEach((log) => changeLogConcept(log, logConceptChallenge));
 };
 
-const changeLogConcept = async ({ tag, message }) => {
+const changeLogConcept = async ({ tag, message },callback) => {
 	if (!message) return;
-	logConceptChallenge(tag, message);
+	callback(tag, message);
 };
 
 const changeAllCommandsConcept = async (steps) => {
@@ -49,9 +47,14 @@ document.getElementById("select_concept").addEventListener("change", async (e) =
 	if (!option || !option?.value) return;
 	const { url, beforeUrl } = await changeUrlConcept(option.value);
 	if (beforeUrl == "free-mode") return (window.location.href = url);
+
+	const { openDialogQuestion } = await import("../dialogs/dialog-question-concept-script.js");
 	const response = await openDialogQuestion();
 	if(!response) return changeCancelConcept(beforeUrl);
+	
+	const {saveConcept} = await import("./handler-nolog.js");
 	await saveConcept({ concept: beforeUrl, response })
+
 	window.location.href = url;
 })
 
