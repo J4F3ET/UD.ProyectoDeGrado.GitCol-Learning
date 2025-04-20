@@ -1,60 +1,28 @@
 // Guarda la respuesta de la pregunta
-
 export const saveConcept = async (response) => {
 	const { auth } = await import("../firebase-config.js");
-	saveChanllengerLog(auth.currentUser);
-	await saveResponse(response, auth.currentUser);
-};
-const saveResponse = async (response, user = null) => {
-	if (!user) saveResponseInSessionStorage(response);
-	else saveResponseInDatabase(response);
-};
-const saveChanllengerLog = async (user = null) => {
-	const log = await getElementSessionStorage("log");
-	if (!user) saveLogInSessionStorage(log);
-	else saveChallengerLogInDatabase(log);
-};
-// Database
-const saveChallengerLogInDatabase = async (log) => {
-	console.log("saveChallengerLogInDatabase");
-};
-const saveResponseInDatabase = async (response) => {
-	console.log("saveResponseInDatabase");
-};
-//  Session storage
-const getElementSessionStorage = async (element) => {
-	return JSON.parse(sessionStorage.getItem(element));
-};
-const setElementSessionStorage = async (element, value) => {
-	if (await getElementSessionStorage(element)) return;
-	sessionStorage.setItem(element, JSON.stringify(value));
-};
-const getConceptSessionStorage = async () => {
-	const conceptObject = await getElementSessionStorage("concept");
-	return conceptObject ? conceptObject : createConceptSessionStorage();
-};
-const createConceptSessionStorage = async (
-	concept = {
-		question: "",
-		challenger: {
-			log: [],
-		},
+	const logs =
+		getElementSessionStorage("log")?.filter((log) => log.tag == "comand") ?? [];
+	const newConcept = getNewConcept(response, logs);
+	const concepts = getElementSessionStorage("concept") || [];
+	const newConcepts = getNewConcepts(newConcept, concepts);
+	sessionStorage.setItem("concept", JSON.stringify(newConcepts));
+	if (auth.currentUser) {
+		saveResponseInDatabase(concepts);
 	}
-) => {
-	setElementSessionStorage("concept", concept);
-	return concept;
 };
-export const saveLogInSessionStorage = async (logConsole = []) => {
-	const conceptUser = await getConceptSessionStorage();
-	conceptUser.challenger.log =
-		logConsole.length == 0 ? logConsole : await getElementSessionStorage("log");
-	saveConceptInSessionStorage(conceptUser);
+const getElementSessionStorage = (key) => {
+	return JSON.parse(sessionStorage.getItem(key)) || null;
 };
-export const saveResponseInSessionStorage = async (response) => {
-	const conceptUser = await getConceptSessionStorage();
-	conceptUser.question = response;
-	saveConceptInSessionStorage(conceptUser);
+const getNewConcept = (response, logs) => {
+	return {
+		...response,
+		log: logs,
+	};
 };
-const saveConceptInSessionStorage = async (concept) => {
-	setElementSessionStorage("concept", concept);
+const getNewConcepts = (newConcept, concepts) => {
+	debugger;
+	return concepts.find((c) => c.concept == newConcept.concept)
+		? concepts.map((c) => (c.concept == newConcept.concept ? newConcept : c))
+		: [...concepts, newConcept];
 };
