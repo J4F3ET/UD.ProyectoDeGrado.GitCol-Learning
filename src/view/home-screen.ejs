@@ -20,10 +20,26 @@
 		<link defer rel="stylesheet" href="dist/css/cursor-global.css" />
 		<link defer rel="stylesheet" href="dist/css/font-global.css" />
 		<link defer rel="stylesheet" href="dist/css/home-style.css" />
-		<link defer rel="stylesheet" href="dist/css/dialog-home-style.css" />
+		<link async rel="stylesheet" href="dist/css/dialog-home-style.css" />
 		<link defer rel="stylesheet" href="dist/css/input-concept.css" />
 		<script async src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script defer src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+		<script defer src="dist/js/home-script.js"></script>
+		<script
+			async
+			type="module"
+			src="dist/js/dialogs/dialog-toogle-mode-home-script.js"
+		></script>
+		<script async src="dist/js/dialogs/dialog-single-home-script.js"></script>
+		<script async src="dist/js/dialogs/dialog-login-home-script.js"></script>
+		<script defer type="module" src="dist/js/login-script.js"></script>
+		<script
+			defer
+			type="module"
+			src="dist/js/utils/btn-session-handler.js"
+		></script>
+		<!--BANNER JS-->
+		<script async src="/dist/js/banner.js"></script>
 	</head>
 	<body class="body scrollable">
 		<header class="home-header">
@@ -47,7 +63,7 @@
 							id="btnLogout"
 							class="btn red"
 						>
-							Logou
+							Logout
 						</button>
 					</div>
 				</nav>
@@ -286,7 +302,10 @@
 		<!--FOOTER SECTION DESING-->
 		<footer class="footer">
 			<div class="footer-text">
-				<p>Copyright &copy;  <%= new Date().getFullYear() %> by Jafet Lopez | All Rights Reserved.</p>
+				<p>
+					Copyright &copy; <%= new Date().getFullYear() %> by Jafet Lopez | All
+					Rights Reserved.
+				</p>
 				<p>Contact: gitcollearning@gmail.com</p>
 			</div>
 			<a class="btn orange" href="#home">
@@ -567,25 +586,10 @@
 		<!--TYPED JS-->
 
 		<!--CUSTOM JS-->
-		<!-- <script defer src="dist/js/dialogs/dialog-multi-home-script.js"></script> -->
+		<script defer src="dist/js/dialogs/dialog-multi-home-script.js"></script>
 
-		<script defer src="dist/js/home-script.js"></script>
-		<script
-			defer
-			src="dist/js/dialogs/dialog-toogle-mode-home-script.js"
-		></script>
-		<script defer src="dist/js/dialogs/dialog-single-home-script.js"></script>
-		<script defer src="dist/js/dialogs/dialog-login-home-script.js"></script>
-		<script defer type="module" src="dist/js/login-script.js"></script>
-		<script
-			defer
-			type="module"
-			src="dist/js/utils/btn-session-handler.js"
-		></script>
 		<!--PARTICLE JS-->
-		<script async src="dist/assets/lib/particles.min.js"></script>
-		<script defer src="dist/assets/lib/particlesjs-config.json"></script>
-		<!--BANNER JS-->
-		<script async src="/dist/js/banner.js"></script>
+		<script  src="dist/assets/lib/particles.min.js"></script>
+		<script  src="dist/assets/lib/particlesjs-config.json"></script>
 	</body>
 </html>

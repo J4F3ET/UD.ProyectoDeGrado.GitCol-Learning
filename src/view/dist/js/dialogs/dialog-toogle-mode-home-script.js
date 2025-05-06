@@ -1,3 +1,7 @@
+import { auth } from "../firebase-config.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+let userExist = false;
+onAuthStateChanged(auth, async (user) => (userExist = user ? true : false));
 const dialogSelectMode = document.querySelector("#dialogSelectMode");
 const dialog = document.getElementById("dialogSelectMode");
 // Toogle mode
@@ -16,28 +20,40 @@ const toogleMode = async (mode) => {
 };
 const toogleModeCallback = async () => {
 	dialog.dataset.mode = dialog.dataset.mode === "single" ? "multi" : "single";
-	dialog.dataset.mode === "single" ? unlockDialog() : lockDialog();
+	if (userExist && dialog.dataset.mode === "multi") unlockDialog("multi");
+	else if (dialog.dataset.mode === "multi") lockDialog("multi");
+	else unlockDialog("single");
 	toogleMode(dialog.dataset.mode);
 };
-const lockDialog = async () => {
+const lockDialog = async (mode) => {
+	const img = document.getElementById(`img_cat_${mode}`);
 	const btn = document.getElementById("btn_select_mode");
 	const dialog_span = document.getElementById("dialog_span");
-	btn.classList.add("lock");
-	btn.classList.remove("unlock");
-	btn.setAttribute("disabled", true);
 
 	dialog_span.classList.add("lock");
 	dialog_span.classList.remove("unlock");
+
+	img.classList.add("lock");
+	img.classList.remove("unlock");
+
+	btn.classList.add("lock");
+	btn.classList.remove("unlock");
+	btn.setAttribute("disabled", true);
 };
-const unlockDialog = async () => {
+const unlockDialog = async (mode) => {
+	const img = document.getElementById(`img_cat_${mode}`);
 	const btn = document.getElementById("btn_select_mode");
 	const dialog_span = document.getElementById("dialog_span");
-	btn.classList.remove("lock");
-	btn.classList.add("unlock");
-	btn.removeAttribute("disabled");
 
 	dialog_span.classList.remove("lock");
 	dialog_span.classList.add("unlock");
+
+	img.classList.remove("lock");
+	img.classList.add("unlock");
+
+	btn.classList.remove("lock");
+	btn.classList.add("unlock");
+	btn.removeAttribute("disabled");
 };
 const closeDialog = async () => {
 	dialogSelectMode.close();

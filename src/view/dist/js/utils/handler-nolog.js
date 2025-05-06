@@ -8,7 +8,7 @@ export const saveConcept = async (response) => {
 	const newConcepts = getNewConcepts(newConcept, concepts);
 	sessionStorage.setItem("concept", JSON.stringify(newConcepts));
 	if (auth.currentUser) {
-		saveResponseInDatabase(concepts);
+		saveResponseInDatabase(newConcepts);
 	}
 };
 const getElementSessionStorage = (key) => {
@@ -21,8 +21,10 @@ const getNewConcept = (response, logs) => {
 	};
 };
 const getNewConcepts = (newConcept, concepts) => {
-	debugger;
 	return concepts.find((c) => c.concept == newConcept.concept)
 		? concepts.map((c) => (c.concept == newConcept.concept ? newConcept : c))
 		: [...concepts, newConcept];
 };
+const saveResponseInDatabase = async (concepts) => {
+	
+}
