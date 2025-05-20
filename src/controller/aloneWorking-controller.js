@@ -41,25 +41,23 @@ router.get("/aloneMode/:name", async (req, res) => {
 });
 /**
  * @openapi
- * /aloneMode/user/concepts:
+ * /aloneMode/user/get/concepts:
  *   get:
- *     summary: Endpoint render view alone-mode
- *     description: Render view alone-mode
+ *     summary: Endpoint get user concepts
+ *     description: Get user concepts
  *     responses:
  *       200:
- *         description: Succes. Render view alone-mode
+ *         description: Succes. Return user concepts
  *         content:
- *           text/html:
- *             example: alone-mode-screen.ejs
+ *           application/json:
  *     security:
  *       - BearerAuth: []
  */
 router.get(
-	"/aloneMode/user/concepts",
+	"/aloneMode/user/get/concepts",
 	releaseVerificationMiddleware,
 	async (req, res) => {
 		let userToken = null;
-		const concepts = req.headers?.concepts;
 		try {
 			userToken = await auth.verifyIdToken(
 				req.headers.authorization.split(" ")[1]
@@ -79,6 +77,21 @@ router.get(
 			});
 		}
 		if (!data) return res.sendStatus(404);
+		console.log("Alone mode concepts", data.concepts);
+		res.json({
+			concepts: data.concepts,
+		});
 	}
 );
+
+router.post("/aloneMode/user/update/concepts", async (req, res) => {
+	const { concepts } = req.body;
+	if (!concepts) return res.sendStatus(404);
+	const concept = await getConcept(conceptName);
+	if (!concept) return res.sendStatus(404);
+	res.json({
+		concept: concept,
+	});
+});
+
 export default router;
