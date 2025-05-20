@@ -36,25 +36,33 @@ const router = Router();
  *       - cookieAuth: []
  */
 router.post("/login", releaseVerificationMiddleware, async (req, res) => {
-	const { uid } = req.body;
+	const { uid,email } = req.body;
 	if (!uid || uid == "") {
 		res
 			.clearCookie("access_token")
 			.status(HttpStatus.NOT_FOUND)
-			.json({ url: "/error" })
+			.json({ url: "/error" ,status: "error" })
 			.end();
 		return;
 	}
-	const { err } = await userLogin(uid);
+	const { err,data } = await userLogin(uid,email);
+	if (err && data.message === "Email not found") {
+		res
+			.clearCookie("access_token")
+			.status(HttpStatus.UNAUTHORIZED)
+			.json({status: "pending"})
+			.end();
+		return;
+	}
 	if (err) {
 		res
 			.clearCookie("access_token")
 			.status(HttpStatus.UNAUTHORIZED)
-			.json({ url: "/error" })
+			.json({ url: "/error",status: "error" })
 			.end();
 		return;
 	}
-	res.status(HttpStatus.OK).json({ url: "/rooms" });
+	res.status(HttpStatus.OK).json({ url: "/rooms",status: "success" });
 	res.end();
 });
 /**

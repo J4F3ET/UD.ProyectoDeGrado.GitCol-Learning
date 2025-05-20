@@ -24,32 +24,44 @@ export const getUserByEmail = async (email) => {
 		return { err: true, data: error };
 	}
 };
-export const userLogin = async (uid) => {
+export const userLogin = async (uid, newEmail) => {
 	if (!uid || uid == "") return { err: true, data: null };
 	try {
 		const userAuth = await auth.getUser(uid);
-		if (!userAuth) {
-			return { err: true, data: new Error("User not found") };
-		}
-		const email = findEmailInAuthObject(userAuth);
+
+		if (!userAuth) return { err: true, data: new Error("User not found") };
+
+		const email = findEmailInAuthObject(userAuth) ?? newEmail;
+		if (!email) return { err: true, data: new Error("Email not found") };
+
 		const userResponse = await getUserByEmail(email);
-		if (userResponse.err) {
+
+		if (userResponse.err)
 			return { err: true, data: new Error("User not found") };
-		}
-		if (!userResponse.data) {
-			return firstLogin(uid);
-		}
-		if (!userResponse.key) {
+
+		if (!userResponse.data) return firstLogin(uid);
+
+		const uidProviderData = userAuth.providerData[0]?.uid;
+
+		const providerInUser = userResponse.data?.providers?.find(
+			(provider) => uidProviderData === provider.providerUid
+		);
+		if (!providerInUser)
+			return { err: true, data: new Error("Provider not found") };
+
+		if (providerInUser.userUid !== userAuth.uid)
 			return { err: true, data: new Error("User not found") };
-		}
+		
+		if (!userResponse.key)
+			return { err: true, data: new Error("User not found") };
+
 		const potentialUser = await completedUser(userAuth, userResponse.data);
 		const existsChanged = await hasChangedUser(
 			potentialUser,
 			userResponse.data
 		);
-		if (existsChanged) {
-			return await updateUser(userResponse.key, potentialUser);
-		}
+		if (existsChanged) return await updateUser(userResponse.key, potentialUser);
+
 		return { err: false, data: userResponse.data };
 	} catch (error) {
 		console.error("USERLOGIN", error);
@@ -139,8 +151,7 @@ const completedUser = async (objectAuth, objectDB) => {
 	return { email, name, providers: providesBD };
 };
 const findEmailInAuthObject = (objectAuth) => {
-	const email = objectAuth.email ?? objectAuth.providerData[0]?.email;
-	return email;
+	return objectAuth.email ?? objectAuth.providerData[0]?.email ?? null;
 };
 export const getUserByAuthUid = async (uid) => {
 	try {
