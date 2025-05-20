@@ -97,7 +97,7 @@ export class DataViewer {
 		svg.innerHTML = `
         <g id="emptyContainer">
             <text class="emptyTitle" x="50" y="${heightSvg / 3}">
-                Empy repository
+                Empty repository
             </text>
             <text class="empyText" x="50" y="${heightSvg / 2.5}" >
                 Use comand "git init" to start

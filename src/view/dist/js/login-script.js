@@ -18,19 +18,40 @@ const HttpStatusErrorMessage = {
 const login = async (user) => {
 	if (!user || !user.uid || !user.accessToken)
 		return alertError("User not found");
+
 	const headers = new Headers();
 	headers.append("Content-Type", "application/json");
 	headers.append("Authorization", `Bearer ${user.accessToken}`);
 	const response = await fetch("/login", {
 		method: "POST",
 		headers: headers,
-		body: JSON.stringify({ uid: user.uid }),
+		body: JSON.stringify({ uid: user.uid, email: user.email }),
 	});
-	if (!response.ok)
-		alertError(
-			HttpStatusErrorMessage[response.status] ?? HttpStatusErrorMessage[500]
-		);
+	const data = await response.json();
+	if (!response.ok && data.status === "error") {
+		auth.signOut();
+		alertError(HttpStatusErrorMessage[response.status]);
+	}
+	if (!response.ok && data.status === "pending") alertNeedToEmail(user);
 };
+const alertNeedToEmail = (user) =>
+	Swal.fire({
+		title: "Need to verify your email",
+		input: "text",
+		inputAttributes: {
+			autocapitalize: "off",
+		},
+		showCancelButton: true,
+		confirmButtonText: "Confirmed",
+		showLoaderOnConfirm: true,
+		allowOutsideClick: () => !Swal.isLoading(),
+	}).then(async (result) => {
+		if (!result.isConfirmed){
+			await auth.signOut();
+		};
+		user.email = result.value;
+		await login(user);
+	});
 const alertError = (message) =>
 	Swal.fire({
 		position: "center",
@@ -39,7 +60,12 @@ const alertError = (message) =>
 		showConfirmButton: false,
 		timer: 1500,
 	});
+const closeDialog = async () => {
+	const dialog_login = document.querySelector("#dialog_login");
+	if (dialog_login) dialog_login.close();
+};
 const authProvider = async (provider) => {
+	closeDialog();
 	const dataAuthProvider = await signInWithPopup(auth, provider);
 	if (!dataAuthProvider || !dataAuthProvider.user)
 		alertError("Error in login, try again later");
@@ -63,7 +89,6 @@ document
 		"click",
 		async () => await authProvider(microsoftAuthProvider)
 	);
-
 // onAuthStateChanged(auth, async (user) => {
 // 	if (!user) return;
 // 	await login(user);
