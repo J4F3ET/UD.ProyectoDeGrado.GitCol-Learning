@@ -8,6 +8,7 @@ import {
 	microsoftAuthProvider,
 	auth,
 } from "./firebase-config.js";
+let loginState = false;
 const HttpStatusErrorMessage = {
 	400: "Error in request, please try again later",
 	401: "Verification failed, please try again later",
@@ -18,7 +19,7 @@ const HttpStatusErrorMessage = {
 const login = async (user) => {
 	if (!user || !user.uid || !user.accessToken)
 		return alertError("User not found");
-
+	loginState = true;
 	const headers = new Headers();
 	headers.append("Content-Type", "application/json");
 	headers.append("Authorization", `Bearer ${user.accessToken}`);
@@ -33,6 +34,7 @@ const login = async (user) => {
 		alertError(HttpStatusErrorMessage[response.status]);
 	}
 	if (!response.ok && data.status === "pending") alertNeedToEmail(user);
+	loginState = false;
 };
 const alertNeedToEmail = (user) =>
 	Swal.fire({
@@ -46,8 +48,10 @@ const alertNeedToEmail = (user) =>
 		showLoaderOnConfirm: true,
 		allowOutsideClick: () => !Swal.isLoading(),
 	}).then(async (result) => {
+
 		if (!result.isConfirmed){
 			await auth.signOut();
+			return;
 		};
 		user.email = result.value;
 		await login(user);
@@ -60,6 +64,26 @@ const alertError = (message) =>
 		showConfirmButton: false,
 		timer: 1500,
 	});
+
+export const sesionExpired = () =>{
+	if (loginState) return;
+	Swal.fire({
+		title: "Session expired",
+		text: "Please login again",
+		icon: "warning",
+		showCancelButton: true,
+		showLoaderOnConfirm: true,
+		confirmButtonColor: "#3085d6",
+		cancelButtonColor: "#d33",
+		confirmButtonText: "Yes, login",
+	}).then((result) => {
+		if (result.isConfirmed) {
+			login();
+		} else {
+			auth.signOut();
+		}
+	});
+}
 const closeDialog = async () => {
 	const dialog_login = document.querySelector("#dialog_login");
 	if (dialog_login) dialog_login.close();
@@ -89,7 +113,3 @@ document
 		"click",
 		async () => await authProvider(microsoftAuthProvider)
 	);
-// onAuthStateChanged(auth, async (user) => {
-// 	if (!user) return;
-// 	await login(user);
-// });
