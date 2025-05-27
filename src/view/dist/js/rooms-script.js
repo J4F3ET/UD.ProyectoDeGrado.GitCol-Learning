@@ -1,4 +1,4 @@
-import { logout, goToHome } from "./userAuth-observer.js";
+import { logout, goToHome } from "./logout-script.js";
 import { driveHelpRoom } from "./drivejs-mode-script.js";
 const dialogCreateRoom = document.getElementById("dialogCreateRoom");
 const dialogSearchRoom = document.getElementById("dialogSearchRoom");
@@ -158,10 +158,6 @@ document
 document.getElementById("inputRoomCode").addEventListener("input", (e) => {
 	e.target.value = e.target.value.toUpperCase();
 	validateInputRoomCode(e.target);
-});
-document.getElementById("btnLogout").addEventListener("click", async () => {
-	logout();
-	goToHome();
 });
 document
 	.getElementById("btnSubmitCreateRoom")

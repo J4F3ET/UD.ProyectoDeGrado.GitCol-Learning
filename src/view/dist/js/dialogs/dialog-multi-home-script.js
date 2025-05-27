@@ -1,5 +1,6 @@
 const openDialogMulti = async () => {
 	if (document.querySelector("[data-mode]").dataset.mode !== "multi") return;
+	console.log("Opening dialog multi home");
 	window.location.href = "/rooms";
 };
 const closeDialogMulti = async () => {
