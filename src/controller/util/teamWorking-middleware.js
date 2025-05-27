@@ -7,8 +7,13 @@ import { HttpStatus } from "./httpStatus.js";
 // Middleware Express: Funciones que se ejecutan antes de que lleguen a las rutas
 export const verifyUserInAnyRoomMiddleware = async (req, res, next) => {
 	try {
-		const data = auth.verifyIdToken(req.headers.cookie.split("=")[1]);
-		const dataSnaptshot = findByUserToRoom((await data).uid);
+		const token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+		const {err, data} = await getUserByAuthUid(token.uid);
+		if (err || !data) {
+			const error = new CustomError("User not found", HttpStatus.NOT_FOUND);
+			return errorMiddleware(error, req, res, next);
+		}
+		const dataSnaptshot = findByUserToRoom(data.key);
 		if ((await dataSnaptshot).length != 0) {
 			res.redirect(`/teamWorking?room=${(await dataSnaptshot)[0]}`);
 		} else {
@@ -21,11 +26,12 @@ export const verifyUserInAnyRoomMiddleware = async (req, res, next) => {
 export const verifyUserInRoomMiddleware = async (req, res, next) => {
 	try {
 		const token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+		if (!token) throw new Error("Token not found");
 		const dataSnaptshot = roomGet(req.query.room);
 		const room = await dataSnaptshot;
 		const { err, data } = await getUserByAuthUid(token.uid);
-		if (!token) throw new Error("Token not found");
 		if (!room.val() || err || !data) throw new Error("Room or user not found");
+		console.log("Verifying user in room:", req.query.room, "User key:", data.key);
 		if (!room.val().members.includes(data.key)) throw new Error("Unauthorized");
 		next();
 	} catch (error) {

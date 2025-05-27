@@ -81,11 +81,16 @@ router.get("/rooms/fit", releaseVerificationMiddleware, async (req, res) => {
 
 	if (!room) return res.sendStatus(404);
 
-	const user = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+	const token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
 
-	if (!user) return res.sendStatus(403);
+	if (!token) return res.sendStatus(403);
 
-	const response = await roomAddMember(room, user.uid);
+	const { err, data } = await getUserByAuthUid(token.uid);
+
+	if (err || !data.key || !data.email)
+		return res.sendStatus(HttpStatus.NOT_FOUND);
+
+	const response = await roomAddMember(room, data.uid);
 
 	if (!response) return res.sendStatus(500);
 
@@ -171,12 +176,18 @@ router.get("/rooms/code", releaseVerificationMiddleware, async (req, res) => {
  */
 router.post("/rooms", releaseVerificationMiddleware, async (req, res) => {
 	const result = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
-	const response = await getUserByAuthUid(result.uid);
-	if (response.err || !response.data.key || !response.data.email) {
+	const { err, data } = await getUserByAuthUid(result.uid);
+	if (err || !data.key || !data.email) {
 		return res.sendStatus(HttpStatus.NOT_FOUND);
 	}
-	const owner = response.data.email;
-	const members = [response.data.key];
+	console.log(
+		"Creating room with code:",
+		req.body.code,
+		"and user key:",
+		data.key
+	);
+	const owner = data.email;
+	const members = [data.key];
 	const room = await roomCreate(
 		req.body.code,
 		req.body.description,
