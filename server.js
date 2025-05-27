@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import { Server } from "socket.io";
 import path from "path";
+import { fileURLToPath } from "url";
 import { createServer } from "node:http";
 import { SocketHandler } from "./src/controller/teamWorking-socket-server.js";
 import { swaggerDoc } from "./docs/swagger.js";
@@ -9,7 +10,8 @@ import { swaggerDoc } from "./docs/swagger.js";
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 //Settings: Configuraciones del servidor (puerto, vistas, etc)
 app.set("port", process.env.PORT || 3000);
 app.set("views", path.join(__dirname, "src", "view"));
@@ -23,11 +25,11 @@ app.use(express.urlencoded({ extended: true }));
 new SocketHandler(io);
 // Routes: Rutas de la aplicacion
 async function uploadCtrl(app) {
-	app.use((await import("./src/controller/login-controller")).default);
-	app.use((await import("./src/controller/home-controller")).default);
-	app.use((await import("./src/controller/rooms-controller")).default);
-	app.use((await import("./src/controller/teamWorking-controller")).default);
-	app.use((await import("./src/controller/aloneWorking-controller")).default);
+	app.use((await import("./src/controller/login-controller.js")).default);
+	app.use((await import("./src/controller/home-controller.js")).default);
+	app.use((await import("./src/controller/rooms-controller.js")).default);
+	app.use((await import("./src/controller/teamWorking-controller.js")).default);
+	app.use((await import("./src/controller/aloneWorking-controller.js")).default);
 }
 uploadCtrl(app);
 // Static files: Archivos que se envian al navegador(frontend)

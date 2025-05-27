@@ -1,4 +1,4 @@
-import { database } from "./firebase-service";
+import { database } from "./firebase-service.js";
 
 export const getConcept = async (key) => {
 	try {

@@ -1,5 +1,4 @@
-import { database } from "./firebase-service";
-import { auth } from "./firebase-service";
+import { database, auth } from "./firebase-service.js";
 const path = "users/";
 
 export const getUserByEmail = async (email) => {
