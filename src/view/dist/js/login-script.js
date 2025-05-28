@@ -8,8 +8,10 @@ const HttpStatusErrorMessage = {
 	500: "Internal server error, please try again later",
 };
 const login = async (user) => {
-	if (!user || !user.uid || !user.accessToken)
+	if (!user || !user.uid || !user.accessToken){
+		auth.signOut();
 		return alertError("User not found");
+	}
 	loginState = true;
 	const headers = new Headers();
 	headers.append("Content-Type", "application/json");
@@ -68,7 +70,7 @@ export const sesionExpired = () => {
 		cancelButtonColor: "#d33",
 		confirmButtonText: "Yes, login",
 	}).then(async (result) => {
-		if (result.isConfirmed) await login();
+		if (result.isConfirmed) await login(auth.currentUser);
 		else auth.signOut();
 	});
 };
