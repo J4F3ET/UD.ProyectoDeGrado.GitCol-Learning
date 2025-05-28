@@ -80,11 +80,13 @@ router.get("/rooms/fit", releaseVerificationMiddleware, async (req, res) => {
 	const room = await roomGetByCode(req.query.code);
 
 	if (!room) return res.sendStatus(404);
-
-	const token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
-
-	if (!token) return res.sendStatus(403);
-
+	let token = null;
+	try {
+		token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+	} catch (error) {
+		res.sendStatus(HttpStatus.FORBIDDEN);
+	}
+	if (!token) return res.sendStatus(HttpStatus.FORBIDDEN);
 	const { err, data } = await getUserByAuthUid(token.uid);
 
 	if (err || !data.key || !data.email)
@@ -175,8 +177,13 @@ router.get("/rooms/code", releaseVerificationMiddleware, async (req, res) => {
  *         - cookieAuth: []
  */
 router.post("/rooms", releaseVerificationMiddleware, async (req, res) => {
-	const result = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
-	const { err, data } = await getUserByAuthUid(result.uid);
+	let token = null;
+	try {
+		token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+	} catch (error) {
+		return res.sendStatus(HttpStatus.FORBIDDEN);
+	}
+	const { err, data } = await getUserByAuthUid(token.uid);
 	if (err || !data.key || !data.email) {
 		return res.sendStatus(HttpStatus.NOT_FOUND);
 	}

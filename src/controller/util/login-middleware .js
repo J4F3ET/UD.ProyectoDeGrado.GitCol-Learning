@@ -1,7 +1,7 @@
-import {auth} from "../../model/firebase-service.js";
-import {errorMiddleware} from "./error-middleware.js";
-import {HttpStatus} from "./httpStatus.js";
-import {CustomError} from "../../model/CustomError.js";
+import { auth } from "../../model/firebase-service.js";
+import { errorMiddleware } from "./error-middleware.js";
+import { HttpStatus } from "./httpStatus.js";
+import { CustomError } from "../../model/CustomError.js";
 export const releaseVerificationMiddleware = (req, res, next) => {
 	if (undefined !== req.headers.cookie) {
 		verifyAccessCookieMiddleware(req, res, next);
@@ -15,9 +15,15 @@ export const releaseVerificationMiddleware = (req, res, next) => {
 // Verifica que el usuario tenga una cookie de acceso
 const verifyAccessCookieMiddleware = (req, res, next) => {
 	try {
-		auth.verifyIdToken(req.headers.cookie.split("=")[1]).then((result) => {
-			next();
-		});
+		auth
+			.verifyIdToken(req.headers.cookie.split("=")[1])
+			.then((result) => {
+				next();
+			})
+			.catch((error) => {
+				const err = new CustomError("Unauthorized", HttpStatus.UNAUTHORIZED);
+				errorMiddleware(err, req, res, next);
+			});
 	} catch (error) {
 		const err = new CustomError("Unauthorized", HttpStatus.UNAUTHORIZED);
 		errorMiddleware(err, req, res, next);
