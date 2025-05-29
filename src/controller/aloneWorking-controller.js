@@ -68,7 +68,9 @@ router.get(
 			});
 		}
 		if (!userToken) return res.sendStatus(401);
-		const { err, data } = await userLogin(userToken.uid);
+		const { err, data } = await userLogin(
+			req.headers.authorization.split(" ")[1]
+		);
 		if (err) {
 			console.log("❌ Error in aloneMode/user/concepts", err);
 			return res.status(403).render("error-screen", {

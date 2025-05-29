@@ -8,7 +8,7 @@ const HttpStatusErrorMessage = {
 	500: "Internal server error, please try again later",
 };
 const login = async (user) => {
-	if (!user || !user.uid || !user.accessToken){
+	if (!user || !user.uid || !user.accessToken) {
 		auth.signOut();
 		return alertError("User not found");
 	}
@@ -46,7 +46,21 @@ const alertNeedToEmail = (user) =>
 			return;
 		} else {
 			user.email = result.value;
-			await login(user);
+
+			const response = await fetch("/login/user/update/email", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${user.accessToken}`,
+				},
+				body: JSON.stringify({ email: user.email }),
+			});
+			if (!response.ok) {
+				auth.signOut();
+				const data = await response.json();
+				alertError(data.message || "Error updating email, try again later");
+				return;
+			} else await login(user);
 		}
 	});
 const alertError = (message) =>
