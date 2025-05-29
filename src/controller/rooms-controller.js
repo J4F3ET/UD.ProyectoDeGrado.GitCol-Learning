@@ -187,12 +187,6 @@ router.post("/rooms", releaseVerificationMiddleware, async (req, res) => {
 	if (err || !data.key || !data.email) {
 		return res.sendStatus(HttpStatus.NOT_FOUND);
 	}
-	console.log(
-		"Creating room with code:",
-		req.body.code,
-		"and user key:",
-		data.key
-	);
 	const owner = data.email;
 	const members = [data.key];
 	const room = await roomCreate(

@@ -8,7 +8,7 @@ import { parseToCommitObject } from "../model/utils.js";
 import { getUserByAuthUid } from "../model/user-service.js";
 export class SocketHandler {
 	constructor(io) {
-		console.log("SocketHandler initialized");
+		console.log("✅ SocketHandler initialized...");
 		// Middleware
 		this.server = io;
 		io.use(this.verifyUrl);
@@ -38,7 +38,7 @@ export class SocketHandler {
 			next();
 		} catch (error) {
 			console.log(
-				"❌ Error verifying URL or user authentication:",
+				"❌ SocketHandler Error verifying URL or user authentication:",
 				error.message
 			);
 			socket.emit("error", error.message);

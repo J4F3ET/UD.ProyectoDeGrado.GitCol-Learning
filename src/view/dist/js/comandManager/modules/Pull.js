@@ -237,7 +237,6 @@ export class Pull {
 				!tagsLocalRepository.has(refBranchLocalPull) &&
 				!tagsLocalRepositoryWithoutReference.size
 			) {
-				console.log(localRepository);
 				return {
 					repositoryMerge: await this.especialCase(
 						localRepository,

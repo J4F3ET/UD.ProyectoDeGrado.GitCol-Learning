@@ -19,7 +19,6 @@ const router = Router();
  *             example: alone-mode-screen.ejs
  */
 router.get("/aloneMode/:name", async (req, res) => {
-	console.log("Alone mode concepts none");
 	const conceptName = req.params.name;
 	if (!conceptName) return res.sendStatus(404);
 	const concept = await getConcept(conceptName);
@@ -63,7 +62,7 @@ router.get(
 				req.headers.authorization.split(" ")[1]
 			);
 		} catch (error) {
-			console.log("Error in aloneMode/user/concepts", error);
+			console.log("❌ Error in aloneMode/user/concepts", error);
 			return res.status(500).render("error-screen", {
 				error: "Error in aloneMode/user/concepts",
 			});
@@ -71,13 +70,13 @@ router.get(
 		if (!userToken) return res.sendStatus(401);
 		const { err, data } = await userLogin(userToken.uid);
 		if (err) {
-			console.log("Error in aloneMode/user/concepts", err);
+			console.log("❌ Error in aloneMode/user/concepts", err);
 			return res.status(403).render("error-screen", {
 				error: "Error in aloneMode/user/concepts",
 			});
 		}
 		if (!data) return res.sendStatus(404);
-		console.log("Alone mode concepts", data.concepts);
+
 		res.json({
 			concepts: data.concepts,
 		});

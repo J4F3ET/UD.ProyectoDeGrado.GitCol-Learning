@@ -31,7 +31,6 @@ export const verifyUserInRoomMiddleware = async (req, res, next) => {
 		const room = await dataSnaptshot;
 		const { err, data } = await getUserByAuthUid(token.uid);
 		if (!room.val() || err || !data) throw new Error("Room or user not found");
-		console.log("Verifying user in room:", req.query.room, "User key:", data.key);
 		if (!room.val().members.includes(data.key)) throw new Error("Unauthorized");
 		next();
 	} catch (error) {

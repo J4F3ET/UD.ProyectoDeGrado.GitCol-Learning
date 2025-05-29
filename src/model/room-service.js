@@ -69,7 +69,6 @@ async function roomUpdate(id, mapParams) {
 
 async function roomUpdateStatus(id, data) {
 	try {
-		console.log("Updating status of room:", id, "to", data);
 		const ref = database.ref("rooms/" + id + "/status");
 		return ref.set(data).key;
 	} catch (error) {
@@ -185,7 +184,6 @@ async function roomGetByCode(code) {
 	}
 }
 async function roomRemoveMember(roomKey, userId) {
-	console.log("Removing user from room:", roomKey, "User ID:", userId);
 	try {
 		const roomSnapshot = database.ref("rooms/" + roomKey).get();
 		const room = (await roomSnapshot).val();

@@ -130,12 +130,6 @@ router.patch(
 					status: HttpStatus.NOT_FOUND,
 				});
 			}
-			console.log(
-				"Removing user from room:",
-				req.query.room,
-				"User key:",
-				data
-			);
 			const removestatus = await roomRemoveMember(req.query.room, data.key);
 			const room = (await roomGet(req.query.room)).val();
 			if (!room.hasOwnProperty("members"))
