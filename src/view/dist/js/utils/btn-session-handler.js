@@ -1,6 +1,6 @@
 import { auth } from "../firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
+onAuthStateChanged(auth, async (user) => resolveBtnLogin(user));
 // Handle login and logout buttons
 const btnDisable = async (btn) => {
 	btn.disabled = true;
@@ -22,4 +22,3 @@ const resolveBtnLogin = async (user) => {
 document
 	.getElementById("btnLogout")
 	.addEventListener("click", async () => auth.signOut());
-onAuthStateChanged(auth, async (user) => resolveBtnLogin(user));

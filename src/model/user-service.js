@@ -1,5 +1,4 @@
-import { database } from "./firebase-service";
-import { auth } from "./firebase-service";
+import { database, auth } from "./firebase-service.js";
 const path = "users/";
 
 export const getUserByEmail = async (email) => {
@@ -24,42 +23,55 @@ export const getUserByEmail = async (email) => {
 		return { err: true, data: error };
 	}
 };
-export const userLogin = async (uid) => {
-	if (!uid || uid == "") return { err: true, data: null };
+export const userLogin = async (uid, token) => {
+	if (!token || token == "") return { err: true, data: null };
+	let payload, userAuth;
 	try {
-		const userAuth = await auth.getUser(uid);
-		if (!userAuth) {
-			return { err: true, data: new Error("User not found") };
-		}
-		const email = findEmailInAuthObject(userAuth);
-		const userResponse = await getUserByEmail(email);
-		if (userResponse.err) {
-			return { err: true, data: new Error("User not found") };
-		}
-		if (!userResponse.data) {
-			return firstLogin(uid);
-		}
-		if (!userResponse.key) {
-			return { err: true, data: new Error("User not found") };
-		}
-		const potentialUser = await completedUser(userAuth, userResponse.data);
-		const existsChanged = await hasChangedUser(
-			potentialUser,
-			userResponse.data
-		);
-		if (existsChanged) {
-			return await updateUser(userResponse.key, potentialUser);
-		}
-		return { err: false, data: userResponse.data };
+		userAuth = await auth.getUser(uid);
+		payload = await auth.verifyIdToken(token);
 	} catch (error) {
-		console.error("USERLOGIN", error);
 		return { err: true, data: error };
 	}
+	if (!userAuth) return { err: true, data: new Error("User not found") };
+	if (!payload) return { err: true, data: new Error("Invalid access token") };
+
+	const { err, data: user } = await getUserByAuthUid(payload.uid);
+
+	if (err) return { err: true, data: new Error("User not found") };
+	if (!user) {
+		const {err,data} = await firstLogin(userAuth)
+		if (err || !data) return { err: true, data: new Error("User not found") };
+		if (!data.user.email) return { err: true, data: new Error("Email not found") };
+		return { err: false, data: data.user };
+	}
+	if (!user.email) return { err: true, data: new Error("Email not found") };
+
+	if (!user.providers || user.providers.length === 0)
+		return { err: true, data: new Error("Provider not found") };
+
+	const providerInUser = user.providers?.find(
+		(provider) => userAuth.providerData[0]?.uid === provider.providerUid
+	);
+
+	if (!providerInUser)
+		return { err: true, data: new Error("Provider not found") };
+
+	if (providerInUser.userUid !== userAuth.uid)
+		return { err: true, data: new Error("User not found") };
+
+	const potentialUser = await completedUser(userAuth, user);
+	const existsChanged = await hasChangedUser(potentialUser, {
+		email: user.email,
+		name: user.name,
+		providers: user.providers,
+	});
+	if (existsChanged) return await updateUser(user.key, potentialUser);
+
+	return { err: false, data: user };
 };
-const firstLogin = async (uid) => {
-	const data = await auth.getUser(uid);
-	if (!data) return { err: true, data: new Error("User not found") };
-	return createUser(await completedUser(data, {}));
+const firstLogin = async (user) => {
+	if (!user) return { err: true, data: new Error("User not found") };
+	return createUser(await completedUser(user, {}));
 };
 const createUser = async (user) => {
 	try {
@@ -139,8 +151,7 @@ const completedUser = async (objectAuth, objectDB) => {
 	return { email, name, providers: providesBD };
 };
 const findEmailInAuthObject = (objectAuth) => {
-	const email = objectAuth.email ?? objectAuth.providerData[0]?.email;
-	return email;
+	return objectAuth.email ?? objectAuth.providerData[0]?.email ?? null;
 };
 export const getUserByAuthUid = async (uid) => {
 	try {
@@ -148,12 +159,12 @@ export const getUserByAuthUid = async (uid) => {
 			.ref(path)
 			.orderByChild("providers")
 			.once("value");
-		if (!snapshot.val()) return { err: true, data: null };
-		const { err, data } = await callbackFindUserByProviderUid(
-			uid,
-			snapshot.val()
-		);
-		if (!err) return { err: false, data };
+
+		const users = snapshot.val();
+		if (!users) return { err: true, data: null };
+		console.log("sas")
+		const { err, data } = await callbackFindUserByProviderUid(uid, users);
+		if (err || err == null || !data) return { err, data };
 		return { err: false, data };
 	} catch (error) {
 		console.error("GETUSERBYAUTHUID", error);
@@ -166,8 +177,25 @@ const callbackFindUserByProviderUid = async (uid, users) => {
 		const user = await findUser(providers, uid);
 		if (user) return { err: false, data: { key, ...value } };
 	}
-	return null;
+	return { err: false, data: null};
 };
 const findUser = async (providers, uid) => {
 	return providers.find((provider) => provider.userUid === uid) ?? null;
+};
+export const updateEmail = async (token, email) => {
+	if (!token || token == "") return { err: true, data: null };
+	let payload;
+	try {
+		payload = await auth.verifyIdToken(token);
+	} catch (error) {
+		return { err: true, data: error };
+	}
+	if (!payload) return { err: true, data: new Error("Invalid access token") };
+
+	const { err, data: user } = await getUserByAuthUid(payload.uid);
+	if (err) return { err: true, data: new Error("User not found") };
+	if (!user) return { err: true, data: new Error("User not found") };
+
+	const updatedUser = { ...user, email };
+	return updateUser(user.key, updatedUser);
 };

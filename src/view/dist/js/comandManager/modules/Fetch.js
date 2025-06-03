@@ -108,7 +108,6 @@ export class Fetch {
 					await mergeChangesInRepositories(repository.commits, remote.commits)
 				)
 			);
-		console.log(repository.commits);
 		sessionStorage.setItem(
 			this._dataRepository,
 			JSON.stringify(

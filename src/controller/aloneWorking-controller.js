@@ -1,5 +1,9 @@
 import { Router } from "express";
+import { releaseVerificationMiddleware } from "./util/login-middleware .js";
 import { getConcept } from "../model/concept-service.js";
+import { userLogin } from "../model/user-service.js";
+import { auth } from "../model/firebase-service.js";
+
 const router = Router();
 /**
  * @openapi
@@ -34,4 +38,61 @@ router.get("/aloneMode/:name", async (req, res) => {
 	}
 	res.render("alone-mode-screen", { concept, current: conceptName });
 });
+/**
+ * @openapi
+ * /aloneMode/user/get/concepts:
+ *   get:
+ *     summary: Endpoint get user concepts
+ *     description: Get user concepts
+ *     responses:
+ *       200:
+ *         description: Succes. Return user concepts
+ *         content:
+ *           application/json:
+ *     security:
+ *       - BearerAuth: []
+ */
+router.get(
+	"/aloneMode/user/get/concepts",
+	releaseVerificationMiddleware,
+	async (req, res) => {
+		let userToken = null;
+		try {
+			userToken = await auth.verifyIdToken(
+				req.headers.authorization.split(" ")[1]
+			);
+		} catch (error) {
+			console.log("❌ Error in aloneMode/user/concepts", error);
+			return res.status(500).render("error-screen", {
+				error: "Error in aloneMode/user/concepts",
+			});
+		}
+		if (!userToken) return res.sendStatus(401);
+		const { err, data } = await userLogin(
+			req.headers.authorization.split(" ")[1]
+		);
+		if (err) {
+			console.log("❌ Error in aloneMode/user/concepts", err);
+			return res.status(403).render("error-screen", {
+				error: "Error in aloneMode/user/concepts",
+			});
+		}
+		if (!data) return res.sendStatus(404);
+
+		res.json({
+			concepts: data.concepts,
+		});
+	}
+);
+
+router.post("/aloneMode/user/update/concepts", async (req, res) => {
+	const { concepts } = req.body;
+	if (!concepts) return res.sendStatus(404);
+	const concept = await getConcept(conceptName);
+	if (!concept) return res.sendStatus(404);
+	res.json({
+		concept: concept,
+	});
+});
+
 export default router;

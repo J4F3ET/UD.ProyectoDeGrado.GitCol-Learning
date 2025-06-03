@@ -1,29 +1,30 @@
-import { logConceptChallenge } from "../mode-script.js";
-import { openDialogQuestion } from "../dialogs/dialog-question-concept-script.js";
-import { saveConcept } from "./handler-nolog.js";
 export const changeConcept = async (concept) => {
-	if (!concept) return;
-	if (concept.challenger) changeChallengeConcept(concept.challenger);
-	if (concept.question) changeQuestionConcept(concept.question);
+	if (!concept || !concept?.challenger) return;
+	changeChallengeConcept(concept.challenger);
 };
 const changeChallengeConcept = async (challenger) => {
-	const { explanation, steps, log } = challenger;
 	clearExplanation();
+	const { explanation, steps, log } = challenger;
 	changeAllCommandsConcept(steps);
 	changeAllLogsConcept([{ message: explanation, tag: "explanation" }, ...log?? []]);
 };
+
 const changeAllLogsConcept = async (logs) => {
 	if (!logs) return;
-	logs.forEach((log) => changeLogConcept(log));
+	const { logConceptChallenge } = await import("../mode-script.js");
+	logs.forEach((log) => changeLogConcept(log, logConceptChallenge));
 };
-const changeLogConcept = async ({ tag, message }) => {
+
+const changeLogConcept = async ({ tag, message },callback) => {
 	if (!message) return;
-	logConceptChallenge(tag, message);
+	callback(tag, message);
 };
+
 const changeAllCommandsConcept = async (steps) => {
 	if (!steps) return;
 	steps.forEach((step) => changeCommandConcept(step));
 };
+
 const changeCommandConcept = async (command) => {
 	const input = document.getElementById("comandInput");
 	input.value = command;
@@ -31,6 +32,7 @@ const changeCommandConcept = async (command) => {
 		new KeyboardEvent("keyup", { key: "Enter", keyCode: 13 })
 	);
 };
+
 const clearExplanation = async () => {
 	const log = JSON.parse(sessionStorage.getItem("log"));
 	if (!log) return;
@@ -42,19 +44,43 @@ const clearExplanation = async () => {
 
 document.getElementById("select_concept").addEventListener("change", async (e) => {
 	const option = e.target.options[e.target.selectedIndex];
-	if (!option) return;
-	
+	if (!option || !option?.value) return;
 	const { url, beforeUrl } = await changeUrlConcept(option.value);
-
 	if (beforeUrl == "free-mode") return (window.location.href = url);
-	console.log(beforeUrl == "free-mode");
+
+	const { openDialogQuestion } = await import("../dialogs/dialog-question-concept-script.js");
 	const response = await openDialogQuestion();
-	if(!response) return (window.location.href = url);
+	if(!response) return changeCancelConcept(beforeUrl);
 	
-	saveConcept({concept:beforeConcept,response})
-	
+	const {saveConcept} = await import("./handler-nolog.js");
+	await saveConcept({ concept: beforeUrl, response })
+
 	window.location.href = url;
 })
+
+const changeCancelConcept = async (newSelected) => {
+	const idSelect = "select_concept";
+	const selectedOption = await findSelectedOption(idSelect);
+	const newSelectedOption = await findSelectedOptionByValue(idSelect, newSelected);
+	if (!selectedOption || !newSelectedOption) return;
+	
+	selectedOption.selected = false;
+	newSelectedOption.selected = true;
+}
+
+const findSelectedOption = async (idSelect) => {
+	const select = document.getElementById(idSelect);
+	if (!select) return;
+	const selectedOption = select.options[select.selectedIndex];
+	return selectedOption;
+}
+
+const findSelectedOptionByValue = async (idSelect,value) => {
+	const select = document.getElementById(idSelect);
+	if (!select || !select?.options) return;
+	const selectedOption = [...select.options].find((option) => option.value === value);
+	return selectedOption;
+}
 
 const changeUrlConcept = async (option) => {
 	const urlParts = window.location.href.split("/");

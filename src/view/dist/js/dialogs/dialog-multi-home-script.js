@@ -1,6 +1,6 @@
 const openDialogMulti = async () => {
 	if (document.querySelector("[data-mode]").dataset.mode !== "multi") return;
-	document.getElementById("dialog_multi").showModal();
+	window.location.href = "/rooms";
 };
 const closeDialogMulti = async () => {
 	document.getElementById("dialog_multi").close();
@@ -8,6 +8,6 @@ const closeDialogMulti = async () => {
 document
 	.getElementById("btn_select_mode")
 	.addEventListener("click", async () => await openDialogMulti());
-document
-	.getElementById("btn_close_multi")
-	.addEventListener("click", async () => await closeDialogMulti());
+// document
+// 	.getElementById("btn_close_multi")
+// 	.addEventListener("click", async () => await closeDialogMulti());

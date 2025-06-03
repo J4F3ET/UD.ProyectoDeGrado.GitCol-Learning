@@ -8,6 +8,7 @@
 		/>
 		<title>Col-Learning</title>
 		<link
+		async
 			rel="shortcut icon"
 			href="/dist/assets/fav-icon.ico"
 			type="image/x-icon"
@@ -16,18 +17,24 @@
 
 		<!-- CSS -->
 		<link rel="stylesheet" href="dist/css/reset.css" />
-		<link defer rel="stylesheet" href="dist/css/global.css" />
+		<link rel="stylesheet" href="dist/css/global.css" />
 		<link async rel="stylesheet" href="dist/css/font-global.css" />
-		<link rel="stylesheet" href="dist/css/icons-global.css" />
+		<link async rel="stylesheet" href="dist/css/icons-global.css" />
 		<link async rel="stylesheet" href="dist/css/cursor-global.css" />
 
 		<link defer rel="stylesheet" href="dist/css/room-style.css" />
+
+
+			<!--PARTICLE JS-->
+		<script defer src="dist/assets/lib/particles.min.js"></script>
+		<script defer src="dist/assets/lib/particlesjs-config.json"></script>
+
 	</head>
 	<body>
 		<div class="back">
-			<a class="btn red" id="btnLogout">
+			<a class="btn red" href="/">
 				<i class="icon-caret-left"></i>
-				Logout
+				Home
 			</a>
 		</div>
 		<div class="room">
@@ -274,12 +281,8 @@
 		crossorigin=""
 	/>
 	<!-- Script -->
-	<script async type="module" src="/dist/js/userAuth-observer.js"></script>
 	<script async type="module" src="/dist/js/rooms-script.js"></script>
 
-	<!--PARTICLE JS-->
-	<script async src="dist/assets/lib/particles.min.js"></script>
-	<script defer src="dist/assets/lib/particlesjs-config.json"></script>
 
 	<!-- Drivejs -->
 	<link async rel="stylesheet" href="dist/css/driverjs-style.css" />

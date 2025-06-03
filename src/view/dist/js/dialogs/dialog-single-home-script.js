@@ -3,7 +3,6 @@ const startAloneMode = async (mode) => {
 	window.location.href = url.toString();
 };
 const openDialogSingle = async () => {
-	console.log(document.getElementById("dialogSelectMode").dataset.mode);
 	if (document.querySelector("[data-mode]").dataset.mode !== "single") return;
 	document.getElementById("dialog_single").showModal();
 };

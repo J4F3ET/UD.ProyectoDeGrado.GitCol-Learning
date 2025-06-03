@@ -1,5 +1,5 @@
-import {database} from "./firebase-service";
-import {defaultRepository} from "./utils.js";
+import { database } from "./firebase-service.js";
+import { defaultRepository } from "./utils.js";
 /**
  * roomCreate - Create a new room
  * @param {string} code : code of the room
@@ -127,11 +127,15 @@ async function roomGetAll() {
  */
 async function roomGetAllPublic() {
 	try {
-		const response = database.ref("rooms/").get();
-		const rooms = (await response).val();
+		const response = await database
+			.ref("rooms/")
+			.orderByChild("hidden")
+			.equalTo(false)
+			.get();
+		const rooms = response.val();
 		if (!rooms) return [];
 		return Object.keys(rooms)
-			.filter((roomId) => rooms[roomId].hidden == false)
+			.filter((roomId) => rooms[roomId].status == true)
 			.map((roomId) => {
 				return {
 					code: rooms[roomId].code,
@@ -185,8 +189,8 @@ async function roomRemoveMember(roomKey, userId) {
 		const room = (await roomSnapshot).val();
 		if (!room) return false;
 		const members = room.members || [];
-		const newMembers = members.filter((member) => member != userId);
-		await database.ref("rooms/" + roomKey).update({members: newMembers});
+		const newMembers = members.filter((member) => member !== userId);
+		await database.ref("rooms/" + roomKey).update({ members: newMembers });
 		return true;
 	} catch (error) {
 		console.error(error);
@@ -200,7 +204,7 @@ async function roomAddMember(roomKey, userId) {
 		if (!room || !room.status) return false;
 		const members = room.members || [];
 		const newMembers = members.concat(userId);
-		await database.ref("rooms/" + roomKey).update({members: newMembers});
+		await database.ref("rooms/" + roomKey).update({ members: newMembers });
 		return true;
 	} catch (error) {
 		console.error(error);

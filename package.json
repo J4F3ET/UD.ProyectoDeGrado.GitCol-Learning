@@ -8,13 +8,14 @@
 	},
 	"main": "server.js",
 	"scripts": {
-		"dev": "nodemon --exec babel-node server.js",
-		"start": "babel-node server.js",
+		"dev": "npm i && npm i -g nodemon && npm audit fix && nodemon --exec babel-node server.js",
+		"start": "npm i && npm audit fix && babel-node server.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"docs": "jsdoc -c ./docs/jsdoc.json"
 	},
 	"author": "Danna He <dhsepulvedas@udistrital.edu.co>(https://github.com/Chocolatamargo2607), Jafet Stiven <jslopezz@udistrital.edu.co> (https://github.com/J4F3ET)",
 	"license": "MIT",
+	"type": "module",
 	"dependencies": {
 		"ejs": "^3.1.9",
 		"express": "^4.18.2",

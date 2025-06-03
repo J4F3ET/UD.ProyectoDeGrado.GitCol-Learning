@@ -8,15 +8,31 @@ const optionsSwagger = {
   };
 // Metadatos de la api
 const options = {
-    definition: {
-        openapi: "3.0.0",
-        info: {
-            title: "GitCol-Learning",
-            version: "1.0.0",
-            description: "Documentación de la API de GitCol-Learning"},
-    },
-    apis: ["./src/controller/*.js","./src/model/*.js"]
-}
+	definition: {
+		openapi: "3.0.0",
+		info: {
+			title: "GitCol-Learning",
+			version: "1.0.0",
+			description: "Documentación de la API de GitCol-Learning",
+		},
+		components: {
+			securitySchemes: {
+				BearerAuth: {
+					type: "http",
+					scheme: "bearer",
+					bearerFormat: "JWT",
+				},
+			},
+		},
+		security: [
+			{
+				BearerAuth: [],
+			},
+		],
+	},
+	apis: ["./src/controller/*.js", "./src/model/*.js"],
+};
+
 
 // Doc en formato json
 const swaggerSpec = swaggerJSDoc(options);

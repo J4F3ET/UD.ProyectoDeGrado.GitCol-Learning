@@ -1,15 +1,16 @@
-import {Router} from "express";
-import {releaseVerificationMiddleware} from "./util/login-middleware .js";
-import {verifyUserInRoomMiddleware} from "./util/teamWorking-middleware.js";
+import { Router } from "express";
+import { releaseVerificationMiddleware } from "./util/login-middleware .js";
+import { verifyUserInRoomMiddleware } from "./util/teamWorking-middleware.js";
 import {
 	roomRemoveMember,
 	roomGet,
 	roomDelete,
 	roomUpdateStatus,
 } from "../model/room-service.js";
-import {auth} from "../model/firebase-service.js";
-import {HttpStatus} from "./util/httpStatus.js";
-import {parseToRoomObject} from "../model/utils.js";
+import { auth } from "../model/firebase-service.js";
+import { HttpStatus } from "./util/httpStatus.js";
+import { parseToRoomObject } from "../model/utils.js";
+import { getUserByAuthUid } from "../model/user-service.js";
 const router = Router();
 /**
  * @openapi
@@ -120,23 +121,26 @@ router.patch(
 	verifyUserInRoomMiddleware,
 	async (req, res) => {
 		try {
-			const user = auth.verifyIdToken(req.headers.cookie.split("=")[1]);
-			const removestatus = await roomRemoveMember(
-				req.query.room,
-				(
-					await user
-				).uid
-			);
+			const token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+			const { err, data } = await getUserByAuthUid(token.uid);
+			if (err || !data) {
+				return res.status(HttpStatus.NOT_FOUND).render("error", {
+					error: err,
+					message: "User not found",
+					status: HttpStatus.NOT_FOUND,
+				});
+			}
+			const removestatus = await roomRemoveMember(req.query.room, data.key);
 			const room = (await roomGet(req.query.room)).val();
 			if (!room.hasOwnProperty("members"))
 				roomUpdateStatus(req.query.room, false);
-			res.json({success: removestatus});
+			res.json({ success: removestatus });
 		} catch (error) {
-			render("error", {
+			res.status(HttpStatus.INTERNAL_SERVER_ERROR).render("error", {
 				error: error,
 				message: error.message,
 				status: HttpStatus.INTERNAL_SERVER_ERROR,
-			}).end();
+			});
 		}
 	}
 );

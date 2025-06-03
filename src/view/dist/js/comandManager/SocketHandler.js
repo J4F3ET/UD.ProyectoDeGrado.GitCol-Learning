@@ -9,11 +9,17 @@ export class SocketHandler {
 		this._remoteRepository = remoteRepository;
 		this.client = io();
 		this.observer = observer;
+		this.client.on("connect", () => {
+			console.log("✅ Socket connected to channel:", this._remoteRepository);
+		});
+		
 		this.client.on("updateRepository", (data) => {
+			console.log("Received updateRepository event with data:", data);
 			this.updateCommitsToRepository(data);
 		});
 		this.client.on("error", (error) => {
 			//LOGIC TO HANDLE ERROR
+			console.log("Socket error:", error);
 		});
 	}
 	async updateCommitsToRepository(data) {

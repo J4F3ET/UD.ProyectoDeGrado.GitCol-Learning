@@ -80,12 +80,19 @@ router.get("/rooms/fit", releaseVerificationMiddleware, async (req, res) => {
 	const room = await roomGetByCode(req.query.code);
 
 	if (!room) return res.sendStatus(404);
+	let token = null;
+	try {
+		token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+	} catch (error) {
+		res.sendStatus(HttpStatus.FORBIDDEN);
+	}
+	if (!token) return res.sendStatus(HttpStatus.FORBIDDEN);
+	const { err, data } = await getUserByAuthUid(token.uid);
 
-	const user = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+	if (err || !data.key || !data.email)
+		return res.sendStatus(HttpStatus.NOT_FOUND);
 
-	if (!user) return res.sendStatus(403);
-
-	const response = await roomAddMember(room, user.uid);
+	const response = await roomAddMember(room, data.uid);
 
 	if (!response) return res.sendStatus(500);
 
@@ -170,13 +177,18 @@ router.get("/rooms/code", releaseVerificationMiddleware, async (req, res) => {
  *         - cookieAuth: []
  */
 router.post("/rooms", releaseVerificationMiddleware, async (req, res) => {
-	const result = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
-	const response = await getUserByAuthUid(result.uid);
-	if (response.err || !response.data.key || !response.data.email) {
+	let token = null;
+	try {
+		token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+	} catch (error) {
+		return res.sendStatus(HttpStatus.FORBIDDEN);
+	}
+	const { err, data } = await getUserByAuthUid(token.uid);
+	if (err || !data.key || !data.email) {
 		return res.sendStatus(HttpStatus.NOT_FOUND);
 	}
-	const owner = response.data.email;
-	const members = [response.data.key];
+	const owner = data.email;
+	const members = [data.key];
 	const room = await roomCreate(
 		req.body.code,
 		req.body.description,
