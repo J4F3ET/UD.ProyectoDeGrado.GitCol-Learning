@@ -1,15 +1,13 @@
 // Guarda la respuesta de la pregunta
 export const saveConcept = async (response) => {
-	const { auth } = import("../firebase-config.js");
 	const logs =
 		getElementSessionStorage("log")?.filter((log) => log.tag == "comand") ?? [];
 	const newConcept = getNewConcept(response, logs);
 	const concepts = getElementSessionStorage("concept") || [];
 	const newConcepts = getNewConcepts(newConcept, concepts);
 	sessionStorage.setItem("concept", JSON.stringify(newConcepts));
-	if ((await auth).currentUser) {
-		saveResponseInDatabase(newConcepts);
-	}
+	const { auth } = await import("../firebase-config.js");
+	if (auth.currentUser) saveResponseInDatabase(newConcepts);
 };
 const getElementSessionStorage = (key) => {
 	return JSON.parse(sessionStorage.getItem(key)) || null;
@@ -26,5 +24,12 @@ const getNewConcepts = (newConcept, concepts) => {
 		: [...concepts, newConcept];
 };
 const saveResponseInDatabase = async (concepts) => {
-	
-}
+	const config = {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({ concepts }),
+	};
+	fetch("/aloneMode/user/update/concepts", config);
+};
