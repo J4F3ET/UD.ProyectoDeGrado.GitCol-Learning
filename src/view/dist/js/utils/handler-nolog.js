@@ -1,13 +1,13 @@
 // Guarda la respuesta de la pregunta
 export const saveConcept = async (response) => {
-	const { auth } = await import("../firebase-config.js");
+	const { auth } = import("../firebase-config.js");
 	const logs =
 		getElementSessionStorage("log")?.filter((log) => log.tag == "comand") ?? [];
 	const newConcept = getNewConcept(response, logs);
 	const concepts = getElementSessionStorage("concept") || [];
 	const newConcepts = getNewConcepts(newConcept, concepts);
 	sessionStorage.setItem("concept", JSON.stringify(newConcepts));
-	if (auth.currentUser) {
+	if ((await auth).currentUser) {
 		saveResponseInDatabase(newConcepts);
 	}
 };

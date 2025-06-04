@@ -11,9 +11,9 @@ export const openDialogQuestion = async () => {
 	});
 };
 
-const resolveDialog = async () => {
+const resolveDialog =  () => {
 	dialog_question.close();
-	return await responseSelect();
+	return responseSelect();
 };
 const responseSelect = async () => {
 	const selected = document.querySelector(
