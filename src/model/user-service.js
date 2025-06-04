@@ -162,7 +162,6 @@ export const getUserByAuthUid = async (uid) => {
 
 		const users = snapshot.val();
 		if (!users) return { err: true, data: null };
-		console.log("sas")
 		const { err, data } = await callbackFindUserByProviderUid(uid, users);
 		if (err || err == null || !data) return { err, data };
 		return { err: false, data };
