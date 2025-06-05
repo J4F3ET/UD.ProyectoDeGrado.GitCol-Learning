@@ -6,8 +6,7 @@ export const saveConcept = async (response) => {
 	const concepts = getElementSessionStorage("concept") || [];
 	const newConcepts = getNewConcepts(newConcept, concepts);
 	sessionStorage.setItem("concept", JSON.stringify(newConcepts));
-	const { auth } = await import("../firebase-config.js");
-	if (auth.currentUser) saveResponseInDatabase(newConcepts);
+	saveResponseInDatabase(newConcepts);
 };
 const getElementSessionStorage = (key) => {
 	return JSON.parse(sessionStorage.getItem(key)) || null;
@@ -24,6 +23,9 @@ const getNewConcepts = (newConcept, concepts) => {
 		: [...concepts, newConcept];
 };
 const saveResponseInDatabase = async (concepts) => {
+	if (!concepts || concepts.length === 0) return;
+	const { auth } = await import("../firebase-config.js");
+	if (!auth || !auth.currentUser) return;
 	const config = {
 		method: "POST",
 		headers: {
