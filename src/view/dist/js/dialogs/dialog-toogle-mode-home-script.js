@@ -1,19 +1,8 @@
 import { auth } from "../firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { sesionExpired } from "../login-script.js";
 let userExist = false;
 
-onAuthStateChanged(auth, async (user) => {
-	userExist = user ? true : false;
-	if (!user){
-		await fetch("/logout");
-		auth.signOut();
-		return
-	}	
-	const response = await fetch("/login/cookie");
-	if (response.ok) return;
-	sesionExpired();
-});
+onAuthStateChanged(auth, async (user) => userExist = user ? true : false);
 const dialogSelectMode = document.querySelector("#dialogSelectMode");
 const dialog = document.getElementById("dialogSelectMode");
 // Toogle mode
