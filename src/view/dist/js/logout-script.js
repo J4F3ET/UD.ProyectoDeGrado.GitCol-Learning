@@ -1,4 +1,3 @@
-import {auth} from "./firebase-config.js";
 export async function logout() {
 	const response = fetch("/logout", {
 		method: "GET",
@@ -6,6 +5,7 @@ export async function logout() {
 			"Content-Type": "application/json",
 		},
 	});
+	const {auth} = await import("./firebase-config.js");
 	auth.signOut();
 	return response;
 }
