@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { releaseVerificationMiddleware } from "./util/login-middleware .js";
 import { getConcept } from "../model/concept-service.js";
-import { userLogin, getUserByAuthUid } from "../model/user-service.js";
+import { userLogin, updateConceptUser } from "../model/user-service.js";
 import { auth } from "../model/firebase-service.js";
 
 const router = Router();
@@ -89,26 +89,29 @@ router.post(
 	"/aloneMode/user/update/concepts",
 	releaseVerificationMiddleware,
 	async (req, res) => {
-		let token = null;
+		let payload = null;
 		const { concepts } = req.body;
 		if (!concepts) return res.sendStatus(400);
 		try {
-			token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+			payload = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
 		} catch (error) {
 			console.log("❌ Error in aloneMode/user/update/concepts", error);
 			return res.status(500).render("error-screen", {
 				error: "Error in aloneMode/user/update/concepts",
 			});
 		}
-		if (!token) return res.sendStatus(401);
-		const { err, data: user } = await getUserByAuthUid(token.uid);
-		if (err || !user) {
+		if (!payload) return res.sendStatus(401);
+		const { err, data } = await updateConceptUser(payload, concepts);
+		if (err) {
 			console.log("❌ Error in aloneMode/user/update/concepts", err);
 			return res.status(403).render("error-screen", {
-				error: "User not found in aloneMode/user/update/concepts",
+				error: "Error in aloneMode/user/update/concepts",
 			});
 		}
-		user.concepts = concepts;
+		if (!data) return res.sendStatus(404);
+		res.json({
+			message: "Concepts updated successfully",
+		});
 
 		
 	}
