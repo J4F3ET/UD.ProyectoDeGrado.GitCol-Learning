@@ -203,3 +203,4 @@ $RECYCLE.BIN/
 package-lock.json
 
 .vscode
+*.cpuprofile
