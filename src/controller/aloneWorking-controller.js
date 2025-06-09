@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { releaseVerificationMiddleware } from "./util/login-middleware .js";
 import { getConcept } from "../model/concept-service.js";
-import { userLogin, updateConceptUser } from "../model/user-service.js";
+import {
+	userLogin,
+	updateConceptUser,
+	getUserByAuthUid,
+} from "../model/user-service.js";
 import { auth } from "../model/firebase-service.js";
 
 const router = Router();
@@ -56,21 +60,17 @@ router.get(
 	"/aloneMode/user/get/concepts",
 	releaseVerificationMiddleware,
 	async (req, res) => {
-		let userToken = null;
+		let payload = null;
 		try {
-			userToken = await auth.verifyIdToken(
-				req.headers.authorization.split(" ")[1]
-			);
+			payload = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
 		} catch (error) {
 			console.log("❌ Error in aloneMode/user/concepts", error);
 			return res.status(500).render("error-screen", {
 				error: "Error in aloneMode/user/concepts",
 			});
 		}
-		if (!userToken) return res.sendStatus(401);
-		const { err, data } = await userLogin(
-			req.headers.authorization.split(" ")[1]
-		);
+		if (!payload) return res.sendStatus(401);
+		const { err, data } = await getUserByAuthUid(payload.uid);
 		if (err) {
 			console.log("❌ Error in aloneMode/user/concepts", err);
 			return res.status(403).render("error-screen", {
@@ -112,8 +112,6 @@ router.post(
 		res.json({
 			message: "Concepts updated successfully",
 		});
-
-		
 	}
 );
 
