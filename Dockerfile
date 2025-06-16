@@ -1,6 +1,7 @@
-FROM node:lts-alpine
-WORKDIR /app
-COPY . /app
+FROM node:lts
+WORKDIR /gitcol-learning
+COPY . /gitcol-learning
 RUN npm install
+RUN npm audit fix
 EXPOSE 8080
-CMD [ "npm", "start" ]
+CMD [ "node","--run", "start" ]

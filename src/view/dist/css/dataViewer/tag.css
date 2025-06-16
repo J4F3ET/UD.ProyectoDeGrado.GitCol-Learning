@@ -1,34 +1,34 @@
 g.branch-tag > rect {
-    fill: #ffcc66fd;
-    stroke: #ebb000;
-    stroke-width: 1;
+	fill: #ffcc66fd;
+	stroke: #ebb000;
+	stroke-width: 1;
 }
 g.branch-tag.git-tag > rect {
-    fill: #7FC9FF;
-    stroke: #0026FF;
+	fill: #7fc9ff;
+	stroke: #0026ff;
 }
 
 g.branch-tag.remote-branch > rect {
-    fill: #CCC;
-    stroke: #888;
+	fill: #ccc;
+	stroke: #888;
 }
 g.branch-tag > text {
-    text-anchor: middle;
-    fill: #000;
-    font-size: var(--font-size-base);
-    font-family: Arial;
+	text-anchor: middle;
+	fill: #000;
+	font-size: var(--font-size-base);
+	font-family: Arial;
 }
 g.head-tag > rect {
-    fill: #a7ffa7;
-    stroke: #339900;
-    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.514));
-    stroke-width: 2;
+	fill: #a7ffa7;
+	stroke: #339900;
+	filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.514));
+	stroke-width: 2;
 }
 g.head-tag > text {
-    text-anchor: middle;
-    fill: #000;
-    font-size: var(--font-size-base);
-    font-family: Arial;
-    font-weight: bold;
-    text-transform: uppercase;
+	text-anchor: middle;
+	fill: #000;
+	font-size: var(--font-size-base);
+	font-family: Arial;
+	font-weight: bold;
+	text-transform: uppercase;
 }

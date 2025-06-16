@@ -1,326 +1,595 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <title>Git Col-Learning</title>
-        <link rel="shortcut icon" href="./dist/assets/fav-icon.ico" type="image/x-icon"/>
-        <!-- --------- BOX ICONS ---------- -->
-        <link href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css" rel="stylesheet" />
-        <!-- CSS -->
-        <link rel="stylesheet" href="dist/css/reset.css">
-        <link rel="stylesheet" href="dist/css/global.css">
-        <link rel="stylesheet" href="dist/css/home-style.css">
-        <link rel="stylesheet" href="dist/css/dialog-home-style.css">
-        <script src="./dist/js/banner.js"></script>
-    </head>
-    <body class="body scrollable">
-        <header class="home-header">
-            <a href="/" class="logo">Git Col-Learning<small>demo</small></a>
-            <i class='nes-icon bars' id="menu-icon"></i>
-            <nav class="home-navbar">
-                <a href="#home" class="item-navbar active-link">Home</a>
-                <a href="#overview" class="item-navbar">Overview</a>
-                <a href="#usage-models" class="item-navbar">Usage Modes</a>
-                <a href="#mision-vision" class="item-navbar">Mision & Vision</a>
-                <a href="#about" class="item-navbar">About us</a>
-                <button class="btn orange btn-dialog">START!</button>
-            </nav>
-        </header>
-        <!--HOME SECTION DESING-->
-        <section class="view-section-especial home-section" id="home">
-            <div class="container-home-img">
-                <img class="banner-home-img" src="dist/assets/img/home/logo.png" alt="">
-            </div>
-            <div class="content-home-section">
-                <h3>Welcome to... </h3>
-                <h1>The Adventure</h1>
-                <h3>¡You can <span class="multiple-text"></span></h3>
-                <p>Discover the power of Git in an exciting way!
-                    Welcome to our web platform designed for you to learn and practice the essential basics of Git.</p>
-                <div class="social-media">
-                    <a class="btn red github-link" href="https://github.com/J4F3ET/UD.ProyectoDeGrado.GitCol-Learning">
-                        <i class='nes-icon github' ></i>
-                    </a>
-                    <button class="btn orange btn-dialog">
-                        START!
-                    </button>
-                </div>
-            </div>
-        </section>
-        <!--OVERVIEW SECTION DESING-->
-        <section class="view-section overview-section" id="overview">
-            <div class="card">
-                <div class="overview-img">
-                    <img 
-                        loading="lazy" 
-                        src="dist/assets/img/home/cats.png" 
-                        alt="The magic cat of GitCol Learning"
-                    >
-                </div>
-                <div class="overview-content">
-                    <h2 class="heading">Application <span> Overview </span></h2>
-                    <p>Immerse yourself in an interactive learning world and unlock your version control skills.
-                        The best part? Our collaborative mode allows you to work as a team, taking your skills to the next level.
-                        Join us and make your Git journey epic!</p>
-                </div>
-            </div>
-        </section>
-        <!--USAGE MODELS DESING-->
-        <section class="view-section" id="usage-models">
-            <h2 class="heading">Usage Models</h2>
-        </section>
-        <!--MISION AND VISION SECTION DESING-->
-        <section id="mision-vision" class="view-section mision-vision-section" >
-            <!--MISION SECTION DESING-->
-            <div class="item-mision-vision-section">
-                <div class="container-mision-vision-img">
-                    <img 
-                        class="img-mision-vision deg-right"
-                        loading="lazy"
-                        src="https://i.redd.it/zym5pybotlja1.gif"
-                        alt="The computer show line code"
-                    >
-                </div>
-                <div class="content-mision-vision">
-                    <h2 class="heading">
-                        Mision of<span class="multiple-text"> proyect</span>
-                    </h2>
-                    <p>
-                        Facilitate learning of the Git tool through an interactive, accessible, and comprehensive platform, enabling students to enhance their version control skills through both individual and collaborative practice, while strengthening their technical capabilities in software development environments.
-                    </p>
-                </div>
-            </div>
-            <!--VISION SECTION DESING-->
-            <div class="item-mision-vision-section">
-                <div class="content-mision-vision">
-                    <h2 class="heading">
-                        Vision of<span class="multiple-text"> proyect</span>
-                    </h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-                </div>
-                <div class="container-mision-vision-img">
-                    <img 
-                        class="img-mision-vision deg-left"
-                        loading="lazy"
-                        src="https://38.media.tumblr.com/a401eaca1220428dc37379cbd7312e16/tumblr_nv44lndz1l1u6xnmoo1_1280.gif"
-                        alt="Person see the computer"
-                    >
-                </div>
-            </div>
-        </section>
-        <!--ABOUT US SECTION DESING-->
-        <section class="view-section about" id="about">
-            <h2 class="heading">About us</h2>
-            <div class="container_perfile_card">
-                <div class="perfile_card">
-                    <div class="perfile_card-photo">
-                        <img
-                            loading="lazy" 
-                            alt="Danna Sepulveda"
-                            src="https://i.pinimg.com/736x/35/2f/61/352f616d659e702365d3524580d2b9a8.jpg"
-                        >
-                    </div>
-                    <div class="perfile_card-title">Danna Sepulveda <br>
-                        <span>Fullstack dev</span>
-                    </div>
-                    <div class="perfile_card-socials">
-                        <button class="perfile_card-socials-btn github">
-                            <a href="https://github.com/Chocolatamargo2607">
-                                <i class="nes-icon github"></i>
-                            </a>
-                        </button>
-                        <button class="perfile_card-socials-btn linkedin">
-                            <a href="#">
-                                <i class="nes-icon linkedin"></i>
-                            </a>
-                            
-                        </button>
-                    </div>
-                </div>
-                <div class="perfile_card">
-                    <div class="perfile_card-photo">
-                        <img 
-                            src="https://i.pinimg.com/564x/f8/41/b0/f841b07404202d58bab4aec4a9680192.jpg" 
-                            alt="Jafet Lopez"
-                        >
-                    </div>
-                    <div class="perfile_card-title">Jafet Lopez <br>
-                        <span>Fullstack dev(Backend)</span>
-                    </div>
-                    <div class="perfile_card-socials">
-                        <button class="perfile_card-socials-btn github">
-                            <a href="https://github.com/J4F3ET">
-                                <i class="nes-icon github"></i>
-                            </a>
-                        </button>
-                        <button class="perfile_card-socials-btn linkedin">
-                            <a href="https://www.linkedin.com/in/jafet-lopez-zuñiga">
-                                <i class="nes-icon linkedin"></i>
-                            </a>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <div id="particles-js"></div>
-        <!--FOOTER SECTION DESING-->
-        <footer class="footer">
-            <div class="footer-text">
-                <p>Copyright &copy; 2024 by Jafet Lopez | All Rights Reserved.</p>
-                <p>Contact: gitcollearning@gmail.com</p>
-            </div>
-            <a class="btn orange" href="#home">
-                <strong>
-                    Up!<i class='nes-icon caret-up'></i>
-                </strong>
-            </a>
-        </footer>
-        <!-- --------- DIALOGS --------- -->
-        <!-- DIALO SELECT TO MODE -->
-        <dialog  id="dialogSelectMode" class="dialog" data-mode="multi" > 
-            <section class="view-section container_dialog">
-                <div class="btn_dialog_close">
-                    <button data-dialog="dialogSelectMode" class="close_dialog btn-times btn red">
-                        <i data-dialog="dialogSelectMode" class='nes-icon times'></i>
-                    </button>
-                </div>
-                <div class="section_dialog info">
-                    <div class="section_dialog_item">
-                        <h2 class="title_dialog">Select mode</h2>
-                        <p class="text_dialog">Choose the mode you want to use</p>
-                    </div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
+		<title>Git Col-Learning</title>
+		<link
+			defer
+			rel="shortcut icon"
+			href="/dist/assets/fav-icon.ico"
+			type="image/x-icon"
+		/>
+		<link rel="stylesheet" href="dist/css/reset.css" />
+		<link rel="stylesheet" href="dist/css/global.css" />
+		<link defer rel="stylesheet" href="dist/css/icons-global.css" />
+		<link defer rel="stylesheet" href="dist/css/cursor-global.css" />
+		<link defer rel="stylesheet" href="dist/css/font-global.css" />
+		<link defer rel="stylesheet" href="dist/css/home-style.css" />
+		<link async rel="stylesheet" href="dist/css/dialog-home-style.css" />
+		<link defer rel="stylesheet" href="dist/css/input-concept.css" />
+		<script async src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+		<script defer src="dist/js/home-script.js"></script>
+		<script
+			async
+			type="module"
+			src="dist/js/dialogs/dialog-toogle-mode-home-script.js"
+		></script>
+		<script async src="dist/js/dialogs/dialog-single-home-script.js"></script>
+		<script async src="dist/js/dialogs/dialog-login-home-script.js"></script>
+		<script defer type="module" src="dist/js/login-script.js"></script>
+		<script
+			defer
+			type="module"
+			src="dist/js/utils/btn-session-handler.js"
+		></script>
+		<!--BANNER JS-->
+		<script async src="/dist/js/banner.js"></script>
+	</head>
+	<body class="body scrollable">
+		<header class="home-header">
+			<div class="nav-wrapper">
+				<a href="/" class="logo">Git Col-Learning<br /><small>demo</small></a>
+				<i class="icon-bars" id="menu-icon"></i>
+				<nav class="home-navbar">
+					<a href="#home" class="item-navbar active-link">Home</a>
+					<a href="#overview" class="item-navbar">Overview</a>
+					<a href="#usage-models" class="item-navbar">Usage Modes</a>
+					<a href="#mision-vision" class="item-navbar">Mision & Vision</a>
+					<a href="#about" class="item-navbar">About us</a>
+					<div>
+						<button class="btn orange btn-dialog">START!</button>
+						<button id="btn_login" class="btn green btn-dialog-login">
+							Login
+						</button>
+						<button
+							disabled
+							style="display: none"
+							id="btnLogout"
+							class="btn red"
+						>
+							Logout
+						</button>
+					</div>
+				</nav>
+			</div>
+		</header>
+		<!--HOME SECTION DESING-->
+		<section class="view-section-especial home-section" id="home">
+			<div class="container-home-img">
+				<img
+					class="banner-home-img"
+					src="dist/assets/img/home/logo.png"
+					alt=""
+				/>
+			</div>
+			<div class="content-home-section">
+				<h3>Welcome to...</h3>
+				<h1>The Adventure</h1>
+				<h3>¡You can <span class="multiple-text"></span></h3>
+				<p>
+					Discover the power of Git in an exciting way! Welcome to our web
+					platform designed for you to learn and practice the essential basics
+					of Git.
+				</p>
+				<div class="social-media">
+					<a
+						class="btn red github-link"
+						href="https://github.com/J4F3ET/UD.ProyectoDeGrado.GitCol-Learning"
+					>
+						<i class="icon-github"
+							><span class="path1"></span><span class="path2"></span
+							><span class="path3"></span><span class="path4"></span
+							><span class="path5"></span
+						></i>
+					</a>
+					<button class="btn orange btn-dialog">START!</button>
+				</div>
+			</div>
+		</section>
+		<!--OVERVIEW SECTION DESING-->
+		<section class="view-section overview-section" id="overview">
+			<h2 class="heading animate-text">
+				Application <span class="multiple-text">Overview</span>
+			</h2>
+			<div class="overview-container">
+				<div class="overview-img">
+					<img
+						loading="lazy"
+						src="dist/assets/img/home/git-branchs.png"
+						alt="The representation of git branchs in the application"
+					/>
+				</div>
+				<div class="overview-content">
+					<p>
+						Immerse yourself in an interactive learning world and unlock your
+						version control skills. The best part? Our collaborative mode allows
+						you to work as a team, taking your skills to the next level. Join us
+						and make your Git journey epic!
+					</p>
+				</div>
+			</div>
+		</section>
+		<!--USAGE MODELS DESING-->
+		<section class="view-section usage-models-section" id="usage-models">
+			<h2 class="heading animate-text">
+				Usage <span class="multiple-text">Models</span>
+			</h2>
+			<div class="card usage-models-container">
+				<div class="usage-models-item usage-models-single">
+					<div class="usage-models-img">
+						<img
+							class="img_cat_with"
+							loading="lazy"
+							src="dist/assets/img/home/cat_white.webp"
+							alt="The magic cat of GitCol Learning"
+						/>
+					</div>
+					<h3 class="heading">
+						<span class="multiple-text">Single </span>User Mode
+					</h3>
+					<div class="usage-models-content">
+						<p>
+							This mode is perfect for individuals who want to learn Git and
+							version control. It is designed to be easy to use and accessible
+							to beginners. The single user mode allows you to work on a single
+							repository, making it ideal for personal projects or small teams.
+						</p>
+					</div>
+				</div>
+				<div class="usage-models-item usage-models-multi">
+					<div class="usage-models-img">
+						<img
+							class="img_cats_with"
+							loading="lazy"
+							src="dist/assets/img/home/cats.webp"
+							alt="The magic cat of GitCol Learning"
+						/>
+					</div>
+					<h3 class="heading">
+						<span class="multiple-text">Multi </span> User Mode
+					</h3>
+					<div class="usage-models-content">
+						<p>
+							This mode is perfect for teams who want to collaborate on a
+							project using Git. It is designed to be easy to use and accessible
+							to beginners. The coperative mode allows you to work on multiple
+							repositories, making it ideal for teams or large projects.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!--MISION AND VISION SECTION DESING-->
+		<section
+			id="mision-vision"
+			class="container-mision-vision-section view-section"
+		>
+			<!--MISION SECTION DESING-->
+			<div class="item-mision-vision-section">
+				<div class="container-mision-vision-img container-img-mision">
+					<img
+						class="img-mision-vision"
+						loading="lazy"
+						src="dist/assets/img/home/mision-vision-1.webp"
+						alt="Computer room with a presentation of the git col learning application on a large screen."
+					/>
+				</div>
+				<div class="card content-mision-vision">
+					<h2 class="heading">
+						<span class="multiple-text">Mision</span> of proyect
+					</h2>
+					<p>
+						Facilitate learning of the Git tool through an interactive,
+						accessible, and comprehensive platform, enabling students to enhance
+						their version control skills through both individual and
+						collaborative practice, while strengthening their technical
+						capabilities in software development environments.
+					</p>
+				</div>
+			</div>
+			<!--VISION SECTION DESING-->
+			<div class="item-mision-vision-section">
+				<div class="content-mision-vision card">
+					<h2 class="heading">
+						<span class="multiple-text"> Vision </span> of proyect
+					</h2>
+					<p>
+						To be the preferred platform for students and educators to start
+						learning Git, facilitating the process of learning and practicing in
+						the best possible way Git, facilitating the process of learning and
+						practicing in the best possible way.
+					</p>
+				</div>
+				<div class="container-mision-vision-img container-img-vision">
+					<img
+						class="img-mision-vision"
+						loading="lazy"
+						src="dist/assets/img/home/mision-vision-2.webp"
+						alt="Room of computer, with a person see the computer"
+					/>
+				</div>
+			</div>
+		</section>
+		<!--ABOUT US SECTION DESING-->
+		<section class="view-section about" id="about">
+			<h2 class="heading animate-text">
+				About <span class="multiple-text">us</span>
+			</h2>
+			<div class="container_perfile_card">
+				<p>
+					In our project, we realized that many technology students struggle
+					with using Git, an essential tool for teamwork in software projects.
+					This limitation hinders their ability to collaborate and deliver
+					quality work. That’s why we created this application: to make learning
+					Git easier and help students master this fundamental skill, enhancing
+					their performance in academic projects and preparing them for the
+					professional world.
+				</p>
+				<div class="perfile_card">
+					<div class="perfile_card-photo">
+						<img
+							loading="lazy"
+							alt="Danna Sepulveda"
+							src="https://i.pinimg.com/736x/35/2f/61/352f616d659e702365d3524580d2b9a8.jpg"
+						/>
+					</div>
+					<div class="perfile_card-title">Danna Sepulveda</div>
+					<div class="perfile_card-socials">
+						<a
+							class="perfile_card-socials-btn github"
+							href="https://github.com/Chocolatamargo2607"
+						>
+							<i class="icon-github"
+								><span class="path1"></span><span class="path2"></span
+								><span class="path3"></span><span class="path4"></span
+								><span class="path5"></span
+							></i>
+						</a>
 
-                    <div class="section_dialog_item group_buttons_dialog no-wrap-buttons">
-                        <button class="btn_dialog_coursel">
-                            <i data-orientation="left" class='nes-icon caret-left  btn arrow'></i>
-                        </button>
-                        <div class="btn_dialog_coursel">
-                            <h3 class="subtitle_mode dialog_block_course">
-                                Single user mode
-                            </h3>
-                        </div>
-                        <button class="btn_dialog_coursel">
-                            <i data-orientation="right" class='nes-icon caret-right btn arrow' ></i>
-                        </button>
-                    </div>
-                    <div class="section_dialog_item">
-                        <button 
-                            id="btn_select_mode"
-                            class="btn_dialog btn_init btn red"
-                        >
-                            Start!
-                        </button>
-                    </div>
-                </div>
-                <div class="section_dialog img">
-                    <div class="section_dialog_item img dialog_block_img">
-                        <img loading="lazy" class="img_cat single" src="dist/assets/img/home/cat_white.png" alt="">
-                    </div>  
-                </div>
-            </section>
-        </dialog>
-        <!-- END DIALOG SELECT TO MODE -->
+						<a class="perfile_card-socials-btn linkedin" href="#">
+							<i class="icon-linkedin white"></i>
+						</a>
+					</div>
+				</div>
+				<div class="perfile_card">
+					<div class="perfile_card-photo">
+						<img
+							src="dist/assets/img/home/jafet.webp"
+							alt="Jafet Lopez"
+							lazy="loading"
+						/>
+					</div>
+					<div class="perfile_card-title">Jafet Lopez</div>
+					<div class="perfile_card-socials">
+						<a
+							class="perfile_card-socials-btn github"
+							href="https://github.com/J4F3ET"
+						>
+							<i class="icon-github"
+								><span class="path1"></span><span class="path2"></span
+								><span class="path3"></span><span class="path4"></span
+								><span class="path5"></span
+							></i>
+						</a>
 
-        <!-- DIALOG SINGLE MODE  -->
-        <dialog  id="dialog_single" class="dialog second">
-            <section class="view-section container_dialog">
-                <div class="btn_dialog_close">
-                    <button  data-dialog="dialog_single" class="close_dialog btn-times btn red">
-                        <i data-dialog="dialog_single" class='nes-icon times'></i>
-                    </button>
-                </div>
-                <div class="section_dialog info">
-                    <div class="section_dialog_item">
-                        <h2 class="title_dialog">Single mode</h2>
-                        <p class="text_dialog">Select type to use</p>
-                    </div>
-                    <div class="section_dialog_item info_mode scrollable dialog_block_info">
-                        GitCol Learning: No Registration Required, Embrace Flexibility in Single User Mode
-                    </div>
-                    <div class="section_dialog_item ">
-                        <a href="/aloneMode" class="btn_init btn red">git init</a>
-                    </div>
-                </div>
-                <div class="section_dialog img">
-                    <div class="section_dialog_item img dialog_block_img">
-                        <img loading="lazy" class="img_cat single" src="dist/assets/img/home/cat_white.png" alt="">
-                    </div>  
-                </div>
-            </section>
-        </dialog>
-        <!-- END DIALOG SINGLE MODE -->
+						<a
+							class="perfile_card-socials-btn linkedin"
+							href="https://www.linkedin.com/in/jafet-lopez-zuñiga"
+						>
+							<i class="icon-linkedin"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</section>
+		<div id="particles-js"></div>
+		<!--FOOTER SECTION DESING-->
+		<footer class="footer">
+			<div class="footer-text">
+				<p>
+					Copyright &copy; <%= new Date().getFullYear() %> by Jafet Lopez | All
+					Rights Reserved.
+				</p>
+				<p>Contact: gitcollearning@gmail.com</p>
+			</div>
+			<a class="btn orange" href="#home">
+				<strong> Up!<i class="icon-caret-up white"></i> </strong>
+			</a>
+		</footer>
+		<!-- --------- DIALOGS --------- -->
+		<!-- DIALO SELECT TO MODE -->
+		<dialog id="dialogSelectMode" class="dialog unlock" data-mode="single">
+			<section class="view-section container_dialog">
+				<div class="btn_dialog_close">
+					<button
+						id="btn_close_select_mode"
+						data-dialog="dialogSelectMode"
+						class="close_dialog btn-times btn red"
+					>
+						<i data-dialog="dialogSelectMode" class="icon-times white"></i>
+					</button>
+				</div>
+				<div class="section_dialog info">
+					<div class="section_dialog_item">
+						<h2 class="title_dialog">Select mode</h2>
+						<p class="text_dialog">Choose the mode you want to use</p>
+						<span id="dialog_span" class="unlock">I need to login</span>
+					</div>
 
-        <!-- DIALOG MULTI MODE  -->
-        <dialog  id="dialog_multi" class="dialog second">
-            <section class="view-section container_dialog">
-                <div class="btn_dialog_close">
-                    <button data-dialog="dialog_multi" class="close_dialog btn-times  btn red">
-                        <i data-dialog="dialog_multi" class='nes-icon times'></i>
-                    </button>
-                </div>
-                <div class="section_dialog info">
-                    <div class="section_dialog_item">
-                        <h2 class="title_dialog">Multi mode</h2>
-                        <p class="text_dialog">Select a supplier to log in</p>
-                    </div>
-                    <div class="section_dialog_item group_buttons_dialog">
-                        <button
-                            id="googleLogin"
-                            data-dialog="dialog_multi"
-                            class="item_dialog close_dialog btn orange"
-                        >
-                            <div class="icon-provider-container-dialog">
-                                <svg width="64px" height="64px" viewBox="-2 -2 24.00 24.00" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>google [#178]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-300.000000, -7399.000000)" fill="#000000"> <g id="icons" transform="translate(56.000000, 160.000000)"> <path d="M263.821537,7247.00386 L254.211298,7247.00386 C254.211298,7248.0033 254.211298,7250.00218 254.205172,7251.00161 L259.774046,7251.00161 C259.560644,7252.00105 258.804036,7253.40026 257.734984,7254.10487 C257.733963,7254.10387 257.732942,7254.11086 257.7309,7254.10986 C256.309581,7255.04834 254.43389,7255.26122 253.041161,7254.98137 C250.85813,7254.54762 249.130492,7252.96451 248.429023,7250.95364 C248.433107,7250.95064 248.43617,7250.92266 248.439233,7250.92066 C248.000176,7249.67336 248.000176,7248.0033 248.439233,7247.00386 L248.438212,7247.00386 C249.003881,7245.1669 250.783592,7243.49084 252.969687,7243.0321 C254.727956,7242.65931 256.71188,7243.06308 258.170978,7244.42831 C258.36498,7244.23842 260.856372,7241.80579 261.043226,7241.6079 C256.0584,7237.09344 248.076756,7238.68155 245.090149,7244.51127 L245.089128,7244.51127 C245.089128,7244.51127 245.090149,7244.51127 245.084023,7244.52226 L245.084023,7244.52226 C243.606545,7247.38565 243.667809,7250.75975 245.094233,7253.48622 C245.090149,7253.48921 245.087086,7253.49121 245.084023,7253.49421 C246.376687,7256.0028 248.729215,7257.92672 251.563684,7258.6593 C254.574796,7259.44886 258.406843,7258.90916 260.973794,7256.58747 C260.974815,7256.58847 260.975836,7256.58947 260.976857,7256.59047 C263.15172,7254.63157 264.505648,7251.29445 263.821537,7247.00386" id="google-[#178]"> </path> </g> </g> </g> </g></svg>
-                                <p>Gmail</p>
-                            </div>
-                        </button>
-                        <button
-                            id="microsoftLogin"
-                            data-dialog="dialog_multi"
-                            class="item_dialog close_dialog btn orange"
-                        >
-                            <div class="icon-provider-container-dialog">
-                                <svg width="64px" height="64px" viewBox="0 0 24.00 24.00" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>microsoft</title> <rect width="24" height="24" fill="none"></rect> <path d="M2,3h9v9H2V3m9,19H2V13h9v9M21,3v9H12V3h9m0,19H12V13h9Z"></path> </g></svg>
-                                <p>Microsoft</p>
-                            </div>
-                        </button>
-                        <button
-                            id="githubLogin"
-                            data-dialog="dialog_multi"
-                            class="item_dialog close_dialog btn orange"
-                        >
-                            <div class="icon-provider-container-dialog">
-                                <svg width="64px" height="64px" viewBox="0 0 20.00 20.00" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>github [#142]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -7559.000000)" fill="#000000"> <g id="icons" transform="translate(56.000000, 160.000000)"> <path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399" id="github-[#142]"> </path> </g> </g> </g> </g></svg>
-                                <p>GitHub</p>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                <div class="section_dialog img">
-                    <div class="section_dialog_item img dialog_block_img">
-                        <img loading="lazy" class="img_cat multi" src="dist/assets/img/home/cats.png" alt="Multi user mode">
-                    </div>  
-                </div>
-            </section>
-        </dialog>
-        <!-- END DIALOG MULTI MODE -->
-        <!-- --------- END DIALOGS ---------- -->
-        <!-- --------- SCROLL REVEAL ---------- -->
-        <!--SCROLL REVEAL-->
-        <script src="https://unpkg.com/scrollreveal"></script>
-        <!--TYPED JS-->
-        <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-        <!--CUSTOM JS-->
-        <script src="dist/js/dialogs-home-script.js"></script>
-        <script src="dist/js/home-script.js"></script>
-        <script type="module" src="dist/js/login-script.js"></script>
-        <!--PARTICLE JS-->
-        <script src="dist/assets/lib/particles.min.js"></script>
-        <script src="dist/assets/lib/particlesjs-config.json"></script>
-        <!--OBSERVER Auth Observer-->
-        <script type="module" src="dist/js/userNotAuth-observer.js"></script>
-        
-    </body>
+					<div class="section_dialog_item group_buttons_dialog no-wrap-buttons">
+						<button class="btn_dialog_coursel">
+							<i
+								data-orientation="left"
+								class="icon-caret-left white btn arrow"
+							></i>
+						</button>
+						<div class="btn_dialog_coursel">
+							<h3 class="subtitle_mode dialog_block_course">Single mode</h3>
+						</div>
+						<button class="btn_dialog_coursel">
+							<i
+								data-orientation="right"
+								class="icon-caret-right white btn arrow"
+							></i>
+						</button>
+					</div>
+					<div class="section_dialog_item">
+						<button
+							id="btn_select_mode"
+							class="btn_dialog btn_init btn red unlock"
+						>
+							Start!
+						</button>
+					</div>
+				</div>
+				<div class="section_dialog img">
+					<div class="section_dialog_item img dialog_block_img">
+						<img
+							id="img_cat_single"
+							loading="lazy"
+							class="img_cat single"
+							src="dist/assets/img/home/cat_white.webp"
+							alt=""
+						/>
+						<img
+							id="img_cat_multi"
+							style="display: none"
+							class="img_cat single lock"
+							src="dist/assets/img/home/cats.webp"
+							alt=""
+						/>
+					</div>
+				</div>
+			</section>
+		</dialog>
+		<!-- END DIALOG SELECT TO MODE -->
+		<!-- DIALOG LOGIN -->
+		<dialog id="dialog_login" data-dialog="login" class="dialog second">
+			<section class="view-section container_dialog">
+				<div class="btn_dialog_close">
+					<button
+						id="btn_close_login"
+						data-dialog="dialog_login"
+						class="close_dialog btn-times btn red"
+					>
+						<i data-dialog="dialog_multi" class="icon-times white"></i>
+					</button>
+				</div>
+				<div class="section_dialog info">
+					<div class="section_dialog_item">
+						<h2 class="title_dialog">Login:</h2>
+						<p class="text_dialog">Select a supplier to log in</p>
+					</div>
+					<div class="section_dialog_item group_buttons_dialog">
+						<button
+							id="googleLogin"
+							data-dialog="dialog_multi"
+							class="item_dialog close_dialog btn orange"
+						>
+							<div
+								data-dialog="dialog_multi"
+								class="icon-provider-container-dialog"
+							>
+								<p data-dialog="dialog_multi">Gmail</p>
+							</div>
+						</button>
+						<button
+							id="microsoftLogin"
+							data-dialog="dialog_multi"
+							class="item_dialog close_dialog btn orange"
+						>
+							<div
+								data-dialog="dialog_multi"
+								class="icon-provider-container-dialog"
+							>
+								<p data-dialog="dialog_multi">Microsoft</p>
+							</div>
+						</button>
+						<button
+							id="githubLogin"
+							data-dialog="dialog_multi"
+							class="item_dialog close_dialog btn orange"
+						>
+							<div
+								data-dialog="dialog_multi"
+								class="icon-provider-container-dialog"
+							>
+								<p data-dialog="dialog_multi">GitHub</p>
+							</div>
+						</button>
+					</div>
+				</div>
+				<div class="section_dialog img">
+					<div class="section_dialog_item img dialog_block_img">
+						<img
+							defer
+							loading="lazy"
+							class="img_cat multi"
+							src="dist/assets/img/home/cats.webp"
+							alt="Multi user mode"
+						/>
+					</div>
+				</div>
+			</section>
+		</dialog>
+		<!-- END DIALOG LOGIN -->
+		<!-- DIALOG SINGLE MODE  -->
+		<dialog id="dialog_single" class="dialog second">
+			<section class="view-section container_dialog">
+				<div class="btn_dialog_close">
+					<button
+						id="btn_close_single"
+						data-dialog="dialog_single"
+						class="close_dialog btn-times btn red"
+					>
+						<i data-dialog="dialog_single" class="icon-times white"></i>
+					</button>
+				</div>
+				<div class="section_dialog info">
+					<div class="section_dialog_item">
+						<h2 class="title_dialog">Single mode</h2>
+						<p class="text_dialog">Select type to use</p>
+					</div>
+					<div
+						class="section_dialog_item info_mode scrollable dialog_block_info"
+					>
+						GitCol Learning: No Registration Required, Embrace Flexibility in
+						Single User Mode
+					</div>
+					<div class="input_selection_concept">
+						<select id="select_concept" class="input_concept">
+							<option value="initialize-repository">
+								initialize repository
+							</option>
+							<option value="first-commit">first commit</option>
+							<option value="view-commit-history">view commit history</option>
+							<option value="create-switch-branch">
+								create & switch branch
+							</option>
+							<option value="delete-rename-branch">
+								delete & rename branch
+							</option>
+							<option value="merge-branches">merge branches</option>
+							<option value="limited-commit-log">limited commit log</option>
+							<option value="git-help">read documentation</option>
+							<option value="list-branches">view branches</option>
+							<option value="switch-branches">switch branches</option>
+						</select>
+					</div>
+					<div class="section_dialog_item">
+						<button id="btn_start_alone_mode" class="btn_init btn red unlock">
+							Start!
+						</button>
+					</div>
+				</div>
+				<div class="section_dialog img">
+					<div class="section_dialog_item img dialog_block_img">
+						<img
+							loading="lazy"
+							class="img_cat single"
+							src="dist/assets/img/home/cat_white.webp"
+							alt=""
+						/>
+					</div>
+				</div>
+			</section>
+		</dialog>
+		<!-- END DIALOG SINGLE MODE -->
+
+		<!-- DIALOG MULTI MODE  -->
+		<!-- <dialog id="dialog_multi" class="dialog">
+			<section class="view-section container_dialog blur">
+				<div class="btn_dialog_close exeption-blur">
+					<button
+						id="btn_close_multi"
+						data-dialog="dialog_multi"
+						class="close_dialog btn-times btn red"
+					>
+						<i data-dialog="dialog_multi" class="icon-times white"></i>
+					</button>
+				</div>
+				<div class="section_dialog info">
+					<div class="section_dialog_item">
+						<h2 class="title_dialog">Multi mode</h2>
+						<p class="text_dialog">Select a supplier to log in</p>
+					</div>
+					<div class="section_dialog_item group_buttons_dialog">
+						<button
+							id="googleLogin"
+							data-dialog="dialog_multi"
+							class="item_dialog close_dialog btn orange"
+						>
+							<div
+								data-dialog="dialog_multi"
+								class="icon-provider-container-dialog"
+							>
+								<p data-dialog="dialog_multi">Gmail</p>
+							</div>
+						</button>
+						<button
+							id="microsoftLogin"
+							data-dialog="dialog_multi"
+							class="item_dialog close_dialog btn orange"
+						>
+							<div
+								data-dialog="dialog_multi"
+								class="icon-provider-container-dialog"
+							>
+								<p data-dialog="dialog_multi">Microsoft</p>
+							</div>
+						</button>
+						<button
+							id="githubLogin"
+							data-dialog="dialog_multi"
+							class="item_dialog close_dialog btn orange"
+						>
+							<div
+								data-dialog="dialog_multi"
+								class="icon-provider-container-dialog"
+							>
+								<p data-dialog="dialog_multi">GitHub</p>
+							</div>
+						</button>
+					</div>
+				</div>
+				<div class="section_dialog img">
+					<div class="section_dialog_item img dialog_block_img">
+						<img
+							loading="lazy"
+							class="img_cat multi"
+							src="dist/assets/img/home/cats.webp"
+							alt="Multi user mode"
+						/>
+					</div>
+				</div>
+			</section>
+		</dialog> -->
+		<!-- END DIALOG MULTI MODE -->
+		<!-- --------- END DIALOGS ---------- -->
+		<!-- --------- SCROLL REVEAL ---------- -->
+		<!--TYPED JS-->
+
+		<!--CUSTOM JS-->
+		<script defer src="dist/js/dialogs/dialog-multi-home-script.js"></script>
+
+		<!--PARTICLE JS-->
+		<script  src="dist/assets/lib/particles.min.js"></script>
+		<script  src="dist/assets/lib/particlesjs-config.json"></script>
+	</body>
 </html>

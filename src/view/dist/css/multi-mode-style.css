@@ -1,61 +1,60 @@
-.repositories-container{
-    width: 100%;
-    height: 100%;
+.repositories-container {
+	width: 100%;
+	height: 100%;
 }
-.hidden-repository{
-    animation: none;
-    display: none;
+.hidden-repository {
+	animation: none;
+	display: none;
 }
-.show-repository{
-    animation: none;
-    display: block;
+.show-repository {
+	animation: none;
+	display: block;
 }
-.hidden-repository{
-    animation: hidden-repository ease-in-out 0.5s forwards;
+.hidden-repository {
+	animation: hidden-repository ease-in-out 0.5s forwards;
 }
-.show-repository{
-    animation: show-repository ease-in-out 0.5s forwards;
+.show-repository {
+	animation: show-repository ease-in-out 0.5s forwards;
 }
-.btn-only-icon{
-    width: min-content;
-    height: min-content;
+.btn-only-icon {
+	width: min-content;
+	height: min-content;
 }
 @keyframes hidden-repository {
-    0%{
-        opacity: 1;
-        transform:translateX(0);
-        position: relative;
-    }
-    100%{
-        opacity: 0;
-        display: none;
-        transform:translateX(-100%);
-        position: fixed;
-    }
+	0% {
+		opacity: 1;
+		transform: translateX(0);
+		position: relative;
+	}
+	100% {
+		opacity: 0;
+		display: none;
+		transform: translateX(-100%);
+		position: fixed;
+	}
 }
 @keyframes show-repository {
-    0%{
-        opacity: 0;
-        transform:translateX(50%);
-        position: fixed;
-    }
-    100%{
-        opacity: 1;
-        position: relative;
-        transform:translateX(0);
-        display: block;
-    }
+	0% {
+		opacity: 0;
+		transform: translateX(50%);
+		position: fixed;
+	}
+	100% {
+		opacity: 1;
+		position: relative;
+		transform: translateX(0);
+		display: block;
+	}
 }
 @media screen and (max-width: 1106px) {
-    
-    .repositories-container {
-        height: 85%;
-    }
-    .container-help-and-svg{
-        height: fit-content;
-    }
-    .container-svg>svg{
-        height: 99vh;
-        width: 100vw;
-    }
+	.repositories-container {
+		height: 85%;
+	}
+	.container-help-and-svg {
+		height: fit-content;
+	}
+	.container-svg > svg {
+		height: 99vh;
+		width: 100vw;
+	}
 }

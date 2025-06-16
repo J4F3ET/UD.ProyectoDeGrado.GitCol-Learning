@@ -1,6 +1,10 @@
+import { HttpStatus } from "./httpStatus.js";
 export const errorMiddleware = (err, req, res, next) => {
-    const status = err.status || 500;
-    res.status(status);
-    res.render("error", { error: err, message: err.message, status});
-    res.end();
-}
+	res.status(err.status??HttpStatus.BAD_REQUEST);
+	res.render("error", {
+		error: err,
+		message: err.message,
+		status: err.status ?? HttpStatus.BAD_REQUEST,
+	});
+	res.end();
+};

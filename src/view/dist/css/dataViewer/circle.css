@@ -1,48 +1,48 @@
 circle.commit {
-    fill: rgba(255, 165, 81, 0.5);
-    stroke: var(--orange-color);
-    filter: drop-shadow(0px 0px 3px rgba(68, 68, 68, 0.514));
-    stroke-width: 2px;
-    transition: cy 0.5s;
-    transition: fill 0.2s ease-in-out;
+	fill: rgba(255, 165, 81, 0.5);
+	stroke: var(--orange-color);
+	filter: drop-shadow(0px 0px 3px rgba(68, 68, 68, 0.514));
+	stroke-width: 2px;
+	transition: cy 0.5s;
+	transition: fill 0.2s ease-in-out;
 }
 circle.commit.detached-head {
-    fill: #1e222983;
-    stroke: #ff4949;
-    stroke-dasharray: 8, 8;
-    stroke-width: 3px;
-    transition: stroke 0.5s ease-in-out;
+	fill: #1e222983;
+	stroke: #ff4949;
+	stroke-dasharray: 8, 8;
+	stroke-width: 3px;
+	transition: stroke 0.5s ease-in-out;
 }
 circle.commit.detached-head.checked-out {
-    stroke: #89f789;
-    fill: #1e222983;
+	stroke: #89f789;
+	fill: #1e222983;
 }
 circle.commit.checked-out {
-    fill: #89f7899d;
-    stroke: #339900bd;
-    stroke-width: 3px;
-    animation: drop 0.5s ease-in-out;
+	fill: #89f7899d;
+	stroke: #339900bd;
+	stroke-width: 3px;
+	animation: drop 0.5s ease-in-out;
 }
 circle.commit.logging {
-    stroke: #0074e7b9;
-    fill: #009beec2;
+	stroke: #0074e7b9;
+	fill: #009beec2;
 }
 @keyframes drop {
-    0% {
-        r: 0;
-    }
-    25% {
-        r: 5;
-    }
-    50% {
-        r: 15;
-    }
-    75% {
-        r: 18;
-    }
-    100% {
-        r: 20;
-    }
+	0% {
+		r: 0;
+	}
+	25% {
+		r: 5;
+	}
+	50% {
+		r: 15;
+	}
+	75% {
+		r: 18;
+	}
+	100% {
+		r: 20;
+	}
 }
 
 /* COSAS QUE NO SE USAN */

@@ -6,36 +6,46 @@
 		<title>Col-Learning</title>
 		<link
 			rel="shortcut icon"
-			href="./dist/assets/fav-icon.ico"
+			href="/dist/assets/fav-icon.ico"
 			type="image/x-icon"
 		/>
 		<!-- --------- BOX ICONS ---------- -->
-        <link href="https://unpkg.com/nes.icons@latest/css/nes-icons.min.css" rel="stylesheet" />
+        
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
 		<!-- CSS -->
 		<link rel="stylesheet" href="dist/css/reset.css" />
-		<link rel="stylesheet" href="dist/css/global.css">
-		
-		<link rel="stylesheet" href="dist/css/driverjs-style.css">
-		<link rel="stylesheet" href="dist/css/multi-mode-style.css">
-        <link rel="stylesheet" href="dist/css/work-style.css">
-		
-        <link rel="stylesheet" href="dist/css/dataViewer/elementSVG.css">
-        <link rel="stylesheet" href="dist/css/dataViewer/circle.css">
-        <link rel="stylesheet" href="dist/css/dataViewer/line.css">
-        <link rel="stylesheet" href="dist/css/dataViewer/tag.css">
-        <link rel="stylesheet" href="dist/css/dataViewer/text.css">
-        <link rel="stylesheet" href="dist/css/dataViewer/log.css">
+		<link defer rel="stylesheet" href="dist/css/global.css" />
+		<link defer rel="stylesheet" href="dist/css/font-global.css" />
+		<link rel="stylesheet" href="dist/css/icons-global.css" />
+		<link async rel="stylesheet" href="dist/css/cursor-global.css" />
 
-
-        <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
-		<script src="./dist/js/banner.js"></script>
+		
+		<link defer rel="stylesheet" href="dist/css/multi-mode-style.css">
+        <link async rel="stylesheet" href="dist/css/work-style.css">
+		
+        <link async rel="stylesheet" href="dist/css/dataViewer/elementSVG.css">
+        <link async rel="stylesheet" href="dist/css/dataViewer/circle.css">
+        <link async rel="stylesheet" href="dist/css/dataViewer/line.css">
+        <link async rel="stylesheet" href="dist/css/dataViewer/tag.css">
+        <link async rel="stylesheet" href="dist/css/dataViewer/text.css">
+        <link async rel="stylesheet" href="dist/css/dataViewer/log.css">
+		<!-- Drivejs -->
+		<link async rel="stylesheet" href="dist/css/driverjs-style.css">
+		<script async src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+		<!--SOCKET IO-->
+		<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 		<script>
 			const REF_STORAGE_REPOSITORY = "<%= (REF_STORAGE_REPOSITORY) %>";
 			const REF_STORAGE_REPOSITORY_CLOUD = "<%= (REF_STORAGE_REPOSITORY_CLOUD) %>";
 			const REF_STORAGE_LOG = "<%= (REF_STORAGE_LOG) %>";
 			sessionStorage.setItem(REF_STORAGE_REPOSITORY_CLOUD, '<%- (repository) %>');
 		</script>
+		
+		<!-- CUSTOM JS -->
+		<script defer type="module" src="/dist/js/mode-script.js"></script>
+		<script defer type="module" src="/dist/js/multi-mode-socket-client.js"></script>
+		<script defer type="module" src="/dist/js/multi-mode-script.js"></script>
+		<script defer  type="module" src="/dist/js/logout-script.js"></script>
 	</head>
 	<body class="scrollable body">
 		<section class="container-box-control" id="controlBoxContainer">
@@ -55,14 +65,14 @@
 		<section class="container-help-and-svg" id="contentContainer">
             <div id="btnSendMessage" class="container-panel-help" id="panelHelpContainer">
 				<button id="btnToggleRepository" data-repository="Local" class="btn green toggle-repository-btn btn-icon-string">
-					<i class="nes-icon cloud"></i>
+					<i class="icon-cloud"></i>
 					<p class="btn-icon-string">Go to remote</p>
 				</button>
 				<button id="btnTutorial" class="btn orange btn-icon-string" title="solution">
-                    <i class="nes-icon exclamation-circle"> </i>&nbsp;&nbsp;Tutorial
+                    <i class="icon-exclamation-circle"> </i>&nbsp;&nbsp;Tutorial
                 </button>
                 <button id="btnLeaveToRoom" class="btn red btn-only-icon" title="back">
-                    <i class="nes-icon times"></i>
+                    <i class="icon-times"></i>
                 </button>
             </div>
 			<divc class="repositories-container">
@@ -73,12 +83,6 @@
 			</div>
         </section>
 	</body>
-	<!--SOCKET IO-->
-	<script src="socket.io/socket.io.min.js"></script>
-	<!-- CUSTOM JS -->
-	<script type="module" src="./dist/js/mode-script.js"></script>
-	<script type="module" src="./dist/js/multi-mode-socket-client.js"></script>
-	<script type="module" src="./dist/js/multi-mode-script.js"></script>
-	<!--OBSERVER Auth Observer-->
-	<script type="module" src="./dist/js/userAuth-observer.js"></script>
+	
+	<script async src="/dist/js/banner.js"></script>
 </html>

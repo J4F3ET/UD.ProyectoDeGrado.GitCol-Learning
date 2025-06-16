@@ -8,15 +8,15 @@
 	},
 	"main": "server.js",
 	"scripts": {
-		"dev": "nodemon --exec babel-node server.js",
-		"start": "babel-node server.js",
+		"dev": "npm i && npm i -g nodemon && npm audit fix && nodemon --exec babel-node server.js",
+		"start": "npm i && npm audit fix && babel-node server.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"docs": "jsdoc -c ./docs/jsdoc.json"
 	},
 	"author": "Danna He <dhsepulvedas@udistrital.edu.co>(https://github.com/Chocolatamargo2607), Jafet Stiven <jslopezz@udistrital.edu.co> (https://github.com/J4F3ET)",
 	"license": "MIT",
+	"type": "module",
 	"dependencies": {
-		"dotenv": "^16.3.1",
 		"ejs": "^3.1.9",
 		"express": "^4.18.2",
 		"firebase-admin": "^12.0.0",
@@ -26,6 +26,7 @@
 		"swagger-jsdoc": "^6.2.8",
 		"swagger-themes": "^1.4.3",
 		"swagger-ui-express": "^5.0.0",
+		"ud.proyectodegrado.gitcol-learning": "file:",
 		"ws": "^8.17.1"
 	},
 	"devDependencies": {
@@ -33,6 +34,7 @@
 		"@babel/core": "^7.23.7",
 		"@babel/node": "^7.22.19",
 		"@babel/preset-env": "^7.23.8",
-		"clean-jsdoc-theme": "^4.2.18"
+		"clean-jsdoc-theme": "^4.2.18",
+		"nodemon": "^3.1.9"
 	}
 }

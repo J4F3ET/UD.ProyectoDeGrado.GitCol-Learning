@@ -1,13 +1,15 @@
-import {Router} from "express";
-import {releaseVerificationMiddleware} from "./util/login-middleware .js";
-import {verifyUserInAnyRoomMiddleware} from "./util/teamWorking-middleware.js";
-import {auth} from "../model/firebase-service.js";
+import { Router } from "express";
+import { releaseVerificationMiddleware } from "./util/login-middleware .js";
+import { verifyUserInAnyRoomMiddleware } from "./util/teamWorking-middleware.js";
+import { auth } from "../model/firebase-service.js";
+import { getUserByAuthUid } from "../model/user-service.js";
 import {
 	roomCreate,
 	roomGetByCode,
 	roomAddMember,
-	roomGetAllPublic, 
+	roomGetAllPublic,
 } from "../model/room-service.js";
+import { HttpStatus } from "./util/httpStatus.js";
 const router = Router();
 /**
  * @openapi
@@ -34,10 +36,10 @@ router.get(
 	"/rooms",
 	releaseVerificationMiddleware,
 	verifyUserInAnyRoomMiddleware,
-	(req, res) =>
-{
-	res.render("rooms-screen");
-});
+	(req, res) => {
+		res.render("rooms-screen");
+	}
+);
 /**
  * @openapi
  * /rooms/fit:
@@ -74,24 +76,27 @@ router.get(
  *       - bearerAuth: []
  *       - cookieAuth: []
  */
-router.get("/rooms/fit", releaseVerificationMiddleware, async(req, res) => {
-
+router.get("/rooms/fit", releaseVerificationMiddleware, async (req, res) => {
 	const room = await roomGetByCode(req.query.code);
 
-	if(!room)
-		return res.sendStatus(404)
+	if (!room) return res.sendStatus(404);
+	let token = null;
+	try {
+		token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+	} catch (error) {
+		res.sendStatus(HttpStatus.FORBIDDEN);
+	}
+	if (!token) return res.sendStatus(HttpStatus.FORBIDDEN);
+	const { err, data } = await getUserByAuthUid(token.uid);
 
-	const user =  await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+	if (err || !data.key || !data.email)
+		return res.sendStatus(HttpStatus.NOT_FOUND);
 
-	if(!user)
-		return res.sendStatus(403)
+	const response = await roomAddMember(room, data.uid);
 
-	const response = await roomAddMember(room,user.uid);
+	if (!response) return res.sendStatus(500);
 
-	if(!response)
-		return res.sendStatus(500)
-
-	res.json(room)
+	res.json(room);
 });
 /**
  * @openapi
@@ -121,9 +126,8 @@ router.get("/rooms/fit", releaseVerificationMiddleware, async(req, res) => {
  *       - bearerAuth: []
  *       - cookieAuth: []
  */
-router.get("/rooms/code", releaseVerificationMiddleware, async(req, res) => {
-	if(!await roomGetByCode(req.query.code))
-		return res.sendStatus(404);
+router.get("/rooms/code", releaseVerificationMiddleware, async (req, res) => {
+	if (!(await roomGetByCode(req.query.code))) return res.sendStatus(404);
 	res.end();
 });
 /**
@@ -172,10 +176,19 @@ router.get("/rooms/code", releaseVerificationMiddleware, async(req, res) => {
  *         - bearerAuth: []
  *         - cookieAuth: []
  */
-router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
-	const result = await auth.verifyIdToken(req.headers.cookie.split("=")[1])
-	const owner = result.name??result.email;
-	const members = [result.uid];
+router.post("/rooms", releaseVerificationMiddleware, async (req, res) => {
+	let token = null;
+	try {
+		token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+	} catch (error) {
+		return res.sendStatus(HttpStatus.FORBIDDEN);
+	}
+	const { err, data } = await getUserByAuthUid(token.uid);
+	if (err || !data.key || !data.email) {
+		return res.sendStatus(HttpStatus.NOT_FOUND);
+	}
+	const owner = data.email;
+	const members = [data.key];
 	const room = await roomCreate(
 		req.body.code,
 		req.body.description,
@@ -183,8 +196,7 @@ router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
 		members,
 		req.body.hidden
 	);
-	if(!room)
-		return res.sendStatus(400)
+	if (!room) return res.sendStatus(HttpStatus.BAD_REQUEST);
 	res.json(room);
 });
 /**
@@ -212,11 +224,14 @@ router.post("/rooms", releaseVerificationMiddleware, async(req, res) => {
  *       - bearerAuth: []
  *       - cookieAuth: []
  */
-router.get("/rooms/all/public", releaseVerificationMiddleware, async(req, res) => {
-	const rooms = await roomGetAllPublic();
-	if(!rooms.length)
-		return res.sendStatus(404)
-	res.json(rooms);
-});
+router.get(
+	"/rooms/all/public",
+	releaseVerificationMiddleware,
+	async (req, res) => {
+		const rooms = await roomGetAllPublic();
+		if (!rooms.length) return res.sendStatus(404);
+		res.json(rooms);
+	}
+);
 
 export default router;
