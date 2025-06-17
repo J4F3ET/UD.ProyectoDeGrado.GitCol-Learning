@@ -39,9 +39,10 @@ export const userLogin = async (uid, token) => {
 
 	if (err) return { err: true, data: new Error("User not found") };
 	if (!user) {
-		const {err,data} = await firstLogin(userAuth)
+		const { err, data } = await firstLogin(userAuth);
 		if (err || !data) return { err: true, data: new Error("User not found") };
-		if (!data.user.email) return { err: true, data: new Error("Email not found") };
+		if (!data.user.email)
+			return { err: true, data: new Error("Email not found") };
 		return { err: false, data: data.user };
 	}
 	if (!user.email) return { err: true, data: new Error("Email not found") };
@@ -162,7 +163,6 @@ export const getUserByAuthUid = async (uid) => {
 
 		const users = snapshot.val();
 		if (!users) return { err: true, data: null };
-		console.log("sas")
 		const { err, data } = await callbackFindUserByProviderUid(uid, users);
 		if (err || err == null || !data) return { err, data };
 		return { err: false, data };
@@ -177,7 +177,7 @@ const callbackFindUserByProviderUid = async (uid, users) => {
 		const user = await findUser(providers, uid);
 		if (user) return { err: false, data: { key, ...value } };
 	}
-	return { err: false, data: null};
+	return { err: false, data: null };
 };
 const findUser = async (providers, uid) => {
 	return providers.find((provider) => provider.userUid === uid) ?? null;
@@ -197,5 +197,12 @@ export const updateEmail = async (token, email) => {
 	if (!user) return { err: true, data: new Error("User not found") };
 
 	const updatedUser = { ...user, email };
+	return updateUser(user.key, updatedUser);
+};
+export const updateConceptUser = async (payload, concepts) => {
+	if (!payload || payload == "") return { err: true, data: null };
+	const { err, data: user } = await getUserByAuthUid(payload.uid);
+	if (err || !user) return { err: true, data: new Error("User not found") };
+	const updatedUser = { ...user, concepts };
 	return updateUser(user.key, updatedUser);
 };

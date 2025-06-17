@@ -32,6 +32,17 @@
 		<link async rel="stylesheet" href="/dist/css/driverjs-style.css" />
 
 		<link async rel="stylesheet" href="/dist/css/input-concept.css" />
+
+		<!-- Drivejs -->
+		<link
+			async
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css"
+		/> 
+		<script
+			async
+			src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"
+		></script>
 		<script async src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script async>
 			const REF_STORAGE_REPOSITORY = "local";
@@ -39,6 +50,19 @@
 			const REF_STORAGE_LOG = "log";
 			const CONCEPT = <%- JSON.stringify(concept) %>;
 		</script>
+
+		<!-- Script -->
+		<script defer type="module" src="/dist/js/mode-script.js"></script>
+		<script defer type="module" src="/dist/js/drivejs-mode-script.js"></script>
+		<script defer type="module" src="/dist/js/utils/concept-config.js"></script>
+		
+		<script async type="module" src="/dist/js/alone-mode-script.js"></script>
+		<script defer type="module" src="/dist/js/utils/btn-session-handler.js"></script>
+		<script async type="module" src="/dist/js/utils/handler-nolog.js"></script>
+		<script async src="/dist/js/dialogs/dialog-login-home-script.js"></script>
+		<script defer type="module" src="/dist/js/login-script.js"></script>
+		<script async type="module" src="/dist/js/dialogs/dialog-question-concept-script.js"></script>
+		<script async src="/dist/js/banner.js"></script>
 	</head>
 	<body class="scrollable body">
 		<section class="container-box-control" id="controlBoxContainer">
@@ -216,26 +240,5 @@
 			</section>
 		</dialog>
 	</body>
-	<!-- Script modules -->
-	<script type="module" src="/dist/js/mode-script.js"></script>
-	<!-- Drivejs -->
-	<link
-		async
-		rel="stylesheet"
-		href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"
-	/> 
-	<script
-		async
-		src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"
-	></script>
-	<script defer type="module" src="/dist/js/drivejs-mode-script.js"></script>
-	<script defer type="module" src="/dist/js/utils/concept-config.js"></script>
-	<!-- Scripts -->
-	<script async type="module" src="/dist/js/alone-mode-script.js"></script>
-	<script defer type="module" src="/dist/js/utils/btn-session-handler.js"></script>
-	<script async type="module" src="/dist/js/utils/handler-nolog.js"></script>
-	<script async src="/dist/js/dialogs/dialog-login-home-script.js"></script>
-	<script defer type="module" src="/dist/js/login-script.js"></script>
-	<script async type="module" src="/dist/js/dialogs/dialog-question-concept-script.js"></script>
-	<script async src="/dist/js/banner.js"></script>
+	
 </html>

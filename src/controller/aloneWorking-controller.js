@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { releaseVerificationMiddleware } from "./util/login-middleware .js";
 import { getConcept } from "../model/concept-service.js";
-import { userLogin } from "../model/user-service.js";
+import {
+	userLogin,
+	updateConceptUser,
+	getUserByAuthUid,
+} from "../model/user-service.js";
 import { auth } from "../model/firebase-service.js";
 
 const router = Router();
@@ -56,21 +60,17 @@ router.get(
 	"/aloneMode/user/get/concepts",
 	releaseVerificationMiddleware,
 	async (req, res) => {
-		let userToken = null;
+		let payload = null;
 		try {
-			userToken = await auth.verifyIdToken(
-				req.headers.authorization.split(" ")[1]
-			);
+			payload = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
 		} catch (error) {
 			console.log("❌ Error in aloneMode/user/concepts", error);
 			return res.status(500).render("error-screen", {
 				error: "Error in aloneMode/user/concepts",
 			});
 		}
-		if (!userToken) return res.sendStatus(401);
-		const { err, data } = await userLogin(
-			req.headers.authorization.split(" ")[1]
-		);
+		if (!payload) return res.sendStatus(401);
+		const { err, data } = await getUserByAuthUid(payload.uid);
 		if (err) {
 			console.log("❌ Error in aloneMode/user/concepts", err);
 			return res.status(403).render("error-screen", {
@@ -85,14 +85,34 @@ router.get(
 	}
 );
 
-router.post("/aloneMode/user/update/concepts", async (req, res) => {
-	const { concepts } = req.body;
-	if (!concepts) return res.sendStatus(404);
-	const concept = await getConcept(conceptName);
-	if (!concept) return res.sendStatus(404);
-	res.json({
-		concept: concept,
-	});
-});
+router.post(
+	"/aloneMode/user/update/concepts",
+	releaseVerificationMiddleware,
+	async (req, res) => {
+		let payload = null;
+		const { concepts } = req.body;
+		if (!concepts) return res.sendStatus(400);
+		try {
+			payload = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
+		} catch (error) {
+			console.log("❌ Error in aloneMode/user/update/concepts", error);
+			return res.status(500).render("error-screen", {
+				error: "Error in aloneMode/user/update/concepts",
+			});
+		}
+		if (!payload) return res.sendStatus(401);
+		const { err, data } = await updateConceptUser(payload, concepts);
+		if (err) {
+			console.log("❌ Error in aloneMode/user/update/concepts", err);
+			return res.status(403).render("error-screen", {
+				error: "Error in aloneMode/user/update/concepts",
+			});
+		}
+		if (!data) return res.sendStatus(404);
+		res.json({
+			message: "Concepts updated successfully",
+		});
+	}
+);
 
 export default router;

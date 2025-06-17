@@ -1,4 +1,5 @@
 import { auth } from "./firebase-config.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 let loginState = false;
 const HttpStatusErrorMessage = {
 	400: "Error in request, please try again later",
@@ -7,6 +8,16 @@ const HttpStatusErrorMessage = {
 	404: "Not found user, please try again later",
 	500: "Internal server error, please try again later",
 };
+onAuthStateChanged(auth, async (user) => {
+	if (!user) {
+		await fetch("/logout");
+		auth.signOut();
+		return;
+	}
+	const response = await fetch("/login/cookie");
+	if (response.ok) return;
+	sesionExpired();
+});
 const login = async (user) => {
 	if (!user || !user.uid || !user.accessToken) {
 		auth.signOut();

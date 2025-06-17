@@ -22,6 +22,7 @@ const verifyAccessCookieMiddleware = (req, res, next) => {
 			})
 			.catch((error) => {
 				const err = new CustomError("Unauthorized", HttpStatus.UNAUTHORIZED);
+				res.clearCookie("access_token");
 				errorMiddleware(err, req, res, next);
 			});
 	} catch (error) {
@@ -43,7 +44,7 @@ const verifyIdTokenMiddleware = (req, res, next) => {
 // Agrega el token de acceso a la cookie
 const setAccessTokenCookieMiddleware = (req, res, next) => {
 	res.cookie("access_token", req.headers["authorization"].split(" ")[1], {
-		expires: new Date(Date.now() + 3600000), // 1 hora
+		expires: new Date(Date.now() + 3000000), // 50 minutos
 		httpOnly: true, // Evita que el cliente acceda a la cookie desde JavaScript
 	});
 	next();
