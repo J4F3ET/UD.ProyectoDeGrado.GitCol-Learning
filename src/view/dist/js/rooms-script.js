@@ -1,5 +1,4 @@
-import { logout, goToHome } from "./logout-script.js";
-import { driveHelpRoom } from "./drivejs-mode-script.js";
+import { goToHome } from "./logout-script.js";
 const dialogCreateRoom = document.getElementById("dialogCreateRoom");
 const dialogSearchRoom = document.getElementById("dialogSearchRoom");
 const RESPONSE_BAD_REQUEST = 400;
@@ -212,6 +211,7 @@ document.getElementById("btnFindRoom").addEventListener("click", async () => {
 document
 	.getElementById("btnCancelSearchRoom")
 	.addEventListener("click", () => dialogSearchRoom.close());
-document.getElementById("helpLoginToRoom").addEventListener("click", () => {
+document.getElementById("helpLoginToRoom").addEventListener("click", async() => {
+	const { driveHelpRoom } = await import("./drivejs-mode-script.js");
 	driveHelpRoom().drive();
 });

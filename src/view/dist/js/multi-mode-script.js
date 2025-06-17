@@ -1,4 +1,3 @@
-import {driveUsageMode} from "./drivejs-mode-script.js";
 const containerRepositoryLocal = document.getElementById("svgContainer");
 const containerRepositoryCloud = document.getElementById("svgContainerCloud");
 const toggleRepository = async () => {
@@ -44,7 +43,8 @@ async function leaveToRoom() {
 document
 	.getElementById("btnToggleRepository")
 	.addEventListener("click", () => toggleRepository());
-document.getElementById("btnTutorial").addEventListener("click", () =>
+document.getElementById("btnTutorial").addEventListener("click", async () => {
+	const { driveUsageMode } = await import("./drivejs-mode-script.js");
 	driveUsageMode(
 		{
 			element: document.querySelector(".show-repository").firstElementChild,
@@ -66,5 +66,5 @@ document.getElementById("btnTutorial").addEventListener("click", () =>
 				align: "start",
 			},
 		}
-	).drive()
-);
+	).drive();
+});
