@@ -7,6 +7,7 @@ export async function logout() {
 	});
 	const {auth} = await import("./firebase-config.js");
 	auth.signOut();
+	sessionStorage.removeItem("concept");
 	return response;
 }
 export async function goToHome() {
