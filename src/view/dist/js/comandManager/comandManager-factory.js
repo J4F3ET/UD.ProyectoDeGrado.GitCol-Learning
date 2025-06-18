@@ -1,4 +1,4 @@
-import {ComandManager} from "./ComandManager.js";
+import { ComandManager } from "./ComandManager.js";
 const COMMANDMAPPINGS = {
 	init: "./modules/Init.js",
 	commit: "./modules/Commit.js",
@@ -29,7 +29,7 @@ export const factoryCommandManager = (commands, args) => {
 	if (sessionStorage.getItem("config") === null)
 		sessionStorage.setItem(
 			"config",
-			JSON.stringify({user: {name: null, email: null}})
+			JSON.stringify({ user: { name: null, email: null } })
 		);
 
 	commands.forEach(async (command) => {

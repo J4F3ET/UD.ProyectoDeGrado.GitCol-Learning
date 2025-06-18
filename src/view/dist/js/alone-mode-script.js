@@ -1,9 +1,9 @@
-window.addEventListener("load", async() => {
-	const {changeConcept} = await import("./utils/concept-config.js");
+window.addEventListener("load", async () => {
+	const { changeConcept } = await import("./utils/concept-config.js");
 	changeConcept(CONCEPT).then(async () => {
 		const { observer } = await import("./mode-script.js");
 		observer.notify(sessionStorage.getItem(REF_STORAGE_LOG));
-	});	
+	});
 });
 document
 	.getElementById("btnExit")

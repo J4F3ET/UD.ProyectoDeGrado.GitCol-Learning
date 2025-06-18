@@ -1,6 +1,6 @@
-import {SocketHandler} from "../SocketHandler.js";
-import {createMessage, getRepository} from "./utils.js";
-import {errorNotConfiguration} from "./error.js";
+import { SocketHandler } from "../SocketHandler.js";
+import { createMessage, getRepository } from "./utils.js";
+import { errorNotConfiguration } from "./error.js";
 /**
  * @class
  * @classdesc Fetch from and integrate with another repository or a local branch

@@ -5,7 +5,7 @@ export async function logout() {
 			"Content-Type": "application/json",
 		},
 	});
-	const {auth} = await import("./firebase-config.js");
+	const { auth } = await import("./firebase-config.js");
 	auth.signOut();
 	sessionStorage.removeItem("concept");
 	return response;

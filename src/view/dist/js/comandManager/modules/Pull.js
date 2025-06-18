@@ -97,7 +97,7 @@ export class Pull {
 
 		const refRemote = this._remoteRepository.split("-")[0];
 
-		let {repositoryFetch, errFetch} = await this.fetch(
+		let { repositoryFetch, errFetch } = await this.fetch(
 			dataComand[dataComand.length - 1],
 			refRemote,
 			localRepository,
@@ -108,7 +108,7 @@ export class Pull {
 		if (errFetch != null)
 			return createMessage(this._logRepository, "info", errFetch);
 
-		const {repositoryMerge, errMerge} = await this.merge(
+		const { repositoryMerge, errMerge } = await this.merge(
 			refRemote,
 			dataComand,
 			repositoryFetch
@@ -144,7 +144,7 @@ export class Pull {
 		const headsDiff = headsRemote.difference(headsLocal);
 
 		if (!commitsDiff.length && !headsDiff.size)
-			return {repositoryFetch: null, errFetch: "Already up to date."};
+			return { repositoryFetch: null, errFetch: "Already up to date." };
 
 		try {
 			if (!commitsDiff.length && headsDiff.size)
@@ -174,7 +174,7 @@ export class Pull {
 					),
 					errFetch: null,
 				};
-			return {repositoryFetch: localRepository, err: null};
+			return { repositoryFetch: localRepository, err: null };
 		} catch (error) {
 			return {
 				repositoryFetch: null,
@@ -264,7 +264,7 @@ export class Pull {
 			);
 
 			if (parentscommitLocalPull.has(commitRemotePull.id))
-				return {repositoryMerge: null, errMerge: "Already up to date."};
+				return { repositoryMerge: null, errMerge: "Already up to date." };
 
 			const functionCase = parentsCommitRemotePull.has(commitLocalPull.id)
 				? resolveMovilityTagInMerge
@@ -279,7 +279,7 @@ export class Pull {
 				errMerge: null,
 			};
 		} catch (error) {
-			return {repositoryMerge: null, errMerge: error};
+			return { repositoryMerge: null, errMerge: error };
 		}
 	}
 

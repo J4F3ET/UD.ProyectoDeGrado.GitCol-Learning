@@ -125,7 +125,7 @@ export class Checkout {
 
 		if (!(await this.resolveConfigurations(dataComand))) return;
 
-		const {branch, commit} = await this.resolveObjetiveToGo(
+		const { branch, commit } = await this.resolveObjetiveToGo(
 			storage.commits,
 			dataComand
 		);

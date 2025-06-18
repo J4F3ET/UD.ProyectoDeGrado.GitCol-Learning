@@ -2,7 +2,7 @@ import { auth } from "../firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 let userExist = false;
 
-onAuthStateChanged(auth, async (user) => userExist = user ? true : false);
+onAuthStateChanged(auth, async (user) => (userExist = user ? true : false));
 const dialogSelectMode = document.querySelector("#dialogSelectMode");
 const dialog = document.getElementById("dialogSelectMode");
 // Toogle mode

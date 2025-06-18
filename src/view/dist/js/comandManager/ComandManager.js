@@ -131,7 +131,7 @@ export class ComandManager {
 		if (sessionStorage.getItem(this._ref_storage_log) == null)
 			sessionStorage.setItem(this._ref_storage_log, JSON.stringify([]));
 		const log = JSON.parse(sessionStorage.getItem(this._ref_storage_log));
-		log.push({tag, message});
+		log.push({ tag, message });
 		sessionStorage.setItem(this._ref_storage_log, JSON.stringify(log));
 	}
 	/**

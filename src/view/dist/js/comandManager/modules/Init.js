@@ -1,5 +1,5 @@
-import {createMessage} from "./utils.js";
-import {errorNotConfiguration} from "./error.js";
+import { createMessage } from "./utils.js";
+import { errorNotConfiguration } from "./error.js";
 /**
  * @class
  * @classdesc This class is responsible for initializing a repository or reinitializing an existing one

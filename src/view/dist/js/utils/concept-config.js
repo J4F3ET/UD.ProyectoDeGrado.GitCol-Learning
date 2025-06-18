@@ -6,7 +6,10 @@ const changeChallengeConcept = async (challenger) => {
 	clearExplanation();
 	const { explanation, steps, log } = challenger;
 	changeAllCommandsConcept(steps);
-	changeAllLogsConcept([{ message: explanation, tag: "explanation" }, ...log?? []]);
+	changeAllLogsConcept([
+		{ message: explanation, tag: "explanation" },
+		...(log ?? []),
+	]);
 };
 
 const changeAllLogsConcept = async (logs) => {
@@ -15,7 +18,7 @@ const changeAllLogsConcept = async (logs) => {
 	logs.forEach((log) => changeLogConcept(log, logConceptChallenge));
 };
 
-const changeLogConcept = async ({ tag, message },callback) => {
+const changeLogConcept = async ({ tag, message }, callback) => {
 	if (!message) return;
 	callback(tag, message);
 };
@@ -42,45 +45,54 @@ const clearExplanation = async () => {
 
 // Esto cambia la url deacuerdo ala option seleccionada
 
-document.getElementById("select_concept").addEventListener("change", async (e) => {
-	const option = e.target.options[e.target.selectedIndex];
-	if (!option || !option?.value) return;
-	const { url, beforeUrl } = await changeUrlConcept(option.value);
-	if (beforeUrl == "free-mode") return (window.location.href = url);
+document
+	.getElementById("select_concept")
+	.addEventListener("change", async (e) => {
+		const option = e.target.options[e.target.selectedIndex];
+		if (!option || !option?.value) return;
+		const { url, beforeUrl } = await changeUrlConcept(option.value);
+		if (beforeUrl == "free-mode") return (window.location.href = url);
 
-	const { openDialogQuestion } = await import("../dialogs/dialog-question-concept-script.js");
-	const response = await openDialogQuestion();
-	if(!response) return changeCancelConcept(beforeUrl);
-	
-	const {saveConcept} = await import("./handler-nolog.js");
-	await saveConcept({ concept: beforeUrl, response })
+		const { openDialogQuestion } = await import(
+			"../dialogs/dialog-question-concept-script.js"
+		);
+		const response = await openDialogQuestion();
+		if (!response) return changeCancelConcept(beforeUrl);
 
-	window.location.href = url;
-})
+		const { saveConcept } = await import("./handler-nolog.js");
+		await saveConcept({ concept: beforeUrl, response });
+
+		window.location.href = url;
+	});
 
 const changeCancelConcept = async (newSelected) => {
 	const idSelect = "select_concept";
 	const selectedOption = await findSelectedOption(idSelect);
-	const newSelectedOption = await findSelectedOptionByValue(idSelect, newSelected);
+	const newSelectedOption = await findSelectedOptionByValue(
+		idSelect,
+		newSelected
+	);
 	if (!selectedOption || !newSelectedOption) return;
-	
+
 	selectedOption.selected = false;
 	newSelectedOption.selected = true;
-}
+};
 
 const findSelectedOption = async (idSelect) => {
 	const select = document.getElementById(idSelect);
 	if (!select) return;
 	const selectedOption = select.options[select.selectedIndex];
 	return selectedOption;
-}
+};
 
-const findSelectedOptionByValue = async (idSelect,value) => {
+const findSelectedOptionByValue = async (idSelect, value) => {
 	const select = document.getElementById(idSelect);
 	if (!select || !select?.options) return;
-	const selectedOption = [...select.options].find((option) => option.value === value);
+	const selectedOption = [...select.options].find(
+		(option) => option.value === value
+	);
 	return selectedOption;
-}
+};
 
 const changeUrlConcept = async (option) => {
 	const urlParts = window.location.href.split("/");
@@ -88,5 +100,5 @@ const changeUrlConcept = async (option) => {
 	const newUrl = `${baseUrl}/${option}`;
 	const url = new URL(newUrl);
 
-	return {url,beforeUrl: urlParts[urlParts.length - 1]}	
+	return { url, beforeUrl: urlParts[urlParts.length - 1] };
 };

@@ -8,7 +8,7 @@ import {
 	findCommitsChangeWithTags,
 	findCommitsHead,
 } from "./utils.js";
-import {errorNotInitialized} from "./error.js";
+import { errorNotInitialized } from "./error.js";
 /**
  * @class
  * @classdesc Download objects and refs from another repository
