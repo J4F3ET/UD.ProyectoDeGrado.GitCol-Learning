@@ -7,13 +7,13 @@ This project is initiated to help students learn git commands in a more interact
 ## Content
 
 1. [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [Dependencies](#dependencies)
-    - [Usage](#usage)
+   - [Installation](#installation)
+   - [Dependencies](#dependencies)
+   - [Usage](#usage)
 2. [Commits](#commits)
 3. [Documentation](#documentation)
-    - [Commands supported by minimun viable product](#commands-supported-by-minimum-viable-product)
-    - [Possible commands to be implemented in the future](#possible-commands-to-be-implemented-in-the-future)
+   - [Commands supported by minimun viable product](#commands-supported-by-minimum-viable-product)
+   - [Possible commands to be implemented in the future](#possible-commands-to-be-implemented-in-the-future)
 4. [Tecnologies](#tecnologies)
 
 ## Getting Started
@@ -60,21 +60,21 @@ The dependencies of the project are the following:
 
 ## Commits
 
-| Description                          | Type     | Format | Example                                    |
-|--------------------------------------|----------|--------|--------------------------------------------|
-| **Requirements and Features**        | feat     | `:sparkles:`    | feat: :sparkles: Include new feature       |
-| **Change Control**                   | feat     | `:boom:`        | feat: :boom: Service implementation        |
-| **Defects and Incidents**            | fix      | `:construction:`| fix: :construction: Mapping is corrected   |
-| **Fix bugs**                         | fix      | `:bug:`         | fix: :bug: Mapping order fix               |
-| **Immediate correction is required** | fix      | `:ambulance:`   | fix: :ambulance: Fix flow bug              |
-| **Phase or sprint implemented**      | feat     | `:package:`     | feat: :package: Feature is included        |
-| **Add, update or pass tests**        | test     | `:white_check_mark:` | test: :white_check_mark: New tests added |
-| **Add or update documentation**      | docs     | `:memo:`        | docs: :memo: Update doc                    |
-| **Add or update UI styles**          | style    | `:lipstick:`    | style: :lipstick: Update UI                |
-| **Write bad code needed review**     | refactor | `:poop:`        | refactor: :poop: Fix this please |
-| **Remove files**                     | feat     | `:fire:`        | feat: :fire: Remove file                   |
-| **Reverting changes**                | revert   | `:rewind:`      | revert: :rewind: I shouldn't do that again |
-| **Improving Performance**            | perf     | `:zap:`         | perf: :zap: Optimizing code                |
+| Description                          | Type     | Format               | Example                                    |
+| ------------------------------------ | -------- | -------------------- | ------------------------------------------ |
+| **Requirements and Features**        | feat     | `:sparkles:`         | feat: :sparkles: Include new feature       |
+| **Change Control**                   | feat     | `:boom:`             | feat: :boom: Service implementation        |
+| **Defects and Incidents**            | fix      | `:construction:`     | fix: :construction: Mapping is corrected   |
+| **Fix bugs**                         | fix      | `:bug:`              | fix: :bug: Mapping order fix               |
+| **Immediate correction is required** | fix      | `:ambulance:`        | fix: :ambulance: Fix flow bug              |
+| **Phase or sprint implemented**      | feat     | `:package:`          | feat: :package: Feature is included        |
+| **Add, update or pass tests**        | test     | `:white_check_mark:` | test: :white_check_mark: New tests added   |
+| **Add or update documentation**      | docs     | `:memo:`             | docs: :memo: Update doc                    |
+| **Add or update UI styles**          | style    | `:lipstick:`         | style: :lipstick: Update UI                |
+| **Write bad code needed review**     | refactor | `:poop:`             | refactor: :poop: Fix this please           |
+| **Remove files**                     | feat     | `:fire:`             | feat: :fire: Remove file                   |
+| **Reverting changes**                | revert   | `:rewind:`           | revert: :rewind: I shouldn't do that again |
+| **Improving Performance**            | perf     | `:zap:`              | perf: :zap: Optimizing code                |
 
 ## Tecnologies
 
@@ -116,42 +116,42 @@ npm run docs
 ### Commands supported by minimum viable product
 
 1. [x] **git init**: Inicilization a local git repository in the current folder.
-    - [x] **git init -h**: Show the help of the command.
+   - [x] **git init -h**: Show the help of the command.
 2. [x] **git commit**: Create a commit with the files in the staging area and a message.
-    - [x] **git commit -h**: Show the help of the command.
-    - [x] **git commit -m "Message"**: Create a commit with the files in the staging area and a message.
-    - [x] **git commit -am "Message"**: Add the files to the staging area and create a commit with the files in the staging area and a message.
+   - [x] **git commit -h**: Show the help of the command.
+   - [x] **git commit -m "Message"**: Create a commit with the files in the staging area and a message.
+   - [x] **git commit -am "Message"**: Add the files to the staging area and create a commit with the files in the staging area and a message.
 3. [x] **git log**: Show the commit history.
-    - [x] **git log -h**: Show the help of the command.
-    - [x] **git log -n number**: Show the commit history with the number of commits specified.
+   - [x] **git log -h**: Show the help of the command.
+   - [x] **git log -n number**: Show the commit history with the number of commits specified.
 4. [x] **git branch**: Show the branches of the repository.
-    - [x] **git branch -h**: Show the help of the command.
-    - [x] **git branch "BranchName"**: Create a branch with the specified name.
-    - [x] **git branch -d "BranchName"**: Delete the branch with the specified name.
-    - [x] **git branch -m "BranchName"**: Change the name of the current branch.
-    - [x] **git branch -a**: Show all the branches of the repository.
-    - [x] **git branch -l**: Show the branches of the repository.
-    - [x] **git branch -r**: Show the remote branches of the repository.
+   - [x] **git branch -h**: Show the help of the command.
+   - [x] **git branch "BranchName"**: Create a branch with the specified name.
+   - [x] **git branch -d "BranchName"**: Delete the branch with the specified name.
+   - [x] **git branch -m "BranchName"**: Change the name of the current branch.
+   - [x] **git branch -a**: Show all the branches of the repository.
+   - [x] **git branch -l**: Show the branches of the repository.
+   - [x] **git branch -r**: Show the remote branches of the repository.
 5. [x] **git checkout**: Change the branch.
-    - [x] **git checkout -h**: Show the help of the command.
-    - [x] **git checkout -b "BranchName"**: Create a branch with the specified name and change to it.
-    - [x] **git checkout -q "BranchName"**: Change to the branch with the specified name.
+   - [x] **git checkout -h**: Show the help of the command.
+   - [x] **git checkout -b "BranchName"**: Create a branch with the specified name and change to it.
+   - [x] **git checkout -q "BranchName"**: Change to the branch with the specified name.
 6. [x] **git push**: Upload the changes to the remote repository.
-    - [x] **git push -h**: Show the help of the command.
+   - [x] **git push -h**: Show the help of the command.
 7. [x] **git pull**: Download the changes from the remote repository.
-    - [x] **git pull -h**: Show the help of the command.
+   - [x] **git pull -h**: Show the help of the command.
 8. [x] **git merge**: Merge two branches.
-    - [x] **git merge -h**: Show the help of the command.
+   - [x] **git merge -h**: Show the help of the command.
 
 ### Possible commands to be implemented in the future
 
 1. **git config**: Configura el nombre y el correo electrónico del usuario.
-    - **git config --global user.name "Nombre"**: Configura el nombre del usuario de forma global.
-    - **git config --global user.email "Correo"**: Configura el correo electrónico del usuario de forma global.
-    - **git config user.name "Nombre"**: Configura el nombre del usuario de forma local en el repositorio actual.
-    - **git config user.email "Correo"**: Configura el correo electrónico del usuario de forma local en el repositorio actual.
-    - **git config --list**: Muestra la configuración actual.
-    - **git config --global --unset user.name**: Elimina la configuración del nombre del usuario.
-    - **git config --global --unset user.email**: Elimina la configuración del correo electrónico del usuario.
-    - **git rm "NombreArchivo"**: Elimina el archivo del área de preparación.
+   - **git config --global user.name "Nombre"**: Configura el nombre del usuario de forma global.
+   - **git config --global user.email "Correo"**: Configura el correo electrónico del usuario de forma global.
+   - **git config user.name "Nombre"**: Configura el nombre del usuario de forma local en el repositorio actual.
+   - **git config user.email "Correo"**: Configura el correo electrónico del usuario de forma local en el repositorio actual.
+   - **git config --list**: Muestra la configuración actual.
+   - **git config --global --unset user.name**: Elimina la configuración del nombre del usuario.
+   - **git config --global --unset user.email**: Elimina la configuración del correo electrónico del usuario.
+   - **git rm "NombreArchivo"**: Elimina el archivo del área de preparación.
 2. **git switch**: Cambia de rama.
