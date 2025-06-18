@@ -29,7 +29,9 @@ async function uploadCtrl(app) {
 	app.use((await import("./src/controller/home-controller.js")).default);
 	app.use((await import("./src/controller/rooms-controller.js")).default);
 	app.use((await import("./src/controller/teamWorking-controller.js")).default);
-	app.use((await import("./src/controller/aloneWorking-controller.js")).default);
+	app.use(
+		(await import("./src/controller/aloneWorking-controller.js")).default
+	);
 }
 uploadCtrl(app);
 // Static files: Archivos que se envian al navegador(frontend)
