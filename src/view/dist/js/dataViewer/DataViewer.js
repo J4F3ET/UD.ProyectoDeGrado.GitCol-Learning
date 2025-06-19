@@ -43,7 +43,7 @@ export class DataViewer {
 	 * @default {cx:-50,cy:334,id:"init",tags:[],class:[]}
 	 * @readonly
 	 */
-	_commitParent = {cx: -50, cy: 334, id: "init", tags: [], class: []};
+	_commitParent = { cx: -50, cy: 334, id: "init", tags: [], class: [] };
 	/**
 	 * @constructor
 	 * @description Create a new instance of the DataViewer

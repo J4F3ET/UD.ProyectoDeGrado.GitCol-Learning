@@ -11,7 +11,7 @@ export const openDialogQuestion = async () => {
 	});
 };
 
-const resolveDialog =  () => {
+const resolveDialog = () => {
 	dialog_question.close();
 	return responseSelect();
 };

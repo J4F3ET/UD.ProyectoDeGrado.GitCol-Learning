@@ -1,4 +1,4 @@
-import {SocketHandler} from "../SocketHandler.js";
+import { SocketHandler } from "../SocketHandler.js";
 import {
 	ErrorModule,
 	errorNotConfiguration,

@@ -76,6 +76,11 @@
 	--width-container-home: min(76.5rem, 90vw);
 	--width-container-dialog: min(76.5rem, 90vw);
 }
+h1{
+	font-size: var(--font-size-h1-mobile);
+	font-weight: 700;
+	color: var(--text-color);
+}
 #particles-js {
 	width: 100%;
 }

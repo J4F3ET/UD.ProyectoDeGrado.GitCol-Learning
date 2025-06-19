@@ -211,7 +211,9 @@ document.getElementById("btnFindRoom").addEventListener("click", async () => {
 document
 	.getElementById("btnCancelSearchRoom")
 	.addEventListener("click", () => dialogSearchRoom.close());
-document.getElementById("helpLoginToRoom").addEventListener("click", async() => {
-	const { driveHelpRoom } = await import("./drivejs-mode-script.js");
-	driveHelpRoom().drive();
-});
+document
+	.getElementById("helpLoginToRoom")
+	.addEventListener("click", async () => {
+		const { driveHelpRoom } = await import("./drivejs-mode-script.js");
+		driveHelpRoom().drive();
+	});

@@ -1,24 +1,24 @@
 .input_concept {
-    border: none;
-    outline: none;
-    min-width: fit-content;
-    max-width: 13rem;
-    height: max-content;
-    margin: 0.5rem;
-    background-color: var(--second-bg-color);
-    padding: 10px 20px;
-    font-size: 100%;
-    font-weight: 700;
-    color: #fff;
-    border-radius: 5px;
-    transition: all ease 0.1s;
-    box-shadow: 0px 5px 0px 0px #2e3542;
-    cursor: var(--cursor-pointer-style), auto;
+	border: none;
+	outline: none;
+	min-width: fit-content;
+	max-width: 13rem;
+	height: max-content;
+	margin: 0.5rem;
+	background-color: var(--second-bg-color);
+	padding: 10px 20px;
+	font-size: 100%;
+	font-weight: 700;
+	color: #fff;
+	border-radius: 5px;
+	transition: all ease 0.1s;
+	box-shadow: 0px 5px 0px 0px #2e3542;
+	cursor: var(--cursor-pointer-style), auto;
 }
 
 .input_concept:active {
-  border-color: #66afe9;
-  outline: none;
-  transform: translateY(5px);
+	border-color: #66afe9;
+	outline: none;
+	transform: translateY(5px);
 	box-shadow: 0px 0px 0px 0px #2e3542;
 }

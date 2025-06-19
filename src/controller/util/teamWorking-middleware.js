@@ -8,7 +8,7 @@ import { HttpStatus } from "./httpStatus.js";
 export const verifyUserInAnyRoomMiddleware = async (req, res, next) => {
 	try {
 		const token = await auth.verifyIdToken(req.headers.cookie.split("=")[1]);
-		const {err, data} = await getUserByAuthUid(token.uid);
+		const { err, data } = await getUserByAuthUid(token.uid);
 		if (err || !data) {
 			const error = new CustomError("User not found", HttpStatus.NOT_FOUND);
 			return errorMiddleware(error, req, res, next);

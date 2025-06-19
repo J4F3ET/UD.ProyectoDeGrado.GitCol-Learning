@@ -3,27 +3,66 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Git Col-Learning</title>
+
 		<link
-			defer
 			rel="shortcut icon"
 			href="/dist/assets/fav-icon.ico"
 			type="image/x-icon"
 		/>
+
 		<link rel="stylesheet" href="dist/css/reset.css" />
 		<link rel="stylesheet" href="dist/css/global.css" />
-		<link defer rel="stylesheet" href="dist/css/icons-global.css" />
-		<link defer rel="stylesheet" href="dist/css/cursor-global.css" />
-		<link defer rel="stylesheet" href="dist/css/font-global.css" />
-		<link defer rel="stylesheet" href="dist/css/home-style.css" />
-		<link async rel="stylesheet" href="dist/css/dialog-home-style.css" />
-		<link defer rel="stylesheet" href="dist/css/input-concept.css" />
+		<link rel="stylesheet" href="dist/css/font-global.css" />
+		<link rel="stylesheet" href="dist/css/home-style.css" />
+
+		<link
+			rel="preload"
+			href="dist/css/icons-global.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript
+			><link rel="stylesheet" href="dist/css/icons-global.css"
+		/></noscript>
+
+		<link
+			rel="preload"
+			href="dist/css/cursor-global.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript
+			><link rel="stylesheet" href="dist/css/cursor-global.css"
+		/></noscript>
+
+		<link
+			rel="preload"
+			href="dist/css/dialog-home-style.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript
+			><link rel="stylesheet" href="dist/css/dialog-home-style.css"
+		/></noscript>
+
+		<link
+			rel="preload"
+			href="dist/css/input-concept.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript
+			><link rel="stylesheet" href="dist/css/input-concept.css"
+		/></noscript>
+	</head>
+	<body class="body scrollable">
 		<script async src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script defer src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+		<script defer src="dist/assets/lib/particles.min.js"></script>
+		<script async src="dist/assets/lib/particlesjs-config.json"></script>
 		<script defer src="dist/js/home-script.js"></script>
 		<script
 			async
@@ -34,14 +73,14 @@
 		<script async src="dist/js/dialogs/dialog-login-home-script.js"></script>
 		<script defer type="module" src="dist/js/login-script.js"></script>
 		<script
-			defer
+			async
 			type="module"
 			src="dist/js/utils/btn-session-handler.js"
 		></script>
-		<!--BANNER JS-->
+		<script defer src="dist/js/dialogs/dialog-multi-home-script.js"></script>
+
 		<script async src="/dist/js/banner.js"></script>
-	</head>
-	<body class="body scrollable">
+
 		<header class="home-header">
 			<div class="nav-wrapper">
 				<a href="/" class="logo">Git Col-Learning<br /><small>demo</small></a>
@@ -88,7 +127,7 @@
 					of Git.
 				</p>
 				<div class="social-media">
-					<a class="btn green github-link" href=""
+					<a class="btn green github-link" href="#"
 						><i class="icon-heart"></i
 					></a>
 					<a
@@ -586,13 +625,5 @@
 		<!-- END DIALOG MULTI MODE -->
 		<!-- --------- END DIALOGS ---------- -->
 		<!-- --------- SCROLL REVEAL ---------- -->
-		<!--TYPED JS-->
-
-		<!--CUSTOM JS-->
-		<script defer src="dist/js/dialogs/dialog-multi-home-script.js"></script>
-
-		<!--PARTICLE JS-->
-		<script src="dist/assets/lib/particles.min.js"></script>
-		<script src="dist/assets/lib/particlesjs-config.json"></script>
 	</body>
 </html>

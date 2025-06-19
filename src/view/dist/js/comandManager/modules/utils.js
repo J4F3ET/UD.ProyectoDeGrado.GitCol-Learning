@@ -256,7 +256,10 @@ const getRepository = async (key) => JSON.parse(sessionStorage.getItem(key));
 async function createMessage(nameRefLog = "log", tag = "info", message) {
 	const log = await getRepository(nameRefLog);
 	if (!log) return;
-	sessionStorage.setItem(nameRefLog, JSON.stringify([...log, {tag, message}]));
+	sessionStorage.setItem(
+		nameRefLog,
+		JSON.stringify([...log, { tag, message }])
+	);
 }
 /**
  * @memberof utils
@@ -269,7 +272,7 @@ async function createMessage(nameRefLog = "log", tag = "info", message) {
  * @returns {Promise<Object>} newStorage
  */
 async function resolveCreateMergeRegister(storage, commitFetch, commitHead) {
-	let {commits, commit} = await createRegister(
+	let { commits, commit } = await createRegister(
 		storage.commits,
 		commitHead,
 		storage.information,
@@ -472,7 +475,7 @@ async function resolveLocationCommit(commits, parentCx, parentCy) {
 		commits.find((commit) => commit.cx == possibleX && commit.cy == parentCy) ==
 		undefined
 	)
-		return {commits, location: [possibleX, parentCy]};
+		return { commits, location: [possibleX, parentCy] };
 	//Case 2
 	const commitsInPossiteY = commits.filter(
 		(commit) => commit.cx == possibleX && commit.cy < parentCy
@@ -492,7 +495,7 @@ async function resolveLocationCommit(commits, parentCx, parentCy) {
 			commitsInPossiteY,
 			commitsInNegativeY
 		);
-		return {commits, location: [possibleX, possibleY]};
+		return { commits, location: [possibleX, possibleY] };
 	}
 	//Case 3
 	const response = await generateLocationCommitCase3(
@@ -501,7 +504,7 @@ async function resolveLocationCommit(commits, parentCx, parentCy) {
 		commitsInPossiteY,
 		commitsInNegativeY
 	);
-	return {commits: response.commits, location: [possibleX, response.cy]};
+	return { commits: response.commits, location: [possibleX, response.cy] };
 }
 /**
  * @name generateLocationCommitCase2
@@ -559,7 +562,7 @@ async function generateLocationCommitCase3(
 				commit.id
 			);
 		});
-		return {commits, cy: parentCy - SPACE_BETWEEN_COMMITS_Y};
+		return { commits, cy: parentCy - SPACE_BETWEEN_COMMITS_Y };
 	} else {
 		commitsInNegativeY.forEach(async (commit) => {
 			commits = await updateLocationChildsOfCommit(
@@ -568,7 +571,7 @@ async function generateLocationCommitCase3(
 				commit.id
 			);
 		});
-		return {commits, cy: parentCy + SPACE_BETWEEN_COMMITS_Y};
+		return { commits, cy: parentCy + SPACE_BETWEEN_COMMITS_Y };
 	}
 }
 /**
@@ -966,7 +969,7 @@ async function addChangesRecursivelyToRepository(commits, changes) {
  */
 async function addCommitChangeToBranch(
 	commitsDestination,
-	parent = {cx: -30, cy: 334},
+	parent = { cx: -30, cy: 334 },
 	commit
 ) {
 	const response = await resolveLocationCommit(
@@ -1009,7 +1012,7 @@ async function mergeChangesInRepositories(
 			return acc;
 		}
 
-		const {repository, changesId} = await mergeChangesInBranchs(
+		const { repository, changesId } = await mergeChangesInBranchs(
 			acc.repository,
 			commitsOrigin,
 			t
@@ -1018,7 +1021,7 @@ async function mergeChangesInRepositories(
 		changesId.forEach((change) => acc.changeMap.set(change, [t]));
 		acc.repository = repository;
 		return acc;
-	}, Promise.resolve({changeMap: new Map(), repository: commitsDestination}));
+	}, Promise.resolve({ changeMap: new Map(), repository: commitsDestination }));
 }
 /**
  * @name findCommitsHead
