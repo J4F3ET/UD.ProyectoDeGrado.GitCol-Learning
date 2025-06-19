@@ -2,12 +2,9 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-		/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link
-			async
 			rel="shortcut icon"
 			href="/dist/assets/fav-icon.ico"
 			type="image/x-icon"
@@ -20,6 +17,14 @@
 		<link rel="stylesheet" href="dist/css/icons-global.css" />
 		<link async rel="stylesheet" href="dist/css/cursor-global.css" />
 		<link async rel="stylesheet" href="dist/css/error-style.css" />
+
+		<!--PARTICLE JS-->
+		<script async src="dist/assets/lib/particles.min.js"></script>
+		<script defer src="dist/assets/lib/particlesjs-config.json"></script>
+		<!--OBSERVER Auth Observer-->
+		<script async type="module" src="dist/js/error-script.js"></script>
+		<!-- Banner -->
+		<script async src="/dist/js/banner.js"></script>
 	</head>
 	<body class="body body-error scrollable">
 		<div class="error-container">
@@ -33,12 +38,5 @@
 			<i class="icon-caret-left"></i> Home
 		</a>
 		<div id="particles-js"></div>
-		<!--PARTICLE JS-->
-		<script async src="dist/assets/lib/particles.min.js"></script>
-		<script defer src="dist/assets/lib/particlesjs-config.json"></script>
-		<!--OBSERVER Auth Observer-->
-		<script async type="module" src="dist/js/error-script.js"></script>
-		<!-- Banner -->
-		<script async src="/dist/js/banner.js"></script>
 	</body>
 </html>
