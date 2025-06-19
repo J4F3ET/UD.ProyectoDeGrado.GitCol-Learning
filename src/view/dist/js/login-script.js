@@ -10,7 +10,7 @@ const HttpStatusErrorMessage = {
 };
 onAuthStateChanged(auth, async (user) => {
 	if (!user) {
-		await fetch("/logout");
+		fetch("/logout",{method: "GET",keepalive: true});
 		auth.signOut();
 		return;
 	}

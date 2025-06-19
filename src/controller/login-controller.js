@@ -82,7 +82,7 @@ router.post("/login", releaseVerificationMiddleware, async (req, res) => {
  *           text/html:
  *             example: error-screen.ejs
  */
-router.get("/logout", releaseVerificationMiddleware, (req, res) => {
+router.get("/logout", (req, res) => {
 	res.clearCookie("access_token");
 	res.end();
 });
