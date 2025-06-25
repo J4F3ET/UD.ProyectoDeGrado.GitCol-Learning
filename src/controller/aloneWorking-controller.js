@@ -1,11 +1,7 @@
 import { Router } from "express";
 import { releaseVerificationMiddleware } from "./util/login-middleware .js";
-import { getConcept } from "../model/concept-service.js";
-import {
-	userLogin,
-	updateConceptUser,
-	getUserByAuthUid,
-} from "../model/user-service.js";
+import { getConcept, getAllKeysConcepts } from "../model/concept-service.js";
+import { updateConceptUser, getUserByAuthUid } from "../model/user-service.js";
 import { auth } from "../model/firebase-service.js";
 
 const router = Router();
@@ -13,8 +9,7 @@ const router = Router();
  * @openapi
  * /aloneMode/{name}:
  *   get:
- *     summary: Endpoint render view alone-mode
- *     description: Render view alone-mode
+ *     summary: Endpoint render view alone-modea
  *     responses:
  *       200:
  *         description: Succes. Render view alone-mode
@@ -25,6 +20,7 @@ const router = Router();
 router.get("/aloneMode/:name", async (req, res) => {
 	const conceptName = req.params.name;
 	if (!conceptName) return res.sendStatus(404);
+	const conceptsKeys = getAllKeysConcepts();
 	const concept = await getConcept(conceptName);
 
 	if (!concept) {
@@ -38,9 +34,15 @@ router.get("/aloneMode/:name", async (req, res) => {
 					},
 				},
 				current: "free-mode",
+				challenges: await conceptsKeys,
 			});
 	}
-	res.render("alone-mode-screen", { concept, current: conceptName });
+	
+	res.render("alone-mode-screen", {
+		concept,
+		current: conceptName,
+		challenges: await conceptsKeys,
+	});
 });
 /**
  * @openapi
