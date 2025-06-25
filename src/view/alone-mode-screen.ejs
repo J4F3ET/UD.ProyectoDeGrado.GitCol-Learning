@@ -38,7 +38,7 @@
 			async
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css"
-		/> 
+		/>
 		<script
 			async
 			src="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.js.iife.js"
@@ -55,13 +55,21 @@
 		<script defer type="module" src="/dist/js/mode-script.js"></script>
 		<script defer type="module" src="/dist/js/drivejs-mode-script.js"></script>
 		<script defer type="module" src="/dist/js/utils/concept-config.js"></script>
-		
+
 		<script async type="module" src="/dist/js/alone-mode-script.js"></script>
-		<script defer type="module" src="/dist/js/utils/btn-session-handler.js"></script>
+		<script
+			defer
+			type="module"
+			src="/dist/js/utils/btn-session-handler.js"
+		></script>
 		<script async type="module" src="/dist/js/utils/handler-nolog.js"></script>
 		<script async src="/dist/js/dialogs/dialog-login-home-script.js"></script>
 		<script defer type="module" src="/dist/js/login-script.js"></script>
-		<script async type="module" src="/dist/js/dialogs/dialog-question-concept-script.js"></script>
+		<script
+			async
+			type="module"
+			src="/dist/js/dialogs/dialog-question-concept-script.js"
+		></script>
 		<script async src="/dist/js/banner.js"></script>
 	</head>
 	<body class="scrollable body">
@@ -80,18 +88,23 @@
 		<section class="container-help-and-svg" id="contentContainer">
 			<div class="container-panel-help" id="panelHelpContainer">
 				<select id="select_concept" class="input_concept">
-					<option  value="initialize-repository"<%= current == 'initialize-repository' ? 'selected' : '' %>>initialize repository</option>
-					<option value="first-commit"<%= current == 'first-commit' ? 'selected' : '' %>>first commit</option>
-					<option value="view-commit-history"<%= current == 'view-commit-history' ? 'selected' : '' %>>view commit history</option>
-					<option value="create-switch-branch"<%= current == 'create-switch-branch' ? 'selected' : '' %>>create &amp; switch branch</option>
-					<option value="delete-rename-branch"<%= current == 'delete-rename-branch' ? 'selected' : '' %>>delete &amp; rename branch</option>
-					<option value="merge-branches" <%= current == 'merge-branches' ? 'selected' : '' %>>merge branches</option>
-					<option value="limited-commit-log"<%= current == 'limited-commit-log' ? 'selected' : '' %>>limited commit log</option>
-					<option value="git-help"<%= current == 'git-help' ? 'selected' : '' %>>read documentation</option>
-					<option value="list-branches"<%= current == 'list-branches' ? 'selected' : '' %>>view branches</option>
-					<option value="switch-branches" <%= current == 'switch-branches' ? 'selected' : '' %> >switch branches</option>
-					<option value="free-mode"<%= current == 'free-mode' ? 'selected' : '' %>>free mode</option>
-				</select>
+					<option value="free-mode" <%= current === "free-mode" ? "selected" : "" %>>
+						Free Mode
+					  </option>
+					  
+
+					<% challenges.forEach((challenge) => { %>
+					  <option value="<%= challenge %>"
+						<% if (challenge == current) { %>
+						  selected
+						<% } %>
+					>
+						<%= challenge
+						  .replace(/-/g, " ")
+						  .replace(/\b\w/g, l => l.toUpperCase()) %>
+					  </option>
+					<% }) %>
+				  </select>
 				<button
 					id="btnTutorial"
 					class="btn orange btn-icon-string"
@@ -109,11 +122,10 @@
 				>
 					Logout
 				</button>
-				
+
 				<button id="btnExit" class="btn red btn-only-icon" title="back">
 					<i class="icon-times"></i>
 				</button>
-				
 			</div>
 			<div id="svgContainer" class="container-svg scrollable"></div>
 		</section>
@@ -202,9 +214,7 @@
 				<div class="section_dialog info">
 					<div class="section_dialog_item">
 						<h2 class="title_dialog">Question</h2>
-						<p class="text_dialog">
-							The question is the following:
-						</p>
+						<p class="text_dialog">The question is the following:</p>
 					</div>
 					<div class="section_dialog_item">
 						<p class="text_dialog">
@@ -234,11 +244,9 @@
 						>
 							<span>Cancel</span>
 						</button>
-					
 					</div>
 				</div>
 			</section>
 		</dialog>
 	</body>
-	
 </html>
