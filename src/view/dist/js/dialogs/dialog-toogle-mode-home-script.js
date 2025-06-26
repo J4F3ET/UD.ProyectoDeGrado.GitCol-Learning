@@ -1,11 +1,29 @@
 import { auth } from "../firebase-config.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 let userExist = false;
-
+let loadChallenges = false;
 onAuthStateChanged(auth, async (user) => (userExist = user ? true : false));
 const dialogSelectMode = document.querySelector("#dialogSelectMode");
 const dialog = document.getElementById("dialogSelectMode");
 // Toogle mode
+const loadChallengesFetch = async () => {
+	if (loadChallenges) return; // Evita cargar varias veces
+	const response = fetch("/home/concepts"); // Ajusta el endpoint si es necesario
+	const select = document.getElementById("select_concept");
+	const freeModeOption = document.createElement("option");
+	freeModeOption.value = 'free-mode';
+	freeModeOption.textContent = "Free mode";
+	select.appendChild(freeModeOption); // Añade la opción de modo libre
+	const challenges = (await (await response).json()).challenges || [];
+	if (!challenges || challenges.length === 0) return;
+	challenges.forEach((challenge) => {
+		const option = document.createElement("option");
+		option.value = challenge;
+		option.textContent = challenge.replace(/-/g, " "); // opcional: mejor presentación
+		select.appendChild(option);
+	});
+	loadChallenges = true;
+};
 const toogleImage = async (mode) => {
 	const otherImage = mode === "single" ? "multi" : "single";
 	document.getElementById(`img_cat_${mode}`).style.display = "block";
@@ -62,6 +80,7 @@ const closeDialog = async () => {
 // Open dialog select mode
 document.querySelectorAll(".btn-dialog").forEach((element) => {
 	element.addEventListener("click", async () => {
+		loadChallengesFetch();
 		dialogSelectMode.showModal();
 	});
 });
