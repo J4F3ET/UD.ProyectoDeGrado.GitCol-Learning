@@ -20,6 +20,7 @@ const loadChallengesFetch = async () => {
 		const option = document.createElement("option");
 		option.value = challenge;
 		option.textContent = challenge.replace(/-/g, " "); // opcional: mejor presentación
+		option.textContent = option.textContent.charAt(0).toUpperCase() + option.textContent.slice(1);
 		select.appendChild(option);
 	});
 	loadChallenges = true;

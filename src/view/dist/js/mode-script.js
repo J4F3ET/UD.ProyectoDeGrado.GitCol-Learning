@@ -29,6 +29,8 @@ const aloneModeCommandManager = factoryCommandManager(listCommands, [
 	REF_STORAGE_LOG,
 	REF_STORAGE_REPOSITORY_CLOUD,
 ]);
+let stateExecution = false;
+const commandsQueue = [];
 let listComands =
 	JSON.parse(sessionStorage.getItem(REF_STORAGE_LOG))
 		?.filter((log) => log.tag === "comand")
@@ -52,15 +54,36 @@ document.getElementById("comandInput").addEventListener("keyup", async (e) => {
 		return;
 	}
 	if (e.key === "Enter") {
-		await executeCommand(e.target.value);
-		e.target.value = "";
-		listComands = JSON.parse(sessionStorage.getItem(REF_STORAGE_LOG))
-			.filter((log) => log.tag === "comand")
-			.map((log) => log.message);
-		accountComands = listComands.length;
-		return;
+		if (stateExecution) {
+			commandsQueue.push(e.target.value);
+			e.target.value = "";
+			return;
+		}
+		eventEnter(e);
 	}
 });
+const deQueueCommand = async () => {
+	if (commandsQueue.length == 0) return;
+	const command = commandsQueue.shift();
+	return executeCommand(command);
+};
+const deQueueCommands = async () => {
+	while (commandsQueue.length > 0) {
+		await deQueueCommand();
+	}
+	return true;
+};
+
+const eventEnter = async (e) => {
+	stateExecution = true;
+	await executeCommand(e.target.value);
+	e.target.value = "";
+	listComands = JSON.parse(sessionStorage.getItem(REF_STORAGE_LOG))
+		.filter((log) => log.tag === "comand")
+		.map((log) => log.message);
+	accountComands = listComands.length;
+	stateExecution = !(await deQueueCommands());
+};
 // FUNCTIONS
 const init = () => {
 	dataViewerLocal.currentData = null;
@@ -76,19 +99,23 @@ const init = () => {
  * @param {String} comand
  */
 const executeCommand = async (comand) => {
+	const promise = new Promise((resolve) => {
+		setTimeout(() => {
+			observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
+			resolve();
+		}, 500);
+	});
 	comand !== ""
 		? aloneModeCommandManager.createMessage("comand", comand)
 		: null;
 	try {
 		await aloneModeCommandManager.executeCommand(comand.trim());
 		observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
-		setTimeout(() => {
-			observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
-		}, 1500);
 	} catch (error) {
 		aloneModeCommandManager.createMessage("error", error.message);
 	} finally {
 		observer.notify(sessionStorage.getItem(REF_STORAGE_LOG));
+		return promise;
 	}
 };
 // OBSERVER

@@ -1,9 +1,11 @@
-window.addEventListener("load", async () => {
-	const { changeConcept } = await import("./utils/concept-config.js");
-	changeConcept(CONCEPT).then(async () => {
-		const { observer } = await import("./mode-script.js");
-		observer.notify(sessionStorage.getItem(REF_STORAGE_LOG));
-	});
+window.addEventListener("load", () => {
+	setTimeout(async () => {
+		const { changeConcept } = await import("./utils/concept-config.js");
+		changeConcept(CONCEPT).then(async () => {
+			const { observer } = await import("./mode-script.js");
+			observer.notify(sessionStorage.getItem(REF_STORAGE_LOG));
+		});
+	}, 250); // Delay to ensure the page is fully loaded
 });
 document
 	.getElementById("btnExit")
