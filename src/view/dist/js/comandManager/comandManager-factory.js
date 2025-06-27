@@ -16,6 +16,13 @@ const dynamicImportCommnad = async (command) => {
 		command.charAt(0).toUpperCase() + command.slice(1)
 	];
 };
+const loadConcept = async () => {
+	const { changeConcept } = await import("../utils/concept-config.js");
+	changeConcept(CONCEPT).then(async () => {
+		const { observer } = await import("../mode-script.js");
+		observer.notify(sessionStorage.getItem(REF_STORAGE_LOG));
+	});
+};
 /**
  * @name factoryCommandManager
  * @description Create a command manager
@@ -32,11 +39,16 @@ export const factoryCommandManager = (commands, args) => {
 			JSON.stringify({ user: { name: null, email: null } })
 		);
 
-	commands.forEach(async (command) => {
-		commandManager.addComand(
-			command,
-			new (await dynamicImportCommnad(command))(...args)
-		);
+	Promise.all(
+		commands.map(async (command) => {
+			commandManager.addComand(
+				command,
+				new (await dynamicImportCommnad(command))(...args)
+			);
+		})
+	).then(() => {
+		if (REF_STORAGE_REPOSITORY_CLOUD) return;
+		loadConcept();
 	});
 	return commandManager;
 };
