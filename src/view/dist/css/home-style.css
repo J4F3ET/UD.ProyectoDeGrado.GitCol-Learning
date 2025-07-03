@@ -178,6 +178,19 @@ p {
 	text-shadow: 0 0 1rem var(--text-color);
 	color: var(--text-color);
 }
+/* VIDEO SECTION DESING */
+video{
+	width: 100%;
+    margin-bottom: 1em;
+}
+.video-section {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	align-items: center;
+	flex-direction: column;
+	gap: 2rem;
+}
 /* OVERVIEW SECTION DESING */
 .overview-section {
 	display: flex;
