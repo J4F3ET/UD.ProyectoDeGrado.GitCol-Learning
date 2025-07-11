@@ -10,7 +10,7 @@ const HttpStatusErrorMessage = {
 };
 onAuthStateChanged(auth, async (user) => {
 	if (!user) {
-		fetch("/logout",{method: "GET",keepalive: true});
+		fetch("/logout", { method: "GET", keepalive: true });
 		auth.signOut();
 		return;
 	}
@@ -38,8 +38,19 @@ const login = async (user) => {
 		alertError(HttpStatusErrorMessage[response.status]);
 	}
 	if (!response.ok && data.status === "pending") alertNeedToEmail(user);
+	const { loginConcept } = await import("./utils/handler-nolog.js");
+	alertOverwriteConceptResponse();
+	loginConcept(user.uid);
 	loginState = false;
 };
+const alertOverwriteConceptResponse = () =>
+	Swal.fire({
+		title: "Concepts Overwritten",
+		text: `Answer from previous concepts with the same name will be overwritten.`,
+		icon: "warning",
+		timer: 5000,
+		position: "top-end",
+	});
 const alertNeedToEmail = (user) =>
 	Swal.fire({
 		title: "Need to verify your email",
@@ -82,7 +93,6 @@ const alertError = (message) =>
 		showConfirmButton: false,
 		timer: 1500,
 	});
-
 export const sesionExpired = () => {
 	if (loginState) return;
 	Swal.fire({
@@ -96,7 +106,10 @@ export const sesionExpired = () => {
 		confirmButtonText: "Yes, login",
 	}).then(async (result) => {
 		if (result.isConfirmed) await login(auth.currentUser);
-		else auth.signOut();
+		else {
+			const { logout } = await import("./logout-script.js");
+			await logout(auth);
+		}
 	});
 };
 const closeDialog = async () => {

@@ -21,4 +21,7 @@ const resolveBtnLogin = async (user) => {
 };
 document
 	.getElementById("btnLogout")
-	.addEventListener("click", async () => auth.signOut());
+	.addEventListener("click", async () => {
+		const { logout } = await import("../logout-script.js");
+		logout(auth);
+	});
