@@ -1,18 +1,19 @@
 import { DataViewer } from "./dataViewer/DataViewer.js";
 import { factoryCommandManager } from "./comandManager/comandManager-factory.js";
 import { Observer } from "./dataViewer/Observer.js";
+import { helpGifs } from "./utils/trigger-help-gif.js";
 const listCommands = ["init", "commit", "checkout", "branch", "log", "merge"];
 if (REF_STORAGE_REPOSITORY_CLOUD) {
 	listCommands.push("push", "clone", "fetch", "pull");
 }
 const messageCallback = (listCommand) => {
 	let messageString = `
-        <h5 class="help">Commands shell</h5>
-        <p class="help">>clear</p>
-        <p class="help">>help</p>
-        <h5 class="help">Commands git</h5>`;
+        <h5 class="help">💻 Commands shell</h5>
+        <p class="help">> clear</p>
+        <p class="help">> help</p>
+        <h5 class="help">💻 Commands git</h5>`;
 	listCommand.forEach((commandString) => {
-		messageString += `<p class="help">>git ${commandString}</p>`;
+		messageString += `<p data-command="git ${commandString}" class="challenge-command-help help">> git ${commandString}</p>`;
 	});
 	return (messageString += `
         <p class="help">
@@ -78,6 +79,7 @@ const eventEnter = async (e) => {
 	stateExecution = true;
 	await executeCommand(e.target.value);
 	e.target.value = "";
+	observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
 	listComands = JSON.parse(sessionStorage.getItem(REF_STORAGE_LOG))
 		.filter((log) => log.tag === "comand")
 		.map((log) => log.message);
@@ -101,20 +103,24 @@ const init = () => {
 const executeCommand = async (comand) => {
 	const promise = new Promise((resolve) => {
 		setTimeout(() => {
-			observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
+			observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY)); //Actualiza SVG
 			resolve();
-		}, 500);
+		}, 100);
 	});
 	comand !== ""
 		? aloneModeCommandManager.createMessage("comand", comand)
 		: null;
 	try {
-		await aloneModeCommandManager.executeCommand(comand.trim());
-		observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
+		const millis = await aloneModeCommandManager.executeCommand(comand.trim());
+		if (millis) {
+			setTimeout(() => {
+				observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
+			}, millis);
+		}
 	} catch (error) {
 		aloneModeCommandManager.createMessage("error", error.message);
 	} finally {
-		observer.notify(sessionStorage.getItem(REF_STORAGE_LOG));
+		observer.notify(sessionStorage.getItem(REF_STORAGE_LOG)); //Este notifica errores
 		return promise;
 	}
 };
@@ -159,10 +165,11 @@ export const logConceptChallenge = async (tag, message) =>
 	aloneModeCommandManager.createMessage(tag, message);
 const eventHelp = async (e) => {
 	document.querySelectorAll(".challenge-command-help")?.forEach((element) => {
-		element.addEventListener("click", () => {
-			const command = element.textContent + " -h";
-			executeCommand(command.includes("git") ? command : "help");
-		});
+		element.addEventListener(
+			"click",
+			async (e) =>
+				await helpGifs(element.dataset.command.split(" ")[1] || "") 
+		);
 	});
 };
 setTimeout(eventHelp, 1000);

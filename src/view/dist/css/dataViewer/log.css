@@ -22,7 +22,15 @@
 	}
 }
 .challenge-command-help {
-	text-decoration: underline;
 	cursor: var(--cursor-pointer-style), auto;
+	color: var(--text-shell-color) !important;
+}
+.challenge-command-help.help {
+	text-decoration: none;
+	color: var(--text-color) !important;
+}
+.challenge-command-help:hover {
+	text-decoration: underline;
+	font-weight: bold;
 	color: var(--text-shell-color) !important;
 }

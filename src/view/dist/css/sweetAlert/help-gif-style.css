@@ -1,0 +1,9 @@
+.help-gif-alert{
+  font-family: "Poppins", sans-serif;
+  width: 100%;
+}
+@media (min-width: 768px) {
+    .help-gif-alert{
+      width: 50vw;
+    }
+}
