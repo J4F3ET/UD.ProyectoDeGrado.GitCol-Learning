@@ -101,6 +101,7 @@ export class ComandManager {
 	 * @param {String} sentence Key of the command, it is the command to be executed without the 'git' word
 	 * @throws {Error} Comand not found
 	 * @throws {Error} Error in the command execution
+	 * @returns {Promise<Number>} Returns milliseconds to wait before notifying observers 
 	 */
 	executeCommand(sentence) {
 		if (this._shellCommands[sentence]) {

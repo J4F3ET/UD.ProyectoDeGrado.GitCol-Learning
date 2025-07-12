@@ -78,6 +78,7 @@ const eventEnter = async (e) => {
 	stateExecution = true;
 	await executeCommand(e.target.value);
 	e.target.value = "";
+	observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
 	listComands = JSON.parse(sessionStorage.getItem(REF_STORAGE_LOG))
 		.filter((log) => log.tag === "comand")
 		.map((log) => log.message);
@@ -101,20 +102,24 @@ const init = () => {
 const executeCommand = async (comand) => {
 	const promise = new Promise((resolve) => {
 		setTimeout(() => {
-			observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
+			observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY)); //Actualiza SVG
 			resolve();
-		}, 500);
+		}, 100);
 	});
 	comand !== ""
 		? aloneModeCommandManager.createMessage("comand", comand)
 		: null;
 	try {
-		await aloneModeCommandManager.executeCommand(comand.trim());
-		observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
+		const millis = await aloneModeCommandManager.executeCommand(comand.trim());
+		if (millis) {
+			setTimeout(() => {
+				observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
+			}, millis);
+		}
 	} catch (error) {
 		aloneModeCommandManager.createMessage("error", error.message);
 	} finally {
-		observer.notify(sessionStorage.getItem(REF_STORAGE_LOG));
+		observer.notify(sessionStorage.getItem(REF_STORAGE_LOG)); //Este notifica errores
 		return promise;
 	}
 };

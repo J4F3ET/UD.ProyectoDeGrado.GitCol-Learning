@@ -143,6 +143,8 @@ export class Log {
 		else this.generatorMessage(storage.information.head, listCommits);
 
 		sessionStorage.setItem(this._repositoryName, JSON.stringify(storage));
+
+		return 2000;
 	}
 	/**
 	 * @name removeClassLog
