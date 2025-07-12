@@ -62,14 +62,17 @@ export class ComandManager {
 	 * @returns {void}
 	 */
 	callBackHelp() {
-		let message = `<h5 class="help">Commands shell</h5>`;
+		let message = `<h5 class="help">💻 Commands shell</h5>`;
 		Object.keys(this._shellCommands).forEach(
-			(key) => (message += `<p class="help">>${key}</p>`)
+			(key) => (message += `<p class="help">> ${key}</p>`)
 		);
-		message += `<h5 class="help">Commands git</h5>`;
+		message += `<h5 class="help">💻 Commands git</h5>`;
 		this._comands
 			.keys()
-			.forEach((key) => (message += `<p class="help">>git ${key}</p>`));
+			.forEach(
+				(key) =>
+					(message += `<p data-command="git ${key}" class="challenge-command-help help">> git ${key}</p>`)
+			);
 		message += `<p class="help">More information using 'git &lt;comand&gt; [-h|--help]'</p>`;
 		this.createMessage("info", message);
 	}
@@ -101,7 +104,7 @@ export class ComandManager {
 	 * @param {String} sentence Key of the command, it is the command to be executed without the 'git' word
 	 * @throws {Error} Comand not found
 	 * @throws {Error} Error in the command execution
-	 * @returns {Promise<Number>} Returns milliseconds to wait before notifying observers 
+	 * @returns {Promise<Number>} Returns milliseconds to wait before notifying observers
 	 */
 	executeCommand(sentence) {
 		if (this._shellCommands[sentence]) {

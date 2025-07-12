@@ -1,18 +1,19 @@
 import { DataViewer } from "./dataViewer/DataViewer.js";
 import { factoryCommandManager } from "./comandManager/comandManager-factory.js";
 import { Observer } from "./dataViewer/Observer.js";
+import { helpGifs } from "./utils/trigger-help-gif.js";
 const listCommands = ["init", "commit", "checkout", "branch", "log", "merge"];
 if (REF_STORAGE_REPOSITORY_CLOUD) {
 	listCommands.push("push", "clone", "fetch", "pull");
 }
 const messageCallback = (listCommand) => {
 	let messageString = `
-        <h5 class="help">Commands shell</h5>
-        <p class="help">>clear</p>
-        <p class="help">>help</p>
-        <h5 class="help">Commands git</h5>`;
+        <h5 class="help">💻 Commands shell</h5>
+        <p class="help">> clear</p>
+        <p class="help">> help</p>
+        <h5 class="help">💻 Commands git</h5>`;
 	listCommand.forEach((commandString) => {
-		messageString += `<p class="help">>git ${commandString}</p>`;
+		messageString += `<p data-command="git ${commandString}" class="challenge-command-help help">> git ${commandString}</p>`;
 	});
 	return (messageString += `
         <p class="help">
@@ -164,10 +165,11 @@ export const logConceptChallenge = async (tag, message) =>
 	aloneModeCommandManager.createMessage(tag, message);
 const eventHelp = async (e) => {
 	document.querySelectorAll(".challenge-command-help")?.forEach((element) => {
-		element.addEventListener("click", () => {
-			const command = element.textContent + " -h";
-			executeCommand(command.includes("git") ? command : "help");
-		});
+		element.addEventListener(
+			"click",
+			async (e) =>
+				await helpGifs(element.dataset.command.split(" ")[1] || "") 
+		);
 	});
 };
 setTimeout(eventHelp, 1000);

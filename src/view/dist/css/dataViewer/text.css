@@ -13,7 +13,11 @@ h6.help {
 	margin-left: 0.5rem;
 }
 h5.help {
+	margin-top:3px;
+	margin-bottom: 1px;
 	font-size: var(--font-size-mobile);
+	font-weight: bold;
+	color: var(--orange-color);
 }
 p {
 	font-size: var(--font-size-small-mobile);
@@ -32,10 +36,10 @@ li.help {
 /* Tabletas */
 @media (min-width: 576px) {
 	h6.help {
-		font-size: var(--font-size-tablet);
+		font-size: var(--font-size-smalltablet);
 	}
 	h5.help {
-		font-size: var(--font-size-tablet);
+		font-size: var(--font-size-smalltablet);
 	}
 	p {
 		font-size: var(--font-size-smalltablet);
@@ -46,12 +50,6 @@ li.help {
 }
 /* Laptops y escritorios */
 @media (min-width: 768px) {
-	h6.help {
-		font-size: var(--font-size-desktop);
-	}
-	h5.help {
-		font-size: var(--font-size-desktop);
-	}
 	p {
 		font-size: var(--font-size-small-desktop);
 	}
@@ -61,12 +59,6 @@ li.help {
 }
 /* Monitores anchos */
 @media (min-width: 1200px) {
-	h6.help {
-		font-size: var(--font-size-desktop);
-	}
-	h5.help {
-		font-size: var(--font-size-desktop);
-	}
 	p {
 		font-size: var(--font-size-small-desktop);
 	}
