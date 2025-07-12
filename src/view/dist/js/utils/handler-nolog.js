@@ -8,9 +8,9 @@ export const saveConcept = async (response) => {
 	const newConcept = createNewConcept(response, logs);
 	const { auth } = await import("../firebase-config.js");
 
-	const concepts = getConcepts(auth.currentUser.uid);
+	const concepts = getConcepts(auth.currentUser?.uid ?? "");
 	const newConcepts = createNewConcepts(newConcept, concepts);
-	saveResponseInSessionStorage(auth.currentUser.uid, newConcepts);
+	saveResponseInSessionStorage(auth.currentUser?.uid ?? "", newConcepts);
 	saveResponseInDatabase(newConcepts, auth);
 };
 const getElementSessionStorage = (key) => {
