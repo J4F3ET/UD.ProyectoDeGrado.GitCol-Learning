@@ -8,7 +8,7 @@ const loadCss = async (url) => {
 
 export const helpGifs = async (command) => {
 	if (!command) return;
-	loadCss("../dist/css/sweetAlert/help-gif-style.css");
+	await loadCss("../dist/css/sweetAlert/help-gif-style.css");
 	Swal.fire({
 		title: "🚀 git " + command, 
 		html:
