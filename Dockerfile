@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:lts-alpine
 WORKDIR /gitcol-learning
 COPY . /gitcol-learning
 RUN npm install
