@@ -1,5 +1,5 @@
 const startAloneMode = async (mode) => {
-	const url = new URL(window.location.href + "aloneMode/" + mode);
+	const url = new URL(window.location.origin + "/aloneMode/" + mode);
 	window.location.href = url.toString();
 };
 const openDialogSingle = async () => {
