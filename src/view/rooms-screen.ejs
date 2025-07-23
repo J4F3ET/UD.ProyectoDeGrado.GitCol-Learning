@@ -18,15 +18,77 @@
 		<!-- CSS -->
 		<link rel="stylesheet" href="dist/css/reset.css" />
 		<link rel="stylesheet" href="dist/css/global.css" />
-		<link async rel="stylesheet" href="dist/css/font-global.css" />
-		<link async rel="stylesheet" href="dist/css/icons-global.css" />
-		<link async rel="stylesheet" href="dist/css/cursor-global.css" />
+		<link
+			rel="preload"
+			href="dist/css/font-global.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/font-global.css" />
+		</noscript>
+		<link
+			rel="preload"
+			href="dist/css/icons-global.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/icons-global.css" />
+		</noscript>
+		<link
+			rel="preload"
+			href="dist/css/cursor-global.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/cursor-global.css" />
+		</noscript>
+		<link
+			rel="preload"
+			href="dist/css/room-style.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/room-style.css" />
+		</noscript>
 
-		<link defer rel="stylesheet" href="dist/css/room-style.css" />
-
-		<!--PARTICLE JS-->
-		<script defer src="dist/assets/lib/particles.min.js"></script>
-		<script defer src="dist/assets/lib/particlesjs-config.json"></script>
+		<!-- Particle -->
+		<link
+			rel="preload"
+			href="dist/css/particle-global.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/particle-global.css" />
+		</noscript>
+		<!-- Drivejs -->
+		<link
+			rel="preload"
+			href="dist/css/driverjs-style.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/driverjs-style.css" />
+		</noscript>
+		<script
+			async
+			src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"
+		></script>
+		<!-- Script -->
+		<script async type="module" src="/dist/js/rooms-script.js"></script>
+		<!-- Drivejs -->
+		<script async type="module" src="/dist/js/driverjs-mode-script.js"></script>
+		<!-- Particle -->
+		<script async src="/dist/js/utils/particles.js"></script>
+		<!-- Banner -->
+		<script async src="/dist/js/banner.js"></script>
+		<!-- SweetAlert2 -->
+		<script async src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
 	<body>
 		<div class="back">
@@ -268,27 +330,6 @@
 			</div>
 		</dialog>
 		<!-- END DIALOG SEARCH ROOM -->
-		<div id="particles-js"></div>
+		<canvas id="particle-canvas"></canvas>
 	</body>
-
-	<!--=============== REMIXICONS ===============-->
-	<link
-		async
-		rel="stylesheet"
-		href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.css"
-		crossorigin=""
-	/>
-	<!-- Script -->
-	<script async type="module" src="/dist/js/rooms-script.js"></script>
-
-	<!-- Drivejs -->
-	<link async rel="stylesheet" href="dist/css/driverjs-style.css" />
-	<script
-		async
-		src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"
-	></script>
-	<!-- Banner -->
-	<script async src="/dist/js/banner.js"></script>
-	<!-- SweetAlert2 -->
-	<script async src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </html>

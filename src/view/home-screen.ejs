@@ -16,7 +16,15 @@
 		<link rel="stylesheet" href="dist/css/global.css" />
 		<link rel="stylesheet" href="dist/css/font-global.css" />
 		<link rel="stylesheet" href="dist/css/home-style.css" />
-
+		<link
+			rel="preload"
+			href="dist/css/particle-global.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript
+			><link rel="stylesheet" href="dist/css/particle-global.css"
+		/></noscript>
 		<link
 			rel="preload"
 			href="dist/css/icons-global.css"
@@ -60,9 +68,6 @@
 	<body class="body scrollable">
 		<script async src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script defer src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-
-		<script defer src="dist/assets/lib/particles.min.js"></script>
-		<script async src="dist/assets/lib/particlesjs-config.json"></script>
 		<script defer src="dist/js/home-script.js"></script>
 		<script
 			async
@@ -78,7 +83,7 @@
 			src="dist/js/utils/btn-session-handler.js"
 		></script>
 		<script defer src="dist/js/dialogs/dialog-multi-home-script.js"></script>
-
+		<script async src="dist/js/utils/particles.js"></script>
 		<script async src="/dist/js/banner.js"></script>
 
 		<header class="home-header">
@@ -129,8 +134,8 @@
 					of Git.
 				</p>
 				<div class="social-media">
-					<a 
-						class="btn green github-link" 
+					<a
+						class="btn green github-link"
 						href="https://docs.google.com/forms/d/e/1FAIpQLScPuf_uHvVsmD-sVWXnhx14TCxhiJqq2G2hOWXrbjFvIKoPpw/viewform?usp=sf_link"
 						><i class="icon-heart"></i
 					></a>
@@ -149,7 +154,8 @@
 			</div>
 		</section>
 		<section class="view-section video-section" id="video">
-			<video class="video-home"
+			<video
+				class="video-home"
 				loop
 				muted
 				playsinline
@@ -327,9 +333,10 @@
 							></i>
 						</a>
 
-						<a 
-							class="perfile_card-socials-btn linkedin" 
-							href="https://www.linkedin.com/in/danna-sepulveda-sanchez/">
+						<a
+							class="perfile_card-socials-btn linkedin"
+							href="https://www.linkedin.com/in/danna-sepulveda-sanchez/"
+						>
 							<i class="icon-linkedin white"></i>
 						</a>
 					</div>
@@ -366,13 +373,14 @@
 				</div>
 			</div>
 		</section>
-		<div id="particles-js"></div>
+		<canvas id="particle-canvas"></canvas>
+
 		<!--FOOTER SECTION DESING-->
 		<footer class="footer">
 			<div class="footer-text">
 				<p>
-					Copyright &copy; <%= new Date().getFullYear() %> by Jafet Lopez & Danna Sepulveda | All
-					Rights Reserved.
+					Copyright &copy; <%= new Date().getFullYear() %> by Jafet Lopez &
+					Danna Sepulveda | All Rights Reserved.
 				</p>
 				<p>Contact: gitcollearning@gmail.com</p>
 			</div>
@@ -543,9 +551,7 @@
 						Single User Mode
 					</div>
 					<div class="input_selection_concept">
-						<select id="select_concept" class="input_concept">
-							
-						</select>
+						<select id="select_concept" class="input_concept"></select>
 					</div>
 					<div class="section_dialog_item">
 						<button id="btn_start_alone_mode" class="btn_init btn red unlock">
