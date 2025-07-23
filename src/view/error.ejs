@@ -12,18 +12,23 @@
 		<title>Git Col-Learning</title>
 
 		<link rel="stylesheet" href="dist/css/reset.css" />
-		<link defer rel="stylesheet" href="dist/css/global.css" />
-		<link defer rel="stylesheet" href="dist/css/font-global.css" />
 		<link rel="stylesheet" href="dist/css/icons-global.css" />
-		<link async rel="stylesheet" href="dist/css/cursor-global.css" />
-		<link async rel="stylesheet" href="dist/css/error-style.css" />
-
-		<!--PARTICLE JS-->
-		<script async src="dist/assets/lib/particles.min.js"></script>
-		<script defer src="dist/assets/lib/particlesjs-config.json"></script>
+		<link rel="stylesheet" href="dist/css/cursor-global.css" />
+		<link rel="stylesheet" href="dist/css/error-style.css" />
+		<link rel="stylesheet" href="dist/css/global.css" />
+		<link rel="stylesheet" href="dist/css/font-global.css" />
+		<link
+			rel="preload"
+			href="dist/css/particle-global.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/><noscript
+			><link rel="stylesheet" href="dist/css/particle-global.css"
+		/></noscript>
 		<!--OBSERVER Auth Observer-->
 		<script async type="module" src="dist/js/error-script.js"></script>
 		<!-- Banner -->
+		<script async src="dist/js/utils/particles.js"></script>
 		<script async src="/dist/js/banner.js"></script>
 	</head>
 	<body class="body body-error scrollable">
@@ -37,6 +42,6 @@
 		<a class="btn green btn-only-icon" href="/">
 			<i class="icon-caret-left"></i> Home
 		</a>
-		<div id="particles-js"></div>
+		<canvas id="particle-canvas"></canvas>
 	</body>
 </html>
