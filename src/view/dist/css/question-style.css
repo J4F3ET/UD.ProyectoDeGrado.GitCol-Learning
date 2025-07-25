@@ -1,0 +1,72 @@
+.title_question {
+	font-size: var(--font-size-h1-mobile);
+	font-weight: 700;
+	color: var(--text-color);
+	margin: 0;
+}
+.text_dialog_span {
+	margin-top: 0.5rem;
+}
+.text_dialog > .question-text {
+	font-size: var(--font-size-h2-mobile);
+	font-weight: 550;
+	color: var(--text-color);
+	margin-bottom: 1rem;
+	text-wrap: wrap;
+}
+.option-container {
+	margin-bottom: 0.7rem;
+    display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+.radio-btn input[type="radio"] {
+	display: none;
+}
+.radio-label {
+	border: none;
+	outline: none;
+	background-color: var(--second-bg-color, #444);
+	padding: 10px 20px;
+	width: 100%;
+	font-weight: 400;
+	color: var(--text-color, #fff);
+	border-radius: 5px;
+	box-shadow: 0px 5px 0px 0px #2e3542;
+	cursor: var(--cursor-pointer-style, pointer), auto;
+	display: inline-block;
+	transition: all 0.1s ease;
+	user-select: none;
+}
+
+.radio-btn:hover .radio-label {
+	background-color: var(--orange-color, #ffa67f);
+	color: var(--black-lite-color, #2e3542);
+	font-weight: 700;
+    box-shadow: 0px 5px 0px 0px var(--orange-lite-color, #ff8c42);
+}
+
+.radio-btn:active .radio-label {
+	background-color: var(--orange-color, #ffa67f);
+	transform: translateY(0.125em);
+}
+
+.radio-btn input[type="radio"]:checked + .radio-label {
+	background-color: var(--black-lite-color, #2e3542);
+	color: var(--text-color, #fff);
+	box-shadow: 0px 2px 0px 0px var(--black-dark-color, #1a1a1a);
+}
+
+.radio-btn input[type="radio"]:focus-visible + .radio-label {
+	outline: 2px dashed var(--orange-color, #ffa67f);
+	outline-offset: 0.2em;
+}
+
+@media screen and (min-width: 768px) {
+	.title_question {
+		font-size: var(--font-size-h1-tablet);
+	}
+	.text_dialog > .question-text {
+		font-size: var(--font-size-h2-tablet);
+	}
+}
