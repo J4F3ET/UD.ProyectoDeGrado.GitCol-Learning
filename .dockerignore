@@ -54,4 +54,8 @@ firebase.json
 npm-debug.log
 LICENSE
 README.md
-docs/
+docs/assets
+docs/jsdocs
+docs/markdown
+docs/README_jsDocs.md
+docs/jsdoc.json
