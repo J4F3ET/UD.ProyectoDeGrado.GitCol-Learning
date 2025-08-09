@@ -1,10 +1,3 @@
-const loadCss = async (url) => {
-	if (!!document.querySelector(`link[rel="stylesheet"][href="${url}"]`)) return;
-	const link = document.createElement("link");
-	link.rel = "stylesheet";
-	link.href = url;
-	document.head.appendChild(link);
-};
 const getImgElement = (command) => {
 	const img = document.createElement("img");
 	img.src = `../dist/assets/gif/git-${command}.gif`;
@@ -17,7 +10,6 @@ const getImgElement = (command) => {
 };
 export const helpGifs = async (command) => {
 	if (!command) return;
-	await loadCss("../dist/css/sweetAlert/help-gif-style.css");
 	const imageElement = getImgElement(command);
 	Swal.fire({
 		title: "🚀 git " + command,
