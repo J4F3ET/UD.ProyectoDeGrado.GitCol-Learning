@@ -94,6 +94,7 @@ const init = () => {
 		sessionStorage.setItem(REF_STORAGE_LOG, JSON.stringify([DEFAULT_MESSAGE]));
 	observer.notify(sessionStorage.getItem(REF_STORAGE_LOG));
 	observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
+	eventHelp();
 };
 /**
  * @name executeCommand
