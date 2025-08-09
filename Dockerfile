@@ -1,9 +1,9 @@
 FROM node:lts-slim
 
 WORKDIR /gitcol-learning
-COPY package.json ./
+COPY package*.json ./
 
-RUN npm ci --only=production
+RUN npm i --omit=dev
 
 COPY build/ ./build
 EXPOSE 8443
