@@ -104,6 +104,7 @@ const executeCommand = async (comand) => {
 	const promise = new Promise((resolve) => {
 		setTimeout(() => {
 			observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY)); //Actualiza SVG
+			eventHelp();
 			resolve();
 		}, 100);
 	});
@@ -165,11 +166,8 @@ export const logConceptChallenge = async (tag, message) =>
 	aloneModeCommandManager.createMessage(tag, message);
 const eventHelp = async (e) => {
 	document.querySelectorAll(".challenge-command-help")?.forEach((element) => {
-		element.addEventListener(
-			"click",
-			async (e) =>
-				await helpGifs(element.dataset.command.split(" ")[1] || "") 
+		element.addEventListener("click", () =>
+			helpGifs(element.dataset.command.split(" ")[1] || null)
 		);
 	});
 };
-setTimeout(eventHelp, 1000);
