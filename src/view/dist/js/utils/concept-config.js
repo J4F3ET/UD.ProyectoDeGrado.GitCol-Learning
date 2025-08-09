@@ -56,8 +56,10 @@ document
 		const { openDialogQuestion } = await import(
 			"../dialogs/dialog-question-concept-script.js"
 		);
-		const response = await openDialogQuestion();
-		if (!response) return changeCancelConcept(beforeUrl);
+		const { response, btn } = await openDialogQuestion();
+
+		if (!response || btn === "btn_cancel_question")
+			return changeCancelConcept(beforeUrl);
 
 		const { saveConcept } = await import("./handler-nolog.js");
 		await saveConcept({ concept: beforeUrl, response });

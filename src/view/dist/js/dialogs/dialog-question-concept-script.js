@@ -6,7 +6,9 @@ export const openDialogQuestion = async () => {
 	dialog_question.showModal();
 	return await new Promise((resolve) => {
 		buttons_dialog_question.forEach((btn) => {
-			btn.addEventListener("click", async () => resolve(await resolveDialog()));
+			btn.addEventListener("click", async () =>
+				resolve({ response: await resolveDialog(), btn: btn.id })
+			);
 		});
 	});
 };
