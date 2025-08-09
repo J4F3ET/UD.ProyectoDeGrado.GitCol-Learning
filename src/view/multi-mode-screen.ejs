@@ -14,24 +14,66 @@
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css"/>
 		<!-- CSS -->
 		<link rel="stylesheet" href="dist/css/reset.css" />
-		<link defer rel="stylesheet" href="dist/css/global.css" />
-		<link defer rel="stylesheet" href="dist/css/font-global.css" />
+		<link rel="stylesheet" href="dist/css/global.css" />
+		<link rel="stylesheet" href="dist/css/font-global.css" />
 		<link rel="stylesheet" href="dist/css/icons-global.css" />
-		<link async rel="stylesheet" href="dist/css/cursor-global.css" />
+		<link rel="stylesheet" href="dist/css/cursor-global.css" />
 
-		
-		<link defer rel="stylesheet" href="dist/css/multi-mode-style.css">
-        <link async rel="stylesheet" href="dist/css/work-style.css">
-		
-        <link async rel="stylesheet" href="dist/css/dataViewer/elementSVG.css">
-        <link async rel="stylesheet" href="dist/css/dataViewer/circle.css">
-        <link async rel="stylesheet" href="dist/css/dataViewer/line.css">
-        <link async rel="stylesheet" href="dist/css/dataViewer/tag.css">
-        <link async rel="stylesheet" href="dist/css/dataViewer/text.css">
-        <link async rel="stylesheet" href="dist/css/dataViewer/log.css">
+
+		<link rel="preload" as="style" href="dist/css/multi-mode-style.css" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/multi-mode-style.css" />
+		</noscript>
+
+		<link rel="preload" as="style" href="dist/css/work-style.css" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/work-style.css" />
+		</noscript>
+
+        <link rel="preload" as="style" href="dist/css/dataViewer/elementSVG.css" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/dataViewer/elementSVG.css"/>
+		</noscript>
+        <link rel="preload" as="style" href="dist/css/dataViewer/circle.css" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/dataViewer/circle.css	"/>
+		</noscript>
+        <link rel="preload" as="style" href="dist/css/dataViewer/line.css" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/dataViewer/line.css"/>
+		</noscript>
+        <link rel="preload" as="style" href="dist/css/dataViewer/tag.css" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/dataViewer/tag.css"/>
+		</noscript>
+        <link rel="preload" as="style" href="dist/css/dataViewer/text.css" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/dataViewer/text.css"/>
+		</noscript>
+        <link rel="preload" as="style" href="dist/css/dataViewer/log.css" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript>
+			<link rel="stylesheet" href="dist/css/dataViewer/log.css"/>
+		</noscript>
+
+		<link rel="preload" as="style" href="/dist/css/sweetAlert/help-gif-style.css" onload="this.onload=null;this.rel='stylesheet'"/>
+		<noscript>
+			<link rel="stylesheet" href="/dist/css/sweetAlert/help-gif-style.css" />
+		</noscript>
+
 		<!-- Drivejs -->
-		<link async rel="stylesheet" href="dist/css/driverjs-style.css">
-		<script async src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+		<link
+			rel="preload"
+			as="style"
+			href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+		<noscript>
+			<link
+				rel="stylesheet"
+				href="https://cdn.jsdelivr.net/npm/driver.js@latest/dist/driver.css"
+			/>
+		</noscript>
+
 		<!--SOCKET IO-->
 		<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
 		<script>
