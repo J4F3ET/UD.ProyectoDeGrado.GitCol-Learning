@@ -58,7 +58,7 @@ document
 		);
 		const { response, btn } = await openDialogQuestion();
 
-		if (!response || btn === "btn_cancel_question")
+		if (!response || btn !== "btn_answer_question")
 			return changeCancelConcept(beforeUrl);
 
 		const { saveConcept } = await import("./handler-nolog.js");
