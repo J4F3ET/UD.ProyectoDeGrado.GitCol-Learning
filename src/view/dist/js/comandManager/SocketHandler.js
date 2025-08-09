@@ -14,7 +14,6 @@ export class SocketHandler {
 		});
 
 		this.client.on("updateRepository", (data) => {
-			console.log("Received updateRepository event with data:", data);
 			this.updateCommitsToRepository(data);
 		});
 		this.client.on("error", (error) => {

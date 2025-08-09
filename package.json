@@ -8,10 +8,13 @@
 	},
 	"main": "server.js",
 	"scripts": {
+		"clean": "rm -rf dist",
 		"dev": "npm i && npm i -g nodemon && npm audit fix && nodemon --exec babel-node server.js",
-		"start": "npm i && npm upgrade && npm audit fix && babel-node server.js",
+		"start": "npm i && npm i -g && npm upgrade && npm upgrade -g && npm audit fix && babel-node src/server.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"docs": "jsdoc -c ./docs/jsdoc.json"
+		"docs": "jsdoc -c ./docs/jsdoc.json",
+		"build-windows": "rmdir /S /Q build && npm ci && npx babel src --out-dir build --copy-files && npx babel-node build/server.js",
+		"build": "rm -rf build && npm ci && npx babel src --out-dir build --copy-files"
 	},
 	"author": "Danna He <dhsepulvedas@udistrital.edu.co>(https://github.com/Chocolatamargo2607), Jafet Stiven <jslopezz@udistrital.edu.co> (https://github.com/J4F3ET)",
 	"license": "MIT",

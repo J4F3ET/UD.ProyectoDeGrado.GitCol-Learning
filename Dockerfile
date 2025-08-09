@@ -1,7 +1,11 @@
 FROM node:lts-slim
+
 WORKDIR /gitcol-learning
-COPY . /gitcol-learning
-RUN npm install
-RUN npm audit fix
+COPY package.json ./
+
+RUN npm ci --only=production
+
+COPY build/ ./build
 EXPOSE 8443
-CMD [ "node","--run", "start" ]
+
+CMD ["node", "build/server.js"]
