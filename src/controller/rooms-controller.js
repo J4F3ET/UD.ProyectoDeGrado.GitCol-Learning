@@ -92,7 +92,7 @@ router.get("/rooms/fit", releaseVerificationMiddleware, async (req, res) => {
 	if (err || !data.key || !data.email)
 		return res.sendStatus(HttpStatus.NOT_FOUND);
 
-	const response = await roomAddMember(room, data.uid);
+	const response = await roomAddMember(room, data.key);
 
 	if (!response) return res.sendStatus(500);
 
