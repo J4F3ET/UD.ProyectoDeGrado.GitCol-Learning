@@ -6,13 +6,12 @@ import { fileURLToPath } from "url";
 import { createServer } from "node:http";
 import { dirname } from "node:path";
 import { SocketHandler } from "./controller/teamWorking-socket-server.js";
-import { swaggerDoc } from "../docs/swagger.js";
-
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 //Settings: Configuraciones del servidor (puerto, vistas, etc)
+app.set("env", process.env.NODE_ENV || "dev");
 app.set("port", process.env.PORT || 3000);
 app.set("views", path.join(__dirname, "view"));
 app.set("view engine", "ejs");
@@ -29,14 +28,20 @@ async function uploadCtrl(app) {
 	app.use((await import("./controller/home-controller.js")).default);
 	app.use((await import("./controller/rooms-controller.js")).default);
 	app.use((await import("./controller/teamWorking-controller.js")).default);
-	app.use(
-		(await import("./controller/aloneWorking-controller.js")).default
-	);
+	app.use((await import("./controller/aloneWorking-controller.js")).default);
 }
 uploadCtrl(app);
+async function loadSawggerDocs() {
+	const { swaggerDoc } = await import("../docs/swagger.js");
+	return swaggerDoc;
+}
 // Static files: Archivos que se envian al navegador(frontend)
-app.use(express.static(path.join(__dirname,"view")));
+app.use(express.static(path.join(__dirname, "view")));
+
+
 server.listen(app.get("port"), () => {
 	console.log("✅ " + app.get("port"));
-	swaggerDoc(app, app.get("port"));
+	if (app.get("env") === "dev")
+		loadSawggerDocs().then((swaggerDoc) => swaggerDoc(app, app.get("port")));
+	console.log("✅ Load " + app.get("env"));
 });
