@@ -87,6 +87,13 @@ const eventEnter = async (e) => {
 	stateExecution = !(await deQueueCommands());
 };
 // FUNCTIONS
+const eventHelp = () => {
+	document.querySelectorAll(".challenge-command-help")?.forEach(async (element) => {
+		element.addEventListener("click", () =>
+			helpGifs(element.dataset.command.split(" ")[1] || null)
+		);
+	});
+};
 const init = () => {
 	dataViewerLocal.currentData = null;
 	dataViewerLocal.logComands = null;
@@ -94,7 +101,9 @@ const init = () => {
 		sessionStorage.setItem(REF_STORAGE_LOG, JSON.stringify([DEFAULT_MESSAGE]));
 	observer.notify(sessionStorage.getItem(REF_STORAGE_LOG));
 	observer.notify(sessionStorage.getItem(REF_STORAGE_REPOSITORY));
-	eventHelp();
+	setTimeout(()=>{
+		eventHelp();
+	},1000)
 };
 /**
  * @name executeCommand
@@ -165,10 +174,3 @@ export { observerCloud };
 // MODULE CONSOLE LOG
 export const logConceptChallenge = async (tag, message) =>
 	aloneModeCommandManager.createMessage(tag, message);
-const eventHelp = async (e) => {
-	document.querySelectorAll(".challenge-command-help")?.forEach((element) => {
-		element.addEventListener("click", () =>
-			helpGifs(element.dataset.command.split(" ")[1] || null)
-		);
-	});
-};
