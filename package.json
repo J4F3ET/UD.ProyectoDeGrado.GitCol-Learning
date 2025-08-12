@@ -9,8 +9,8 @@
 	"main": "server.js",
 	"scripts": {
 		"clean": "rm -rf dist",
-		"dev": "npm i && npm i -g nodemon && npm audit fix && nodemon --exec babel-node src/server.js",
-		"start": "npm i && npm i -g && npm upgrade && npm upgrade -g && npm audit fix && babel-node src/server.js",
+		"dev": "nodemon --exec babel-node src/server.js",
+		"start": "babel-node src/server.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"docs": "jsdoc -c ./docs/jsdoc.json",
 		"build-windows": "rmdir /S /Q build && npm ci && npx babel src --out-dir build --copy-files && npx babel-node build/server.js",
@@ -23,14 +23,9 @@
 		"ejs": "^3.1.9",
 		"express": "^4.18.2",
 		"firebase-admin": "^12.0.0",
-		"jsdoc": "^4.0.2",
 		"morgan": "^1.10.0",
 		"socket.io": "^4.7.4",
-		"swagger-jsdoc": "^6.2.8",
-		"swagger-themes": "^1.4.3",
-		"swagger-ui-express": "^5.0.0",
-		"ud.proyectodegrado.gitcol-learning": "file:",
-		"ws": "^8.17.1"
+		"ud.proyectodegrado.gitcol-learning": "file:"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.23.4",
@@ -38,6 +33,10 @@
 		"@babel/node": "^7.22.19",
 		"@babel/preset-env": "^7.23.8",
 		"clean-jsdoc-theme": "^4.2.18",
-		"nodemon": "^3.1.9"
+		"jsdoc": "^4.0.4",
+		"nodemon": "^3.1.9",
+		"swagger-jsdoc": "^6.2.8",
+		"swagger-themes": "^1.4.3",
+		"swagger-ui-express": "^5.0.1"
 	}
 }
