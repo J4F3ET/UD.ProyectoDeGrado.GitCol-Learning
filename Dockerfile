@@ -1,4 +1,4 @@
-FROM node:lts-slim
+FROM node:lts-alpine
 
 WORKDIR /gitcol-learning
 COPY package*.json ./
@@ -6,7 +6,7 @@ COPY package*.json ./
 RUN npm i --omit=dev
 
 COPY build/ ./build
-COPY docs/ ./docs
+
 EXPOSE 8443
 
 CMD ["node", "build/server.js"]
